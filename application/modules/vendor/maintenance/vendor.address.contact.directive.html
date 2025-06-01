@@ -1,0 +1,262 @@
+<style>
+  button:focus {
+    outline: 5px auto #6ecaf6!important
+  }
+
+  input[type="text"]:focus,
+  select:focus {
+    border-left: 3px solid #f9c10c!important;
+  }
+
+  .selfFulfilment::before {
+    top: 0px !important;
+    width: 17px;
+    height: 17px;
+    left: 10px;
+  }
+
+  .selfFulfilment::after {
+    top: 4px !important;
+  }
+</style>
+
+<div class="col-lg-12 f-16 panel-header">
+  <span class="f-700 main-header">Department Address and Contact</span>
+  <div>
+    <small>Address and contact details for departments</small>
+  </div>
+</div>
+<div class="col-lg-12 text-center m-t-25" data-ng-if="isLoading">
+  <span class="f-17 f-700 c-black">Loading</span>
+  <span class="f-700" style="letter-spacing: 3px;">....</span>
+</div>
+<div class="col-lg-12 p-5" data-ng-if="!isLoading">
+  <script type="text/javascript">
+    function limitTextareaLine(elementId) {
+     var charactersPerLine = 30;
+     var maxLines = 3;
+     var totalNoOfCharsAllowed = 80; // allow maximum 80 characters inclusive of all 3 lines
+     /*
+     This function handles two aspects:
+     1. (a) READ VALUE from the textarea, (b) DETECT IF TEXT PER LINE IS TOO LONG  as required by the length restrictions, (c) PUSH OVERFLOWING TEXT from a line to the next line and (d) WRITE VALUE back to the textarea.
+     2. (a) READ THE CURSOR POSITION to store the cursor position, and (b) POSITION THE CURSOR where a user would expect it after WRITE DATA.
+     */
+     var textInput = document.getElementById(elementId).value;//1a: READ VALUE
+     var inputAsRows = textInput.split("\n");// create array from input => each element contains one row of the textarea
+     var inputAsOneLine = textInput.replace(/(\r\n\t|\n|\r\t)/gm, "");//remove all line-breaks
+     var cursorPositionOnInput = document.getElementById(elementId).selectionStart;//2a: READ CURSOR POSITION
+     var cursorOffsetAfterOutput = 0;//set default value for cursor offset. cursor offset is needed when re-posiotioning the cursor after WRITE DATA
+
+     var visibleCharactersPerLine = Math.floor((document.getElementById(elementId).offsetWidth) / 9);//number of visible characters per line before text breaks without a line-break. Depends on width of textarea and width of characters entered.
+     var additionalTextAreaRows = 0; //additional rows needed due to the text breaking
+
+     var totalRows = inputAsRows.length; //don't put inputAsRows.length in the for statement, as the array is growing in the loop which results in an infinite loop
+     var row;
+     for (row = 0; row < totalRows; ++row) {
+         
+         if (inputAsRows[row].length > charactersPerLine) { //1b DETECT IF TEXT PER LINE IS TOO LONG 
+             if (inputAsRows[row + 1] === undefined) {
+                 inputAsRows[row + 1] = "";// the row did not exist
+                 totalRows++;
+             }
+            
+             //1c PUSH OVERFLOWING TEXT: move text that is too long for this row to the next row:
+             inputAsRows[row + 1] = inputAsRows[row].substring(charactersPerLine) + inputAsRows[row + 1];
+             inputAsRows[row] = inputAsRows[row].substring(0, charactersPerLine);
+             //determine, if cursor was at the end of the line that got a line-break:
+             var newOutput = inputAsRows.join("\n");
+             if (newOutput.substr(cursorPositionOnInput - 1, 1) == "\n") {
+                 cursorOffsetAfterOutput = 1;
+             }
+           }
+         if (inputAsRows[row].length > visibleCharactersPerLine) { //1b DETECT IF TEXT PER LINE IS TOO LONG 
+             additionalTextAreaRows = additionalTextAreaRows + Math.floor(inputAsRows[row].length / visibleCharactersPerLine);
+         }
+     }
+
+     if (inputAsRows.length <= maxLines && inputAsOneLine.length <= totalNoOfCharsAllowed) {//data is within max number of rows and max total digits
+         textOutput = inputAsRows.join("\n");
+         $('#errMsg').text('');  //remove error message
+     } else { //data would be too long 
+         $('#errMsg').text('Address can take upto 3 lines!')
+         cursorOffsetAfterOutput = -1;
+     }
+     document.getElementById(elementId).value = textOutput;//1d: WRITE VALUE
+     document.getElementById(elementId).selectionStart = cursorPositionOnInput + cursorOffsetAfterOutput; //2b: POSITION CURSOR
+     document.getElementById(elementId).selectionEnd = cursorPositionOnInput + cursorOffsetAfterOutput; //set a single cursor, not a selection
+ }
+ 
+     // To hide error message onblur
+     function checkLimit() {
+         $('#errMsg').text('')
+     }
+ </script>
+  <div class="col-lg-12 p-0 m-t-5 m-b-5" style="border: 1px solid lightgray; min-height:150px" data-ng-repeat="department in vendorDepartments">
+    <ng-form role="form" novalidate="novalidate" name="venMaintCtrl.departmentForm{{::department.id}}">
+      <div class="col-lg-12 p-0 p-5 d-flex justify-content-between" style="border-bottom:1px solid lightgray; background: #efefef">
+        <span class="f-700 f-15 main-header">{{department.name}}</span>
+        <div class="checkbox m-t-5">
+          <label>
+            <span class="p-l-5 p-r-15">
+              PE Directory
+            </span>
+            <input id="pe_directory" name="pe_directory" type="checkbox" hidden="hidden" ng-model="department.addressContactDetails.pe_directory"
+              ng-true-value="1" ng-false-value="0">
+            <i class="input-helper selfFulfilment"></i>
+          </label>
+        </div>
+      </div>
+      <div>
+        <div class="col-lg-12 f-500 p-0 p-5">
+          <span class="f-15 f-500 underline">Contact</span>
+        </div>
+        <div class="col-lg-12 m-t-10 form-group">
+          <div class="col-lg-12 d-flex d-flex-v-center p-5">
+            <div class="col-lg-4">
+              <label class="maintenance-field-label d-flex">Contact Person</label>
+            </div>
+            <div class="col-lg-4">
+              <input id="contact_person_name" name="contact_person_name" type="text" class="form-control inputn-sm c-black" placeholder="Enter Name"
+                ng-pattern="venMaintCtrl.as400FieldsRegularExpression" data-ng-model="department.addressContactDetails.contact_person_name" ng-minlength="3"
+                ng-maxlength="40" ng-model-options="{updateOn:'blur'}" data-ng-class="{'error-field-validation': venMaintCtrl.departmentForm{{::department.id}}.contact_person_name.$invalid && venMaintCtrl.isInvalidForm}"
+              />
+              <div ng-show="venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$invalid && venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$dirty  && (venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$error.minlength || venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$error.maxlength)">
+                <span class="text-danger f-12">*Length (min:3 & max:40) chars </span>
+              </div>
+              <div ng-show="venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$invalid && venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$dirty  && venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$error.pattern && (!venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$error.minlength && !venMaintCtrl.departmentForm{{::department.id}}['contact_person_name'].$error.maxlength)">
+                <span class="text-danger f-12">*Name must be a valid string </span>
+              </div>
+            </div>
+            <div class="col-lg-4 p-0">
+              <div class="checkbox pull-right">
+                <label>
+                  <span class="p-l-5">Send to AS400
+                  </span>
+                  <input id="send_name_to_as400" name="send_name_to_as400" type="checkbox" hidden="hidden" ng-model="department.addressContactDetails.send_name_to_as400"
+                    ng-true-value="1" ng-false-value="0" data-ng-click="checkSendToAs400Data(department,'send_name_to_as400')"
+                    ng-disabled="!department.addressContactDetails.contact_person_name">
+                  <i class="input-helper selfFulfilment"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 d-flex d-flex-v-center p-5">
+            <div class="col-lg-4">
+              <label class="maintenance-field-label d-flex">Phone Number
+              </label>
+            </div>
+            <div class="col-lg-4">
+              <input id="phone_number" name="phone_number" type="text" class="form-control inputn-sm c-black" phone-input placeholder="Enter Phone Number"
+                data-ng-model="department.addressContactDetails.phone_number" ng-model-options="{updateOn:'blur'}" ng-pattern="/(^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$)/"
+                data-ng-class="{'error-field-validation': venMaintCtrl.departmentForm{{::department.id}}.phone_number.$invalid && venMaintCtrl.isInvalidForm}"
+              />
+              <div ng-show="venMaintCtrl.departmentForm{{::department.id}}['phone_number'].$dirty  && venMaintCtrl.departmentForm{{::department.id}}['phone_number'].$error.pattern">
+                <span class="text-danger f-12">*Phone number is invalid </span>
+              </div>
+            </div>
+            <div class="col-lg-4 p-0">
+              <div class="checkbox pull-right">
+                <label>
+                  <span class="p-l-5">Send to AS400</span>
+                  <input id="send_phone_to_as400" name="send_phone_to_as400" type="checkbox" hidden="hidden" ng-model="department.addressContactDetails.send_phone_to_as400"
+                    ng-true-value="1" ng-false-value="0" data-ng-click="checkSendToAs400Data(department,'send_phone_to_as400')"
+                    ng-disabled="!department.addressContactDetails.phone_number">
+                  <i class="input-helper selfFulfilment"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 d-flex d-flex-v-center p-5">
+            <div class="col-lg-4">
+              <label class="maintenance-field-label d-flex">Email Id</label>
+            </div>
+            <div class="col-lg-4">
+              <input type="text" id="email_id" name="email_id" class="form-control inputn-sm c-black" placeholder="Enter Email Id" ng-pattern='/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
+                data-ng-model="department.addressContactDetails.email_id" ng-model-options="{updateOn:'blur'}" data-ng-class="{'error-field-validation': venMaintCtrl.departmentForm{{::department.id}}.email_id.$invalid && venMaintCtrl.isInvalidForm}"
+              />
+              <div ng-show="venMaintCtrl.departmentForm{{::department.id}}['email_id'].$dirty && venMaintCtrl.departmentForm{{::department.id}}['email_id'].$error.pattern">
+                <span class="text-danger f-12">*Email id is invalid </span>
+              </div>
+            </div>
+            <div class="col-lg-4 p-0">
+              <div class="checkbox pull-right">
+                <label>
+                  <span class="p-l-5"> Send to AS400</span>
+                  <input id="send_email_to_as400" name="send_email_to_as400" type="checkbox" hidden="hidden" ng-model="department.addressContactDetails.send_email_to_as400"
+                    ng-true-value="1" ng-false-value="0" data-ng-click="checkSendToAs400Data(department,'send_email_to_as400')"
+                    ng-disabled="!department.addressContactDetails.email_id">
+                  <i class="input-helper selfFulfilment"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lg-12 f-500 p-0 p-5 d-flex justify-content-between d-flex-v-end">
+          <div class="col-xs-8 p-0">
+            <span class="f-15 f-500 underline">Address</span>
+          </div>
+          <div class="col-xs-4">
+            <div class="checkbox m-t-5 pull-right">
+              <label>
+                <span class="p-l-5">
+                  Send to AS400
+                </span>
+                <input id="send_address_to_as400" name="send_address_to_as400" type="checkbox" hidden="hidden" ng-model="department.addressContactDetails.send_address_to_as400"
+                  ng-true-value="1" ng-false-value="0" data-ng-click="checkSendToAs400Data(department,'send_address_to_as400')"
+                  ng-disabled="(department.addressContactDetails.country_id === 237 && (!department.addressContactDetails.zipcode || !department.addressContactDetails.region_name || !department.addressContactDetails.city_id)) || !department.addressContactDetails.country_id || !department.addressContactDetails.address">
+                <i class="input-helper selfFulfilment"></i>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 d-flex m-t-10 form-group">
+          <div class="col-lg-3">
+            <label class="maintenance-field-label">Country</label>
+            <select name="country_id" id="country_id" class="form-control select-component text-muted" ng-options="country.id as country.name for country in countries"
+              ng-model="department.addressContactDetails.country_id" data-ng-change="getRegions(department.addressContactDetails.country_id, department.addressContactDetails)">
+              <option value="" disabled>Select Country</option>
+            </select>
+          </div>
+          <div class="col-lg-3"  data-ng-if="department.addressContactDetails.country_id === 237">
+            <label class="maintenance-field-label">Zipcode</label>
+            <input  type="text" class="form-control inputn-sm c-black" id="zipcode" name="zipcode" ng-model="department.addressContactDetails.zipcode"
+              data-ng-change="setValues(department.addressContactDetails.zipcode, department.addressContactDetails);"  googleplace>
+            <div ng-show="venMaintCtrl.departmentForm{{::department.id}}['zipcode'].$dirty  && (venMaintCtrl.departmentForm{{::department.id}}['zipcode'].$error.minlength || venMaintCtrl.departmentForm{{::department.id}}['zipcode'].$error.maxlength)">
+              <span class="text-danger f-12">*Zipcode must be 5 digits long</span>
+            </div>
+          </div>
+
+          <div class="col-lg-3" data-ng-if="department.addressContactDetails.zipcode && department.addressContactDetails.zipcode.length === 5 && department.addressContactDetails.country_id === 237">
+            <label class="maintenance-field-label">Region</label>
+            <input type="text" name="region_name" id="region_name" class="form-control inputn-sm c-black" ng-model="department.addressContactDetails.region_name"
+              ng-disabled="department.addressContactDetails.country_id === 237" />
+          </div>
+          <div class="col-lg-3 d-flex d-flex-v-center" data-ng-if="department.addressContactDetails.isLoadingData">
+            <span class="text-muted p-t-10">Loading...</span>
+          </div>
+          <div class="col-lg-3" data-ng-if="!department.addressContactDetails.isLoadingData && department.addressContactDetails.zipcode && department.addressContactDetails.zipcode.length === 5 && (department.addressContactDetails.regionalCitiesList.length || department.addressContactDetails.city) && department.addressContactDetails.country_id === 237">
+            <label class="maintenance-field-label">City</label>
+            <select id="city_d" name="city_id" ng-options="city.id as city.city_name for city in department.addressContactDetails.regionalCitiesList"
+              class="form-control select-component" ng-model="department.addressContactDetails.city_id">
+            </select>
+            <!-- <input data-ng-if="department.addressContactDetails.country_id !== 237" id="city" name="city" class="form-control inputn-sm c-black"
+              ng-model="department.addressContactDetails.city" /> -->
+          </div>
+        </div>
+        <div class="col-lg-12 d-flex m-t-10 form-group" data-ng-if="(department.addressContactDetails.zipcode && department.addressContactDetails.zipcode.length === 5) || department.addressContactDetails.country_id !== 237">
+          <div class="col-lg-12">
+            <label class="maintenance-field-label">Street Address</label>
+            <textarea type="text" name="street_address" id="street_address{{::department.id}}" class="form-control input-sm" ng-model="department.addressContactDetails.address" onInput="limitTextareaLine(this.id);"  ng-pattern="venMaintCtrl.as400FieldsRegularExpression"
+              data-ng-required="department.addressContactDetails.zipcode || department.addressContactDetails.country_id" data-ng-class="{'error-field-validation': venMaintCtrl.departmentForm{{::department.id}}.street_address.$invalid && venMaintCtrl.isInvalidForm}"  onblur="checkLimit();"></textarea>
+            <div ng-show="venMaintCtrl.departmentForm{{::department.id}}['street_address'].$dirty">
+              <span class="text-danger f-12" data-ng-show="!venMaintCtrl.departmentForm{{::department.id}}['street_address'].$error.pattern && venMaintCtrl.departmentForm{{::department.id}}['street_address'].$error.required">*Address is required </span>
+              <span class="text-danger f-12" data-ng-show="venMaintCtrl.departmentForm{{::department.id}}['street_address'].$error.pattern">*Address is must be a valid string </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-form>
+  </div>
+</div>

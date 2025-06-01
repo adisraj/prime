@@ -1,0 +1,234 @@
+<div class="container col-lg-12 p-0" data-ng-controller="EntityDetailsController as entityDetailCtrl">
+    <!--list panel-->
+    <!--  <rcp-module-header module-name="EntityDetails" button-name="Entity Details" svg-image="submenu_entity.svg" create-new-fn="entityDetailCtrl.createEntityDetails()"></rcp-module-header>-->
+    <nav class="navbar navbar-toolbar navbar-default fixed-top">
+        <div class="bgm-white header-module">
+            <div class="navbar-header p-relative" style="min-height: inherit;">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                <div class="image-module p-absolute">
+                    <img src="./img/sidebar-icons/submenu_entity.svg" />
+                </div>
+                <div class="label-module p-absolute">
+                    <a class="navbar-brand" href="javascript:void(0)">Entity Details</a>
+                </div>
+            </div>
+
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li> <a><button type="button" class="btn btn-primal btn-block waves-effect" data-ng-click="entityDetailCtrl.openForm();">Create Entity Details</button></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="rcp-table-container">
+        <div class="col-sm-12 m-b-10 p-l-0 p-r-0">
+            <rcp-table-group-header rcp-table="entity_details_list" rcp-table-name="entity_details_list" rcp-entity-details-ctrl="entityDetailCtrl" rcp-group-by-dropdown-list="edGroupByDropdown" load-ng-table-data="loadNgTableData" columns="edcols" image-name="submenu_entity.svg"
+                reload-fn="entityDetailCtrl.reload();"></rcp-table-group-header>
+        </div>
+        <div class="lv-bordered lv-lg {{entityDetailCtrl.$listFullScreen?'fullscreen':''}}">
+            <ul class="lv-actions actions">
+                <li>
+                    <input type="text" ng-model="entityDetailCtrl.returnValue" ng-init="entityDetailCtrl.returnValue=''" ng-hide="true" />
+                </li>
+            </ul>
+            <div class="table-responsive" ng-if="!entityDetailCtrl.$grid">
+                <table ng-table-dynamic="entity_details_list with edcols" class="table table-hover table-vmiddle table-condensed table-bordered " ng-class="{'table-condensed': entityDetailCtrl.$compact}" ng-table-columns-binding11="entityDetailCtrl.cols" arrow-selector>
+                    <tbody>
+                        <tr class="ng-table-group" ng-show="entityDetailCtrl.returnValue" ng-repeat-start="edlistMain in $data | filter : searchresult.term | groupBy : entityDetailCtrl.returnValue">
+                            <td colspan="{{$columns.length}}">
+                                <a href="" ng-click="showHideFollowingArray(edlistMain)">
+                                    <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': edlistMain[0].hideRows, 'glyphicon-chevron-down': !edlistMain[0].hideRows }"></span>
+                                    <strong>
+                                            <span display-group-header values="mainValue" selectedvalue="entityDetailCtrl.returnValue" ></span>
+                                            <input type="text" ng-model="mainValue" ng-init="mainValue = edlistMain[0]" ng-hide="true"/>
+                                        </strong>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="edlist in edlistMain | filter : searchText | orderBy : orderType" ng-class="{ 'active': edlist.$edit, 'background-hover':$index == selectedRow  }" ng-init="edlist.$editval=true;" ng-hide="edlist.hideRows" selectedrow="{{edlist}}" ng-dblclick="entityDetailCtrl.dblClickAction(edlist);"
+                            ng-click="setClickedRow($index);" ng-repeat-end>
+
+                            <td style="cursor:pointer;" table-name="entity_details_list" ng-repeat="c in edcols" sortable="{{c.sortable}}" ng-class="{{c.class}}" view-value="{{c.view_value}}" alt-title="{{c.alt_title}}">
+                                <div ng-if="c.field == 'Edit'" class="text-center">
+                                    <ul class="actions actions-sm" ng-if="!entityDetailCtrl.$edit">
+                                        <a href="" ng-click="entityDetailCtrl.$edit=true;seteditoption(1);">
+                                            <i class="zmdi zmdi-edit" ng-style="styleClasseditIcon"></i>
+                                        </a>
+                                    </ul>
+                                    <!-- show on edit -->
+                                    <button type="button" class="btn btn-success" ng-if="edlist.$edit" ng-click="update_entity_details(edlist);"><i class="zmdi zmdi-check"></i>
+                                </button>
+                                    <button type="button" class="btn btn-cancel" ng-if="edlist.$edit" ng-click="edlist.$edit=false;reload();"><i class="zmdi zmdi-close"></i>
+                                </button>
+                                </div>
+                                <div ng-if="c.field == 'Delete'" class="text-center">
+                                    <ul class="actions actions-sm">
+                                        <li>
+                                            <a href="" ng-click="delete_entity_details(edlist)">
+                                                <i class="zmdi zmdi-delete zmdi-hc-fw" ng-style="styleClass"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div ng-if="c.ui_component =='text'">
+                                    <span>{{edlist[c.field] }}</span>
+                                </div>
+                                <div ng-if="c.ui_component =='input-text'">
+                                    <span ng-if="!edlist.$edit || !c.edit">{{ edlist[c.field] }}</span>
+                                    <div ng-if="edlist.$edit && c.edit">
+                                        <input class="form-control" type="text" placeholder="{{edlist[c.title]}}" ng-model="edlist[c.field]" required errorvalue="edlist[c.error]" />
+                                    </div>
+                                </div>
+                                <div ng-if="c.ui_component == 'options' && c.field == 'micro_service_name'">
+                                    <span ng-if="!edlist.$edit || !c.edit">{{ edlist[c.view_value] }}</span>
+                                    <div ng-if="edlist.$edit && c.edit">
+                                        <select class="select-component form-control" ng-options="{{c.options}}" ng-model="edlist[c.field]" errorvaluechosen="edlist[c.error]" ng-init="entityDetailCtrl.loadMicroServiceViews(edlist)" ng-change="entityDetailCtrl.loadMicroServiceViews(edlist)">
+                                            <option value="" disabled>Select Option</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div ng-if="c.ui_component == 'options' && c.field !=='view_name' && c.field !== 'micro_service_name'">
+                                    <span ng-if="!edlist.$edit || !c.edit">{{ edlist[c.view_value] }}</span>
+                                    <div ng-if="edlist.$edit && c.edit">
+                                        <select class="select-component form-control" ng-options="{{c.options}}" ng-model="edlist[c.field]" errorvaluechosen="edlist[c.error]">
+                                            <option value="" disabled>Select Option</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div ng-if="c.ui_component == 'options' && c.field =='view_name'">
+                                    <span ng-if="!edlist.$edit || !c.edit">{{ edlist[c.view_value] }}</span>
+                                    <div ng-if="edlist.$edit && c.edit">
+                                        <select class="select-component form-control" ng-options="{{c.options}}" ng-model="edlist[c.field]" errorvaluechosen="edlist[c.error]" ng-change="entityDetailCtrl.loadRespectiveEntityColumns(edlist)">
+                                            <option value="" disabled>Select Option</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div ng-if="c.field == 'rules'" class="iconcolumnWidth text-center">
+                                    <a class="icon-arrow-down" style="cursor: pointer;" ng-click="entityDetailCtrl.showRules(edlist.model_name,edlist.micro_service_name)">
+                                        <i class="glyphicon glyphicon-eye-open"></i>
+                                    </a>
+                                </div>
+                        </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="rightsidebar" class="c-overflow" data-ng-class="{'toggled':entityDetailCtrl.isShowDetails === true || entityDetailCtrl.isShowDetails === 1,'changehistorytoggle':showhistory === true}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="entityDetailCtrl.closeForm();closeShowHistory()" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" ng-if="(!entityDetailCtrl.isDeleteSuccess && !entityDetailCtrl.isConfirmDelete && entityDetailCtrl.isShowAdd)" title="{{entityDetailCtrl.entityInformation.name}}">Create <strong>{{entityDetailCtrl.entityInformation.name | truncate :16}}</strong></label>
+                <label class="rclabel editformlabel" ng-if="(!entityDetailCtrl.isDeleteSuccess && !entityDetailCtrl.isConfirmDelete && !entityDetailCtrl.isShowAdd)" title="{{entityDetailCtrl.entityInformation.name}}">Update <strong>{{entityDetailCtrl.entityInformation.name | truncate :16}}</strong></label>
+                <label class="rclabel editformlabel" ng-if="(entityDetailCtrl.isDeleteSuccess || entityDetailCtrl.isConfirmDelete && !entityDetailCtrl.isShowAdd)" title="{{entityDetailCtrl.entityInformation.name}}">Delete <strong>{{entityDetailCtrl.entityInformation.name | truncate :16}}</strong></label>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div ng-if="!(entityDetailCtrl.isUpdateSuccess || entityDetailCtrl.isSaveSuccess || entityDetailCtrl.isConfirmDelete || entityDetailCtrl.isDeleteSuccess)">
+                <div data-ng-include="'./application/modules/entity/entity_svg.html'"></div>
+            </div>
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(entityDetailCtrl.isUpdateSuccess || entityDetailCtrl.isSaveSuccess || entityDetailCtrl.isConfirmDelete || entityDetailCtrl.isDeleteSuccess)">
+                    <ng-form role="form" novalidate="novalidate" name="entityDetailCtrl.entity_details_form" valdr-type="ENTITY_DETAILS">
+                        <div class="form-group" valdr-form-group>
+                            <span style="color:red;" ng-show="entityDetailCtrl.entity_details_form.entity.$invalid">* </span>
+                            <span style="color:green;" ng-show="entityDetailCtrl.entity_details_form.entity.$valid">* </span>
+                            <label>Entity</label>
+                            <select id="pref_entity" name="pref_entity" class="form-control select-component input-sm" ng-model="entityDetailCtrl.ed_details.entity" ng-options="en.id as en.entity for en in entityDetailCtrl.entitiesList" errorvaluechosen="entityDetailCtrl.ed_details.entity_error"
+                                required="" auto-focus ><option value="" disabled>Select Entity</option>       
+                                    </select>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <div>
+                                <label>Has Model Yes or No?</label>
+                            </div>
+                            <div class="btn-group colors">
+                                <label class="btn rcp-select-btn" ng-class="{'active':entityDetailCtrl.ed_details.has_model=='1'}">
+                                  <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                                    <input ng-model="entityDetailCtrl.ed_details.has_model" type="radio" value="1" ng-change="entityDetailCtrl.ed_details.has_model=1;"  style="display:none;"> Yes
+                                </label>
+                                <label class="btn rcp-select-btn" ng-class="{'active':entityDetailCtrl.ed_details.has_model=='0'}">
+                                    <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                                        <input ng-model="entityDetailCtrl.ed_details.has_model" type="radio" value="0" ng-change="entityDetailCtrl.ed_details.has_model=0;"  style="display:none;"> NO
+                                </label>
+                            </div>
+                        </div>
+                        <div ng-if="entityDetailCtrl.ed_details.has_model">
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;" ng-show="entityDetailCtrl.entity_details_form.micro_service_name.$invalid">* </span>
+                                <span style="color:green;" ng-show="entityDetailCtrl.entity_details_form.micro_service_name.$valid">* </span>
+                                <label>Micro Service Name</label>
+                                <select name="micro_service_name" class="form-control select-component input-sm" ng-model="entityDetailCtrl.ed_details.micro_service_name" ng-options="opt.value as opt.label for opt in microservicenames" errorvaluechosen="entityDetailCtrl.ed_details.table_name_error"
+                                    required="" ng-change="entityDetailCtrl.loadMicroServiceViews(entityDetailCtrl.ed_details)">
+                                        <option value="" disabled>Select Micro Service Name</option>
+                                        </select>
+                            </div>
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;" ng-show="entityDetailCtrl.entity_details_form.view_name.$invalid">* </span>
+                                <span style="color:green;" ng-show="entityDetailCtrl.entity_details_form.view_name.$valid">* </span>
+                                <label>View Name</label>
+                                <select name="view_name" class="form-control select-component input-sm" ng-model="entityDetailCtrl.ed_details.view_name" ng-options="en.TABLE_NAME as en.TABLE_NAME for en in microServiceViews" errorvaluechosen="entityDetailCtrl.ed_details.view_name_error"
+                                    required="" ng-change="entityDetailCtrl.loadRespectiveEntityColumns(entityDetailCtrl.ed_details)">
+                                        <option value="" disabled>Select View Name</option>
+                                        </select>
+                            </div>
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;" ng-show="entityDetailCtrl.entity_details_form.default_sort_type.$invalid">* </span>
+                                <span style="color:green;" ng-show="entityDetailCtrl.entity_details_form.default_sort_type.$valid">* </span>
+                                <label>Sort Type</label>
+                                <select name="default_sort_type" class="form-control select-component input-sm" ng-model="entityDetailCtrl.ed_details.default_sort_type" errorvaluechosen="entityDetailCtrl.ed_details.default_sort_type_error" required="">
+                                            <option value="" disabled>Select Sort Type</option>
+                                            <option value="asc">Asc</option>
+                                            <option value="desc">Desc</option>
+                                        </select>
+                            </div>
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;" ng-show="entityDetailCtrl.entity_details_form.default_sort_field.$invalid">* </span>
+                                <span style="color:green;" ng-show="entityDetailCtrl.entity_details_form.default_sort_field.$valid">* </span>
+                                <label>Sort Field</label>
+                                <select name="default_sort_field" class="form-control select-component input-sm" ng-model="entityDetailCtrl.ed_details.default_sort_field" ng-options="cn.column_name as cn.column_name for cn in fields" errorvaluechosen="entityDetailCtrl.ed_details.default_sort_field_error"
+                                    required=""><option value="" disabled>Select Sort Field</option>
+                                        <option value="NONE"></option>
+                                        </select>
+                            </div>
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;" ng-show="entityDetailCtrl.entity_details_form.default_group_field.$invalid">* </span>
+                                <span style="color:green;" ng-show="entityDetailCtrl.entity_details_form.default_group_field.$valid">* </span>
+                                <label>Group Field</label>
+                                <select name="default_group_field" class="form-control select-component input-sm" ng-model="entityDetailCtrl.ed_details.default_group_field" ng-options="cn.column_name as cn.column_name for cn in fields" errorvaluechosen="entityDetailCtrl.ed_details.default_group_field_error"
+                                    required=""><option value="" disabled>Select Group Field</option>                     
+                                        </select>
+                            </div>
+                        </div>
+                        <rcp-edit-form-btns new-form="entityDetailCtrl.isShowAdd" save-fn="entityDetailCtrl.save(entityDetailCtrl.ed_details);" save-btn-text="entityDetailCtrl.saveBtnText" save-btn-error="entityDetailCtrl.saveBtnError" update-fn="entityDetailCtrl.update(entityDetailCtrl.ed_details);"
+                            update-btn-text="entityDetailCtrl.updateBtnText" update-btn-error="entityDetailCtrl.updateBtnError" confirm-fn="entityDetailCtrl.showconfirm();closeShowHistory();" confirm-delete="entityDetailCtrl.isConfirmDelete" update-success="entityDetailCtrl.isUpdateSuccess"
+                            entity-id="entityDetailCtrl.ed_details.id" enable-button="entityDetailCtrl.entity_details_form.$invalid"></rcp-edit-form-btns>
+                    </ng-form>
+                </div>
+                <rcp-delete-form data-ng-if="entityDetailCtrl.isConfirmDelete" image-name="entity/entity_svg.html" close-fn="entityDetailCtrl.closeForm(); " delete-fn="entityDetailCtrl.delete(entityDetailCtrl.ed_details);" confirm-delete="entityDetailCtrl.isConfirmDelete"></rcp-delete-form>
+                <rcp-success-form success-tick="success_tick.svg" create-new-fn="entityDetailCtrl.createAnotherForm();" close-fn="entityDetailCtrl.closeForm();" update-success="entityDetailCtrl.isUpdateSuccess" save-success="entityDetailCtrl.isSaveSuccess" delete-success="entityDetailCtrl.isDeleteSuccess">
+                </rcp-success-form>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-if="!entityDetailCtrl.isShowAdd && entityDetailCtrl.isShowHistory" data-ng-include="'./application/templates/history.html'"></div>
+    </div>
+    <div class="col-sm-6" ng-if="entityDetailCtrl.isShowValidations && !entityDetailCtrl.isShowDetails" style="margin-top:50px;">
+        <div class="card listview lv-bordered lv-lg">
+            <div class="lv-header-alt clearfix" style="cursor:pointer;">
+                <a href="" style="padding-top:9px;" class="lvh-label pull-right" ng-click="entityDetailCtrl.isShowValidations=false">
+                    <b><i class="zmdi zmdi-close c-red plusbtn c-red f-700"></i></b>
+                </a>
+                <h4 class="c-blue f-700">{{entityDetailCtrl.entityname}} Model </h4>
+                <pre pretty-json="model" edition="true" on-edit="doWith(newJson)"></pre>
+            </div>
+        </div>
+    </div>
+</div>

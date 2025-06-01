@@ -1,0 +1,56 @@
+<div id="rcrightsidebar" class="toggled">
+    <div class="m-t-25 d-flex">
+        <div class="p-0 cursor-pointer p-absolute" data-ui-sref="common.prime.mtooptions">
+            <a>
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="p-0 m-auto">
+            <label class="rclabel editformlabel" title="Filter MTO Options">Filter
+                    <strong>MTO Options</strong> 
+                </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-t-10 m-b-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/filters.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <ng-form name="mtoMaintCtrl.mto_filter_from" role="form" novalidate="novalidate">                
+                <div class="form-group">
+                    <label>Option Type</label>
+                    <multiselect class="" ng-model="mtoMaintCtrl.filters.optionTypeIds" options="type.id as type.short_description for type in mtoMaintCtrl.allMTOTypes" select-limit="100" header="Select Type" selected-header="options selected" multiple="true" required enable-filter="true" filter-placeholder="Quick Search" ng-class="{'highlight-filter':mtoMaintCtrl.filters.optionTypeIds.length>0}">
+                </div>
+                <div class="form-group">
+                    <label>Vendor</label>
+                    <multiselect class="" ng-model="mtoMaintCtrl.filters.vendorIds" options="each.id as each.name for each in mtoMaintCtrl.allVendors" select-limit="100" header="Select Type" selected-header="options selected" multiple="true" required enable-filter="true" filter-placeholder="Quick Search" ng-class="{'highlight-filter':mtoMaintCtrl.filters.vendorIds.length>0}">
+                </div>           
+                <div class="form-group">
+                    <label>Current Status</label>
+                    <multiselect class="" ng-model="mtoMaintCtrl.filters.currentStatusIds" options="status.code as status.description for status in statuses" select-limit="100" header="Select Current Status" selected-header="options selected" multiple="true" required enable-filter="true"
+                        filter-placeholder="Quick Search" ng-class="{'highlight-filter':mtoMaintCtrl.filters.currentStatusIds.length>0}">
+                </div>                             
+                <div class="form-group">
+                    <button type="button" class="btn-block btn-primal btn-lg" id="filter_mto_btn" ng-click="mtoMaintCtrl.applyFilters();">
+                            <strong>{{mtoMaintCtrl.applyFiltersBtnLabel}}</strong>
+                        </button>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn-block btn-secondary btn-lg" id="mto_filter_reset_btn" ng-click="mtoMaintCtrl.resetFilters();">
+                            <strong>Reset Filters</strong>
+                        </button>
+                </div>
+            </ng-form>
+        </div>
+        <div class="col-xs-12 p-0">
+            <div data-ng-if="mtoMaintCtrl.message" class="alert alert-success">
+                <button type="button" class="close" data-ng-click="mtoMaintCtrl.message = null" aria-hidden="true">&times;</button> {{mtoMaintCtrl.message}}
+            </div>        
+            <div data-ng-if="mtoMaintCtrl.errorMessage" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="mtoMaintCtrl.errorMessage = null" aria-hidden="true">&times;</button> {{mtoMaintCtrl.errorMessage}}
+            </div>
+        </div>        
+    </div>    
+</div>

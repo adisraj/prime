@@ -1,0 +1,30 @@
+<!--<div class="col-lg-12 p-r-5">-->
+
+<div class="col-lg-12 col-md-12 p-0 table-header-section">
+    <div class="p-l-0 col-lg-2 col-md-2 col-sm-12 col-xs-12 p-0 tableheader-btn p-t-5">
+        <span>{{rcpTable.data.length}} of {{rcpTable.total()}} Records found</span>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <input class="form-control input-sm " type="text " ng-model="searchresult.term " indicate-quick-search placeholder="Quick Search "/>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div ng-if="rcpTable.data.length > 0" class="m-t-0">
+            <div class="col-lg-10 col-md-8 col-sm-9 col-xs-10 p-0 m-t-0">
+                <select class="form-control select-component input-sm" ng-model="returnValue" ng-change="collapsesettings(returnValue);" ng-options="each.prefix as each.name for each in rcpGroupByDropdownList">
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-2 p-0 m-t-0" style="display:flex; justify-content:center;">
+                <a ng-click="uncollapseAll();" ng-show="returnValue">&nbsp <i class="zmdi zmdi-unfold-more zmdi-hc-2x"></i></a>
+                <a ng-click="collapseAll();" ng-show="returnValue"> &nbsp <i class="zmdi zmdi-unfold-less zmdi-hc-2x"></i> &nbsp</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-6 col-xs-12 tableheader-btn">
+        <div hide-show-columns hide-show-input="columns" access-permission-input="{{accessRulesForEntity}}" cols-local-storage-name="rcpTableName" image-name="{{svgImageUrl}}"></div>
+    </div>
+    <div class="col-lg-1 col-md-2 col-sm-6 col-xs-12 tableheader-btn">
+
+        <button type="button" ng-click="reloadFn();" class="btn-primal btn-block  waves-effect"><span class="f-700 ng-binding">Refresh</span></button>
+    </div>
+</div>
+<!--</div>-->

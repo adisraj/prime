@@ -1,0 +1,1110 @@
+<style>
+    button[disabled] {
+        opacity: 0.7;
+    }
+
+    .item-sku-list-insight-container {
+        height: auto;
+        max-height: calc(150px - 30px);
+        overflow: auto;
+    }
+
+    .status-legend {
+        height: 100%;
+        width: 4px;
+        margin-right: 5px;
+        position: absolute;
+        top: 0%;
+        left: 0px;
+    }
+
+    .status-legend.status-active {
+        background: #6abe6d;
+    }
+
+    .status-legend.status-inactive {
+        background: #2196f3;
+    }
+
+    .status-legend.status-pending-active {
+        background: rgb(255, 206, 139);
+    }
+
+    .status-legend.status-pending-inactive {
+        background: #31708f;
+    }
+
+    .availability-sku-list {
+        box-shadow: 2px 3px 10px -3px #ababab !important;
+    }
+
+    .availability-sku-list:after {
+        content: "" !important;
+        position: absolute !important;
+        bottom: -8px !important;
+        right: 50% !important;
+        filter: drop-shadow(0px -3px 0px #dfdfdf) !important;
+        border-top: 7px solid #000000 !important;
+        border-left: 7px solid transparent !important;
+        border-right: 7px solid transparent !important;
+    }
+
+    .content-section .dropup .dropdown-menu {
+        left: -200px;
+    }
+
+    .workbench-container:not(:last-child) {
+        border-bottom: 1px solid #ececec;
+    }
+
+    .item-advance-search multiselect .btn-group button.btn.btn-default.dropdown-toggle.waves-effect:focus {
+        border-left: 3px solid #f9c10c !important;
+        background: white!important;
+        outline: none!important;
+        margin-left: -3px;
+    }
+</style>
+<div class="container col-lg-12 p-0 p-b-30" data-ng-controller="ItemMaintenanceController as itemMaintCtrl" data-auto-scroll>
+    <div ui-view>
+        <div data-ng-init="itemMaintCtrl.setInitialHeight();">
+            <!-- Section to show the module header section -->
+            <div class="col-lg-12 p-0 rc-module-header-wrapper" style="height: auto;">
+                <div class="rc-module-header" style="height: auto;">
+                    <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+                        <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                            <div class="p-relative">
+                                <div class="image-module p-absolute top-10">
+                                    <img src="./img/sidebar-icons/entity-config-item.svg" />
+                                </div>
+                                <div class="label-module top-10">
+                                    <a class="p-l-40" href="javascript:void(0)">Items</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex" style="flex: 5;" data-ng-if="itemMaintCtrl.itemPermissions.view">
+                            <div class="d-flex d-flex-v-center p-l-20">
+                                <span data-ng-show="!itemMaintCtrl.groupByField" class="f-12">Loaded
+                                    <i class="zmdi zmdi-hourglass-alt" ng-if="!itemMaintCtrl.itemsDataList.length && itemMaintCtrl.itemsDataList.length != 0"></i>{{itemMaintCtrl.itemsDataList.length}} of
+                                    <i class="zmdi zmdi-hourglass-alt" ng-if="!itemMaintCtrl.totalRecordCount && itemMaintCtrl.totalRecordCount != 0"></i>{{itemMaintCtrl.totalRecordCount}} Records
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex p-0" data-ng-if="itemMaintCtrl.isFilterApplied && itemMaintCtrl.appliedFilterCount">
+                            <button type="button" id="filter_applied" name="filter_applied" class="hidden-sm visible-md visible-lg bg-none border-none"
+                                data-toggle="collapse" data-target="#advanced-search" data-ng-disabled="(
+                                    (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                    (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader)
+                                )" data-ng-click="itemMaintCtrl.openAdvancedSearchPanel(true); itemMaintCtrl.focusAdvanceSearch();">
+                                <span class="c-red m-t-10">
+                                    <i class="fa fa-filter p-r-5"></i>{{itemMaintCtrl.appliedFilterCount}} Filter(s) Applied
+                                </span>
+                            </button>
+                            <button type="button" class="hidden-lg hidden-md visible-sm bg-none border-none" data-toggle="collapse" data-target="#advanced-search"
+                                data-ng-disabled="(
+                                    (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                    (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader)
+                                )" data-ng-click="itemMaintCtrl.openAdvancedSearchPanel(true); itemMaintCtrl.focusAdvanceSearch();">
+                                <span class="c-red m-t-10">
+                                    <i class="fa fa-filter p-r-5"></i>{{itemMaintCtrl.appliedFilterCount}}
+                                </span>
+                            </button>
+                            <button type="button" id="reset_btn" name="reset_btn" class="hidden-sm bg-none border-none" data-ng-click="itemMaintCtrl.resetFilters();"
+                                data-ng-disabled="(
+                                    (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                    (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader)
+                                )">
+                                <span class="text-primary m-t-10 m-l-10">
+                                    <i class="fa fa-undo f-12 p-r-5" aria-hidden="true"></i>Reset Filters
+                                </span>
+                            </button>
+                        </div>
+                        <div class="d-flex">
+                            <div id="navbar" class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li ng-if="itemMaintCtrl.itemsDataList.length > 0 && itemMaintCtrl.itemPermissions.view">
+                                        <a class="d-flex">
+                                            <div class="group-by-section tableheader-btn" ng-init="itemMaintCtrl.sortBy = itemMaintCtrl.sortByField !== 'none' ? itemMaintCtrl.sortByField : sortableFields[0].value"
+                                                style="width: 180px;">
+                                                <select class="form-control select-component input-sm" id="inlineSearch" name="inlineSearch" data-ng-init="itemMaintCtrl.focusSearchField();"
+                                                    ng-options="each.value as each.field for each in sortableFields" ng-model="itemMaintCtrl.sortBy"
+                                                    ng-change="itemMaintCtrl.sortByField=itemMaintCtrl.sortBy;itemMaintCtrl.sortByOrder='asc'; itemMaintCtrl.isGroupByApplied ? itemMaintCtrl.groupByData(itemMaintCtrl.groupByField) : itemMaintCtrl.reload();itemMaintCtrl.scrollToPosition(0, 0);"
+                                                    data-ng-disabled="(
+                                                        (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                                        (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader)
+                                                    )">
+                                                </select>
+                                            </div>
+                                            <div class="tableheader-btn" ng-if="itemMaintCtrl.sortByOrder==='desc' && itemMaintCtrl.sortBy !== '' && itemMaintCtrl.isLoaded"
+                                                data-ng-click="itemMaintCtrl.sortByField = itemMaintCtrl.sortByField;itemMaintCtrl.sortByOrder='asc'; itemMaintCtrl.isGroupByApplied ? itemMaintCtrl.groupByData(itemMaintCtrl.groupByField) : itemMaintCtrl.reload();itemMaintCtrl.scrollToPosition(0, 0);">
+                                                <span>
+                                                    <i class="m-t-5 zmdi zmdi-long-arrow-up zmdi-hc-fw f-700 f-20" style="color: firebrick;"></i>
+                                                </span>
+                                            </div>
+                                            <div class="tableheader-btn" ng-if="itemMaintCtrl.sortByOrder==='asc' && itemMaintCtrl.sortBy !== '' && itemMaintCtrl.isLoaded"
+                                                data-ng-click="itemMaintCtrl.sortByField=itemMaintCtrl.sortByField;itemMaintCtrl.sortByOrder='desc';itemMaintCtrl.isGroupByApplied ? itemMaintCtrl.groupByData(itemMaintCtrl.groupByField) : itemMaintCtrl.reload();itemMaintCtrl.scrollToPosition(0, 0);">
+                                                <span>
+                                                    <i class="m-t-5 zmdi zmdi-long-arrow-down zmdi-hc-fw f-700 f-20" style="color: firebrick;"></i>
+                                                </span>
+                                            </div>
+                                            <!-- ng-if consists condition for recordsCount is true - couse, when recordsCount is false there is another loading symbol -->
+                                            <span class="cursor-not-allowed" ng-if="!itemMaintCtrl.isLoaded && itemMaintCtrl.recordsCount">
+                                                <img src="./img/loading-circle.gif" style="height: 30px;width: 30px;" />
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li ng-if="itemMaintCtrl.itemsDataList.length > 0 && itemMaintCtrl.itemPermissions.view">
+                                        <a>
+                                            <div class="group-by-section tableheader-btn">
+                                                <select class="form-control select-component input-sm" ng-model="itemMaintCtrl.groupByField" ng-change="itemMaintCtrl.groupByData(itemMaintCtrl.groupByField);"
+                                                    data-ng-disabled="(
+                                                        (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                                        (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader)
+                                                    )" ng-options="each.prefix as each.name for each in itmGroupByDropdown|filter:{prefix:'!description'}|filter:{prefix:'!next_effective_date'}|filter:{prefix:'!status_effective_date'}">
+                                                </select>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="non-collapsed-link" data-ng-if="itemMaintCtrl.itemPermissions.view">
+                                        <a>
+                                            <button class="btn search-box-advanced-btn btn-sm" title="Search will be performed at the server." data-toggle="collapse"
+                                                data-target="#advanced-search" data-ng-disabled="(
+                                                    (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                                    (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader) ||
+                                                    !itemMaintCtrl.productAssortments.length
+                                                )" data-ng-click="itemMaintCtrl.openAdvancedSearchPanel(true);itemMaintCtrl.focusAdvanceSearch();">
+                                                Search
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="non-collapsed-link" data-ng-if="itemMaintCtrl.itemPermissions.view">
+                                        <a>
+                                            <button type="button" data-ng-click="itemMaintCtrl.reloadItemCountAndList(true)" data-ng-disabled="(
+                                                    (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                                    (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader)
+                                                )" class="btn-primal btn-block waves-effect">
+                                                <span class="f-700 ng-binding">Refresh</span>
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="m-r-10 non-collapsed-link">
+                                        <a>
+                                            <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="itemMaintCtrl.showItemSelectionModal();"
+                                                data-ng-disabled="itemMaintCtrl.disableActions || !itemMaintCtrl.itemPermissions.create">
+                                                <span title="{{!itemMaintCtrl.itemPermissions.create ? 'Access denied' : ''}}">Create Item
+                                                </span>
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="dropdown collapsed-link" uib-dropdown>
+                                        <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                            <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dm-icon pull-right">
+                                            <li class="cursor-pointer">
+                                                <button type="button" href="" style="padding: 8px 20px" class="restricted-btn" data-ng-click="itemMaintCtrl.showItemSelectionModal();"
+                                                    data-ng-disabled="itemMaintCtrl.disableActions || !itemMaintCtrl.itemPermissions.create"
+                                                    title="{{!itemMaintCtrl.itemPermissions.create ? 'Access denied' : ''}}"
+                                                    data-ng-class="{'opacity50' : !itemMaintCtrl.itemPermissions.create}">
+                                                    <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i>
+                                                    Create Item
+                                                    </a>
+                                            </li>
+                                            <li class="cursor-pointer" data-ng-if="itemMaintCtrl.itemPermissions.view">
+                                                <button type="button" href="" data-ng-click="itemMaintCtrl.reloadItemCountAndList(true)" data-ng-disabled="(
+                                                        (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                                        (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader)
+                                                    )" style="padding: 8px 20px" class="restricted-btn">
+                                                    <i class="zmdi zmdi-refresh text-warning f-17 m-r-15"></i> Refresh</a>
+                                            </li>
+                                            <li class="cursor-pointer" data-ng-if="itemMaintCtrl.itemPermissions.view">
+                                                <button type="button" style="padding: 8px 20px" class="restricted-btn" data-toggle="collapse" data-target="#advanced-search"
+                                                    data-ng-disabled="(
+                                                        (!itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isLoaded) ||
+                                                        (itemMaintCtrl.isGroupByApplied && !itemMaintCtrl.isGroupHeader) ||
+                                                        !itemMaintCtrl.productAssortments.length
+                                                    )" data-ng-click="itemMaintCtrl.openAdvancedSearchPanel(true);itemMaintCtrl.focusAdvanceSearch();">
+                                                    <i class="zmdi zmdi-search f-17 m-r-15"></i> Search</button>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Advanced search panel start -->
+                    <div class="col-xs-12 collapse" style="height: auto;" id="advanced-search">
+                        <div class="col-xs-12 p-0" style="height: auto;">
+                            <div class="col-xs-12 p-0 filter-search-body p-10">
+                                <div class="col-xs-12 filter-search-header">
+                                    <span>Advanced Search</span>
+                                    <span class="zmdi zmdi-close c-white cursor-pointer f-19 pull-right p-r-5" data-ng-click="itemMaintCtrl.openAdvancedSearchPanel(true);"></span>
+                                </div>
+                                <div class="col-xs-12 filter-search-content">
+                                    <ng-form class="item-advance-search" name="itemMaintCtrl.item_filter_from" role="form" novalidate="novalidate">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <div class="form-group" valdr-form-group>
+                                                    <input type="text" name="description" id="description_search" class="form-control input-sm" ng-model="itemMaintCtrl.filters.description"
+                                                        placeholder="Description" ng-keyup="$event.keyCode == 13 ? itemMaintCtrl.applyFilters():null"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="form-group">
+                                                <i class="fa fa-info-circle" title="To view damaged/suffixed SKUs use the 'Include damaged/suffixed SKUs'. Enter only the original SKU number in this field!" aria-hidden="true"></i>
+                                                <label>SKU #</label>
+                                                 <div class="form-group" valdr-form-group>
+                                                    <input type="text" id="sku_number_search" class="form-control input-sm" ng-model="itemMaintCtrl.filters.sku_number" placeholder="SKU Number" ng-change="enableDamagedcheck()"
+                                                        ng-keyup="$event.keyCode == 13 ? itemMaintCtrl.applyFilters():null" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="form-group">
+                                                <label>Include damaged/suffixed SKUs</label>
+                                                <select class="form-control select-component input-sm" id="selectdamagechk" name="selectdamagechk"
+                                                    ng-options="each.value as each.field for each in damagefields" ng-model="itemMaintCtrl.filters.selectedsku"
+                                                    data-ng-disabled="!enableDamagechk" style="background-size: 8px;color: grey;">
+                                                    <option value="" disabled>Select Option</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" ng-if="itemMaintCtrl.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Vendor</label>
+                                                <multiselect id="vendor_id" ng-model="itemMaintCtrl.filters.vendorIds" class="tabfocus" options="vendor.id as (vendor.name + ' (' + vendor.VendorType + ')') for vendor in itemMaintCtrl.allVendors"
+                                                    select-limit="100" header="Select Vendor" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-change="itemMaintCtrl.loadCollectionsForMultipleVendors()" ng-class="{'highlight-filter':itemMaintCtrl.filters.vendorIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12" ng-if="itemMaintCtrl.isResetFilter===false" ng-init="itemMaintCtrl.fetchCollections()">
+                                            <div class="form-group">
+                                                <label>Collection</label>
+                                                <multiselect class="tabfocus" ng-model="itemMaintCtrl.filters.collectionIds" options="each.id as each.short_description for each in itemMaintCtrl.itemCollections"
+                                                    select-limit="100" header="Select Collection" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':itemMaintCtrl.filters.collectionIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12" data-ng-init="itemMaintCtrl.isPrimaryHierarchySearch()">
+                                            <div class="form-group" ng-if="itemMaintCtrl.showFilter&&itemMaintCtrl.isPrimaryHierarchyLoaded && itemMaintCtrl.reloadHierarchy">
+                                                <label>{{itemConfig.primary_item_hierarchy_desc}}</label>
+                                                <hierarchy-tree-view primary-hierarchy-id="itemConfig.primary_item_hierarchy_id" path="primary_item_hierarchy_value_path"
+                                                    primary-hierarchy-value-id="primary_item_hierarchy_value_id" directive-end-fn='end(directiveData)'
+                                                    enable-valdr-validation enable-valdr-message form-data="head" tree-view-fn="itemMaintCtrl.toggleTreeViewPanel(flagData)"
+                                                    form-header="{{itemConfig.primary_item_hierarchy_desc}}" clear-path="itemMaintCtrl.clearPath"></hierarchy-tree-view>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" ng-if="itemMaintCtrl.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Current Status</label>
+                                                <multiselect class="tabfocus" ng-model="itemMaintCtrl.filters.currentStatusIds" options="status.code as status.description for status in statuses"
+                                                    select-limit="100" header="Select Current Status" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':itemMaintCtrl.filters.currentStatusIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" ng-if="itemMaintCtrl.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Next Status</label>
+                                                <multiselect class="tabfocus" ng-model="itemMaintCtrl.filters.nextStatusIds" options="status.code as status.description for status in next_statuses"
+                                                    select-limit="100" header="Select Next Status" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':itemMaintCtrl.filters.nextStatusIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-xs-12">
+                                            <div class="form-group">
+                                                <label>Vendor Item Number</label>
+                                                <input type="text" name="vendor_item_number" id="vendor_item_number_search" class="form-control input-sm" data-ng-change="itemMaintCtrl.filters.isVendorItemNumberBlurred=false"
+                                                    ng-model="itemMaintCtrl.filters.vendorItemNumber" placeholder="Vendor Item Number"
+                                                    data-ng-blur="itemMaintCtrl.filters.isVendorItemNumberBlurred=true;" ng-keyup="$event.keyCode == 13 ? itemMaintCtrl.applyFilters() : null"
+                                                />
+                                            </div>
+                                            <span data-ng-if="itemMaintCtrl.filters.isVendorItemNumberBlurred&&itemMaintCtrl.filters.vendorItemNumber&&itemMaintCtrl.filters.vendorItemNumber.length&&itemMaintCtrl.filters.vendorItemNumber.length < 3"
+                                                class="text-danger">
+                                                Enter a minimum of 3 characters.
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-xs-12" ng-if="itemMaintCtrl.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Buyer</label>
+                                                <multiselect class="tabfocus" ng-model="itemMaintCtrl.filters.buyerIds" options="each.id as each.short_description for each in itemMaintCtrl.buyerValues"
+                                                    select-limit="100" header="Select Buyer" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':itemMaintCtrl.filters.buyerIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-xs-12" style1="height:40px;align-items:flex-end;">
+                                            <div class="m-b-5">
+                                                <label>Type</label>
+                                            </div>
+                                            <div class="checkbox form-group">
+                                                <div class="d-flex">
+                                                    <div>
+                                                        <label class="p-l-25">Item
+                                                            <input type="checkbox" ng-model="itemMaintCtrl.filters.itemSubType" ng-true-value="true" ng-false-value="undefined">
+                                                            <i class="input-helper"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <label class="p-l-25 m-l-10">Set
+                                                            <input type="checkbox" ng-model="itemMaintCtrl.filters.setSubType" ng-true-value="true" ng-false-value="undefined">
+                                                            <i class="input-helper"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-xs-12" style1="height:40px;align-items:flex-end;">
+                                            <div class="m-b-5">
+                                                <label>Show Errored Items</label>
+                                            </div>
+                                            <div class="checkbox form-group">
+                                                <div class="d-flex">
+                                                    <div>
+                                                        <label class="p-l-25">
+                                                            <input type="checkbox" ng-model="itemMaintCtrl.filters.has_error" ng-true-value="1" ng-false-value="0">
+                                                            <i class="input-helper"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-form>
+                                    <!-- SKU Product Assortment Segment START -->
+                                    <div class="col-xs-12 m-t-10 p-0" style1="max-height:100%;">
+                                        <div class="col-lg-12">
+                                            <div class="table-responsive">
+                                                <div>
+                                                    <table class="table table-hover table-vmiddle table-condensed table-bordered assortment-value">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    <span class="handle">Assortment</span>
+                                                                </th>
+                                                                <th class="text-center" ng-repeat="label in itemMaintCtrl.assortmentLabels">
+                                                                    <span class="handle">{{label.Field.replace('_'," ")}}
+                                                                    </span>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="productAssortment in itemMaintCtrl.productAssortments">
+                                                                <td>
+                                                                    {{productAssortment.short_description}}
+                                                                </td>
+                                                                <td class="text-center" ng-repeat="label in itemMaintCtrl.assortmentLabels">
+                                                                    <div class="checkbox rclabel col-xs-12">
+                                                                        <label>
+                                                                            <input hidden="hidden" ng-false-value="0" ng-model="item.assortmentValue" ng-true-value="1" type="checkbox" ng-change="itemMaintCtrl.applyAssortmentValueFilters(productAssortment.id,label.Field,item.assortmentValue)">
+                                                                            <i class="input-helper" data-ng-init="item.assortmentValue = itemMaintCtrl.checkAssortmentFilters(productAssortment.id, label.Field);"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- SKU Product Assortment Segment END -->
+                                    <!--Search Deleted Items/SKUs Started-->
+                                    <!-- <div class="col-xs-12"><span class="center-align">OR</span></div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 m-t-10">
+                                        <div class="form-group">
+                                            <label>Search Deleted SKU #</label>
+                                            <div class="form-group" valdr-form-group>
+                                                <input type="text" id="sku_number_search" class="form-control input-sm" ng-model="itemMaintCtrl.filters.deleted_sku_number" placeholder="SKU Number"
+                                                    ng-keyup="$event.keyCode == 13 ? itemMaintCtrl.applyFilters():null" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6 col-xs-12 m-t-10" style1="height:40px;align-items:flex-end;">
+                                        <div class="m-b-5">
+                                            <label>Show All Deleted Items</label>
+                                        </div>
+                                        <div class="checkbox form-group">
+                                            <div class="d-flex">
+                                                <div>
+                                                    <label class="p-l-25">
+                                                        <input type="checkbox" ng-model="itemMaintCtrl.filters.is_deleted" ng-true-value="1" ng-false-value="0">
+                                                        <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <!--Search Deleted Items/SKUs End-->
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-b-10">
+                                <div class="pull-left text-danger" data-ng-show="itemMaintCtrl.applyFilterSuccess === false">
+                                    {{itemMaintCtrl.applyFilterMessage}}</div>
+                                <div class="m-b-0 pull-left alert alert-success alert-dismissable p-b-5 p-t-5" data-ng-show="itemMaintCtrl.message && itemMaintCtrl.isFilterApplied">
+                                    <button type="button" class="close" data-ng-click="itemMaintCtrl.message = null" aria-hidden="true">&times;</button> {{itemMaintCtrl.message}}
+                                </div>
+                                <div class="m-b-0 pull-left alert alert-success alert-dismissable p-b-5 p-t-5" data-ng-show="itemMaintCtrl.resetMessage">
+                                    <button type="button" class="close" data-ng-click="itemMaintCtrl.resetMessage = null" aria-hidden="true">&times;</button> {{itemMaintCtrl.resetMessage}}
+                                </div>
+                                <div class="ipad-advance-search pull-right">
+                                    <span class="f-300 text-info m-r-5">[ You can expect some delay as the advanced search will be performed on the server side.
+                                        ]
+                                    </span>
+                                    <span class="c-red m-r-5" data-ng-if="itemMaintCtrl.isFilterApplied && itemMaintCtrl.appliedFilterCount">
+                                        <i class="fa fa-filter p-r-5"></i>{{itemMaintCtrl.appliedFilterCount}} Filter(s) Applied </span>
+                                    <span class="m-r-5" data-ng-if="!itemMaintCtrl.isFilterApplied || !itemMaintCtrl.appliedFilterCount">
+                                        <i class="fa fa-filter p-r-5"></i> Not applied</span>
+                                    <button type="button" class="btn-primary btn tabfocus-btn hidden-sm" id="filter_attribute_btn" ng-click="itemMaintCtrl.applyFilters();"
+                                        ng-model-options="{debounce:3000}" data-ng-disabled="itemMaintCtrl.isRefreshing || itemMaintCtrl.isProcessing || !itemMaintCtrl.isLoaded || (itemMaintCtrl.filters.vendorItemNumber&&itemMaintCtrl.filters.vendorItemNumber.length&&itemMaintCtrl.filters.vendorItemNumber.length < 3)">
+                                        <strong>{{itemMaintCtrl.applyFiltersBtnLabel}}</strong>
+                                    </button>
+                                    <button type="button" class="btn btn-cancel tabfocus-btn hidden-sm" id="vendor_filter_reset_btn" ng-click="itemMaintCtrl.resetFilters(-1);"
+                                        data-ng-disabled="itemMaintCtrl.isRefreshing || itemMaintCtrl.isProcessing || !itemMaintCtrl.isLoaded">
+                                        <strong>Reset Filters</strong>
+                                    </button>
+                                    <div class="hidden-lg hidden-md m-t-10">
+                                        <button type="button" class="btn-primary btn tabfocus-btn" id="filter_attribute_btn" ng-click="itemMaintCtrl.applyFilters();"
+                                            ng-model-options="{debounce:3000}" data-ng-disabled="itemMaintCtrl.isRefreshing || itemMaintCtrl.isProcessing || !itemMaintCtrl.isLoaded">
+                                            <strong>{{itemMaintCtrl.applyFiltersBtnLabel}}</strong>
+                                        </button>
+                                        <button type="button" class="btn btn-cancel tabfocus-btn" id="vendor_filter_reset_btn" ng-click="itemMaintCtrl.resetFilters(-1);"
+                                            data-ng-disabled="itemMaintCtrl.isRefreshing || itemMaintCtrl.isProcessing || !itemMaintCtrl.isLoaded">
+                                            <strong>Reset Filters</strong>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ./rc-module-header -->
+            <div class="col-lg-12 text-center module-content" data-ng-if="!itemMaintCtrl.recordsCount && !itemMaintCtrl.isLoaded">
+                <div class="m-t-20">
+                    <span class="f-17 f-700 c-black">Loading</span>
+                    <span class="f-700" style="letter-spacing: 3px;">....</span>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 module-content" data-ng-if="itemMaintCtrl.recordsCount && itemMaintCtrl.recordsCount !== 0">
+                <div class="col-xs-12 p-0" data-ng-if="itemMaintCtrl.itemPermissions.view">
+                    <div class="col-xs-12">
+                        <div class="col-xs-12" data-ng-if="itemMaintCtrl.disableActions">
+                            <span class="pull-right text-danger blinker">* Configuration status should be "Active" to create & maintain entities.</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 rcpscrollbar p-0 o-auto pageHeight m-t-10" data-ng-if="!itemMaintCtrl.groupByField">
+                        <div class="col-md-6 col-sm-12 col-xs-12 m-b-10" ng-repeat="item in itemMaintCtrl.itemsDataList track by $index" data-ng-init="item.isLoadingMaintainSku = undefined;item.toggleSKUInsight=false;item.isLoadingMaintainRetail = undefined;item.isLoadingHistory = undefined;item.isLoadingClone = undefined;item.isLoadingMetadata = undefined;">
+                            <div class="col-xs-12 p-0 m-0">
+                                <div class="d-flex update-process-overlay" data-ng-show="item.isShowUpdateProcessing">
+                                    <img class="m-auto" src="./img/loading.gif" alt="" style="width:100px;height:100px;">
+                                </div>
+                                <div ios-dblclick="itemMaintCtrl.UpdateItem(item);">
+                                    <div class="col-xs-12 main-card box p-0">
+                                        <div class="col-xs-12 header-section" ng-class="{'status-active f-500':item.status==='Active','status-pending-active f-300':item.status==='Pending Active', 'status-inactive f-300':item.status==='Inactive','status-pending-inactive f-300':item.status==='Pending Inactive',
+                                        'hightlight-activehistory':item.showhistory === true || item.id == $stateParams.id || item.isShowMetadata}">
+                                            <span class="text-overflow-desc-auto" title="{{item.description}}">
+                                                <span data-ng-if="item.item_sub_type === 'Set'">
+                                                    <img src="./img/sets-icon.png" alt="" style="height:20px;width:20px;" title="Item Set">
+                                                </span>
+                                                {{item.description}}
+                                            </span>
+                                            <div class="d-flex align-items-center pull-right">
+                                                <img class="p-r-5" data-ng-if="item.isLoadingHistory" src="./img/loader.gif" alt="Loading" height="25px" />
+                                                <img class="p-r-5" data-ng-if="item.isLoadingClone" src="./img/loader.gif" alt="Loading" height="25px" />
+                                                <img class="p-r-5" data-ng-if="item.isLoadingMetadata" src="./img/loader.gif" alt="Loading" height="25px" />
+                                                <button type="button" id="item_history" name="item_history" class="cursor-pointer m-r-5 restricted-btn p-0" data-ng-click="itemMaintCtrl.showHistoryDetails(item);">
+                                                    <span class="f-16 fa fa-history c-gray" title="History" title-direction="top-left" fixed-position="true"></span>
+                                                </button>
+                                                <button type="button" class="cursor-not-allowed clone-not-allowed m-r-5 restricted-btn p-0" data-ng-if="!itemMaintCtrl.isCloneAllowed"
+                                                    rc-popover popover-title="Cloning feature is disabled" popover-content="No access for clone. Enable access to clone Item."
+                                                    popover-trigger="hover" popover-placement="bottom">
+                                                    <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                </button>
+                                                <button type="button" class="cursor-not-allowed clone-not-allowed m-r-5 restricted-btn p-0" data-ng-if="itemMaintCtrl.isCloneAllowed && (item.description.includes('clone') || item.description.includes('Clone'))"
+                                                    rc-popover popover-title="Cloning is disabled for this Item" popover-content="Have same identity as the cloned parent Item, to enable cloning change any master properties of this entity."
+                                                    popover-trigger="hover" popover-placement="bottom">
+                                                    <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                </button>
+                                                <button type="button" class="restricted-btn p-0" id="clone_item" name="clone_item" data-ng-click="itemMaintCtrl.goToClonePanel(item)"
+                                                    data-ng-if="itemMaintCtrl.isCloneAllowed && !(item.description.includes('clone') || item.description.includes('Clone'))">
+                                                    <span class="zmdi zmdi-copy zmdi-hc-fw f-19" style="color: #6e6e6e;margin-right: 4px;" title="Clone" title-direction="top-left"
+                                                        fixed-position="true"></span>
+                                                </button>
+                                                <button type="button" class="restricted-btn p-0" id="meta_data" name="meta_data" ng-click="showMetaData(itemMaintCtrl.entityInformation,item, itemMaintCtrl.itemPermissions);"
+                                                    data-ng-disabled="!itemMaintCtrl.itemPermissions.drop">
+                                                    <span class="zmdi zmdi-cloud-outline zmdi-hc-fw f-19 c-gray" data-ng-if="itemMaintCtrl.itemPermissions.drop" title="Click here to manage documents"
+                                                        title-direction="top" fixed-position="true"></span>
+                                                    <span class="zmdi zmdi-cloud-off zmdi-hc-fw f-19 c-gray" data-ng-if="!itemMaintCtrl.itemPermissions.drop" title="Access denied"
+                                                        title-direction="top" fixed-position="true"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 content-section">
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-xs-3 p-0 d-flex">
+                                                    <img check-image class="img-responsive card-image m-auto cursor-pointer" data-ng-click="item.thumbnail?itemMaintCtrl.previewDatalake(item,'cover_image'):''"
+                                                        image-name="entity-config-item.svg" ng-src="{{item.thumbnail}}" />
+                                                </div>
+                                                <div class="col-xs-9 p-0 inheritheight" style="max-height:160px;">
+                                                    <div class="col-sm-7 col-xs-12 p-0 m-b-10">
+                                                        <div class="col-xs-12 p-0 d-flex">
+                                                            <label class="rclabel m-l-10 text-nowrap">Vendor :</label>
+                                                            <label class="rclabel m-l-10 c-gray text-overflow-desc-auto" title="{{item.vendor}}">{{item.vendor}}</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Collection :</label>
+                                                            <label data-ng-show="item.collection !== 'NA'" class="c-gray m-l-10">{{item.collection}}</label>
+                                                            <label data-ng-show="item.collection === 'NA' || item.collection === null || item.collection === undefined" class="c-gray m-l-10"
+                                                                title="{{item.collection}}">N/A</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Status :</label>
+                                                            <span class="rclabel m-l-10 " ng-class="{'text-success f-500':item.status==='Active' , 'text-warning f-300':item.status==='Pending', 'text-primary f-300':item.status==='Inactive','text-info f-300':item.status==='Pending Inactive'}">{{item.status}}</span>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Next Status :</label>
+                                                            <label class="rclabel m-l-10 c-gray">{{item.next_status}}</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Next Effective Date :</label>
+                                                            <label data-ng-show="item.next_status_id !== 500" class="c-gray m-l-10">{{item.next_effective_date | FormatDate}}</label>
+                                                            <label data-ng-show="item.next_status_id === 500" class="c-gray m-l-10">N/A</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Buyer :</label>
+                                                            <label class="rclabel m-l-10 c-gray">
+                                                                <span data-ng-if="item.buyer_id">{{itemMaintCtrl.buyerIdsMap[item.buyer_id].short_description}}</span>
+                                                                <span data-ng-if="!item.buyer_id">NA</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="p-0 d-flex" style="width:370px">
+                                                            <label class="rclabel m-l-10 text-nowrap">SKU :</label>
+                                                            <span data-ng-click="itemMaintCtrl.copyText(item)" class="zmdi zmdi-copy zmdi-hc-fw f-14 cursor-pointer m-l-10" style="color: #5f5f5f;padding-top: 2px;"
+                                                                title-direction="top-left" data-ng-if="item.availableSkus.length > 0"
+                                                                fixed-position="true" copy-to-clipboard="{{item.availableSkus[0].sku}}"
+                                                                title="{{item.copyText}}"></span>
+                                                            <label id="copyToClipboardText" class="rclabel c-gray text-overflow-desc-auto cursor-pointer" data-ng-if="item.availableSkus.length > 0"
+                                                                data-ng-click="itemMaintCtrl.viewSkuDetails(item.availableSkus[0])">
+                                                                <span>{{item.availableSkus[0].sku}}</span>
+                                                            </label>
+                                                            <div class="dropup dropdown-large m-l-5 cursor-pointer" uib-dropdown="" data-ng-if="item.availableSkus.length > 1">
+                                                                <span uib-dropdown-toggle="" href="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="true">
+                                                                    <button type="button" class="text-nowrap p-relative cursor-pointer bg-none border-none">
+                                                                        +{{item.availableSkus.length-1}} more
+                                                                    </button>
+                                                                </span>
+                                                                <div class="dropdown-menu dropdown-menu-lg availability-sku-list sku-list-popup p-0">
+                                                                    <div class="col-xs-12 f-14 bgm-black f-500 c-white" style="padding: 7px 7px;">
+                                                                        <span class="fa fa-barcode m-r-5"></span>
+                                                                        Available SKUs
+                                                                        <span data-ng-show="item.availableSkus && item.availableSkus.length > 0 && !item.skuLoading">({{item.availableSkus.length - 1}})</span>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0 item-sku-list-insight-container rc-scroll-bar">
+                                                                        <button type="button" class="workbench-container f-14 bg-none border-none" data-ng-repeat="availableSku in item.availableSkus"
+                                                                            data-ng-show="item.availableSkus && item.availableSkus.length > 0 && !item.skuLoading && !$first"
+                                                                            data-ng-click="itemMaintCtrl.viewSkuDetails(availableSku)"
+                                                                            data-ng-disabled="!itemMaintCtrl.skuByItemPermissions.update"
+                                                                            data-ng-class="{'cursor-not-allowed' : !itemMaintCtrl.skuByItemPermissions.update}">
+                                                                            <div class="status-legend" data-ng-class="{'status-active':availableSku.status.toLowerCase()==='active','status-pending-active':availableSku.status.toLowerCase()==='pending active', 'status-inactive':availableSku.status.toLowerCase()==='inactive','status-pending-inactive':availableSku.status.toLowerCase()==='pending inactive'}">
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0 d-flex align-items-center">
+                                                                                <span class="p-0 c-brown text-nowrap flex-0">{{ availableSku.sku }}</span>
+                                                                                <div class="d-flex justify-content-between align-items-center flex-fill">
+                                                                                    <div class="d-flex align-items-center p-0 c-lightblue text-nowrap p-l-10" title="{{!itemMaintCtrl.skuByItemPermissions.update ? 'Access denied' : availableSku.description}}">
+                                                                                        <span data-ng-if="availableSku.sku_sub_type.toLowerCase() === 'set'" title="SKU Set" title-direction="left">
+                                                                                            <img class="m-r-5" src="./img/sets-icon.png" alt="" style="height:10px;width:10px;opacity: 0.6;">
+                                                                                        </span>
+                                                                                        <span data-ng-if="availableSku.sku_sub_type.toLowerCase() === 'component'" title="SKU Component" title-direction="left">
+                                                                                            <img class="m-r-5" src="./img/component.png" alt="" style="height:10px;width:10px;opacity: 0.6;">
+                                                                                        </span>
+                                                                                        {{ availableSku.description | truncate : 40 }}
+                                                                                    </div>
+                                                                                    <div class="f-14 f-300 m-l-5 text-nowrap text-muted text-capitalize">
+                                                                                        [ {{ availableSku.sku_type }} ]
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="f-12 pull-left" style="font-weight:300;">
+                                                                                <label class="text-nowrap">Vendor Item # : </label>
+                                                                                <span ng-if="availableSku.vendor_item_number"> {{availableSku.vendor_item_number}}</span>
+                                                                                <span ng-if="!availableSku.vendor_item_number"> Not Available</span>
+                                                                            </div>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-5" data-ng-show="(!item.availableSkus || (item.availableSkus && item.availableSkus.length === 0)) && !item.skuLoading">
+                                                                        <span class="col-xs-12 p-0 d-flex align-items-center justify-content-center text-muted">
+                                                                            No SKUs available
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-5" data-ng-show="item.skuLoading">
+                                                                        <span class="col-xs-12 p-0 d-flex align-items-center justify-content-center text-muted">
+                                                                            Loading...
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <label class="rclabel m-l-10 c-gray text-overflow-desc-auto" data-ng-if="!item.availableSkus || (item.availableSkus && item.availableSkus.length === 0)">
+                                                                No SKUs available
+                                                            </label>
+                                                        </div>
+                                                        <div class="p-0 d-flex" ng-if="item.availableSkus && item.availableSkus.length > 0" style="width:370px">
+                                                            <label class="rclabel m-l-10 text-nowrap">Vendor Item # :</label>
+                                                            <label id="copyToClipboardText" class="rclabel c-gray text-overflow-desc-auto cursor-pointer" data-ng-if="item.availableSkus.length > 0"
+                                                                data-ng-click="itemMaintCtrl.viewSkuDetails(item.availableSkus[0])">
+                                                                <span class="m-l-10" ng-if="item.availableSkus[0].vendor_item_number"> {{item.availableSkus[0].vendor_item_number}}</span>
+                                                            </label>
+                                                            <label class="rclabel m-l-10 c-gray text-overflow-desc-auto" data-ng-if="item.availableSkus && item.availableSkus.length > 0 && !item.availableSkus[0].vendor_item_number">
+                                                                Not available
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-5 col-xs-12" style="height: inherit;border-left: 1px solid #ececec;">
+                                                        <div class="col-xs-12 m-b-5" style="padding: 0px 7px 6px 7px;border-bottom: 1px solid #ececec">
+                                                            <span class="rclabel m-b-0 f-700 c-gray text-overflow-desc-auto" title="{{item.primary_item_hierarchy}}">{{item.primary_item_hierarchy}}</span>
+                                                        </div>
+                                                        <div class="aligncenter" data-ng-if="!item.path">
+                                                            <img src="./img/loading-circle.gif" style="height: 30px;width: 30px;" />
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10 maintenance-card-label-value" style="flex:2;">
+                                                                <ul class="hierarchytreelist p-0" data-ng-repeat="name in item.path track by $index">
+                                                                    <li ng-style="{'margin-left': 15*$index+'px'}">
+                                                                        {{name}}</li>
+                                                                </ul>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 m-t-5 text-center d-flex" style="justify-content:space-between;align-items:center;">
+                                                <!-- Edit Item Icon-->
+                                                <div class="d-flex" style="align-items:flex-end;">
+                                                    <button class="f-14 restricted-btn text-primary" id="edit_item" name="edit_item" data-ng-click="itemMaintCtrl.UpdateItem(item);"
+                                                        data-ng-disabled="!itemMaintCtrl.itemPermissions.update" data-ng-class="{'opacity50' : !itemMaintCtrl.itemPermissions.update}">
+                                                        <span class="f-13" title="{{!itemMaintCtrl.itemPermissions.update ? 'Access denied' : ''}}" title-direction="top">
+                                                            <i class="fa fa-edit m-r-5"></i>Edit Item
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <!-- Edit Item Icon-->
+                                                <div class="d-flex" style="justify-content: flex-end;">
+                                                    <div class="p-5">
+                                                        <button type="button" class="btn-inverse f-400" style="padding:0 7px 0 0px;height: 30px;width: 130px;align-items: center;display: flex;justify-content:center;"
+                                                            ng-click="itemMaintCtrl.gotoSKU(item);">
+                                                            <img class="p-r-5" data-ng-if="item.isLoadingMaintainSku" src="./img/loader.gif" alt="Loading" height="25px" />
+                                                            <span>Maintain
+                                                                <b>SKU</b>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                    <!-- Hidding the code as it is not completely functional -->
+                                                    <!-- <div class="p-5">
+                                                        <button type="button" class="btn-success f-400" title="{{ itemMaintCtrl.vendorsMap[item.vendor_id].resale_allowed===0 ? 'Retails not allowed for Vendor' + ' - ' + item.vendor : 'Maintain Retails'}}" data-ng-disabled="!itemMaintCtrl.vendorsMap[item.vendor_id]||itemMaintCtrl.vendorsMap[item.vendor_id].resale_allowed===0" style="padding:0 7px 0 0px;height: 30px;width: 140px;align-items: center;display: flex;justify-content:center;border:0;" ng-click="itemMaintCtrl.gotoRetail(item);">
+                                                            <img class="p-r-5" data-ng-if="item.isLoadingMaintainRetail" src="./img/loader.gif" alt="Loading" height="25px" />
+                                                            <span>Maintain
+                                                                <b>Retails</b>
+                                                            </span>
+                                                        </button>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="itemMaintCtrl.isLoading">
+                            <span class="f-17 f-700 c-black">Loading</span>
+                            <span class="f-700" style="letter-spacing: 3px;">
+                                <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                <span>
+                        </div>
+                        <div ng-if="itemMaintCtrl.availableItemsCount > 0 && !itemMaintCtrl.isLoading">
+                            <div class="col-lg-12 col-md-12 col-xs-12 aligncenter p-t-10 m-b-10">
+                                <button class="btn btn-sm btn-inverse" data-ng-click="itemMaintCtrl.loadMoreItems()">
+                                    <span ng-if="itemMaintCtrl.limit >= itemMaintCtrl.availableItemsCount">
+                                        Load Next {{itemMaintCtrl.availableItemsCount}} of remaining {{itemMaintCtrl.availableItemsCount}} Records
+                                    </span>
+                                    <span ng-if="itemMaintCtrl.availableItemsCount > itemMaintCtrl.limit">
+                                        Load Next {{itemMaintCtrl.limit}} of remaining {{itemMaintCtrl.availableItemsCount}} Records
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Start Group By View -->
+                    <div class="col-xs-12 rcpscrollbar p-0 o-auto pageHeight m-t-10" data-ng-if="itemMaintCtrl.groupByField">
+                        <d-expand-collapse>
+                            <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="!itemMaintCtrl.isGroupHeader">
+                                <span class="f-17 f-700 c-black">Loading</span>
+                                <span class="f-700" style="letter-spacing: 3px;">
+                                    <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                    <span>
+                            </div>
+                            <div data-ng-if="itemMaintCtrl.isGroupHeader === true && itemGroup.selected === 1" ng-repeat="itemGroup in itemMaintCtrl.groupItems">
+                                <button type="button" class="col-xs-12 bg-none border-none" data-ng-click="itemMaintCtrl.showItemData(itemMaintCtrl.groupByField,itemGroup)">
+                                    <div class="col-xs-12 card-group-header" data-ng-click="toggleCollapse($event);">
+                                        <span data-ng-if="itemMaintCtrl.groupByField.includes('effective_date')">
+                                            {{itemGroup[itemMaintCtrl.groupByField] | FormatDate}}
+                                            <span class="zmdi-hc-fw">({{itemGroup.count}})</span>
+                                        </span>
+                                        <span data-ng-if="itemMaintCtrl.groupByField==='qualifier'">
+                                            {{itemGroup['qualifier']}}
+                                            <span class="zmdi-hc-fw">({{itemGroup.count}})</span>
+                                        </span>
+                                        <span data-ng-if="!itemMaintCtrl.groupByField.includes('effective_date')&&itemMaintCtrl.groupByField!=='qualifier'">
+                                            <span data-ng-if="itemGroup[itemMaintCtrl.groupByField].toLowerCase() !== 'na'">{{itemGroup[itemMaintCtrl.groupByField]}}</span>
+                                            <span data-ng-if="itemGroup[itemMaintCtrl.groupByField].toLowerCase() === 'na'">N/A</span>
+                                            ({{itemGroup.count}})
+                                        </span>
+                                        <div id="{{$index}}-groupHeaderIcon" class="pull-right zmdi inline-block" data-ng-init="initGroupHeader('{{$index}}-groupHeaderIcon',itemGroup)">
+                                        </div>
+                                    </div>
+                                </button>
+                                <div class="col-xs-12 p-0 expand-collapse-me m-0" data-ng-class="{'d-none':!itemGroup.expanded}" data-ng-if="itemGroup.items">
+                                    <div class="col-xs-12 m-t-5 m-b-5">
+                                        <span data-ng-show="itemMaintCtrl.groupByField">{{ itemGroup.items.length}} of {{itemGroup.count}} Records found </span>
+                                    </div>
+                                    <div class="col-xs-12 p-0 m-0">
+                                        <div class="col-md-6 col-sm-12 col-xs-12 m-b-10" data-ng-if="itemGroup.isItemsLoaded === true" data-ng-repeat="item in itemGroup.items"
+                                            ios-dblclick="itemMaintCtrl.UpdateItem(item);" data-ng-init1="itemMaintCtrl.fetchFirstSkuByItem(item);">
+                                            <div class="d-flex update-process-overlay" data-ng-show="item.isShowUpdateProcessing">
+                                                <img class="m-auto" src="./img/loading.gif" alt="" style="width:100px;height:100px;">
+                                            </div>
+                                            <div class="col-xs-12 main-card box p-0">
+                                                <div class="col-xs-12 header-section" ng-class="{'status-active f-500':item.status==='Active','status-pending-active f-300':item.status==='Pending Active', 'status-inactive f-300':item.status==='Inactive','status-pending-inactive f-300':item.status==='Pending Inactive',
+                                                'hightlight-activehistory':item.showhistory === true || item.id == $stateParams.id}">
+                                                    <span class="text-overflow-desc-auto">
+                                                        <span data-ng-if="item.item_sub_type === 'Set'">
+                                                            <img src="./img/sets-icon.png" alt="" style="height:20px;width:20px;" title="Item Set">
+                                                        </span> {{item.description}}
+                                                    </span>
+                                                    <div class="d-flex pull-right align-items-center">
+                                                        <button type="button" id="item_history" name="item_history" class="cursor-pointer m-r-5 restricted-btn p-0" data-ng-click="itemMaintCtrl.showHistoryDetails(item);">
+                                                            <span class="f-16 fa fa-history c-gray" title="History" title-direction="top-left" fixed-position="true"></span>
+                                                        </button>
+                                                        <button type="button" class="cursor-not-allowed clone-not-allowed m-r-5 restricted-btn p-0" data-ng-if="!itemMaintCtrl.isCloneAllowed"
+                                                            rc-popover popover-title="Cloning feature is disabled" popover-content="No access for clone. Enable access to clone Item."
+                                                            popover-trigger="hover" popover-placement="bottom">
+                                                            <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                        </button>
+                                                        <button type="button" class="cursor-not-allowed clone-not-allowed m-r-5 restricted-btn p-0" data-ng-if="itemMaintCtrl.isCloneAllowed && (item.description.includes('clone') || item.description.includes('Clone'))"
+                                                            rc-popover popover-title="Cloning is disabled for this Item" popover-content="Have same identity as the cloned parent Item, to enable cloning change any master properties of this entity."
+                                                            popover-trigger="hover" popover-placement="bottom">
+                                                            <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                        </button>
+                                                        <button type="button" class="cursor-pointer restricted-btn p-0" id="clone_item" name="clone_item" data-ng-click="itemMaintCtrl.goToClonePanel(item)"
+                                                            data-ng-if="itemMaintCtrl.isCloneAllowed && !(item.description.includes('clone') || item.description.includes('Clone'))">
+                                                            <span class="zmdi zmdi-copy zmdi-hc-fw f-19" style="color: #6e6e6e;margin-right: 4px;" title="Clone" title-direction="top-left"
+                                                                fixed-position="true"></span>
+                                                        </button>
+                                                        <button class="restricted-btn p-0" id="meta_data" name="meta_data" ng-click="showMetaData(itemMaintCtrl.entityInformation,item,itemMaintCtrl.itemPermissions);"
+                                                            data-ng-disabled="!itemMaintCtrl.itemPermissions.drop">
+                                                            <span class="zmdi zmdi-cloud-outline zmdi-hc-fw f-19 c-gray" data-ng-if="itemMaintCtrl.itemPermissions.drop" title="Click here to manage documents"
+                                                                title-direction="top" fixed-position="true"></span>
+                                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw f-19 c-gray" data-ng-if="!itemMaintCtrl.itemPermissions.drop" title="Access denied"
+                                                                title-direction="top" fixed-position="true"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 content-section">
+                                                    <div class="col-xs-12 p-0">
+                                                        <div class="col-xs-3 p-0 d-flex">
+                                                            <img check-image class="img-responsive card-image m-auto cursor-pointer" data-ng-click="item.thumbnail?itemMaintCtrl.previewDatalake(item,'cover_image'):''"
+                                                                image-name="entity-config-item.svg" ng-src="{{item.thumbnail}}"
+                                                            />
+                                                        </div>
+                                                        <div class="col-xs-9 p-0 inheritheight" style="max-height:171px;">
+                                                            <div class="col-sm-7 col-xs-12 p-0 m-b-10">
+                                                                <div class="col-xs-12 p-0 d-flex">
+                                                                    <label class="rclabel m-l-10 text-nowrap">Vendor :
+                                                                    </label>
+                                                                    <label class="rclabel m-l-10 c-gray text-overflow-desc-auto" title="{{item.vendor}}">{{item.vendor}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Collection :</label>
+                                                                    <label data-ng-show="item.collection !== 'NA'" class="c-gray m-l-10">{{item.collection}}</label>
+                                                                    <label data-ng-show="item.collection === 'NA' || item.collection === null || item.collection === undefined" class="c-gray m-l-10"
+                                                                        title="{{item.collection}}">N/A</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Status :</label>
+                                                                    <span class="rclabel m-l-10 " ng-class="{'text-success f-500':item.status==='Active' , 'text-warning f-300':item.status==='Pending', 'text-primary f-300':item.status==='Inactive','text-info f-300':item.status==='Pending Inactive'}">{{item.status}}</span>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Next Status :</label>
+                                                                    <label class="rclabel m-l-10 c-gray">{{item.next_status}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Next Effective Date :
+                                                                    </label>
+                                                                    <label data-ng-show="item.next_status_id !== 500" class="c-gray m-l-10">{{item.next_effective_date | FormatDate}}</label>
+                                                                    <label data-ng-show="item.next_status_id === 500" class="c-gray m-l-10">N/A</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Buyer :</label>
+                                                                    <label class="rclabel m-l-10 c-gray">
+                                                                        <span data-ng-if="item.buyer_id">{{itemMaintCtrl.buyerIdsMap[item.buyer_id].short_description}}</span>
+                                                                        <span data-ng-if="!item.buyer_id">NA</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="p-0 d-flex" style="width:370px">
+                                                                    <label class="rclabel m-l-10 text-nowrap">SKU :
+                                                                    </label>
+                                                                    <span class="zmdi zmdi-copy zmdi-hc-fw f-14 cursor-pointer m-l-10" style="color: #5f5f5f;padding-top: 2px;" title-direction="top-left"
+                                                                        data-ng-if="item.availableSkus.length > 0" fixed-position="true"
+                                                                        copy-to-clipboard="{{item.availableSkus[0].sku}}" title="Copy to Clipboard"></span>
+                                                                    <label id="copyToClipboardText" class="rclabel c-gray text-overflow-desc-auto cursor-pointer" data-ng-if="item.availableSkus.length > 0"
+                                                                        data-ng-click="itemMaintCtrl.viewSkuDetails(item.availableSkus[0])">
+                                                                        <span>{{item.availableSkus[0].sku}}</span>
+                                                                    </label>
+                                                                    <div class="dropup dropdown-large m-l-5 cursor-pointer" uib-dropdown="" data-ng-if="item.availableSkus.length > 1">
+                                                                        <span uib-dropdown-toggle="" href="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="true">
+                                                                            <button type="button" class="text-nowrap p-relative cursor-pointer bg-none border-none">
+                                                                                +{{item.availableSkus.length-1}} more
+                                                                            </button>
+                                                                        </span>
+                                                                        <div class="dropdown-menu dropdown-menu-lg availability-sku-list sku-list-popup p-0">
+                                                                            <div class="col-xs-12 f-14 bgm-black f-500 c-white" style="padding: 7px 7px;">
+                                                                                <span class="fa fa-barcode m-r-5"></span>
+                                                                                Available SKUs
+                                                                                <span data-ng-show="item.availableSkus && item.availableSkus.length > 0 && !item.skuLoading">({{item.availableSkus.length - 1}})</span>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0 item-sku-list-insight-container rc-scroll-bar">
+                                                                                <button type="button" class="workbench-container f-14 bg-none border-none" data-ng-repeat="availableSku in item.availableSkus"
+                                                                                    data-ng-if="item.availableSkus && item.availableSkus.length > 0 && !item.skuLoading && !$first"
+                                                                                    data-ng-click="itemMaintCtrl.viewSkuDetails(availableSku)"
+                                                                                    data-ng-disabled="!itemMaintCtrl.skuByItemPermissions.update"
+                                                                                    data-ng-class="{'cursor-not-allowed' : !itemMaintCtrl.skuByItemPermissions.update}">
+                                                                                    <div class="status-legend" data-ng-class="{'status-active':availableSku.status.toLowerCase()==='active','status-pending-active':availableSku.status.toLowerCase()==='pending active', 'status-inactive':availableSku.status.toLowerCase()==='inactive','status-pending-inactive':availableSku.status.toLowerCase()==='pending inactive'}">
+                                                                                    </div>
+                                                                                    <div class="col-xs-12 p-0 d-flex align-items-center">
+                                                                                        <span class="p-0 c-brown text-nowrap flex-0">{{ availableSku.sku }}</span>
+                                                                                        <div class="d-flex justify-content-between align-items-center flex-fill">
+                                                                                            <div class="d-flex align-items-center p-0 c-lightblue text-nowrap p-l-10" title="{{!itemMaintCtrl.skuByItemPermissions.update ? 'Access denied' : availableSku.description}}">
+                                                                                                <span data-ng-if="availableSku.sku_sub_type.toLowerCase() === 'set'" title="SKU Set" title-direction="left">
+                                                                                                    <img class="m-r-5" src="./img/sets-icon.png" alt="" style="height:10px;width:10px;opacity: 0.6;">
+                                                                                                </span>
+                                                                                                <span data-ng-if="availableSku.sku_sub_type.toLowerCase() === 'component'" title="SKU Component" title-direction="left">
+                                                                                                    <img class="m-r-5" src="./img/component.png" alt="" style="height:10px;width:10px;opacity: 0.6;">
+                                                                                                </span>
+                                                                                                {{ availableSku.description | truncate : 40 }}
+                                                                                            </div>
+                                                                                            <div class="f-14 f-300 m-l-5 text-nowrap text-muted text-capitalize">
+                                                                                                [ {{ availableSku.sku_type }} ]
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="f-12 pull-left" style="font-weight:300;">
+                                                                                        <label class="text-nowrap">Vendor Item # : </label>
+                                                                                        <span ng-if="availableSku.vendor_item_number"> {{availableSku.vendor_item_number}}</span>
+                                                                                        <span ng-if="!availableSku.vendor_item_number"> Not Available</span>
+                                                                                    </div>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-5" data-ng-show="(!item.availableSkus || (item.availableSkus && item.availableSkus.length === 0)) && !item.skuLoading">
+                                                                                <span class="col-xs-12 p-0 d-flex align-items-center justify-content-center text-muted">
+                                                                                    No SKUs available
+                                                                                </span>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-5" data-ng-show="item.skuLoading">
+                                                                                <span class="col-xs-12 p-0 d-flex align-items-center justify-content-center text-muted">
+                                                                                    Loading...
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <label class="rclabel m-l-10 c-gray text-overflow-desc-auto" data-ng-if="!item.availableSkus || (item.availableSkus && item.availableSkus.length === 0)">
+                                                                        No SKUs available
+                                                                    </label>
+                                                                </div>
+                                                                <div class="p-0 d-flex" ng-if="item.availableSkus && item.availableSkus.length > 0" style="width:370px">
+                                                                    <label class="rclabel m-l-10 text-nowrap">Vendor Item # :</label>
+                                                                    <label id="copyToClipboardText" class="rclabel c-gray text-overflow-desc-auto cursor-pointer" data-ng-if="item.availableSkus.length > 0"
+                                                                        data-ng-click="itemMaintCtrl.viewSkuDetails(item.availableSkus[0])">
+                                                                        <span class="m-l-10" ng-if="item.availableSkus[0].vendor_item_number"> {{item.availableSkus[0].vendor_item_number}}</span>
+                                                                    </label>
+                                                                    <label class="rclabel m-l-10 c-gray text-overflow-desc-auto" data-ng-if="item.availableSkus && item.availableSkus.length > 0 && !item.availableSkus[0].vendor_item_number">
+                                                                        Not available
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-5 col-xs-12" style="height: inherit;border-left: 1px solid #ececec;">
+                                                                <div class="col-xs-12 m-b-5" style="padding: 0px 7px 6px 7px;border-bottom: 1px solid #ececec">
+                                                                    <label class="rclabel m-b-0 f-700 c-gray">{{item.primary_item_hierarchy}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10 maintenance-card-label-value" style="flex:2;">
+                                                                        <div class="aligncenter" data-ng-if="!item.path">
+                                                                            <img src="./img/loading-circle.gif" style="height: 30px;width: 30px;" />
+                                                                        </div>
+                                                                        <ul class="hierarchytreelist p-0" data-ng-repeat="name in item.path track by $index">
+                                                                            <li ng-style="{'margin-left': 15*$index+'px'}">
+                                                                                {{name}}</li>
+                                                                        </ul>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 m-t-5 text-center d-flex" style="justify-content:space-between;align-items:center;">
+                                                        <!-- Edit Item Icon-->
+                                                        <div class="d-flex" style="align-items:flex-end;">
+                                                            <button class="f-14 restricted-btn text-primary" id="edit_item" name="edit_item" data-ng-click="itemMaintCtrl.UpdateItem(item);"
+                                                                data-ng-class="{'opacity50' : !itemMaintCtrl.itemPermissions.update}"
+                                                                data-ng-disabled="!itemMaintCtrl.itemPermissions.update">
+                                                                <span class="f-13" title="{{!itemMaintCtrl.itemPermissions.update ? 'Access denied' : ''}}" title-direction="top">
+                                                                    <i class="fa fa-edit m-r-5"></i>Edit Item</span>
+                                                            </button>
+                                                        </div>
+                                                        <!-- Edit Item Icon-->
+                                                        <div class="d-flex" style="justify-content: flex-end;">
+                                                            <div class="p-5">
+                                                                <button type="button" class="btn btn-inverse f-400 " ng-click="itemMaintCtrl.gotoSKU(item);">
+                                                                    <span>Maintain
+                                                                        <b>SKU</b>
+                                                                    </span>
+                                                                </button>
+                                                            </div>
+                                                            <!-- Hidding the code as it is not completely functional -->
+                                                            <!-- <div class="p-5">
+                                                                <button type="button" class="btn btn-success f-400 "
+                                                                    ng-click="itemMaintCtrl.gotoRetail(item);">
+                                                                    <span>Maintain
+                                                                        <b>Retails</b>
+                                                                    </span>
+                                                                </button>
+                                                            </div> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div data-ng-if="itemGroup.availableGroupItems > 0 && itemGroup.isItemsLoaded === true">
+                                        <div class="col-lg-12 col-md-12 aligncenter p-t-10 m-b-10">
+                                            <button class="btn btn-sm btn-inverse" data-ng-disabled="itemGroup.isMoreItemsLoaded === false" data-ng-click="itemMaintCtrl.loadMoreItemData(itemMaintCtrl.groupByField,itemGroup)">Load Remaining {{itemGroup.availableGroupItems}} Records</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="itemGroup.isItemsLoaded === false || itemGroup.isMoreItemsLoaded === false">
+                                    <span class="f-17 f-700 c-black">Loading</span>
+                                    <span class="f-700" style="letter-spacing: 3px;">
+                                        <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                        <span>
+                                </div>
+                            </div>
+                            <!-- Group by panel Section start -->
+                            <div class="group-by-panel" data-ng-class="{'activate':itemMaintCtrl.showgroupByMenu}" data-ng-if="itemMaintCtrl.groupByField.length>0 && itemMaintCtrl.groupItems.length > 0">
+                                <span class="d-flex d-flex-h-center d-flex-v-center bg-primary" data-ng-if="!itemMaintCtrl.showgroupByMenu" id="open-setting"
+                                    data-ng-click="itemMaintCtrl.showgroupByMenu = !itemMaintCtrl.showgroupByMenu;">
+                                    <i class="zmdi zmdi-settings"></i>
+                                </span>
+                                <span class="d-flex d-flex-h-center d-flex-v-center bg-primary" data-ng-if="itemMaintCtrl.showgroupByMenu" id="close-setting"
+                                    data-ng-click="itemMaintCtrl.showgroupByMenu = !itemMaintCtrl.showgroupByMenu;">
+                                    <i class="zmdi zmdi-close"></i>
+                                </span>
+                                <form>
+                                    <span class="no-padding group-by-header-panel c-bluegray">Group by</span>
+                                    <div class="col-xs-12 p-0 m-b-10">
+                                        <select class="form-control select-component input-sm" ng-model="itemMaintCtrl.groupByField" ng-change="itemMaintCtrl.groupByData(itemMaintCtrl.groupByField);"
+                                            ng-options="each.prefix as each.name for each in itmGroupByDropdown|filter:{prefix:'!description'}|filter:{prefix:'!next_effective_date'}|filter:{prefix:'!status_effective_date'}">
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-12 p-0 m-b-10 f-500">
+                                        <a class="cursor-pointer">
+                                            <span data-ng-click="itemMaintCtrl.toggleAllGroups(1);">Select All</span>
+                                        </a> |
+                                        <a class="cursor-pointer">
+                                            <span data-ng-click="itemMaintCtrl.toggleAllGroups(0);">Unselect All</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-12 p-0 groupitems-container rc-scroll-bar">
+                                        <div data-ng-repeat="gc in itemMaintCtrl.groupItems">
+                                            <div class="checkbox p-l-5">
+                                                <label>
+                                                    <span data-ng-if="itemMaintCtrl.groupByField.includes('effective_date')">{{gc[itemMaintCtrl.groupByField]|FormatDate}}
+                                                        <span style="color:green"> [{{gc.count}}]</span>
+                                                    </span>
+                                                    <span data-ng-if="!itemMaintCtrl.groupByField.includes('effective_date')">{{gc[itemMaintCtrl.groupByField]}}
+                                                        <span style="color:green">
+                                                            <span class="f-14 f-700">( {{gc.count}} )</span>
+                                                        </span>
+                                                    </span>
+                                                    <input type="checkbox" ng-model="gc.selected" ng-true-value="1" ng-false-value="0" ng-click="itemMaintCtrl.toggleselectedGroupitem(gc,$index);toggleCollapse($event);">
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- ./group-by-panel -->
+                        </d-expand-collapse>
+                    </div>
+                    <!-- End Group By View -->
+                </div>
+                <div class="col-xs-12 p-0" ng-if="itemMaintCtrl.isShowHistory === true;" data-ng-include="'./application/templates/history.html'"></div>
+                <meta-data-panel></meta-data-panel>
+                <div ui-view="clone"></div>
+                <!-- This will call filter state keeping the main location state -->
+                <div ui-view="filter"></div>
+                <div class="col-lg-12 p-0">
+                    <div id="refresh-table" class="p-15" data-ng-class="{'toggled':itemMaintCtrl.isRefreshing}">
+                        <div class="col-xs-6 p-0">
+                            <span class="f-15 f-300 pull-left">{{itemMaintCtrl.refreshTableText}}</span>
+                        </div>
+                        <div class="col-xs-6 p-0" data-ng-if="itemMaintCtrl.totalTimeText">
+                            <span class="pull-right f-300">
+                                <strong>{{itemMaintCtrl.itemsDataList.length}}</strong>
+                                <span class="f-14 c-gray">{{itemMaintCtrl.totalRecordsText}}</span>
+                                <span ng-bind-html="itemMaintCtrl.totalTimeText"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!itemMaintCtrl.itemPermissions.view" data-ng-include="'./application/templates/restricted.access.html'"></div>
+            </div>
+
+            <!-- ./Advanced Search panel -->
+            <div class="col-xs-12 p-0 module-content" data-ng-if="!itemMaintCtrl.isFilterApplied && itemMaintCtrl.recordsCount === 0 && itemMaintCtrl.isLoaded">
+                <div class="col-xs-12 text-center text-info m-t-25">
+                    <span class="f-15 f-300">No Active item exists. Please add item.</span>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0" data-ng-class="{'module-content': !itemMaintCtrl.recordsCount}" data-ng-if="
+                    itemMaintCtrl.isFilterApplied &&
+                    (
+                        (!itemMaintCtrl.isGroupByApplied && itemMaintCtrl.itemsDataList.length === 0 && itemMaintCtrl.isLoaded) ||
+                        (itemMaintCtrl.isGroupByApplied && itemMaintCtrl.groupItems.length === 0 && itemMaintCtrl.isGroupHeader)
+                    )
+                ">
+                <div class="col-xs-12 text-center text-info m-t-25" data-ng-init="itemMaintCtrl.focusFilterApplied();">
+                    <span class="f-15 f-300">No results matching your criteria. Please amend your search options.</span>
+                </div>
+            </div>
+
+            <div class="col-xs-12 p-0" data-ng-class="{'module-content': !itemMaintCtrl.groupItems}" data-ng-if="
+                    !itemMaintCtrl.isFilterApplied &&
+                    itemMaintCtrl.isGroupByApplied && itemMaintCtrl.groupItems.length === 0 && itemMaintCtrl.isGroupHeader
+                    
+                ">
+                <div class="col-xs-12 text-center text-info m-t-25" >
+                    <span class="f-15 f-300">No results matching your groupby. Please amend your option.</span>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div data-ng-if="itemMaintCtrl.isViewAuthorized">
+        <div data-ng-include="'./application/modules/item/maintenance/item.sub.type.selection.model.html'"></div>
+    </div>
+</div>

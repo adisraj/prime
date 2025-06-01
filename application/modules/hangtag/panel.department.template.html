@@ -1,0 +1,66 @@
+<div id="rcrightsidebar" data-ng-class="{'toggled':tagCtrl.showDeptTemplPanel === true}">
+    <div data-ng-if="!tagCtrl.isSaveSuccess">
+        <div class="m-t-25 d-flex">
+            <div class="p-0 cursor-pointer p-absolute" data-ng-click="tagCtrl.toggleDeptTemplatePanel(false)">
+                <a>
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="p-0 m-auto">
+                <label class="rclabel editformlabel" title="Add Department/Class">Add Template to <strong>Department/Class</strong></label>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-if1="!tagCtrl.isUnauthorized">
+            <div class="d-flex m-t-10 m-b-10" ng-if="!tagCtrl.isSaveSuccess">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/toolbar-quick-access.svg'"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0">
+                <ng-form name="tagCtrl.department_class_form" role="form" novalidate="novalidate">
+                    <div class="col-xs-12 p-10">
+                        <div class="form-group">
+                            <label>Select Template:</label>
+                            <select class="form-control select-component input-sm" id="templateId" name="tagCtrl.classId" ng-options="template.id as template.name for template in tagCtrl.templates" ng-model="tagCtrl.save_data.templateId" required>
+                                      <option value="" disabled>Select Class</option>
+                                 </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-10">
+                        <div class="form-group ">
+                            <label>Department:</label>
+                            <select class="form-control select-component input-sm" id="departmetId" name="tagCtrl.departmentId" ng-options="dept as dept.department for dept in tagCtrl.departmentsclasses" ng-model="tagCtrl.save_data.department" required>
+                                <option value="" disabled>Select Class</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-10">
+                        <div class="form-group" style="border-bottom:1px solid #ececec; background-color:#f7f7f7">
+                            <div class="checkbox p-10">
+                                <label><span class="f-700">Select Class</span>
+                        <input id="select_all" type="checkbox" ng-model="tagCtrl.save_data.isClass" ng-init = "tagCtrl.save_data.isClass" ng-true-value="true" ng-false-value="false">
+                        <i class="input-helper"></i>
+                           </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-10" data-ng-if="tagCtrl.save_data.isClass">
+                        <div class="form-group">
+                            <label>Class:</label>
+                            <select class="form-control select-component input-sm" id="classId" ng-options="class.id as class.class for class in tagCtrl.save_data.department.classes" ng-model="tagCtrl.save_data.classId">
+                            <option value="" disabled>Select class</option>
+                    </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-block btn-primal btn-lg" id="save_btn" ng-click="tagCtrl.saveDepartmentTemplate()" ng-class="{'btn-danger': tagCtrl.saveBtnError === true}" data-ng-disabled="tagCtrl.department_class_form.$invalid">
+                            <strong>{{tagCtrl.save_btn_txt}}</strong>
+                        </button>
+                    </div>
+                </ng-form>
+            </div>
+        </div>
+    </div>
+    <rcp-success-form success-tick="success_tick.svg" create-new-fn="tagCtrl.createNewDepartmentTemplate();" close-fn="tagCtrl.toggleDeptTemplatePanel(false);" save-success="tagCtrl.isSaveSuccess">
+    </rcp-success-form>
+</div>

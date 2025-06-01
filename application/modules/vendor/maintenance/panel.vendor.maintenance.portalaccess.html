@@ -1,0 +1,204 @@
+<style>
+  .vendor-info-section {
+    border: 1px solid #e8e8e8;
+    line-height: 1.7;
+    padding: 7px 10px;
+    background: #232526;
+    background: -webkit-linear-gradient(to right, #414345, #232526);
+    background: linear-gradient(to right, #424242, #7b7b7b);
+  }
+
+  .associate-portal-access {
+    border-bottom: 1px solid #ececec;
+  }
+
+  .text-success {
+    color: #67bd6a !important;
+  }
+
+  .text-warning {
+    color: #ffa829 !important;
+  }
+
+  .text-primary {
+    color: #2196f3 !important;
+  }
+
+  .text-info {
+    color: #31708f !important;
+  }
+
+  button#create_new_btn {
+    display: none;
+  }
+</style>
+<div id="rcrightsidebar" class="rcp-scrollbar associate-portal-access p-0"
+  data-ng-class="{'toggled':venMaintCtrl.PortalAccess}">
+  <ul style="display:none">
+    <li>
+      <keybinding on="esc" invoke="venMaintCtrl.closeVendorPortalPanel()" />
+    </li>
+  </ul>
+  <div class="col-xs-12">
+    <!-- Section for Panel header and icon start -->
+    <div class="col-xs-12 p-0">
+      <div class="m-t-25" style="display:flex">
+        <div class="p-0 p-absolute cursor-pointer">
+          <a class="cursor-pointer" data-ng-click="venMaintCtrl.closeVendorPortalPanel();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+          </a>
+        </div>
+      </div>
+      <div class="panel-name-section">
+        <label class="rclabel editformlabel" title="Portal Access">
+          <strong>Vendor Portal Access</strong>
+        </label>
+      </div>
+
+      <!-- <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10">
+          <div class="m-auto updatepanel">
+            <div data-ng-include="'./img/sidebar-icons/vendor-portal.svg'"></div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="col-xs-12 p-0 vendor-portal-box" data-ng-if="!venMaintCtrl.isSaveSuccess && !venMaintCtrl.isDeletePortalSuccess">
+      <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10">
+          <div class="m-auto updatepanel">
+            <div data-ng-include="'./img/sidebar-icons/vendor-portal.svg'"></div>
+          </div>
+        </div>
+      </div>
+    <div class="col-xs-12 p-10 m-b-10" style="border: 1px dotted rgb(175, 164, 164); background: whitesmoke;">
+      <div class="col-xs-12 p-5">
+        <div>
+          <span class="text-muted">Vendor : </span>
+          <span>{{venMaintCtrl.accessVendorDetails.name}}</span>
+        </div>
+      </div>
+      <div class="col-xs-12 d-flex justify-content-between p-5">
+        <div>
+          <span class="text-muted">Type : </span>
+          <span>{{venMaintCtrl.accessVendorDetails.VendorType}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 p-0">
+      <ng-form role="form" novalidate="novalidate" name="vendor_portal">
+        <div class="form-group">
+          <span class="c-red" ng-show="vendor_portal.email.$invalid">* </span>
+          <span class="c-green" ng-show="vendor_portal.email.$valid">* </span>
+          <label>Email ID</label>
+          <input id="vendorEmailId" type="text" name="email" autofocus
+            class="form-control input-sm" placeholder="Enter Email ID" ng-model=venMaintCtrl.vendorAccessObject.email_id
+            ng-readonly="venMaintCtrl.disableActions" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required
+            ng-model-options="{ updateOn: 'blur' }" />
+          <div ng-show="vendor_portal.email.$error.pattern"
+            class="col-sm-12 p-5 info-msg text-overflow-desc-auto c-deeporange" style="color: #8f96a9;">
+            <span>Email ID is invalid.</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <span class="c-red" ng-show="vendor_portal.effective_date.$invalid">* </span>
+          <span class="c-green" ng-show="vendor_portal.effective_date.$valid">* </span>
+          <label>Expiry date</label>
+          <input type="text" id="effective_date" name="effective_date" required
+            ng-init="venMaintCtrl.vendorAccessObject.expiry_date=getDateBasedOnFormat(venMaintCtrl.vendorAccessObject.expiry_date)"
+            class="form-control input-sm rcp-mydatepicker" ng-model="venMaintCtrl.vendorAccessObject.expiry_date"
+            ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+            data-ng-change="venMaintCtrl.checkDateValidation(venMaintCtrl.vendorAccessObject.expiry_date);"
+            model-view-value="true" is-effective-date="false" is-vendor-portal="true">
+          <div ng-show="venMaintCtrl.invalidExpiryDate"
+            class="col-sm-12 p-0 info-msg text-overflow-desc-auto c-deeporange" style="color: #8f96a9;">
+            <span>Date should be current date or future date</span>
+          </div>
+        </div>
+        <button class="btn btn-block btn-sm btn-primal f-700 waves-effect"
+          ng-click="venMaintCtrl.createVendorPortalAccess()"
+          ng-disabled="(venMaintCtrl.vendorAccessObject.email_id.length===0 || !venMaintCtrl.vendorAccessObject.email_id || !venMaintCtrl.vendorAccessObject.expiry_date || venMaintCtrl.isLoading || venMaintCtrl.invalidExpiryDate)">
+          <span data-ng-if="venMaintCtrl.isLoading"><i class="fa fa-spinner fa-spin m-r-5"></i></span>
+          Add
+        </button>
+      </ng-form>
+
+      <div data-ng-show="venMaintCtrl.message" class="col-xs-12 p-5 m-t-10 m-b-0 alert alert-success alert-dismissable">
+        {{venMaintCtrl.message}}
+      </div>
+      <div data-ng-show="venMaintCtrl.errorMessage"
+        class="col-xs-12 p-5 m-t-10 m-b-0 alert alert-danger alert-dismissable">
+        {{venMaintCtrl.errorMessage}}
+      </div>
+    </div>
+    <div class="col-xs-12 p-0 m-b-20">
+      <table class="table table-responsive table-bordered table-bordered-sm table-condensed m-t-20">
+        <thead>
+          <th>Email</th>
+          <th>Expiry Date</th>
+          <th>Login Count</th>
+          <th class="text-center">URL</th>
+          <th class="text-center">Remove</th>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="vendor in venMaintCtrl.vendoraccess"
+            data-ng-if="venMaintCtrl.vendoraccess.length > 0 && !venMaintCtrl.isLoadingVendorPortalData">
+            <td class="text-overflow-desc-auto" title="{{vendor.email_id}}">{{vendor.email_id | truncate : 15}}</td>
+            <td>{{vendor.expiry_date | FormatDate}}</td>
+            <td>{{vendor.login_count || 'NA'}}</td>
+            <td class="text-center"><a data-ng-click="venMaintCtrl.getVendorPortalLoginLink(vendor)">Get Link</a></td>
+            <td class="text-center">
+              <span data-ng-if="vendor.isDeletingVendor"><i class="fa fa-spinner fa-spin m-r-5"></i></span>
+              <span class="fa fa-trash c-firebrick" ng-if="!vendor.showRemoveConfirmation"
+                data-ng-class="{'opacity50': venMaintCtrl.isDeletingVendor}"
+                ng-click="vendor.isDeletingVendor ? null : vendor.showRemoveConfirmation=true"></span>
+              <span ng-if="vendor.showRemoveConfirmation">
+                <i class="zmdi zmdi-check m-r-5" data-ng-class="{'opacity50': venMaintCtrl.isDeletingVendor}"
+                  data-ng-click="vendor.isDeletingVendor ? null : venMaintCtrl.removeVendorPortalAccess(vendor,$index);"
+                  style="background-color: #008e00; color: white; padding: 1px 5px 2px 5px; font-size: 15px; margin-top: 3px;"></i>
+                <i class="zmdi zmdi-close" data-ng-class="{'opacity50': venMaintCtrl.isDeletingVendor}"
+                  data-ng-click="vendor.isDeletingVendor ? null : vendor.showRemoveConfirmation = false"
+                  style="background-color: #f44336; color: white; padding: 1px 6px 2px 6px; font-size: 15px; margin-top: 3px;"></i>
+              </span>
+            </td>
+          </tr>
+          <tr class="text-center"
+            data-ng-if="venMaintCtrl.vendoraccess.length === 0 && !venMaintCtrl.isLoadingVendorPortalData">
+            <td colspan="4">No records found!</td>
+          </tr>
+          <tr class="text-center" data-ng-if="venMaintCtrl.isLoadingVendorPortalData">
+            <td colspan="4" class="p-5"><span><i class="fa fa-spinner fa-spin m-r-5"></i></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-12 p-0 m-b-20" data-ng-if="venMaintCtrl.vendorPortalUrl">
+      <div class="col-xs-12 p-0">
+        <div class="col-xs-12 p-t-5 p-r-10 p-b-5 p-l-10 d-flex align-items-center justify-content-between"
+          style="border-bottom: 1px solid #ececec;background: #495c98;">
+          <span class="f-500 c-white">Vendor Portal URL</span>
+          <span class="f-15 f-700 cursor-pointer c-white"
+            data-ng-click="venMaintCtrl.vendorPortalUrl = !venMaintCtrl.vendorPortalUrl">&times;</span>
+        </div>
+        <div class="col-xs-12 p-10 p-l-0 d-flex justify-content-between align-items-center" style="border: 1px solid #ececec;
+        border-top: 0;">
+          <a class="text-"
+            data-ng-click="venMaintCtrl.copyToClipboard(venMaintCtrl.vendorPortalUrl)">{{venMaintCtrl.vendorPortalUrl}}</a>
+          <button class="btn btn-sm btn-info" style="width: 85px;"
+            data-ng-click="venMaintCtrl.copyToClipboard(venMaintCtrl.vendorPortalUrl)">Copy
+            URL</button>
+        </div>
+        <div class="col-xs-12 p-5 m-t-20 m-b-0 alert alert-success alert-dismissable"
+          data-ng-if="venMaintCtrl.showTextCopied">
+          <span>Text copied to clipboard</span>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-xs-12 p-0">
+      <rcp-success-form  success-tick="success_tick.svg"
+      save-success="venMaintCtrl.isSaveSuccess" delete-success="venMaintCtrl.isDeletePortalSuccess" close-fn="venMaintCtrl.closeVendorPortalForm();"></rcp-success-form>
+    </div>
+  </div>
+
+</div>

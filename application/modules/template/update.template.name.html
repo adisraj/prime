@@ -1,0 +1,66 @@
+
+            <div id="rcrightsidebar" data-ng-show="templateCtrl.openUpdateTemplateNameSidepanel === true" data-ng-class="{'toggled':templateCtrl.openUpdateTemplateNameSidepanel === true,'changeposition': templateCtrl.showhistory}" >
+                <div class="col-xs-12 side-panel-name m-t-25">
+                        <div class="close-icon">
+                            <a data-ng-click="templateCtrl.closeForm();" class="cursor-pointer">
+                                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                            </a>
+                        </div>
+                        <div class="panel-name-section">
+                            <label class="rclabel editformlabel" ng-if="(!templateCtrl.isDeleteSuccess && !templateCtrl.isConfirmDelete && templateCtrl.isShowAdd)"
+                                title="Template Name">Create
+                                <strong>Template Name</strong>
+                            </label>
+                            <label class="rclabel editformlabel" ng-if="(!templateCtrl.isDeleteSuccess && !templateCtrl.isConfirmDelete && !templateCtrl.isShowAdd)"
+                                title="Template Name">Update
+                                <strong>Template Name</strong>
+                            </label>
+                            <label class="rclabel editformlabel" ng-if="(templateCtrl.isDeleteSuccess || templateCtrl.isConfirmDelete && !templateCtrl.isShowAdd)" title="Template Name">Delete
+                                <strong>Template Name</strong>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="d-flex m-b-10 m-t-10" ng-if="!(templateCtrl.isUpdateSuccess || templateCtrl.isSaveSuccess || templateCtrl.isConfirmDelete || templateCtrl.isDeleteSuccess)">
+                            <div class="m-auto updatepanel">
+                                <div data-ng-include="'./img/sidebar-icons/template.svg'"></div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 p-0">
+                            <div ng-if="!(templateCtrl.isUpdateSuccess || templateCtrl.isSaveSuccess || templateCtrl.isConfirmDelete || templateCtrl.isDeleteSuccess)">
+                                <ng-form name="templateCtrl.updateTemplateForm" novalidate="novalidate" valdr-type="RULES-108">
+                                    <div class="form-group" valdr-form-group>
+                                        <span class="c-red" ng-show="templateCtrl.updateTemplateForm.name.$invalid">* </span>
+                                        <span class="c-green" ng-show="templateCtrl.updateTemplateForm.name.$valid">* </span>
+                                        <label>Name</label>
+                                        <input id="name" name="name" type="text" class="form-control input-sm" ng-model="templateCtrl.templateDetails.name"
+                                            placeholder="Enter Name" ng-minlength="3" ng-maxlength="40" errorvalue="templateCtrl.templateDetails.name_error"
+                                            ng-model-options="{ updateOn: 'blur' }" required>
+                                    </div>
+                                    <rcp-edit-form-btns new-form="templateCtrl.isShowAdd" save-fn="templateCtrl.saveTemplateSKU(templateCtrl.templateDetails);" save-btn-text="templateCtrl.saveBtnText"
+                                        save-btn-error="templateCtrl.saveBtnError" update-fn="templateCtrl.updateTemplateSKU(templateCtrl.templateDetails);" update-btn-text="templateCtrl.updateBtnText"
+                                        update-btn-error="templateCtrl.updateBtnError" confirm-fn="templateCtrl.showconfirm(); closeShowHistory();" confirm-delete="templateCtrl.isConfirmDelete"
+                                        update-success="templateCtrl.isUpdateSuccess" entity-id="templateCtrl.templateDetails.id" enable-button="templateCtrl.updateTemplateForm.$invalid || templateCtrl.isProcessing">
+                                    </rcp-edit-form-btns>
+                                    <!-- <button type="button" class="btn-block btn-primal btn-lg" data-ng-disabled="updateTemplateForm.$invalid || templateCtrl.isProcessing" data-ng-click="">Update</button> -->
+                                    <!-- <button class="btn-block btn-secondary btn-lg f-700" data-ng-disabled="templateCtrl.isProcessing">Delete</button> -->
+                                    <!-- <button class="f-700 btn-link btn-block" data-ng-click="templateCtrl.historySidePanel();">View History</button> -->
+                                </ng-form>
+                            </div>
+                        </div>
+                        <rcp-delete-form data-ng-if="templateCtrl.isConfirmDelete" image-name="template.svg" close-fn="templateCtrl.closeForm(); "
+                            delete-fn="templateCtrl.deleteTemplateSKU(templateCtrl.templateDetails);" confirm-delete="templateCtrl.isConfirmDelete">
+                        </rcp-delete-form>
+                        <rcp-success-form success-tick="success_tick.svg" create-new-fn="templateCtrl.createAnotherForm('template_master');" close-fn="templateCtrl.closeForm();" save-success="templateCtrl.isSaveSuccess" update-success="templateCtrl.isUpdateSuccess" delete-success="templateCtrl.isDeleteSuccess">
+                        </rcp-success-form>
+                        <!-- <rcp-success-form success-tick="success_tick.svg" close-fn="templateCtrl.closeForm();" update-success="templateCtrl.successMessage">
+                        </rcp-success-form> -->
+                        <div class="col-xs-12" ng-if="!templateCtrl.isShowAdd && templateCtrl.isShowHistory" data-ng-include="'./application/modules/template/history.html'">
+                        </div>
+                    </div>
+                    <!-- <div class="col-xs-12" data-ng-if="templateCtrl.successMessage">
+                        <div class="alert alert-success">
+                            {{templateCtrl.successMessage}}
+                        </div>
+                    </div> -->
+            </div>

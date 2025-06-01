@@ -1,0 +1,451 @@
+<style>
+    .significant-attribute {
+        font-weight: 700;
+        color: black;
+    }
+
+    .arrow-style {
+        color: brown;
+    }
+
+    .short_description_col {
+        background: #fafdfb;
+    }
+</style>
+<!--list panel-->
+<div class="col-lg-12 p-0" data-ng-controller="ItemTypeUDDController as itemTypeUDDCtrl">
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="itemTypeUDDCtrl.openForm()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="itemTypeUDDCtrl.closeForm();itemTypeUDDCtrl.isColumnSettingsVisible = false" />
+        </li>
+        <li>
+            <keybinding on="ctrl+f" invoke="itemTypeUDDCtrl.focusSearchField()" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="itemTypeUDDCtrl.reload('refresh')" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="itemTypeUDDCtrl.isColumnSettingsVisible = true" />
+        </li>
+    </ul>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;display:grid;">
+                <div class="d-flex p-l-5">
+                    <span class="image-module align-items-center" style="display: grid">
+                        <img src="./img/sidebar-icons/entity-config-item.svg" />
+                    </span>
+                    <span class="label-module align-items-center" style="font-size: 1em;font-weight: 500;display: grid;">
+                        <a href="javascript:void(0)" style="width:auto;line-height: inherit;">Item Type User Defined Data
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+                    <div class="">
+                        <span data-ng-if="!itemTypeUDDCtrl.search && !itemTypeUDDCtrl.showOnlySignificant">
+                            {{itemTypeUDDCtrl.rowsInfo}} </span>
+                        <span data-ng-if="itemTypeUDDCtrl.search || itemTypeUDDCtrl.showOnlySignificant"> Displaying {{(itemTypeUDDCtrl.itemudd_data | pick: itemTypeUDDCtrl.showOnlySignificant ? 'is_important>0':'is_important>-1'|filterBy:
+                            ['id','status','user_defined_data_type','attribute_or_hierarchy','maintenance_description','display_sequence','entry_level','required','visibility','pe_filter_priority']
+                            : itemTypeUDDCtrl.search).length}} of {{itemTypeUDDCtrl.itemudd_data.length}} Records </span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="itemTypeUDDCtrl.itemudd_data.length > 0">
+                                    <input class="form-control input-sm" type="text" ng-model="itemTypeUDDCtrl.search" id="inlineSearch" name="inlineSearch"
+                                        data-ng-init="itemTypeUDDCtrl.focusSearchField()" indicate-quick-search placeholder="Quick Search"
+                                        data-ng-disabled="!itemTypeUDDCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="itemTypeUDDCtrl.itemudd_data.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="itemTypeUDDCtrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect" data-ng-disabled="!itemTypeUDDCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="itemTypeUDDCtrl.itemudd_data.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="itemTypeUDDCtrl.reload(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="!itemTypeUDDCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link m-0" data-ng-if="itemTypeUDDCtrl.selectedDescription.length <= 1 && permissionsMap.view">
+                            <a>
+                                <button type="button" class="btn btn-primal f-700 waves-effect" data-ng-click="itemTypeUDDCtrl.fetchGroupHeaderPropertiesByItemTypeId();"
+                                    data-ng-disabled="itemTypeUDDCtrl.rowsCount === 0">
+                                    <span>Group Headers</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-cancel waves-effect f-700" data-ui-sref="common.prime.itemtype">Go Back</button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="itemTypeUDDCtrl.openForm();" data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Add User Defined Data
+                                    </span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="itemTypeUDDCtrl.openForm();" style="padding: 8px 18px" class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Add User Defined Data
+                                    </button>
+                                </li>
+                                <li ng-if="itemTypeUDDCtrl.itemudd_data.length > 0 && permissionsMap.view">
+                                    <a data-ng-click="itemTypeUDDCtrl.isLoaded ? itemTypeUDDCtrl.ShowHideColumnSettings() : '' " data-ng-class="{'cursor-not-allowed': !itemTypeUDDCtrl.isLoaded}"
+                                        href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="itemTypeUDDCtrl.itemudd_data.length > 0 && permissionsMap.view">
+                                    <a data-ng-click="itemTypeUDDCtrl.isLoaded ? itemTypeUDDCtrl.reload(true) : '' " data-ng-class="{'cursor-not-allowed': !itemTypeUDDCtrl.isLoaded}"
+                                        href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                                <li class="cursor-pointer" data-ng-if="permissionsMap.view">
+                                    <button data-ng-click="itemTypeUDDCtrl.fetchGroupHeaderPropertiesByItemTypeId();" style="padding: 8px 20px" class="ristrictedBtn"
+                                        data-ng-disabled="itemTypeUDDCtrl.rowsCount === 0">
+                                        <img src="img/group-header-dark.svg" class="m-r-15" style="height:13px;"> Group Headers
+                                    </button>
+                                </li>
+                                <li>
+                                    <a data-ui-sref="common.prime.itemtype">
+                                        <i class="zmdi zmdi-long-arrow-left"></i> Go Back</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!itemTypeUDDCtrl.rowsCount && !itemTypeUDDCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="(itemTypeUDDCtrl.rowsCount > 0 && itemTypeUDDCtrl.isLoaded) || itemTypeUDDCtrl.showSignificantFlag">
+        <div class="rcp-table-container" ng-if="permissionsMap.view && itemTypeUDDCtrl.isLoaded">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/item/type.udd/hideShowColumns.html'"></div>
+                <div data-ng-include="'./application/modules/item/type.udd/groupHeader.html'"></div>
+                <div class="col-xs-12 p-0 module-content-configuration" data-ng-if="(itemTypeUDDCtrl.rowsCount > 0 && itemTypeUDDCtrl.isLoaded) || itemTypeUDDCtrl.showSignificantFlag">
+                    <div class="d-flex d-flex-v-center">
+                        <span class="f-300 text-nowrap">Showing UDDs for : </span>
+                        <div class="d-flex flex-wrap">
+                            <div class="selected-description" data-ng-repeat="data in itemTypeUDDCtrl.selectedDescription | limitTo : itemTypeUDDCtrl.typeLimit">
+                                <span ng-bind-html="itemTypeUDDCtrl.itemTypeMap[data.type_id].item_type_path">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="cursor-pointer selected-description load-more m-l-5 m-b-5" data-ng-if="itemTypeUDDCtrl.selectedDescription.length > itemTypeUDDCtrl.typeLimit"
+                            data-ng-click="itemTypeUDDCtrl.typeLimit = itemTypeUDDCtrl.typeLimit+5">
+                            <span> Load more </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0">
+                    <div class="col-xs-12 p-0">
+                        <div class="d-flex justify-content-end m-t-10">
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label style="color: #615f5f;font-weight:300;font-style:italic;"> Significant Item Type User Defined Datas are highlighted
+                                        <input id="is_important" type="checkbox" hidden="hidden" ng-model="itemTypeUDDCtrl.showOnlySignificant" ng-true-value="1"
+                                            ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <div class="col-xs-12 p-0 o-auto sticky-head-container" style="max-height: calc(100vh - 340px);">
+                                <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                                    <thead data-ng-show="itemTypeUDDCtrl.isLoaded">
+                                        <tr>
+                                            <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.id.visible == 0">
+                                                <span class="handle">Id</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.status.visible == 0">
+                                                <span class="handle">Status</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'status' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'status' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="item_type_name_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'item_type_path_search'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.itemType.visible == 0">
+                                                <span class="handle">Item Type</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'item_type_path_search' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'item_type_path_search' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="user_defined_data_type_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'user_defined_data_type'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.uddType.visible == 0">
+                                                <span class="handle">UDD Type</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'user_defined_data_type' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'user_defined_data_type' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="attribute_or_hierarchy_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'attribute_or_hierarchy'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.uddName.visible == 0">
+                                                <span class="handle">User Defined Data</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'attribute_or_hierarchy' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'attribute_or_hierarchy' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="description_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'maintenance_description'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.description.visible == 0">
+                                                <span class="handle">Description</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'maintenance_description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'maintenance_description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="default_value_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'default_value'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.default_value.visible == 0">
+                                                <span class="handle">Default Value</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'default_value' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'default_value' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="group_header_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'group_header'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.group_header.visible == 0">
+                                                <span class="handle">Group Header</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'group_header' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'group_header' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="entry_level_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'entry_level'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.entryLevel.visible == 0">
+                                                <span class="handle">Entry Level</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'entry_level' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'entry_level' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="entry_type_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'entry_type'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.entry_type.visible == 0">
+                                                <span class="handle">Entry Type</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'entry_type' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'entry_type' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="required_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'required'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.required.visible == 0">
+                                                <span class="handle">Required</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'required' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'required' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="visibility_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'visibility'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.visibility.visible == 0">
+                                                <span class="handle">Visibility</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'visibility' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'visibility' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="display_sequence_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'display_sequence'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.displaySequence.visible == 0">
+                                                <span class="handle">Prime Sequence</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'display_sequence' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'display_sequence' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="columnwidth-15 text-center" id="pe_filter_priority_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'pe_filter_priority'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.filterPriority.visible == 0">
+                                                <span class="handle">Product Explorer Sequence</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'pe_filter_priority' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'pe_filter_priority' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="columnwidth-15 text-center" id="inlcude_in_item_type_report_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'inlcude_in_item_type_report'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.inItemTypeReport.visible == 0">
+                                                <span class="handle">Include in Item Type Report</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'inlcude_in_item_type_report' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'inlcude_in_item_type_report' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="columnwidth-15 text-center" id="include_in_mercury_report_col_head" drag-me drop-me data-handle=".handle" ng-click="itemTypeUDDCtrl.sortType = 'inlcude_in_mercury_report'; sortReverse = !sortReverse"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.inMercuryReport.visible == 0">
+                                                <span class="handle">Include in Mercury Report</span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'inlcude_in_mercury_report' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="itemTypeUDDCtrl.sortType == 'inlcude_in_mercury_report' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                            <th class="text-center" id="datalake_col_head" drag-me drop-me data-handle=".handle" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.datalake.visible == 0">
+                                                <span class="handle">Documents</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="itemtype_udd in itemTypeUDDCtrl.itemudd_data | pick: itemTypeUDDCtrl.showOnlySignificant ? 'is_important>0':'is_important>-1'|filterBy: ['id','status','item_type_path_search','user_defined_data_type','attribute_or_hierarchy','maintenance_description','default_value_view || default_value','display_sequence','entry_level','required','visibility','pe_filter_priority'] : itemTypeUDDCtrl.search |orderBy:itemTypeUDDCtrl.sortType:sortReverse|itemsPerPage:itemTypeUDDCtrl.pageSize"
+                                            ng-class="{'background-hover':$index === selectedRow}" data-ng-click="itemTypeUDDCtrl.setClickedRow($index);"
+                                            ios-dblclick=" itemTypeUDDCtrl.dblClickAction(itemtype_udd);" selectedrow="{{itemtype_udd}}">
+                                            <td class="id_col text-center" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.id.visible == 0">
+                                                {{itemtype_udd.id}}</td>
+                                            <td class="status_col" ng-class="{'text-success f-500': itemtype_udd.status==='Active' , 'text-warning f-300': itemtype_udd.status ==='Pending Active', 'text-primary f-300': itemtype_udd.status ==='Inactive','text-info f-300': itemtype_udd.status==='Pending Inactive'}"
+                                                data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.status.visible == 0">
+                                                {{itemtype_udd.status}}
+                                                <i ng-show="itemtype_udd.status_id === 1" class="glyphicon glyphicon-ok c-green"></i>
+                                                <i ng-show="itemtype_udd.status_id === 0" class="glyphicon glyphicon-remove c-red"></i>
+                                            </td>
+                                            <td class="item_type_name_col" ng-bind-html="itemTypeUDDCtrl.itemTypeMap[itemtype_udd.type_id].item_type_path" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.itemType.visible == 0">
+                                            </td>
+                                            <td class="user_defined_data_type_col" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.uddType.visible == 0">
+                                                {{itemtype_udd.user_defined_data_type}}
+                                            </td>
+                                            <td class="attribute_or_hierarchy_col" ng-class="{'significant-attribute': itemtype_udd.is_important}" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.uddName.visible == 0">
+                                                {{itemtype_udd.attribute_or_hierarchy}}
+                                            </td>
+                                            <td class="description_col" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.description.visible == 0">
+                                                {{itemtype_udd.maintenance_description}}
+                                            </td>
+                                            <td class="default_value_col" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.default_value.visible == 0">
+                                                <span data-ng-if="itemtype_udd.user_defined_data_type.toLowerCase() !== 'hierarchy'">
+                                                    <span title="{{itemtype_udd.default_value_view}}" data-ng-if="itemtype_udd.default_value_view">{{itemtype_udd.default_value_view | truncate : 50}}
+                                                    </span>
+                                                    <span title="{{itemtype_udd.default_value}}" data-ng-if="!itemtype_udd.default_value_view && itemtype_udd.default_value && (itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase() !== 'url'&&itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase() !== 'value list' && itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase() !== 'rating' && itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase() !== 'multiselect' && itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase()!=='date range') ">{{itemtype_udd.default_value | truncate : 50}}
+                                                        <span data-ng-if="itemTypeUDDCtrl.attributeListMap && itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase() === 'percentage' && itemtype_udd.default_value">%</span>
+                                                    </span>
+                                                    <span ng-if="itemtype_udd.default_value && (itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase()==='url')">
+                                                        <span data-ng-if="itemtype_udd.default_value&&itemtype_udd.default_value.split('::')[0]">{{itemtype_udd.default_value.split('::')[0]}}::</span>{{itemtype_udd.default_value.split('::')[1]}}</span>
+                                                    <span ng-if="itemtype_udd.default_value && itemtype_udd.default_value.includes('current') && (itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase()==='date range')">
+                                                        {{itemtype_udd.default_value.split(',')[1]}} day[s] starting from {{itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].attribute_from_value|FormatDate}}</span>
+                                                    <span ng-if="itemtype_udd.default_value && !itemtype_udd.default_value.includes('current') && (itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase()==='date range')">
+                                                        {{itemtype_udd.default_value}}
+                                                    </span>
+                                                </span>
+                                                <span data-ng-if="itemtype_udd.user_defined_data_type.toLowerCase() === 'hierarchy'" data-ng-init="itemTypeUDDCtrl.fetchHierarchyValuesByHierarchyId(itemtype_udd);"
+                                                    ng-bind-html="itemtype_udd.default_value_path">
+                                                </span>
+                                                <span data-ng-if="(!itemtype_udd.default_value_view && !itemtype_udd.default_value) || (!itemtype_udd.default_value_view && itemtype_udd.default_value && (itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase() === 'value list' || itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase() === 'rating' || itemTypeUDDCtrl.attributeListMap[itemtype_udd.user_defined_data_id].format.toLowerCase() === 'multiselect'))"
+                                                    class="text-muted">Not Configured</span>
+                                            </td>
+                                            <td class="group_header_col" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.group_header.visible == 0">
+                                                <span data-ng-if="itemtype_udd.group_header_id">{{itemtype_udd.group_header}}</span>
+                                                <span data-ng-if="!itemtype_udd.group_header_id" class="text-muted">Not Configured
+                                                </span>
+                                            </td>
+                                            <td class="entry_level_col" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.entryLevel.visible == 0">
+                                                {{itemtype_udd.entry_level}}
+                                            </td>
+                                            <td class="entry_type_col" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.entry_type.visible == 0">
+                                                {{itemtype_udd.entry_type}}
+                                            </td>
+                                            <td class="required_col" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.required.visible == 0">
+                                                {{itemtype_udd.required}}
+                                            </td>
+                                            <td class="visibility_col" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.visibility.visible == 0" data-ng-init="itemTypeUDDCtrl.addVisibilityDescriptionOnMultiselect(itemtype_udd)">
+                                                {{itemtype_udd.visibility}}
+                                            </td>
+                                            <td class="display_sequence_col text-center" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.displaySequence.visible == 0">
+                                                {{itemtype_udd.display_sequence}}
+                                            </td>
+                                            <td class="pe_filter_priority_col text-center" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.filterPriority.visible == 0">
+                                                {{itemtype_udd.pe_filter_priority | roundIntegerValue}}
+                                            </td>
+                                            <td class="include_in_item_type_report_col text-center" ios-dblclick="itemTypeUDDCtrl.dblClickAction(itemtype_udd);" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.inItemTypeReport.visible == 0">
+                                                <i ng-show="itemtype_udd.include_in_type_report === 1" class="glyphicon glyphicon-ok c-green" title="Allowed" title-direction="right"
+                                                    fixed-position="true"></i>
+                                                <i ng-show="itemtype_udd.include_in_type_report === 0" class="glyphicon glyphicon-remove c-red" title="Not allowed" title-direction="right"
+                                                    fixed-position="true"></i>
+                                            </td>
+                                            <td class="include_in_mercury_report_col text-center" ios-dblclick="itemTypeUDDCtrl.dblClickAction(itemtype_udd);" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.inMercuryReport.visible == 0">
+                                                <i ng-show="itemtype_udd.include_in_mercury_report === 1" class="glyphicon glyphicon-ok c-green" title="Allowed" title-direction="right"
+                                                    fixed-position="true"></i>
+                                                <i ng-show="itemtype_udd.include_in_mercury_report === 0" class="glyphicon glyphicon-remove c-red" title="Not allowed" title-direction="right"
+                                                    fixed-position="true"></i>
+                                            </td>
+                                            <td class="datalake_col text-center" data-ng-hide="itemTypeUDDCtrl.itemTypeUDDGrid.columns.datalake.visible == 0">
+                                                <button type="button" class="p-l-5 header-button datalake-button" ng-click="showMetaData(itemTypeUDDCtrl.entityInformation,itemtype_udd,permissionsMap);"
+                                                    data-ng-disabled="!permissionsMap.drop">
+                                                    <span class="zmdi zmdi-cloud zmdi-hc-fw" data-ng-if="permissionsMap.drop" title="Click here to manage documents" title-direction="left"
+                                                        fixed-position="true"></span>
+                                                    <span class="zmdi zmdi-cloud-off zmdi-hc-fw" data-ng-if="!permissionsMap.drop" title="Access denied" title-direction="left"
+                                                        fixed-position="true"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                                <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="itemTypeUDDCtrl.pageChangeHandler(newPageNumber)">
+                                </dir-pagination-controls>
+                                <div class="btn-group pull-right ng-table-counts m-0">
+                                    <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="itemTypeUDDCtrl.pageSize = 10" ng-class="{'active':itemTypeUDDCtrl.pageSize === 10}">10</button>
+                                    <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="itemTypeUDDCtrl.pageSize = 25" ng-class="{'active':itemTypeUDDCtrl.pageSize === 25}">25</button>
+                                    <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="itemTypeUDDCtrl.pageSize = 50" ng-class="{'active':itemTypeUDDCtrl.pageSize === 50}">50</button>
+                                    <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="itemTypeUDDCtrl.pageSize = 100" ng-class="{'active':itemTypeUDDCtrl.pageSize === 100}">100</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <meta-data-panel></meta-data-panel>
+    </div>
+    <div ng-if="!permissionsMap.view && itemTypeUDDCtrl.isLoaded" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <!-- Modal to show dislpay sequence update notification - START-->
+    <div data-ng-include="'./template/view.update.display.sequence.html'"></div>
+    <!-- Modal to show dislpay sequence update notification - END-->
+    <div class="col-xs-12">
+        <div data-ng-if="itemTypeUDDCtrl.rowsCount === 0 && itemTypeUDDCtrl.isLoaded && !itemTypeUDDCtrl.showSignificantFlag && permissionsMap.view"
+            class="module-content-configuration">
+            <div class="col-xs-12 text-center text-info">
+                <span class="f-15 f-300">No user defined data exists for selected item type[s]. Please add user defined data.
+                </span>
+            </div>
+        </div>
+    </div>
+    <ui-view></ui-view>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':itemTypeUDDCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{itemTypeUDDCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="itemTypeUDDCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{itemTypeUDDCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{itemTypeUDDCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="itemTypeUDDCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

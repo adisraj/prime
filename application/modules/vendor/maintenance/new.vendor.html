@@ -1,0 +1,1302 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6!important
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+        border-left: 3px solid #f9c10c!important;
+    }
+
+    input[type="radio"]:focus,
+    input[type="radio"]:checked {
+        border: 2px solid #f9c10c!important;
+        border-radius: 50%;
+        background-color: #009688;
+        box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, .4), 0 1px 1px hsla(0, 0%, 100%, .8);
+        content: '';
+        height: 20px;
+        width: 20px;
+    }
+
+    input[type="radio"] {
+        border: 1px solid #5d4565;
+        border-radius: 50%;
+        cursor: pointer;
+        display: inline-block;
+        height: 20px;
+        margin-right: 15px;
+        position: relative;
+        width: 20px;
+        -webkit-appearance: none;
+    }
+</style>
+<div id="vendorId" data-ng-init="venMaintCtrl.InitializeCreateUpdateForm();">
+    <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="venMaintCtrl.isFormLoading">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">
+            <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+            <span>
+    </div>
+    <div class="form-page-size" data-ng-if="!venMaintCtrl.isFormLoading">
+        <div class="maintainence-details-section p-t-10 p-l-10 p-b-10 p-r-0">
+            <div class="col-lg-9 col-xs-8 p-0 inheritheight">
+                <div class="col-lg-12 inheritheight">
+                    <div ng-if="venMaintCtrl.createForm" ng-init="venMaintCtrl.setStageIndication('createform');">
+                        <div class="col-xs-12 p-0" data-ng-class="{'disable-actions':venMaintCtrl.disableActions}">
+                            <ng-form name="venMaintCtrl.ven_maint_form" valdr-type="VENDOR_MASTER" role="form" novalidate="novalidate">
+                                <!--CREATE FORM START-->
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-xs-10 col-lg-8 update-maintenance-screen-title">
+                                        <span class="f-16 c-white">
+                                            <i class="fa fa-edit"></i> Create Vendor </span>
+                                    </div>
+                                    <div class="col-xs-10 col-lg-8 p-0 box maintenanceworkspace">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Master Details</span>
+                                            <div>
+                                                <small>The primary details of the location</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-10">
+                                            <div class="col-lg-12 p-0 m-b-15">
+                                                <div class="col-sm-9">
+                                                    <div class="">
+                                                        <label class="btn rcp-select-btn btn-sm" ng-class="{'active':head.individual_or_company==='Company'}">
+                                                            <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                                                            <input class="p-absolute" ng-model="head.individual_or_company" type="radio" value="Company" ng-click="venMaintCtrl.changeInfo('Company')"
+                                                                style="opacity: 0"> Company
+                                                        </label>
+                                                        <label class="btn rcp-select-btn btn-sm" ng-class="{'active':head.individual_or_company==='Individual'}">
+                                                            <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                                                            <input id="ind_name" class="p-absolute" ng-model="head.individual_or_company" type="radio" value="Individual" ng-click="venMaintCtrl.changeInfo('Individual')"
+                                                                style="opacity: 0"> Individual
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 p-0">
+                                                <div ng-if="head.individual_or_company==='Individual'">
+                                                    <div class="col-xs-12 p-0">
+                                                        <div class="col-md-6 col-xs-12">
+                                                            <div class="form-group" valdr-form-group>
+                                                                <span class="c-red" ng-show="venMaintCtrl.ven_maint_form.name.$invalid">*
+                                                                </span>
+                                                                <span class="c-green" ng-show="venMaintCtrl.ven_maint_form.name.$valid">*
+                                                                </span>
+                                                                <label class="maintenance-field-label">Individual Name
+                                                                </label>
+                                                                <select data-ng-if="venMaintCtrl.allindividuals && venMaintCtrl.allindividuals.length>0" selectize="venMaintCtrl.selectIndividualDropDown"
+                                                                    items="head.individual_id_or_company_id" name="name" class="form-control select-component input-sm"
+                                                                    options="venMaintCtrl.allindividuals" ng-model="head.individual_id_or_company_id"
+                                                                    data-ng-class="{'error-field-validation': venMaintCtrl.ven_maint_form.name.$invalid && venMaintCtrl.isInvalidForm}"
+                                                                    required>
+                                                                </select>
+                                                                <div class="text-info f-13 m-t-5" ng-if="venMaintCtrl.showLoadingIndividual">Loading individuals...
+                                                                </div>
+                                                                <div class="text-info f-12 m-t-5" ng-if="!venMaintCtrl.showLoadingIndividual && venMaintCtrl.allindividuals.length === 0">
+                                                                    No individuals are present, Click add to create new individual
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2 col-md-6 p-0">
+                                                            <div class="form-group">
+                                                                <button class="aligncenter add-new-btn btn btn-inverse" ng-click="venMaintCtrl.openForm('Individual')">Add Individual
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div ng-if="head.individual_or_company==='Company'">
+                                                    <div class="col-lg-12 col-md-12 p-0">
+                                                        <div class="col-md-12 col-xs-12 col-lg-6">
+                                                            <div class="form-group" valdr-form-group>
+                                                                <span class="c-red" ng-show="venMaintCtrl.ven_maint_form.company_individual.$invalid">*
+                                                                </span>
+                                                                <span class="c-green" ng-show="venMaintCtrl.ven_maint_form.company_individual.$valid">*
+                                                                </span>
+                                                                <label class="maintenance-field-label">Company</label>
+                                                                <select autofocus data-ng-if="venMaintCtrl.allCompanies && venMaintCtrl.allCompanies.length>0" selectize="venMaintCtrl.selectCompanyDropDown"
+                                                                    items="head.individual_id_or_company_id" name="company_individual"
+                                                                    class="form-control select-component input-sm" options="venMaintCtrl.allCompanies"
+                                                                    ng-model="head.individual_id_or_company_id" ng-change="venMaintCtrl.getCompanyDetails(head.individual_id_or_company_id);venMaintCtrl.primaryDepartmentLoaded=false;venMaintCtrl.mainAddressLoaded=false;"
+                                                                    data-ng-class="{'error-field-validation': venMaintCtrl.ven_maint_form.company_individual.$invalid && venMaintCtrl.isInvalidForm}"
+                                                                    required>
+                                                                </select>
+                                                                <div class="text-info f-13 m-t-5" ng-if="venMaintCtrl.showLoadingCompany">Loading companies...
+                                                                </div>
+                                                                <div class="text-info f-12 m-t-5" ng-if="!venMaintCtrl.showLoadingCompany && venMaintCtrl.allCompanies.length === 0">
+                                                                    No companies are present, Click add to create new company
+                                                                </div>
+                                                                <!-- <div ng-if="(!venMaintCtrl.primaryDepartment && !venMaintCtrl.primaryDepartmentLoaded || !venMaintCtrl.mainAddress && !venMaintCtrl.mainAddressLoaded) && head.individual_id_or_company_id && venMaintCtrl.isInvalidForm">
+                                                                    <span class="rc-alert-icon m-r-0">
+                                                                        <span class="zmdi zmdi-alert-polygon m-t-5" style="font-size:18px;color: #ff6c3c;" fixed-position="true">
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="text-danger f-12">
+                                                                        Add Primary Department and Address to continue.</span>
+                                                                </div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-lg-6 col-sm-6 d-flex">
+                                                            <div class="form-group m-r-10">
+                                                                <button ng-show="!venMaintCtrl.isCompanyDepartmentSidePanelVisible" class="aligncenter add-new-btn btn btn-inverse" ng-click="venMaintCtrl.openForm('Company')"
+                                                                    ng-disabled="venMaintCtrl.disableActions || !venMaintCtrl.companyPermissions.create"
+                                                                    title="{{!venMaintCtrl.companyPermissions.create ? 'Access denied' : ''}}">Add Company
+                                                                </button>
+                                                            </div>
+                                                            <!-- <div class="form-group">
+                                                                <button ng-show="head.individual_id_or_company_id &&  !venMaintCtrl.showCmpDetails" class="aligncenter form-view-btn btn btn-sm btn-inverse"
+                                                                    ng-click="venMaintCtrl.openForm('CompanyDepartments')" data-ng-disabled="!venMaintCtrl.companyDepartmentPermissions.create"
+                                                                    title="{{!venMaintCtrl.companyDepartmentPermissions.create ? 'Access denied' : ''}}">
+                                                                    <span class="zmdi zmdi-eye zmdi-hc-fw m-r-5"></span>Departments</button>
+                                                            </div> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-md-6 col-xs-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="venMaintCtrl.ven_maint_form.type_id.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="venMaintCtrl.ven_maint_form.type_id.$valid">*
+                                                        </span>
+                                                        <label class="maintenance-field-label">Vendor Type</label>
+                                                        <select data-ng-if="venMaintCtrl.allVendorTypes && venMaintCtrl.allVendorTypes.length>0 && !venMaintCtrl.showLoadingVendorType"
+                                                            ng-change="head.VendorType=(venMaintCtrl.allVendorTypes|filter:{type_id:head.type_id})[0].short_description;venMaintCtrl.reloadUDDs();"
+                                                            selectize="venMaintCtrl.selectVendorTypeDropDown" items="head.type_id"
+                                                            name="type_id" class="form-control select-component input-sm" options="venMaintCtrl.allVendorTypes"
+                                                            ng-model="head.type_id" data-ng-class="{'error-field-validation': venMaintCtrl.ven_maint_form.type_id.$invalid && venMaintCtrl.isInvalidForm}"
+                                                            required>
+                                                        </select>
+                                                        <div class="text-info f-13 m-t-5" ng-if="venMaintCtrl.showLoadingVendorType">Loading vendor types...</div>
+                                                        <div class="text-info f-12 m-t-5" ng-if="!venMaintCtrl.showLoadingVendorType && venMaintCtrl.allVendorTypes.length === 0">
+                                                            No vendor types are present.</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 col-xs-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="venMaintCtrl.ven_maint_form.purchase_terms.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="venMaintCtrl.ven_maint_form.purchase_terms.$valid">*
+                                                        </span>
+                                                        <label class="maintenance-field-label">Vendor Terms</label>
+                                                        <select data-ng-if="venMaintCtrl.allVendorPurchaseTerms && venMaintCtrl.allVendorPurchaseTerms.length>0 && !venMaintCtrl.showLoadingVendorTerms"
+                                                            ng-change="head.purchase_terms=(venMaintCtrl.allVendorPurchaseTerms|filter:{purchase_terms_id:head.purchase_terms_id})[0].description"
+                                                            selectize="venMaintCtrl.selectVendorTermsDropDown" items="head.purchase_terms_id"
+                                                            name="purchase_terms" class="form-control select-component input-sm"
+                                                            options="venMaintCtrl.allVendorPurchaseTerms" ng-model="head.purchase_terms_id"
+                                                            data-ng-class="{'error-field-validation': venMaintCtrl.ven_maint_form.purchase_terms.$invalid && venMaintCtrl.isInvalidForm}"
+                                                            required>
+                                                        </select>
+                                                        <div class="text-info f-13 m-t-5" ng-if="venMaintCtrl.showLoadingVendorTerms">Loading vendor terms...</div>
+                                                        <div class="text-info f-12 m-t-5" ng-if="!venMaintCtrl.showLoadingVendorTerms && venMaintCtrl.allVendorPurchaseTerms.length === 0">
+                                                            No vendor terms are present.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-md-6 col-xs-12">
+                                                    <div class="form-group" valdr-form-group data-ng-if="vendorConfig.buyer_hierarchy_id">
+                                                        <span class="c-red" ng-show="head.buyer_id == null || head.buyer_id == undefined">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="head.buyer_id">* </span>
+                                                        <label class="maintenance-field-label">{{vendorConfig.buyer_hierarchy_desc}}</label>
+                                                        <hierarchy-tree-view primary-hierarchy-id="vendorConfig.buyer_hierarchy_id" path="head.buyer_hierarchy_path" primary-hierarchy-value-id="head.buyer_id"
+                                                            directive-end-fn='getBuyerHierarchyPath(directiveData)' enable-valdr-validation
+                                                            enable-valdr-message form-data="head" form-header="{{vendorConfig.buyer_hierarchy_desc}}"
+                                                            clear-path="venMaintCtrl.clearPath" data-ng-class="{'error-field-validation': (head.buyer_id == null || head.buyer_id == undefined) && venMaintCtrl.isInvalidForm}">
+                                                        </hierarchy-tree-view>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-xs-12">
+                                                    <span class="c-red" ng-show="head.inventory_method_id == null || head.inventory_method_id == undefined || head.inventory_method_id.length == 0">*</span>
+                                                    <span class="c-green" ng-show="head.inventory_method_id && head.inventory_method_id.length > 0">* </span>
+                                                    <label class="maintenance-field-label">Inventory Methods</label>
+                                                    <multiselect class="" ng-model="head.inventory_method_id" options="im.id as im.name for im in venMaintCtrl.inventoryMethods"
+                                                        select-limit="100" header="Select Inventory Methods" selected-header="options selected"
+                                                        multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                        ng-class="{'error-field-validation': (head.inventory_method_id == null || head.inventory_method_id == undefined || head.inventory_method_id.length == 0) && venMaintCtrl.isInvalidForm}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12">
+                                                <div class="form-group" valdr-form-group>
+                                                    <label class="maintenance-field-label">Pricing Factor</label>
+                                                    <input type="number" id="pricing_factor" name="pricing_factor" class="form-control input-sm" ng-model="head.factor" min="1"
+                                                        max="5" placeholder="Enter Pricing Factor">
+                                                    <span class="text-danger" ng-if="venMaintCtrl.ven_maint_form.pricing_factor.$invalid">
+                                                        Pricing Factor should be between 1 and 5. </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12 ">
+                                                <label class="maintenance-field-label d-block">Vendor Reorder</label>
+                                                <div class="d-flex align-items-center">
+                                                    <label class="align-items-center d-flex m-r-15">
+                                                        <input type="radio" name="vendorreorder" ng-model="head.vendor_reorder" value="1" ng-value="1" ng-change="venMaintCtrl.changeVendorReorder()">
+                                                        <i class="input-helper"></i> Yes
+                                                    </label>
+                                                    <label class="align-items-center d-flex">
+                                                        <input type="radio" name="vendorreorder" ng-model="head.vendor_reorder" value="0" ng-value="0" ng-change="venMaintCtrl.changeVendorReorder()"
+                                                            selected>
+                                                        <i class="input-helper"></i> No
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- Section Other Details Start -->
+                                    <div class="col-xs-10 col-lg-8 p-0 box m-t-10 maintenanceworkspace">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Other Details</span>
+                                            <div>
+                                                <small>Other vendor descriptions and details</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-10">
+
+                                            <div class="col-md-12 col-xs-12 p-0">
+                                                <div class="col-md-6 col-xs-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="head.rms_vendor_short_name == null || head.rms_vendor_short_name == undefined || head.rms_vendor_short_name == 0">*</span>
+                                                        <span class="c-green" ng-show="head.rms_vendor_short_name && head.rms_vendor_short_name.length > 0">* </span>
+                                                        <label class="maintenance-field-label">RMS Vendor Short Name
+                                                        </label>
+                                                        <input type="text" ng-blur="venMaintCtrl.duplicateCheck(head.rms_vendor_short_name);" nextfocus enterindex="6" id="rms_vendor_short_name"
+                                                            name="rms_vendor_short_name" class="form-control input-sm" ng-model="head.rms_vendor_short_name"
+                                                            placeholder="Enter RMS Vendor Short Name" data-ng-maxlength="5" data-ng-pattern="venMaintCtrl.as400FieldsRegularExpression" data-ng-class="{'error-field-validation': (head.rms_vendor_short_name == null || head.rms_vendor_short_name == undefined || head.rms_vendor_short_name == 0) && venMaintCtrl.isInvalidForm}">
+                                                        <span class="text-danger f-12" data-ng-if="venMaintCtrl.ven_maint_form.rms_vendor_short_name.$dirty && !venMaintCtrl.ven_maint_form.rms_vendor_short_name.$valid && venMaintCtrl.ven_maint_form.rms_vendor_short_name.$error.pattern && !venMaintCtrl.ven_maint_form.rms_vendor_short_name.$error.maxlength">*Short Name must be a valid string</span>
+                                                        <span class="text-danger f-12" data-ng-if="venMaintCtrl.ven_maint_form.rms_vendor_short_name.$dirty && venMaintCtrl.ven_maint_form.rms_vendor_short_name.$error.maxlength && !venMaintCtrl.ven_maint_form.rms_vendor_short_name.$valid">*The length should be with in 5 characters</span>
+                                                        <span class="text-danger f-12" data-ng-if="venMaintCtrl.ven_maint_form.rms_vendor_short_name.$dirty && venMaintCtrl.ven_maint_form.rms_vendor_short_name.$valid && venMaintCtrl.isVendorShortNameExist && !venMaintCtrl.shortNameValidation">{{venMaintCtrl.duplicateShortNameMessage}}
+                                                        <img src="./img/loadingData.gif" ng-if="venMaintCtrl.shortNameValidation === true && head.rms_vendor_short_name.length > 0"
+                                                            style="height: 30px;width: 30px;" />
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-xs-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="head.rms_vendor_short_sequence == null || head.rms_vendor_short_sequence == undefined || head.rms_vendor_short_sequence == 0">*</span>
+                                                        <span class="c-green" ng-show="head.rms_vendor_short_sequence && head.rms_vendor_short_sequence.length > 0">* </span>
+                                                        <label class="maintenance-field-label">RMS Vendor Sort Sequence
+                                                        </label>
+                                                        <input type="text" id="rms_vendor_short_sequence" name="rms_vendor_short_sequence" class="form-control input-sm" ng-model="head.rms_vendor_short_sequence" data-ng-pattern="venMaintCtrl.as400FieldsRegExpression"
+                                                            placeholder="Enter RMS Vendor Sort Sequence" data-ng-maxlength="10" data-ng-class="{'error-field-validation': (head.rms_vendor_short_sequence == null || head.rms_vendor_short_sequence == undefined || head.rms_vendor_short_sequence == 0) && venMaintCtrl.isInvalidForm}">
+                                                        <span class="text-danger f-12" data-ng-if="venMaintCtrl.ven_maint_form.rms_vendor_short_sequence.$dirty && !venMaintCtrl.ven_maint_form.rms_vendor_short_sequence.$valid && venMaintCtrl.ven_maint_form.rms_vendor_short_sequence.$error.pattern && !venMaintCtrl.ven_maint_form.rms_vendor_short_sequence.$error.maxlength">*Sort Sequence will allow Uppercase, Special characters and Numbers</span>
+                                                        <span class="text-danger f-12" data-ng-if="venMaintCtrl.ven_maint_form.rms_vendor_short_sequence.$dirty && venMaintCtrl.ven_maint_form.rms_vendor_short_sequence.$invalid && venMaintCtrl.ven_maint_form.rms_vendor_short_sequence.$error.maxlength">*The length should be with in 10 characters</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12">
+                                                <div class="form-group" valdr-form-group>
+                                                    <label class="maintenance-field-label">RMS Vendor Number
+                                                        <i class="fa fa-info-circle" title="The RMS Vendor Number will be zero until the vendor is published"></i>
+                                                    </label>
+                                                    <input type="text" id="rms_vendor_number" data-ng-disabled="true" name="rms_vendor_number" class="form-control input-sm" ng-model="head.rms_vendor_number" data-ng-pattern="venMaintCtrl.as400FieldsRegularExpression"
+                                                        placeholder="0" ng-pattern="/^[1-9]{1,7}$/"">
+                                                        
+                                                        <span class="text-danger f-12"
+                                                        data-ng-if="venMaintCtrl.ven_maint_form.rms_vendor_number.$dirty && venMaintCtrl.ven_maint_form.rms_vendor_number.$invalid && venMaintCtrl.ven_maint_form.rms_vendor_number.$error.pattern">*RMS
+                                                        vendor should be between 1 to 9999999</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- Section Other Details end -->
+                                    <!-- Section Status Start -->
+                                    <div class="col-xs-10 col-lg-8 p-0 box m-t-10 maintenanceworkspace">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Status</span>
+                                            <div>
+                                                <small>Current and next status for the Vendor</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-10">
+                                            <div class="col-md-6 col-xs-12">
+                                                <div class="form-group" valdr-form-group>
+                                                    <span class="c-red" ng-show="venMaintCtrl.ven_maint_form.status_id.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="venMaintCtrl.ven_maint_form.status_id.$valid">*
+                                                    </span>
+                                                    <label class="maintenance-field-label">Current Status</label>
+                                                    <select class="form-control select-component input-sm" id="status_id" name="status_id" ng-options="each.code as each.description for each in  statuses"
+                                                        ng-change="head.status=(statuses|filter:{code:head.status_id})[0].description;venMaintCtrl.reloadUDDs()"
+                                                        ng-model="head.status_id" required="" errorvaluechosen="head.status_id_error"
+                                                        placeholder-text-single="'Select Status'" data-ng-class="{'error-field-validation': venMaintCtrl.ven_maint_form.status_id.$invalid && venMaintCtrl.isInvalidForm}">
+                                                        <option value="" disabled>Select Current Status</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12">
+                                                <div class="form-group" valdr-form-group ng-init="head.effective_date=getDateBasedOnFormat(head.effective_date)">
+                                                    <span class="c-red" ng-show="venMaintCtrl.ven_maint_form.effective_date.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="venMaintCtrl.ven_maint_form.effective_date.$valid">*
+                                                    </span>
+                                                    <label class="maintenance-field-label">Effective Date</label>
+                                                    <div class="form-groups" valdr-form-group>
+                                                        <input type="text" id="effective_date" name="effective_date" required class="form-control input-sm rcp-mydatepicker" ng-model="head.effective_date"
+                                                            ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+                                                            model-view-value="true" is-effective-date="true" data-ng-class="{'error-field-validation': venMaintCtrl.ven_maint_form.effective_date.$invalid && venMaintCtrl.isInvalidForm}">
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12">
+                                                <div class="form-group" valdr-form-group>
+                                                    <span class="c-red" ng-show="venMaintCtrl.ven_maint_form.next_status_id.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="venMaintCtrl.ven_maint_form.next_status_id.$valid">*
+                                                    </span>
+                                                    <label class="maintenance-field-label">Next Status</label>
+                                                    <select class="form-control select-component input-sm" id="next_status_id" name="next_status_id" ng-change="venMaintCtrl.changeEvent(head); head.next_status=(next_statuses|filter:{code:head.next_status_id})[0].description"
+                                                        ng-options="each.code as each.description disable when (each.code === venMaintCtrl.statusCodes.Pending.ID && head.status_id !== venMaintCtrl.statusCodes.Pending.ID) for each in next_statuses"
+                                                        ng-model="head.next_status_id" errorvaluechosen="head.next_status_id_error"
+                                                        required="" data-ng-class="{'error-field-validation': venMaintCtrl.ven_maint_form.next_status_id.$invalid && venMaintCtrl.isInvalidForm}">
+                                                        <option value="" disabled>Select Next Status</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12" ng-if="effective_val">
+                                                <span class="c-red" ng-show="venMaintCtrl.ven_maint_form.next_effective_date.$invalid">*
+                                                </span>
+                                                <span class="c-green" ng-show="venMaintCtrl.ven_maint_form.next_effective_date.$valid">*
+                                                </span>
+                                                <label class="maintenance-field-label" ng-init="head.next_effective_date=getDateBasedOnFormat(head.next_effective_date)">Next Effective Date</label>
+                                                <div class="form-group" valdr-form-group>
+                                                    <input type="text" id="next_effective_date" name="next_effective_date" required class="form-control input-sm rcp-mydatepicker"
+                                                        ng-model="head.next_effective_date" ui-mask="{{ui_date_mask}}" mydatepicker
+                                                        ng-model-options="{ updateOn: 'blur' }" model-view-value="true" is-effective-date="false"
+                                                        data-ng-class="{'error-field-validation': venMaintCtrl.ven_maint_form.next_effective_date.$invalid && venMaintCtrl.isInvalidForm}">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xs-12 m-b-15">
+                                            <div class="col-xs-12">
+                                                <div class="rc-alert rc-alert-type-info" aria-hidden="false" role="alert">
+                                                    <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                        <div class="rc-alert-icon">
+                                                            <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                                                            </span>
+                                                        </div>
+                                                        <div style="flex:1;">
+                                                            <div class="f-14 f-700 text-info">Automatic status adjustment
+                                                            </div>
+                                                            <div>
+                                                                <span class="text-muted">
+                                                                    Based on the next effective date the current status will be automatically adjusted. If the current date is equal to the next
+                                                                    effective date then the current status will be changed
+                                                                    to the next status and the effective date will be updated
+                                                                    to the current date
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Section Status End -->
+                                    <div class="col-xs-10 col-lg-8 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="venMaintCtrl.validationMessage">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                                <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                    <div class="rc-alert-icon">
+                                                        <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px" title="Error message" title-direction="bottom" fixed-position="true">
+                                                        </span>
+                                                    </div>
+                                                    <div style="flex:1;">
+                                                        <div class="f-15 f-700 text-danger">Error!</div>
+                                                        <div>
+                                                            <span class="c-black">{{venMaintCtrl.validationMessage}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Section for the buttons -- START -->
+                                    <div class="col-xs-10 col-lg-8 p-0 m-t-10 m-b-10">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-xs-6 p-0 pull-right d-flex">
+                                                <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 waves-effect" data-ng-click="venMaintCtrl.closeForm();">Cancel</button>
+                                                <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 waves-effect" data-ng-click="venMaintCtrl.continueFn('createForm')">Next</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Section for the buttons -- END -->
+                                </div>
+                                <!--CREATE FORM END-->
+                            </ng-form>
+                        </div>
+                    </div>
+                    <div ng-show="venMaintCtrl.addressContactScreen" ng-init="venMaintCtrl.setStageIndication('addressContactForm');">
+                        <div class="col-xs-10 col-lg-8 p-0">
+                            <div class="col-lg-12 update-maintenance-screen-title">
+                                <span class="f-16 c-white">
+                                    <i class="fa fa-edit"></i> Create Vendor </span>
+                            </div>
+                            <div class="col-lg-12 p-0 box maintenanceworkspace">
+                                <div class="col-lg-12 p-0 rcpscrollbar">
+                                    <vendor-address-contact-directive></vendor-address-contact-directive>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="venMaintCtrl.validationMessage">
+                                <div class="col-xs-12 p-0">
+                                    <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                        <div class="col-xs-12 d-flex m-b-5 p-0">
+                                            <div class="rc-alert-icon">
+                                                <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                </span>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div class="f-15 f-700 text-danger">Error!</div>
+                                                <div>
+                                                    <span class="c-black">{{venMaintCtrl.validationMessage}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 p-t-10 m-b-10">
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="(!venMaintCtrl.confirmDelete && !venMaintCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect" data-ng-click="venMaintCtrl.closeForm();">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="venMaintCtrl.backFn('addressContactScreen');">Back</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 waves-effect" data-ng-click="venMaintCtrl.continueFn('addressContactScreen');">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Div for vendor configure start-->
+                    <div ng-show="venMaintCtrl.configureScreen" ng-init="venMaintCtrl.setStageIndication('configureform');">
+                        <div class="col-xs-10 col-lg-8 p-0">
+                            <div class="col-lg-12 update-maintenance-screen-title">
+                                <span class="f-16 c-white">
+                                    <i class="fa fa-edit"></i> Create Vendor </span>
+                            </div>
+                            <div class="col-lg-12 p-0 box maintenanceworkspace">
+                                <div class="col-lg-12 p-0 rcpscrollbar">
+                                    <vendor-userdefined-data-directive></vendor-userdefined-data-directive>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-b-10 p-0 m-t-10" data-ng-if="uddValidationErrors.length>0">
+                                <div class="rc-alert p-10" aria-hidden="false" role="alert">
+                                    <div class="col-xs-12 d-flex p-0 box">
+                                        <div style="flex:1;">
+                                            <div class="d-flex d-flex-v-center p-10" style="background-color: #fffdf7;border-bottom: 1px solid #eaeded;">
+                                                <span class="c-firebrick zmdi zmdi-alert-octagon" style="font-size:28px"></span>
+                                                <span class="c-firebrick m-l-10">
+                                                    Please add values before proceeding in maintenance.
+                                                </span>
+                                            </div>
+                                            <div class="p-5">
+                                                <!-- <div class="c-gray p-5">Click on each link to add values</div> -->
+                                                <div class="p-5" data-ng-repeat="uddValidationError in uddValidationErrors">
+                                                    <span class="d-flex d-flex-v-center">
+                                                        <span data-ng-if="uddValidationError.user_defined_data_type.toLowerCase() === 'attribute'">
+                                                            <img src="./img/sidebar-icons/package.svg" style="height:13px;width:15px;" />
+                                                        </span>
+                                                        <span data-ng-if="uddValidationError.user_defined_data_type.toLowerCase() === 'hierarchy'">
+                                                            <img src="./img/sidebar-icons/hierarchy-levels.svg" style="height:13px;width:15px;" />
+                                                        </span>
+                                                        <span class="c-bluegray f-400 m-l-5 m-r-5">{{uddValidationError.user_defined_data_type}}
+                                                        </span> -
+                                                        <span class="m-l-5 text-info">{{uddValidationError.udd_description}}</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="venMaintCtrl.validationMessage">
+                                <div class="col-xs-12 p-0">
+                                    <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                        <div class="col-xs-12 d-flex m-b-5 p-0">
+                                            <div class="rc-alert-icon">
+                                                <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                </span>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div class="f-15 f-700 text-danger">Error!</div>
+                                                <div>
+                                                    <span class="c-black">{{venMaintCtrl.validationMessage}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 p-t-10 m-b-10">
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="(!venMaintCtrl.confirmDelete && !venMaintCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect" data-ng-click="venMaintCtrl.closeForm();">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="venMaintCtrl.backFn('configureScreen');">Back</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 waves-effect" data-ng-click="venMaintCtrl.resultdata(vmCtrl.result_udd_data);venMaintCtrl.continueFn('configureScreen');">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-xs-4">
+                            <div class="col-xs-12 p-10" style="background: #fafafa;border: 1px solid #dadada;">
+                                <div class="col-xs-12">
+                                    <h5 class="text-primary">User Defined Datatypes</h5>
+                                    <small>
+                                        User-defined datatypes use the built-in datatypes and other user-defined
+                                        datatypes as the building blocks for datatypes that
+                                        model the structure and behavior of data in applications.
+                                    </small>
+                                </div>
+                                <div class="col-xs-12 p-10">
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/package.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Attributes
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Attributes are a quality, character, characteristic or property.
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/hierarchy-levels.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Hierarchy
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Hierarchies are any system of persons or things ranked one above another in
+                                        hierarchical manner.
+
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/package.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Groups
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Groups are any assemblage of persons or things.
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+
+                    </div>
+                    <!--End of configure vendor div -->
+
+                    <!--Div is for the manage drops in location-->
+                    <div ng-if="venMaintCtrl.manageDropScreen" ng-init="venMaintCtrl.setStageIndication('dropScreen');venMaintCtrl.initializeDropForm()">
+                        <ng-form name="venMaintCtrl.drop_form" novalidate="novalidate">
+                            <div class="col-xs-10 col-lg-8 p-0">
+                                <div class="col-lg-12 update-maintenance-screen-title">
+                                    <span class="f-16 c-white">
+                                        <i class="fa fa-edit"></i> Create Vendor </span>
+                                </div>
+                                <div class="col-xs-12 p-0 box maintenanceworkspace">
+                                    <div class="col-xs-12 f-16 panel-header">
+                                        <span class="f-700 main-header">Unstructured Data</span>
+                                        <div>
+                                            <small>Add/Remove drops for the vendor</small>
+                                        </div>
+                                    </div>
+                                    <div data-ng-include="'./template/unstructured.data.info.section.html'"></div>
+                                    <div class="col-xs-12 p-10">
+                                        <div class="col-xs-6">
+                                            <div class="text-info text-center f-12 m-t-5" ng-if="loadingStreams">Loading streams...
+                                            </div>
+                                            <div class="text-info text-center f-12 m-t-5" ng-if="!streams.length && !loadingStreams">No streams exists for selected lake</div>
+                                            <div class="form-group" ng-if="drop.lake_id && !loadingStreams">
+                                                <span class="c-red" ng-show="venMaintCtrl.drop_form.stream_id.$invalid">*
+                                                </span>
+                                                <span class="c-green" ng-show="venMaintCtrl.drop_form.stream_id.$valid">*
+                                                </span>
+                                                <label>Stream</label>
+                                                <select id="stream_id" name="stream_id" ng-model="drop.stream_id" class="form-control select-component input-sm" ng-options="item.stream_id as item.stream for item in streams"
+                                                    data-ng-change="venMaintCtrl.getLakeStreamLinkByIds(drop.lake_id,drop.stream_id);resetAllconfigData()"
+                                                    required>
+                                                    <option value="" disabled>Select Stream</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 p-0">
+                                            <div class="col-xs-12">
+                                                <span class="c-green">*</span>
+                                                <label>Status</label>
+                                            </div>
+                                            <div class="col-xs-12 form-group d-flex m-t-5 p-0" data-ng-init="venMaintCtrl.getDropStatus()">
+                                                <div ng-repeat="status in statusList">
+                                                    <div data-ng-init="status.isDefault ? drop.status_id = status.id : ''">
+                                                        <label class="d-flex align-items-center m-r-15">
+                                                            <input hidden="hidden" type="radio" name="status" class="m-r-10 m-t-0" id="{{$index}}-status-local" ng-model="drop.status_id"
+                                                                value="{{status.id}}" required ng-checked="status.isDefault">
+                                                            <i class="input-helper"></i>{{status.label}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-xs-12">
+                                                <span class="c-green">*</span>
+                                                <label>Source</label>
+                                            </div>
+                                            <div class="col-xs-12 form-group d-flex" data-ng-init="drop.source = 'Local'">
+                                                <div class="m-t-5">
+                                                    <label class="d-flex align-items-center">
+                                                        <input hidden="hidden" type="radio" name="match" id="match-local" data-ng-change="venMaintCtrl.venDataAddToQueueError = false;resetAllconfigData()" ng-model="drop.source" value="Local" required>
+                                                        <i class="input-helper"></i>Upload from Local Computer
+                                                    </label>
+                                                </div>
+                                                <div class="m-t-5 m-l-10">
+                                                    <label class="d-flex align-items-center">
+                                                        <input hidden="hidden" type="radio" name="match" id="match-url" ng-model="drop.source" value="URL" ng-click="drop.is_save_to_document_store=true;resetAllconfigData()"
+                                                            required>
+                                                        <i class="input-helper"></i>Upload from Internet
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="drop.source.toLowerCase() === 'local'" style="align-items:flex-end;">
+                                            <div class="col-xs-4 col-lg-7">
+                                                <div class="form-group" ng-repeat="f in files">
+                                                    <label>File Name</label>
+                                                    <label name="filename" class="form-control input-sm o-hidden text-overflow-desc-aut" title="{{f.name}}" disabled required>{{f.name}}</label>
+                                                </div>
+                                                <div class="text-danger p-t-10" data-ng-if="errFiles" data-ng-repeat="ef in errFiles">
+                                                    <span data-nf-if="ef.$errorMessages && ef.$errorMessages.maxSize">
+                                                        * {{ef.name}} exedes size limit {{ef.$errorParam}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8 col-lg-5 p-0" style="margin-top: 22px;">
+                                                <div class="col-xs-6 form-group pull-right" data-ng-if1="venMaintCtrl.drop_form.$valid && (!isAllowMultipleDrops||(files||files.length>0))"
+                                                    data-ng-click="venMaintCtrl.isAllowedMultipleDropsForSelectedStream(queuedDrops)">
+                                                    <button ng-disabled="(!isAllowMultipleDrops && queuedDrops.length>0) || venMaintCtrl.isAddedToQueue || venMaintCtrl.drop_form.$invalid || !files || !files.length || notImage"
+                                                        type="button" class="btn btn-success f-700 btn-block" name="update_title_btn"
+                                                        id="update_title_btn">Add to Queue
+                                                    </button>
+                                                </div>
+                                                <div class="col-xs-6 form-group pull-right">
+                                                    <button type="button" class="btn btn-info f-700 btn-block" ng-disabled="!isAllowMultipleDrops" name="update_title_btn" id="update_title_btn"
+                                                        ngf-select="venMaintCtrl.selectFiles($files, $invalidFiles)" multiple
+                                                        accept="*" ngf-max-size="60MB">Select File</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-lg-12 p-0 checkbox m-b-10">
+                                                <label class="d-flex" data-ng-if="drop.stream_id == '33' && files.length && !notImage" data-ng-init="venMaintCtrl.is_thumbnail = 1;">
+                                                    <input type="checkbox" data-ng-model="venMaintCtrl.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                                    <i class="input-helper"></i>
+                                                    <span class="m-t-5 m-l-10">Save as thumbnail</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="text-danger p-b-10 m-l-10" data-ng-if="notImage">* Selected File is
+                                            not an image</div>
+                                        <div class="col-xs-12 p-0 d-flex" data-ng-if="drop.source.toLowerCase() === 'url'" style="align-items:flex-end;">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <span class="c-red" ng-show="venMaintCtrl.drop_form.url.$invalid|| notImageUrl || invalidUrl">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="venMaintCtrl.drop_form.url.$valid && !notImageUrl && !invalidUrl">*
+                                                    </span>
+                                                    <label>URL</label>
+                                                    <input id="url" ng-bind="datas" name="url"  ng-keyup="venMaintCtrl.validateUrl(drop.url);"
+                                                        type="text" class="form-control input-sm" data-ng-change="venMaintCtrl.venDataAddToQueueError = false;venMaintCtrl.showCantGen = false" ng-model="drop.url" placeholder="Enter URL"
+                                                         required>
+                                                      
+                                                    <span class="text-danger" ng-if="(venMaintCtrl.drop_form.url.$error.pattern && !venMaintCtrl.drop_form.url.$pristine) || invalidUrl">Invalid URL
+                                                    </span>
+                                                    <span class="text-danger" ng-if="venMaintCtrl.showCantGen">Cannot convert the given url into file
+                                                    </span>
+                                                    <!-- <img data-ng-if="drop.source.toLowerCase()=='url' &&venMaintCtrl.drop_form.url.$valid && !venMaintCtrl.showCantGen"
+                                                    ng-src="{{drop.url}}" style="height:125px;width:125px;" /> -->
+                                                    <div class="col-xs-12 p-0 form-group" data-ng-if="drop.source.toLowerCase()=='url' && isImage && files.length > 0" style="display: inline-flex;top: 5px;flex-direction: column;">
+                                                        <img data-ng-if="drop.source.toLowerCase()=='url' && venMaintCtrl.drop_form.url.$valid && !venMaintCtrl.showCantGen"
+                                                        ng-src="{{drop.url}}" style="height:125px;width:125px;" />
+                                                        <div class="d-flex" style="align-items: flex-end;" ng-repeat="f in files">
+                                                            <label class="c-gray f-300">{{f.type | truncate:40}}</label>
+                                                            <label class="c-gray f-300" style="margin-left: 15px">{{f.size}} kb</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div data-ng-if="drop.url&&drop.url.length>0&&venMaintCtrl.drop_form.url.$valid && !notImageUrl && !invalidUrl" class="checkbox m-b-10" style="margin-left: -9px;">
+                                                    <label class="d-flex">
+                                                        <input type="checkbox" data-ng-disabled="drop.source.toLowerCase()=='url'" data-ng-model="drop.is_save_to_document_store" ng-true-value=true ng-false-value=false>
+                                                        <i class="input-helper" data-ng-disabled="drop.source.toLowerCase()=='url'" ng-class="{'cursor-nt-al': drop.source.toLowerCase()=='url'}"
+                                                         title="{{drop.source.toLowerCase()=='url'? 'Saving to document store by default':''}}"></i>
+                                                        <span class="m-t-5 m-l-10">Save to document store</span>
+                                                    </label>
+                                                    <label class="d-flex m-t-5" data-ng-if="drop.stream_id == '33'" data-ng-init="venMaintCtrl.is_thumbnail = 1;">
+                                                        <input type="checkbox" data-ng-model="venMaintCtrl.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                                        <i class="input-helper"></i>
+                                                        <span class="m-t-5 m-l-10">Save as thumbnail</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0" data-ng-if1="isAllowMultipleDrops && !(venMaintCtrl.drop_form.$invalid)">
+                                                <div class="col-lg-6 col-xs-12 form-group pull-right" data-ng-click="venMaintCtrl.isAllowedMultipleDropsForSelectedStream(queuedDrops)">
+                                                    <button type="button" ng-disabled="venMaintCtrl.drop_form.$invalid || venMaintCtrl.isAddedToQueue || venMaintCtrl.showCantGen || (!isAllowMultipleDrops && queuedDrops.length>0)||notImageUrl||invalidUrl" class="btn btn-success f-700 btn-block"
+                                                        name="update_title_btn" id="update_title_btn">Add to Queue</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-danger p-b-10 m-l-10" data-ng-if="notImageUrl">* URL is
+                                            not an image</div>
+                                        <div class="col-xs-12 p-0" data-ng-if="!isAllowMultipleDrops && queuedDrops.length>0">
+                                            <span class="col-xs-12 text-danger">Multiple drop upload is not allow for selected stream. Delete the existing queue.
+                                            </span>
+                                        </div>
+                                        <div class="f-14 f-700 c-firebrick" data-ng-if="venMaintCtrl.venDataAddToQueueError">
+                                            {{venMaintCtrl.venDataAddToQueueError}}
+                                        </div>
+                                        <!-- End -->
+                                    </div>
+                                </div>
+                                <!-- Table to show the cover images and the Thumbnails start -->
+                                <div class="col-xs-12 p-0 box maintenanceworkspace m-t-10">
+                                    <div class="col-xs-12 m-b-10 p-0">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Images added to the queue
+                                            </span>
+                                            <div>
+                                                <small>Images will be only be added to the queue, and will be linked once the data
+                                                    is published.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-t-10">
+                                            <div class="rc-alert rc-alert-type-info" aria-hidden="false" role="alert">
+                                                <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                    <div class="rc-alert-icon">
+                                                        <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                                                        </span>
+                                                    </div>
+                                                    <div style="flex:1;">
+                                                        <div class="f-14 f-700 text-info">Images in the Queue</div>
+                                                        <div>
+                                                            <span class="text-muted">
+                                                                Based on the next effective date the current status will be automatically adjusted. If the current date is equal to the next
+                                                                effective date then the current status will be changed to
+                                                                the next status and the effective date will be updated to
+                                                                the current date
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Section to show the message for the Image added to Queue start -->
+                                        <div class="col-xs-12 m-t-10" id="showQueueMessage">
+                                            <div class="col-xs-12 p-10" style="border: 1px solid #b4ceb4;border-radius: 3px;background: #f2fff2;">
+                                                <span class="d-flex f-14 f-700" style="color: #386d39;">
+                                                    <span class="f-21 f-700 m-r-5 text-success zmdi zmdi-check zmdi-hc-fw" style="color: #5ca05d;"></span>
+                                                    {{venMaintCtrl.showSuccessQueueMessage}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- Section to show the message for the Image added to Queue end -->
+
+                                        <!-- Section to show the message on deleting cover image -->
+                                        <div class="col-xs-12 m-t-10" id="showConfirmationMessage" data-ng-if="venMaintCtrl.DeletionConfirmation">
+                                            <div class="col-xs-12 p-10" style="border: 1px solid #b4ceb4;border-radius: 3px;background: #f2fff2;">
+                                                <span class="d-flex f-14 f-700">
+                                                    Removing cover image will remove the same from thumbnail. Do you want to delete ?
+                                                </span>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group pull-right">
+                                                        <button class="btn btn-block btn-success waves-effect f-700" ng-if="!updateFile" ng-click="venMaintCtrl.deleteDropFromQueue()">
+                                                            Yes, Delete!
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-group pull-right m-r-5">
+                                                        <button class="btn btn-block btn-inverse waves-effect f-700" data-ng-click="venMaintCtrl.initializeDropForm()">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Section to show the message on deleting cover image end -->
+
+                                        <div class="col-xs-12 o-auto p-t-10" data-ng-if="queuedDrops.length>0">
+                                            <table class="table table-condensed table-bordered-sm table-bordered table-vmiddle maintenance-drops-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Size</th>
+                                                        <th>Lake</th>
+                                                        <th>Stream</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <!-- <tbody>
+                                                    <tr>
+                                                        <td colspan="5" class="group-header-cover-img">Cover Image</td>
+                                                        <tr class="repeated-item" ng-repeat="drop in queuedDrops" ng-disabled="isDeleting" data-ng-if="drop.stream_code==='cover_image'">
+                                                            <td title="{{drop.file_name || drop.url}}">{{drop.file_name || (drop.url | limitTo: 50)}}
+                                                                <span ng-if="drop.url">
+                                                                    ... </span>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span data-ng-if="drop.size">{{drop.size/1024 | DecimalPrecision:1 }} KB</span>
+                                                                <span data-ng-if="!drop.size"> - </span>
+                                                            </td>
+                                                            <td>{{drop.lake}}</td>
+                                                            <td>{{drop.stream}}</td>
+                                                            <td class="text-center d-flex" style="justify-content: space-evenly;">
+                                                                <a class="c-firebrick f-500 cursor-pointer f-17" ng-click="venMaintCtrl.removeDropsFromQueue($index)" title="Delete Image">
+                                                                    <span class="zmdi zmdi-delete zmdi-hc-fw"></span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <td colspan="5" class="group-header-thumbnail">Thumbnails</td>
+                                                        <tr class="repeated-item" ng-repeat="drop in queuedDrops" ng-disabled="isDeleting" data-ng-if="drop.stream_code==='thumbnail'">
+                                                            <td title="{{drop.file_name || drop.url}}">{{drop.file_name || (drop.url | limitTo: 50)}}
+                                                                <span ng-if="drop.url">
+                                                                    ... </span>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span data-ng-if="drop.size">{{drop.size/1024 | DecimalPrecision:1 }} KB</span>
+                                                                <span data-ng-if="!drop.size"> - </span>
+                                                            </td>
+                                                            <td>{{drop.lake}}</td>
+                                                            <td>{{drop.stream}}</td>
+                                                            <td class="text-center d-flex" style="justify-content: space-evenly;">
+                                                                <a class="c-firebrick f-500 cursor-pointer f-17" ng-click="venMaintCtrl.removeDropsFromQueue($index)" title="Delete Image">
+                                                                    <span class="zmdi zmdi-delete zmdi-hc-fw"></span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tr>
+                                                </tbody> -->
+                                                <tbody data-ng-repeat="(groupName,dropValues) in queuedDrops|groupBy:'stream' track by $index">
+                                                    <tr>
+                                                        <td colspan="5" class="group-header-cover-img">{{groupName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="repeated-item" data-ng-repeat="drop in dropValues"  data-ng-init="drop.thumbnail=venMaintCtrl.getDownloadUrl(drop.drop_id, drop.url)"
+                                                        ng-disabled="isDeleting">
+                                                        <td>{{drop.file_name || (drop.url | limitTo: 50)}}
+                                                            <span ng-if="drop.url">
+                                                                ... </span>
+                                                        </td>
+                                                        <td>
+                                                            <span data-ng-if="drop.size">{{drop.size/1024 | DecimalPrecision:1 }} KB</span>
+                                                            <span data-ng-if="!drop.size"> - </span>
+                                                        </td>
+                                                        <td>{{drop.lake}}</td>
+                                                        <td>{{drop.stream}}</td>
+                                                        <td class="text-center d-flex" style="justify-content: space-evenly;">
+                                                            <button type="button" class="c-firebrick f-500 cursor-pointer f-17 
+                                                            zmdi zmdi-delete zmdi-hc-fw bg-none border-none p-0" ng-click="venMaintCtrl.deleteDropsFromQueue(drop)"
+                                                                title="Delete Image">
+                                                            </button>
+                                                        </td>
+                                                   
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-12 o-auto" data-ng-if="queuedDrops.length===0">
+                                            <div class="col-xs-12 p-10">
+                                                <span class="text-info">No queued drops to publish.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="venMaintCtrl.validationMessage ">
+                                    <div class="col-xs-12 p-0">
+                                        <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                            <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                <div class="rc-alert-icon">
+                                                    <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                    </span>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div class="f-15 f-700 text-danger">Error!</div>
+                                                    <div>
+                                                        <span class="c-black">{{venMaintCtrl.validationMessage}}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Table to show the cover images and the Thumbnails end -->
+                                <div class="col-xs-12 m-t-10 p-0 m-b-10">
+                                    <div class="col-xs-8 col-lg-6 p-0 pull-right d-flex" data-ng-if="(!venMaintCtrl.confirmDelete && !venMaintCtrl.opdone)">
+                                        <button type="button" class="btn btn-block btn-cancel f-700 waves-effect" style="overflow: visible;" data-ng-click="venMaintCtrl.closeForm();">Cancel</button>
+                                        <button type="button" class="btn btn-block btn-inverse f-700 m-l-5 m-t-0 waves-effect" data-ng-click="venMaintCtrl.backFn('dropScreen');"
+                                            ng-disabled="venMaintCtrl.isProcessing ||venMaintCtrl.isDeleting">Back</button>
+                                        <button type="button" class="btn btn-block btn-success f-700 m-l-5 m-t-0 waves-effect" data-ng-click="venMaintCtrl.continueFn('dropScreen')"
+                                            ng-disabled="venMaintCtrl.isProcessing ||venMaintCtrl.isDeleting">Next</button>
+                                        <button data-ng-if="files.length > 0" type="button" class="btn btn-block btn-info f-700 m-l-5 m-t-0 waves-effect" data-ng-click="venMaintCtrl.continueFn('skip')"
+                                            ng-disabled="venMaintCtrl.isProcessing ||venMaintCtrl.isDeleting">Skip</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                    <!--End of manage drops in vendor div -->
+
+                    <!--Div for preview and publish stage start-->
+                    <div ng-show="venMaintCtrl.previewAndPublish" ng-init="venMaintCtrl.setStageIndication('previewandpublish');">
+                        <div class="col-lg-12 p-0 maintenanceworkspace noboxshadow">
+                            <div class="rcpscrollbar full-height">
+                                <div class="col-xs-12 m-b-10" data-ng-show1="!venMaintCtrl.publishResponseMessage">
+                                    <div class="col-lg-12 update-maintenance-screen-title" data-ng-class="{'d-none' : venMaintCtrl.publishResponseMessage}">
+                                        <span class="f-16 c-white">
+                                            <i class="fa fa-edit"></i> Create Vendor </span>
+                                    </div>
+                                    <div class="col-xs-12 d-flex p-0" style="min-height:50px;flex-direction:column;align-items:flex-end;">
+                                        <div class="col-xs-12 align-items-center justify-content-between type-success" aria-hidden="false" role="alert" ng-class="{'preview-screen':!venMaintCtrl.publishResponseMessage, 'publish-screen':venMaintCtrl.publishResponseMessage}">
+                                            <div class="d-flex p-0" data-ng-if="!venMaintCtrl.publishResponseMessage">
+                                                <div class="rc-alert-icon">
+                                                    <span class=" zmdi zmdi-globe text-info" style="font-size:35px" title="Review" title-direction="bottom" fixed-position="true">
+                                                    </span>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div class="f-14 f-700">Review and Publish</div>
+                                                    <div>
+                                                        <span class="text-muted">
+                                                            <div class="list-style-none" style="line-height: 1.7;">
+                                                                <li>
+                                                                    <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                    <span class="">
+                                                                        <strong>Preview and Publish :</strong> Publish the entered/configured
+                                                                        details
+                                                                    </span>
+                                                                </li>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="" style="justify-content:space-between" data-ng-if="!venMaintCtrl.publishResponseMessage">
+                                                <div class="pull-right d-flex p-0 d-flex-h-center">
+                                                    <button type="button" class="btn btn-lg btn-inverse f-700 waves-effect" data-ng-click="venMaintCtrl.backFn('publishVendor');"
+                                                        data-ng-if="venMaintCtrl.previewAndPublish">Back</button>
+                                                    <button type="button" class="btn btn-lg btn-success f-700 m-l-5 waves-effect" data-ng-click="venMaintCtrl.save('Vendor',head);"
+                                                        data-ng-if="venMaintCtrl.previewAndPublish">Publish {{moduleName}}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- Section to show the response of the published data start -->
+                                            <div class="col-xs-12 p-0" data-ng-if="venMaintCtrl.publishResponseMessage">
+                                                <div class="col-xs-12 p-0 justify-content-between p-0">
+                                                    <div class="col-xs-12 col-lg-9 p-0">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="rc-alert-icon">
+                                                                    <span class=" zmdi zmdi-globe text-info" style="font-size:35px" title="Update information" title-direction="bottom" fixed-position="true">
+                                                                    </span>
+                                                                </span>
+                                                                <div data-ng-if="venMaintCtrl.isProcessing">
+                                                                    <i class="zmdi zmdi-hourglass-alt"></i> ...
+                                                                </div>
+                                                                <div class="f-14 f-700 text-success" data-ng-if="!venMaintCtrl.isProcessing && vendorSuccessMessage">
+                                                                    <span>Vendor</span> Created</div>
+                                                                <span class="c-firebrick f-14 f-700" data-ng-if="!venMaintCtrl.isProcessing && vendorErrorMessage">Error while creating the Vendor</span>
+                                                            </div>
+                                                        </div>
+                                                        <div style="padding-left:40px;" data-ng-if="!venMaintCtrl.isProcessing">
+                                                            <div class="message-section success d-flex-v-center" data-ng-if="vendorSuccessMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{vendorSuccessMessage}}</span>
+                                                            </div>
+                                                            <div class="message-section success d-flex-v-center" data-ng-if="vendorDepartmentSuccessMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{vendorDepartmentSuccessMessage}}</span>
+                                                            </div>
+                                                            <div class="message-section success d-flex-v-center" data-ng-if="vendorUDDSuccessMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{vendorUDDSuccessMessage}}</span>
+                                                            </div>
+                                                            <div class="message-section error d-flex-v-center" data-ng-if="vendorErrorMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{vendorErrorMessage}}</span>
+                                                            </div>
+                                                            <div class="d-flex message-section">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info" data-ng-if="venMaintCtrl.opdone && !vendorErrorMessage">
+                                                                    Are you planing to create a new Vendor?
+                                                                </span>
+                                                                <span class="" data-ng-if="vendorErrorMessage">
+                                                                    Will you go back and review your setup?
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-xs-12 m-t-10" data-ng-if="!venMaintCtrl.isProcessing">
+                                                        <div class="pull-right d-flex p-0 d-flex-h-center">
+                                                            <button type="button" class="btn btn-inverse f-300 waves-effect f-15 p-10" data-ng-click="venMaintCtrl.closeForm();">Finish</button>
+                                                            <button type="button" class="btn btn-cancel f-300 waves-effect f-15 m-l-5 p-10" data-ng-if="vendorErrorMessage" data-ng-click="venMaintCtrl.backFn('addresscontactscreen');venMaintCtrl.publishResponseMessage=false;">Go Back
+                                                            </button>
+                                                            <button type="button" class="btn btn-info f-300 m-l-5 waves-effect f-16" data-ng-if="venMaintCtrl.opdone && !vendorErrorMessage"
+                                                                data-ng-click="venMaintCtrl.NewVendor();" data-ng-disabled="disableActions"
+                                                                style="padding:10px 15px;">Let's Create
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Section to show the response of the published data end -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-xs-12 col-md-6">
+                                        <!--BASIC DETAILS PREVIEW -- START-->
+                                        <div class="col-lg-12 p-0">
+                                            <div class="col-xs-12 f-16 panel-header">
+                                                <span class="f-700" style="color:darkgray;">
+                                                    Vendor Details
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-12 p-t-10 card previewnpublish f-13">
+                                                <div class="col-xs-12 form-group">
+                                                    <label class="panel-body-label">Name</label>
+                                                    <div class="description-data p-0">
+                                                        <label class="m-0 p-0">
+                                                            <select data-ng-if="venMaintCtrl.allindividuals && venMaintCtrl.allindividuals.length>0 && head.individual_or_company==='Individual'"
+                                                                selectize="venMaintCtrl.selectIndividualDropDown" items="head.individual_id_or_company_id"
+                                                                name="name" class="form-control select-component input-sm" options="venMaintCtrl.allindividuals"
+                                                                ng-model="head.individual_id_or_company_id" disabled>
+                                                            </select>
+                                                            <select data-ng-if="venMaintCtrl.allCompanies && venMaintCtrl.allCompanies.length>0 && head.individual_or_company==='Company'"
+                                                                selectize="venMaintCtrl.selectCompanyDropDown" items="head.individual_id_or_company_id"
+                                                                name="company_individual" class="form-control select-component input-sm"
+                                                                options="venMaintCtrl.allCompanies" ng-model="head.individual_id_or_company_id"
+                                                                disabled>
+                                                            </select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <label class="panel-body-label">Vendor Type</label>
+                                                    <div class="description-data p-0">
+                                                        <label class="m-0 p-0">
+                                                            <select data-ng-if="venMaintCtrl.allVendorTypes && venMaintCtrl.allVendorTypes.length>0 && !venMaintCtrl.showLoadingVendorType"
+                                                                selectize="venMaintCtrl.selectVendorTypeDropDown" items="head.type_id"
+                                                                name="type_id" class="form-control select-component input-sm"
+                                                                options="venMaintCtrl.allVendorTypes" ng-model="head.type_id"
+                                                                required disabled>
+                                                            </select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 p-0 form-group">
+                                                    <div class="col-xs-6">
+                                                        <label class="panel-body-label">Current Status</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                <select class="dropdown-to-label" ng-options="each.code as each.description for each in statuses" ng-model="head.status_id"
+                                                                    disabled></select>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <label class="panel-body-label">Effective Date</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">{{head.effective_date }}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 p-0 form-group">
+                                                    <div class="col-xs-6">
+                                                        <label class="panel-body-label">Next Status</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                <select class="dropdown-to-label" ng-options="each.code as each.description for each in next_statuses" ng-model="head.next_status_id"
+                                                                    disabled></select>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6" ng-if="effective_val">
+                                                        <label class="panel-body-label">Next Effective Date</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">{{head.next_effective_date }}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <label class="panel-body-label">Vendor Terms</label>
+                                                    <div class="description-data p-0">
+                                                        <label class="m-0 p-0">
+                                                            <select data-ng-if="venMaintCtrl.allVendorPurchaseTerms && venMaintCtrl.allVendorPurchaseTerms.length>0 && !venMaintCtrl.showLoadingVendorTerms"
+                                                                selectize="venMaintCtrl.selectVendorTermsDropDown" items="head.purchase_terms_id"
+                                                                name="purchase_terms" class="form-control select-component input-sm"
+                                                                options="venMaintCtrl.allVendorPurchaseTerms" ng-model="head.purchase_terms_id"
+                                                                required disabled>
+                                                            </select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <label class="panel-body-label">Buyer</label>
+                                                    <div class="description-data">
+                                                        <label class="m-0 p-0" ng-bind-html="head.buyer"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <label class="panel-body-label">Inventory Methods</label>
+                                                    <div class="description-data p-0">
+                                                        <label class="m-0 p-10 col-lg-12">{{venMaintCtrl.inventory_methods}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--BASIC DETAILS PREVIEW -- END-->
+                                    </div>
+                                    <div class="col-xs-12 col-md-6">
+                                        <!--UDD DETAILS PREVIEW -- START-->
+                                        <div class="col-lg-12 p-0 card m-b-0">
+                                            <div class="col-lg-12 f-16 panel-header c-white">
+                                                <span class="f-700" style="color:darkgray;">
+                                                    User Defined Data
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <preview-udd-directive udd-data="uddData" selected-hierarchy-property="selectedHierarchyProperty" attribute-values-map="venMaintCtrl.attributeValuesMap"
+                                            mto-options-map="" is-summary="false"></preview-udd-directive>
+                                        <!--UDD DETAILS PREVIEW -- END-->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--Div for preview and publish item stage end-->
+                </div>
+            </div>
+        </div>
+        <!--show Vendor dependent details-->
+        <!-- <div data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.dependency.html'"></div> -->
+    </div>
+    <div ui-view></div>
+    <div data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.view.departments.html'">
+    </div>
+    <!--COMPANY DEPARTMENT PANEL END-->
+
+    <!--Department and INDIVIDUAL DETAILS PANEL START-->
+    <div id="rcrightsidebar" class="changehistory" ng-class="{'toggled':venMaintCtrl.showassociate,'toggle-addcnt': isShowAddressContactPanel}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="venMaintCtrl.closeForm('AssociateDetails');" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="{{venMaintCtrl.moduleheadername}}">{{venMaintCtrl.moduleheadername}}</label>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-if="venMaintCtrl.deptdetails">
+            <div class="d-flex">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/department.svg'"></div>
+                </div>
+            </div>
+            <div class="col-lg-12 p-15">
+                <div>
+                    <strong>Department Name :</strong>
+                    <label> {{venMaintCtrl.departmentDetails.name}} </label>
+                </div>
+                <div>
+                    <strong>Status :</strong>
+                    <label> {{venMaintCtrl.departmentDetails.status}}</label>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 text-center">
+                <div class="col-xs-8">
+                    <button class="btn btn-secondary btn-block" data-ng-click="venMaintCtrl.openAddressContactPanel();openAddressPanel(venMaintCtrl.department_uuid,venMaintCtrl.departmentDetails.id);">
+                        Address and Contact
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-if="venMaintCtrl.assocdetails">
+            <!-- <div data-ng-include="'./application/modules/company/associate/company_associate_svg.html'"></div> -->
+            <div class="d-flex">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/inr-users.svg'"></div>
+                </div>
+            </div>
+            <div class="col-lg-12 p-15">
+                <div>
+                    <strong>Title :</strong>
+                    <label> {{venMaintCtrl.associateDetails.title}} </label>
+                </div>
+                <div>
+                    <strong>Associate Name :</strong>
+                    <label> {{venMaintCtrl.associateDetails.individual}}</label>
+                </div>
+                <div>
+                    <strong>Status :</strong>
+                    <label> {{venMaintCtrl.associateDetails.status}}</label>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 text-center">
+                <div class="col-xs-8">
+                    <button class="btn btn-secondary btn-block" data-ng-click="venMaintCtrl.openAddressContactPanel();openAddressPanel(venMaintCtrl.associate_uuid,venMaintCtrl.associateDetails.id);">
+                        Address and Contact
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--INDIVIDUAL DETAILS PANEL END-->
+
+    <!-- NEW COMPANY  PANEL START-->
+    <div data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.create.company.html'">
+    </div>
+    <!-- NEW COMPANY  PANEL END-->
+
+    <!-- NEW DEPARTMENT PANEL START-->
+    <div data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.create.department.html'">
+    </div>
+    <!-- NEW DEPARTMENT PANEL END-->
+
+    <!-- NEW ASSOCIATE PANEL START-->
+    <div data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.create.associate.html'">
+    </div>
+    <!-- NEW ASSOCIATE PANEL END-->
+
+    <div ng-if="venMaintCtrl.showAddrCnt" data-ng-include="'./application/templates/panel.address.contact.html'"></div>
+
+    <!-- NEW INDIVIDUAL  PANEL START-->
+    <div data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.create.individual.html'">
+    </div>
+    <!-- NEW INDIVIDUAL  PANEL END-->
+</div>

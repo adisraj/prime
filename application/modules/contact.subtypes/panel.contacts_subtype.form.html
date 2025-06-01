@@ -1,0 +1,127 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar" class=" c-overflow"
+    data-ng-class="{'toggled':contacttypeCtrl.isShowcontactTypeDetails=== true || contacttypeCtrl.isShowcontactTypeDetails === 1 }">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="contacttypeCtrl.closeForm(); ">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!contacttypeCtrl.isDeleteSuccess && !contacttypeCtrl.isUpdateSubType && contacttypeCtrl.isAddSubType) || contacttypeCtrl.isSaveSuccess"
+                title="Contact Sub Type">Create
+                <strong>Contact Sub Type</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(!contacttypeCtrl.isDeleteSuccess && contacttypeCtrl.isUpdateSubType && !contacttypeCtrl.isAddSubType) || contacttypeCtrl.isUpdateSuccess"
+                title="Contact Sub Type">Update
+                <strong>Contact Sub Type</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="contacttypeCtrl.isConfirmSubTypeDelete || contacttypeCtrl.isDeleteSuccess"
+                title="Contact Sub Type">Delete
+                <strong>Contact Sub Type</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12 m-t-10">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="!(contacttypeCtrl.isUpdateSuccess || contacttypeCtrl.isSaveSuccess  || contacttypeCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div title="Contact Sub Types" title-direction="right"
+                    data-ng-include="'./img/sidebar-icons/submenu_contact.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div ng-if=" contacttypeCtrl.isAddSubType || contacttypeCtrl.isUpdateSubType">
+                <ng-form role="form " name="contacttypeCtrl.contact_form">
+                    <div class="form-group">
+                        <span style="color:red" ng-show="contacttypeCtrl.contact_form.type_id.$invalid">* </span>
+                        <span style="color:green" ng-show="contacttypeCtrl.contact_form.type_id.$valid">* </span>
+                        <label>Contact Type</label>
+                        <select name="type_id" id="type_id"
+                            class="form-control select-component input-sm"
+                            ng-options="type.id as type.contact_type for type in contacttypeCtrl.allContactTypes"
+                            ng-model="contacttypeCtrl.contactType_Details.type_id"
+                            ng-model-options="{ updateOn: 'blur' }"
+                            ng-change="contacttypeCtrl.contactType_Details.contact_type=(contacttypeCtrl.allContactTypes|filter:{id:contacttypeCtrl.contactType_Details.type_id})[0].contact_type; "
+                            required>
+                            <option value="" disabled>Select Type</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span style="color:red" ng-show="contacttypeCtrl.contact_form.sub_type.$invalid">* </span>
+                        <span style="color:green" ng-show="contacttypeCtrl.contact_form.sub_type.$valid">* </span>
+                        <label>Sub Type</label>
+                        <input id="sub_type" name="sub_type" type="text" minlength="3"
+                            maxlength="25" ng-pattern="contacttypeCtrl.as400FieldsRegularExpression" ng-pattern-restrict
+                            class="form-control input-sm" ng-model="contacttypeCtrl.contactType_Details.sub_type"
+                            ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Sub Type"
+                            errorvalue="contacttypeCtrl.contactType_Details.sub_type_error" required>
+                        <span class="text-danger" ng-show="
+                            contacttypeCtrl.contact_form.sub_type.$error.minlength &&
+                            contacttypeCtrl.contact_form.sub_type.$dirty">
+                            Length ( minimum:3 & maximum:25) chars.
+                        </span>
+                        <span class="text-danger"
+                            ng-show="
+                            contacttypeCtrl.contact_form.sub_type.$dirty && contacttypeCtrl.contact_form.sub_type.$error.pattern && !contacttypeCtrl.contact_form.sub_type.$error.minlength">
+                            Sub Type must be string.
+                        </span>
+                        <span class="text-danger" ng-show="contacttypeCtrl.contact_form.sub_type.$invalid && 
+                            contacttypeCtrl.contact_form.sub_type.$dirty && !contacttypeCtrl.contact_form.sub_type.$viewValue
+                            ">
+                            Sub Type is Required!</span>
+                    </div>
+                    <div ng-if="contacttypeCtrl.isAddSubType">
+                        <rcp-edit-form-btns new-form="true"
+                            save-fn="contacttypeCtrl.save(contacttypeCtrl.contactType_Details);"
+                            save-btn-text="contacttypeCtrl.saveSubTypeBtnText"
+                            save-btn-error="contacttypeCtrl.saveStateBtnError"
+                            enable-button="contacttypeCtrl.contact_form.$invalid">
+                        </rcp-edit-form-btns>
+                    </div>
+                    <div ng-if="contacttypeCtrl.isUpdateSubType">
+                        <rcp-edit-form-btns new-form="false"
+                            update-fn="contacttypeCtrl.update(contacttypeCtrl.contactType_Details);"
+                            update-btn-text="contacttypeCtrl.updateSubTypeBtnText"
+                            update-btn-error="contacttypeCtrl.updateSubTypeBtnError"
+                            enable-button="contacttypeCtrl.contact_form.$invalid" access-permissions="permissionsMap">
+                        </rcp-edit-form-btns>
+                    </div>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="contacttypeCtrl.isConfirmSubTypeDelete || contacttypeCtrl.showErrorDetails"
+                success-tick="success_tick.svg" close-fn="contacttypeCtrl.closeForm(); "
+                delete-fn="contacttypeCtrl.delete(contacttypeCtrl.contactType_Details);"
+                confirm-delete="contacttypeCtrl.isConfirmSubTypeDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="contacttypeCtrl.openForm();"
+                close-fn="contacttypeCtrl.closeForm();" update-success="contacttypeCtrl.isUpdateSuccess"
+                save-success="contacttypeCtrl.isSaveSuccess" delete-success="contacttypeCtrl.isDeleteSuccess">
+            </rcp-success-form>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="contacttypeCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="contacttypeCtrl.message = null"
+                    aria-hidden="true">&times;</button> {{contacttypeCtrl.message}}
+            </div>
+        </div>
+        <div class="col-lg-12" ng-if="contacttypeCtrl.showErrorDetails">
+            <div class="rc-alert rc-alert-error" aria-hidden="false" role="alert">
+                <div class="rc-alert-icon-section">
+                    <span class="zmdi zmdi-alert-polygon">
+                    </span>
+                </div>
+                <div class="rc-alert-content-section">
+                    <div class="rc-alert-header">Action cannot be completed!</div>
+                    <div class="rc-alert-body">
+                        <span>
+                            Subtype is referenced in contacts.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

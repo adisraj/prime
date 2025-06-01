@@ -1,0 +1,87 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar" class=" c-overflow"
+    data-ng-class="{'toggled':cityCtrl.isShowCitiesDetails=== true || cityCtrl.isShowCitiesDetails === 1,'changeposition':showhistory === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="cityCtrl.closeForm(); closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!cityCtrl.isDeleteCitySuccess && !cityCtrl.isConfirmCityDelete && cityCtrl.isShowAddCity)"
+                title="{{cityCtrl.entityInformation.name}}">Create
+                <strong>{{cityCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(!cityCtrl.isDeleteCitySuccess && !cityCtrl.isConfirmCityDelete && !cityCtrl.isShowAddCity)"
+                title="{{cityCtrl.entityInformation.name}}">Update
+                <strong>{{cityCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(cityCtrl.isDeleteCitySuccess || cityCtrl.isConfirmCityDelete && !cityCtrl.isShowAddCity)"
+                title="{{cityCtrl.entityInformation.name}}">Delete
+                <strong>{{cityCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!cityCtrl.isUnauthorized">
+        <div class="d-flex"
+            ng-if="!(cityCtrl.isUpdateCitySuccess || cityCtrl.isSaveCitySuccess || cityCtrl.isConfirmCityDelete || cityCtrl.isDeleteCitySuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/inr-users.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" valdr-form-group>
+            <div
+                ng-if="!(cityCtrl.isUpdateCitySuccess || cityCtrl.isSaveCitySuccess || cityCtrl.isConfirmCityDelete || cityCtrl.isDeleteCitySuccess)">
+                <ng-form role="form" novalidate="novalidate" name="cityCtrl.city_form" valdr-type="RULES-118">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="cityCtrl.city_form.city_name.$invalid">* </span>
+                        <span class="c-green" ng-show="cityCtrl.city_form.city_name.$valid">* </span>
+                        <label>City Name</label>
+                        <input id="city_name" name="city_name" type="text"
+                            class="form-control input-sm" ng-model="cityCtrl.cities_details.city_name"
+                            placeholder="Enter City Name" ng-model-options="{ updateOn: 'blur' }"
+                            errorvalue="cityCtrl.cities_details.city_name_error">
+                    </div>
+                    <rcp-edit-form-btns new-form="cityCtrl.isShowAddCity"
+                        save-fn="cityCtrl.save(cityCtrl.cities_details);" save-btn-text="cityCtrl.saveCityBtnText"
+                        save-btn-error="cityCtrl.saveCityBtnError" update-fn="cityCtrl.update(cityCtrl.cities_details);"
+                        update-btn-text="cityCtrl.updateCityBtnText" update-btn-error="cityCtrl.updateCityBtnError"
+                        confirm-fn="cityCtrl.showconfirm(); closeShowHistory();"
+                        confirm-delete="cityCtrl.isConfirmCityDelete" update-success="cityCtrl.isUpdateCitySuccess"
+                        entity-id="cityCtrl.cities_details.id" enable-button="cityCtrl.city_form.$invalid"
+                        access-permissions="cityCtrl.cityPermissions">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="cityCtrl.isConfirmCityDelete" image-name="inr-users.svg"
+                close-fn="cityCtrl.closeForm(); " delete-fn="cityCtrl.delete(cityCtrl.cities_details);"
+                confirm-delete="cityCtrl.isConfirmCityDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="cityCtrl.createAnotherForm();"
+                close-fn="cityCtrl.closeForm();" update-success="cityCtrl.isUpdateCitySuccess"
+                save-success="cityCtrl.isSaveCitySuccess" delete-success="cityCtrl.isDeleteCitySuccess">
+            </rcp-success-form>
+            <div ng-if="isMaintenance !== true && !cityCtrl.isConfirmCityDelete && !cityCtrl.isUpdateCitySuccess && !cityCtrl.isSaveCitySuccess && !cityCtrl.isDeleteCitySuccess && !cityCtrl.isShowAddCity">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn"
+                    data-ng-click="loadHistory();" data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View
+                    History</button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading history...</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-show="cityCtrl.message" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="cityCtrl.message = null"
+                aria-hidden="true">&times;</button> {{cityCtrl.message}}
+        </div>
+    </div>
+    <div ng-if="cityCtrl.isUnauthorized && (cityCtrl.isShowAddCity || !cityCtrl.isShowAddCity || cityCtrl.isConfirmCityDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                data-ng-if="!cityCtrl.isShowAddCity && cityCtrl.isShowHistory"
+                data-ng-include="'./application/templates/history.html'">
+            </div>

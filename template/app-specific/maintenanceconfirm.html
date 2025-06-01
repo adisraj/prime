@@ -1,0 +1,28 @@
+<div class="form-group">
+    <div class="col-lg-5 m-0 p-0 row pull-left" style="height: 35px;">
+        <div growl></div>
+    </div>
+    <div class="col-lg-7 m-0 row pull-right" data-ng-if="(!confirmDelete && !opdone)" style="height: 35px;" valdr-form-group>
+        <button type="button" class="btn btn-lg btn-view-values inheritheight pull-right" style="line-height: 0;font-size: 14px;font-family:'Roboto Condensed';font-weight:700;" data-ng-click="publishFn();" data-ng-if="page=='3'">Publish {{moduleName}}</button>
+        <button type="button" class="btn btn-lg btn-view-values inheritheight pull-right" style="line-height: 0;font-size: 14px;font-family:'Roboto Condensed';font-weight:700;" ng-click="continueFn();" data-ng-disabled="isFormValid" data-ng-if="(page=='2' || page=='1')">Continue</button>
+        <button type="button" class="btn btn-lg inheritheight pull-right noboxshadow m-r-5" style="color: #ffffff;background-color: #8c9a9c;border-color: transparent;line-height: 0;box-shadow: none;font-size: 14px;font-family:'Roboto Condensed';font-weight:700;"
+            data-ng-if="(page=='2' || page=='1')" data-ng-click="closeFn();">Cancel</button>
+        <button type="button" class="btn btn-lg inheritheight  pull-right m-r-5 noboxshadow" style="color: #ffffff;background-color: #8c9a9c;border-color: transparent;line-height: 0;font-size: 14px;font-family:'Roboto Condensed';font-weight:700;" ng-click="refineFn();"
+            data-ng-if="page=='3'">Refine</button>
+        <button type="button" ng-if="isUpdate" class="btn btn-lg btn-warning inheritheight pull-right m-r-5 noboxshadow" style="color: #ffffff;line-height: 0;font-size: 14px;font-family:'Roboto Condensed';font-weight:700;" ng-click="confirmDel()">Delete</button>
+    </div>
+
+    <div class="col-lg-7 m-0 row pull-right" data-ng-if="(confirmDelete && !opdone)">
+        <div class="col-lg-12">
+            <button type="button" class="btn btn-warning col-lg-5 col-lg-offset-1" id="update_title_btn" data-ng-click="deleteFn();">
+                <strong>Yes,Delete!</strong>
+            </button>
+            <button type="button" class="btn btn-success col-lg-5 col-lg-offset-1" id="update_title_btn" data-ng-click="confirmDel()">
+                <strong>Cancel</strong>
+            </button>
+        </div>
+    </div>
+    <div class="col-lg-7 m-0 row pull-right" style="height: 35px;" data-ng-if="opdone">
+        <button type="button" class="btn btn-lg btn-view-values inheritheight pull-right" style="line-height: 0;font-size: 14px;font-family:'Roboto Condensed';font-weight:700;" data-ng-click="closeFn();">Done</button>
+    </div>
+</div>

@@ -1,0 +1,503 @@
+<link rel="stylesheet" href="./application/modules/item/sku/sku.vendor.configuration.css">
+<script type="text/javascript">
+
+    function limitTextareaLine() {
+        var charactersPerLine = 30;
+        var maxLines = 24;
+        /*
+        This function handles two aspects:
+        1. (a) READ VALUE from the textarea, (b) DETECT IF TEXT PER LINE IS TOO LONG  as required by the length restrictions, (c) PUSH OVERFLOWING TEXT from a line to the next line and (d) WRITE VALUE back to the textarea.
+        2. (a) READ THE CURSOR POSITION to store the cursor position, and (b) POSITION THE CURSOR where a user would expect it after WRITE DATA.
+        */
+        var textInput = document.getElementById("purchase_info_vendor_item_description").value;//1a: READ VALUE
+        var inputAsRows = textInput.split("\n");// create array from input => each element contains one row of the textarea
+        var inputAsOneLine = textInput.replace(/(\r\n\t|\n|\r\t)/gm, "");//remove all line-breaks
+        var cursorPositionOnInput = document.getElementById("purchase_info_vendor_item_description").selectionStart;//2a: READ CURSOR POSITION
+        var cursorOffsetAfterOutput = 0;//set default value for cursor offset. cursor offset is needed when re-posiotioning the cursor after WRITE DATA
+
+        var visibleCharactersPerLine = Math.floor((document.getElementById("purchase_info_vendor_item_description").offsetWidth) / 9);//number of visible characters per line before text breaks without a line-break. Depends on width of textarea and width of characters entered.
+        var additionalTextAreaRows = 0; //additional rows needed due to the text breaking
+
+        var totalRows = inputAsRows.length; //don't put inputAsRows.length in the for statement, as the array is growing in the loop which results in an infinite loop
+        var row;
+        for (row = 0; row < totalRows; ++row) {
+            if (inputAsRows[row].length > charactersPerLine) { //1b DETECT IF TEXT PER LINE IS TOO LONG 
+                if (inputAsRows[row + 1] === undefined) {
+                    inputAsRows[row + 1] = "";// the row did not exist
+                    totalRows++;
+                }
+                //1c PUSH OVERFLOWING TEXT: move text that is too long for this row to the next row:
+                inputAsRows[row + 1] = inputAsRows[row].substring(charactersPerLine) + inputAsRows[row + 1];
+                inputAsRows[row] = inputAsRows[row].substring(0, charactersPerLine);
+                //determine, if cursor was at the end of the line that got a line-break:
+                var newOutput = inputAsRows.join("\n");
+                if (newOutput.substr(cursorPositionOnInput - 1, 1) == "\n") {
+                    cursorOffsetAfterOutput = 1;
+                }
+            }
+            if (inputAsRows[row].length > visibleCharactersPerLine) { //1b DETECT IF TEXT PER LINE IS TOO LONG 
+                additionalTextAreaRows = additionalTextAreaRows + Math.floor(inputAsRows[row].length / visibleCharactersPerLine);
+            }
+
+        }
+
+        if (inputAsRows.length <= maxLines && inputAsOneLine.length <= (maxLines * charactersPerLine)) {//data is within max number of rows and max total digits
+            textOutput = inputAsRows.join("\n");
+            $('#errMsg').text('');  //remove error message
+        }
+        else //data would be too long 
+        {
+            $('#errMsg').text('Vendor Item Description can take upto 24 lines!')
+            cursorOffsetAfterOutput = -1;
+        }
+        document.getElementById("purchase_info_vendor_item_description").value = textOutput;//1d: WRITE VALUE
+        document.getElementById("purchase_info_vendor_item_description").selectionStart = cursorPositionOnInput + cursorOffsetAfterOutput; //2b: POSITION CURSOR
+        document.getElementById("purchase_info_vendor_item_description").selectionEnd = cursorPositionOnInput + cursorOffsetAfterOutput; //set a single cursor, not a selection
+    }
+
+    // To hide error message onblur
+    function checkLimit() {
+        $('#errMsg').text('')
+    }
+</script>
+<div class="col-xs-12 col-lg-8 p-0" data-ng-init="skuMaintCtrl.showPurchseInfoForm = false;skuMaintCtrl.isLoadingVendors = true; skuMaintCtrl.getVendorsList();">
+    <div class="col-xs-12 p-0 maintenance-header-section">
+        <div class="col-xs-12 p-t-5 p-b-5 f-16 panel-header d-flex" style="justify-content:space-between;">
+            <div>
+                <div>
+                    <span class="f-700 main-header">Vendor Purchasing Informtion</span>
+                </div>
+                <small>
+                    Vendor purchase information of the SKU
+                </small>
+            </div>
+        </div>
+
+        <div class="col-xs-12 p-0" style="border: 1px solid #efefef;background: #ffffff;">
+            <div class="col-xs-12 p-0">
+                <div class="p-10" style="background:#f7f7f7">
+                    <span class="p-0 m-0" style="color: #31394a">
+                        Primary Vendor
+                    </span>
+                </div>
+
+                <div class="col-xs-12 p-10 d-flex align-items-center" style="color:#636363;display:flex">
+                    <i class="c-alt f-18 zmdi zmdi-forward"></i>
+                    <span class="p-l-10 c-purple">{{selected_item.vendor}}</span>
+                    <button class="btn btn-primal cursor-pointer m-l-10" data-ng-click="skuMaintCtrl.showPurchseInfoForm = true; skuMaintCtrl.getLinkedVendorDetails(selected_item); skuMaintCtrl.getCurrentVendorInList(selected_item);"
+                    data-ng-disabled="skuMaintCtrl.getUPCresponse">
+                        Purchase Information
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 p-0">
+            <div class="col-xs-12 p-0">
+                <div class="col-xs-12 p-0">
+                    <div class="p-10" style="background:#f7f7f7">
+                        <span class="p-0 m-0" style="color: #31394a">
+                            Alternative Vendors
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-12 multiple-vendor-container p-10">
+                    <div class="col-xs-12 linked-vendors" ng-repeat="vendor in skuMaintCtrl.itemVendors" data-ng-if="skuMaintCtrl.itemVendors.length > 0">
+                        <div class="col-xs-1 priority-container">
+                            {{$index + 1}}
+                        </div>
+                        <div class="col-xs-7 vendor-name-container">
+                            {{vendor.vendor}}
+                        </div>
+                        <div class="col-xs-1 move-vendors" data-ng-if="skuMaintCtrl.itemVendors.length > 1 && updateForm">
+                            <move-up-down-rows filter-values="skuMaintCtrl.itemVendorList" api-instance-display-values="apiInstanceDisplayValues" reload-method-display-values="reloadMethodDisplayValues(head.id)"
+                                length="skuMaintCtrl.itemVendors.length" index="$index" update="update" update-info-fn="getDisplaySequnceUpdateInformation(data);"></move-up-down-rows>
+                        </div>
+                        <div class="col-xs-3 " style="cursor:pointer">
+                            <a data-ng-click="skuMaintCtrl.showPurchseInfoForm = true; skuMaintCtrl.getLinkedVendorDetails(vendor); skuMaintCtrl.getCurrentVendorInList(vendor);">Purchase Information
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12" data-ng-if="skuMaintCtrl.itemVendors.length === 0">
+                        <span class="f-14 text-muted">No vendors are linked</span>
+                    </div>
+                    <div class="col-lg-12 m-t-5" data-ng-if="skuMaintCtrl.isLoadingVendors && !(skuMaintCtrl.itemVendors.length>1 || skuMaintCtrl.itemVendors.length === 0)">
+                        <span class="f-15 f-700 c-bluegray">Loading</span>
+                        <span class="f-700 c-bluegray" style="letter-spacing: 3px;">....</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vendor purchase terms information form - START -->
+        <div>
+            <div class="col-xs-12 p-0 m-t-10" data-ng-class="{'disable-actions':skuMaintCtrl.disableActions}">
+                <div class="maintenanceworkspace o-auto" style="max-height:100%;border: 1px solid #efefef;" data-ng-if="skuMaintCtrl.showPurchseInfoForm && skuMaintCtrl.isUpdate">
+                    <div class="linkvendor-name-container f-700 p-10">{{skuMaintCtrl.linkVendor.vendor}}</div>
+                    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12 f-11" style="background: #ffffff;padding: 10px 0px 0px 0px;">
+                        <ng-form name="vendor_purchase_info_form">
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-lg-6 col-md-6 p-0">
+                                    <span class="c-red" ng-show="vendor_purchase_info_form.vendor_item_number.$invalid">* </span>
+                                    <span class="c-green" ng-show="vendor_purchase_info_form.vendor_item_number.$valid">* </span>
+                                    <label class="maintenance-field-label">Vendor Item Number</label>
+                                    <input type="text" id="vendor_item_number" name="vendor_item_number" class="form-control input-sm" ng-model="skuMaintCtrl.linkVendor.vendor_item_number"
+                                        maxlength="20" placeholder="Enter vendor item number" ng-pattern="skuMaintCtrl.as400FieldsRegularExpression" autofocus >
+                                    <div data-ng-if="vendor_purchase_info_form.vendor_item_number.$error.pattern">
+                                        <span class="text-danger">Vendor Item Number must be valid string</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-4 col-lg-3 col-md-3 p-0">
+                                    <span class="c-red" ng-show="vendor_purchase_info_form.vendor_item_description.$invalid">* </span>
+                                    <span class="c-green" ng-show="vendor_purchase_info_form.vendor_item_description.$valid">* </span>
+                                    <label class="maintenance-field-label">Vendor Item Description</label>
+                                </div>
+                                <span class="text-info zmdi zmdi-info-outline" style="font-size:20px" title="Vendor Item Description can be upto 30 characters per line and upto 24 lines"
+                                    title-direction="right">
+                                </span>
+                                <!-- <textarea type="text" type="text" rows="5" cols="10" onInput="limitTextareaLine();" id="purchase_info_vendor_item_description"
+                                    name="vendor_item_description" class="form-control input-sm" ng-model="skuMaintCtrl.linkVendor.vendor_item_description"
+                                    placeholder="Enter vendor item description" onblur="checkLimit();"></textarea> -->
+
+                                    <textarea id="purchase_info_vendor_item_description" class="form-control input-sm" name="vendor_item_description" rows="10" cols="10" ng-model="skuMaintCtrl.linkVendor.vendor_item_description" onInput="limitTextareaLine();" type="text"  ng-trim="false" ng-pattern="skuMaintCtrl.as400FieldsRegularExpression"></textarea>
+                                    <!-- <pre>{{skuMaintCtrl.linkVendor.vendor_item_description}}</pre> -->
+                                <span class="text-danger" id="errMsg"></span>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-r-0  p-l-0">
+                                    <span class="c-red" ng-show="vendor_purchase_info_form.first_cost.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="vendor_purchase_info_form.first_cost.$valid">*
+                                    </span>
+                                    <label class="maintenance-field-label">First Cost</label>
+                                    <input type="text" id="first_cost" name="first_cost" class="form-control input-sm currency-field" ng-model="skuMaintCtrl.linkVendor.first_cost"
+                                        placeholder="Enter first cost" style="text-align:right;" ng-pattern="/^([0-9]{0,9})([.][0-9]+)?$/"
+                                        decimal-numbers currency="2" currency-point="." ng-model-options="{ updateOn: 'blur'}">
+                                    <span class="text-danger" ng-if="vendor_purchase_info_form.first_cost.$error.pattern">
+                                        Range 0.00 - 999999999.99
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-r-0">
+                                    <label class="maintenance-field-label">Net Cost</label>
+                                    <input type="text" id="net_cost" name="net_cost" class="form-control input-sm" ng-model="skuMaintCtrl.linkVendor.net_cost"
+                                    style="text-align:right;" ng-pattern="/^([0-9]{0,9})([.][0-9]+)?$/" decimal-numbers currency="2" currency-point="." disabled>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-r-0">
+                                    <label class="maintenance-field-label">Average Cost</label>
+                                    <input type="text" id="average_cost" name="average_cost" class="form-control input-sm" style="text-align:right;" decimal-numbers
+                                        currency="2" currency-point="." ng-model="skuMaintCtrl.linkVendor.average_cost" disabled>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-r-0">
+                                    <label class="maintenance-field-label">Landed Cost</label>
+                                    <input type="text" id="landed_cost" name="landed_cost" class="form-control input-sm" style="text-align:right;" ng-model="skuMaintCtrl.linkVendor.landed_cost"
+                                        decimal-numbers currency="2" currency-point="." disabled>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 p-0">
+                                    <div class="col-xs-12 p-0">
+                                        <span class="c-red" ng-show="vendor_purchase_info_form.hts_number.$invalid">*
+                                        </span>
+                                        <span class="c-green" ng-show="vendor_purchase_info_form.hts_number.$valid">*
+                                        </span>
+                                        <label class="maintenance-field-label">Harmonized Tariff Schedule</label>
+                                        <input type="text" id="hts_number" name="hts_number" class="form-control input-sm" ng-model="skuMaintCtrl.linkVendor.hts_number"
+                                            placeholder="Enter HTS" maxlength="20" ng-pattern="/^([0-9]{4})([.][0-9]{2})([.][0-9]{4})$/"
+                                            ng-model-options="{ updateOn: 'blur' }">
+                                    </div>
+                                    <!-- Error message for invalid pattern for HTS when First cost invalid message is displayed -->
+                                    <div class="col-xs-12" ng-if="vendor_purchase_info_form.first_cost.$error.pattern">
+                                        <span class="text-danger" ng-if="vendor_purchase_info_form.hts_number.$error.pattern">Invalid Harmonized Tariff Schedule ! (E.g - nnnn.nn.nnnn)</span>
+                                    </div>
+                                    <!-- Error message for invalid pattern for HTS when First cost invalid message is not displayed (margin-left adjustment) -->
+                                    <div class="col-xs-12" ng-if="!vendor_purchase_info_form.first_cost.$error.pattern">
+                                        <span class="text-danger" ng-if="vendor_purchase_info_form.hts_number.$error.pattern">Invalid Harmonized Tariff Schedule ! (E.g - nnnn.nn.nnnn)</span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 p-0">
+                                    <div class="col-xs-12 col-lg-12 col-md-12">
+                                        <span class="c-red" ng-show="vendor_purchase_info_form.upc_number.$invalid">*
+                                        </span>
+                                        <span class="c-green" ng-show="vendor_purchase_info_form.upc_number.$valid">*
+                                        </span>
+                                        <label class="maintenance-field-label">UPC Number</label>
+                                    </div>
+                                    <div class="col-xs-12 col-lg-12 col-md-12 p-r-0">
+                                        <div class="d-flex" style1="flex-direction:row-reverse">
+                                            <input type="text" id="upc_number" name="upc_number" class="form-control input-sm" ng-model="skuMaintCtrl.upc_number" minlength="{{skuMaintCtrl.upc_configuration.minimum_length}}"
+                                                maxlength="{{skuMaintCtrl.upc_configuration.maximum_length-1}}" only-integer placeholder="Enter UPC Number" data-ng-disabled="skuMaintCtrl.disableupc"
+                                                
+                                            />
+                                            <!-- <input type="text" id="check_digit" name="check_digit" title="Check Digit" only-integer title-direction="bottom" class="form-control input-sm upcnumber upc_number-check-digit  text-center upc_number-box"
+                                                ng-model="skuMaintCtrl.checkDigit" minlength="1" maxlength="1" data-ng-change="skuMaintCtrl.CheckDigitValidation();"
+                                                ng-model-options="{ updateOn: 'blur' }" data-ng-required="skuMaintCtrl.upc_number" data-ng-disabled="skuMaintCtrl.upcalreadyexists"> -->
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="vendor_purchase_info_form.upc_number.$error.minlength || vendor_purchase_info_form.upc_number.$error.maxlength">
+                                            <span>UPC number must be of {{skuMaintCtrl.upc_configuration.minimum_length}} to {{skuMaintCtrl.upc_configuration.maximum_length-1}}
+                                                digits
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="!vendor_purchase_info_form.upc_number.$error.minlength && !skuMaintCtrl.upcalreadyexists && !vendor_purchase_info_form.upc_number.$error.maxlength && skuMaintCtrl.invalidCheckDigit">
+                                            <span data-ng-if="skuMaintCtrl.invalidCheckDigit">Check digit is incorrect!</span>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="skuMaintCtrl.upc_number && !skuMaintCtrl.upcalreadyexists && vendor_purchase_info_form.check_digit.$error.required">
+                                            <span>Check digit is required!</span>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="skuMaintCtrl.upc_number && skuMaintCtrl.upcalreadyexists">
+                                            <span>UPC Already Exists for ({{skuMaintCtrl.exisitng_sku_upc}})!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-0">
+                                    <span class="c-red" ng-show="vendor_purchase_info_form.tariff_percentage.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="vendor_purchase_info_form.tariff_percentage.$valid">*
+                                    </span>
+                                    <label class="maintenance-field-label">Tariff Percentage</label>
+                                    <div class="d-flex">
+                                        <input type="number" id="tariff_percentage" name="tariff_percentage" class="form-control input-sm"
+                                            ng-model="skuMaintCtrl.linkVendor.tariff_percentage" placeholder="Enter tariff" style="text-align:right;"
+                                            ng-model-options="{ updateOn: 'blur'}" min="0" max="100">
+                                        <input type="text" style="width: 15%; color: black; background-color: lightgray; border: 1px solid lightgray; cursor: default; text-align: center;"
+                                            id="tariff_percentage_append" name="tariff_percentage_append" value="%" disabled>
+                                    </div>
+                                    <span class="text-danger"
+                                        ng-if="vendor_purchase_info_form.tariff_percentage.$error.min || vendor_purchase_info_form.tariff_percentage.$error.max">
+                                        Range 0.00 - 100.00
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-lg-12 col-md-12 p-0">
+                                    <span class="c-red" ng-show="vendor_purchase_info_form.purchasing_information.$invalid">* </span>
+                                    <span class="c-green" ng-show="vendor_purchase_info_form.purchasing_information.$valid">* </span>
+                                    <label class="maintenance-field-label">Additional Information</label>
+                                    <textarea type="text" rows="3" id="purchasing_information" name="purchasing_information" class="form-control input-sm rc-text-area"
+                                        ng-model="skuMaintCtrl.linkVendor.purchasing_information" placeholder="Enter Additional information" ng-minlength="1" ng-maxlength="335"
+                                        ng-pattern="skuMaintCtrl.globalRegularExpression"></textarea>
+                                    <span class="text-danger" ng-if="(vendor_purchase_info_form.purchasing_information.$error.minlength || vendor_purchase_info_form.purchasing_information.$error.maxlength) && !vendor_purchase_info_form.purchasing_information.$error.pattern">Additional Information out of range. Can take up to 335 characters.</span>
+                                    <span class="text-danger" ng-if="vendor_purchase_info_form.purchasing_information.$error.pattern">Invalid string</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 col-sm-12 m-b-10">
+                                <div class="col-xs-12 col-md-6 col-lg-6">
+                                    <div class="col-xs-12 alert alert-success m-0 p-t-5 p-b-5" data-ng-show="skuMaintCtrl.skuVendorSuccessMessage">
+                                        <button type="button" class="close" data-ng-click="skuMaintCtrl.skuVendorSuccessMessage = null" aria-hidden="true">&times;</button> {{skuMaintCtrl.skuVendorSuccessMessage}}
+                                    </div>
+                                    <div class="col-xs-12 alert alert-danger m-0 p-t-5 p-b-5" data-ng-show="skuMaintCtrl.skuVendorErrorMessage">
+                                        <button type="button" class="close" data-ng-click="skuMaintCtrl.skuVendorErrorMessage = null" aria-hidden="true">&times;</button> {{skuMaintCtrl.skuVendorErrorMessage}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 col-lg-6 p-0 pull-right">
+                                    <div class="maintenance-btn-container">
+                                        <button type="button" data-ng-if="skuMaintCtrl.isVendorLinkedToSku" class="btn btn-group-justified btn-sm btn-danger bgm-firebrick f-700 m-l-5 waves-effect"
+                                            data-ng-click="skuMaintCtrl.deleteLinkedVendorDetails(skuMaintCtrl.linkVendor)" style="flex:0.5"
+                                            ng-disabled="!skuMaintCtrl.isVendorBtnEnable || skuMaintCtrl.skuVendorSuccessMessage || skuMaintCtrl.skuVendorErrorMessage">Delete</button>
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-cancel m-l-5 f-700 waves-effect" style="flex:0.5" data-ng-click="skuMaintCtrl.continueFn('close');">Close</button>
+                                        <button type="button" data-ng-if="skuMaintCtrl.isUpdate && skuMaintCtrl.isVendorLinkedToSku" class="btn btn-group-justified btn-sm btn-primary f-700 m-l-5 waves-effect"
+                                            data-ng-click="skuMaintCtrl.updateLinkedVendorDetails(skuMaintCtrl.linkVendor,skuMaintCtrl.upc_number);"
+                                            style="flex:0.5" data-ng-disabled="!skuMaintCtrl.isVendorBtnEnable || vendor_purchase_info_form.$invalid || skuMaintCtrl.skuVendorSuccessMessage || skuMaintCtrl.skuVendorErrorMessage || skuMaintCtrl.invalidCheckDigit || skuMaintCtrl.upcalreadyexists">
+                                            {{skuMaintCtrl.updateVendorBtnText}}
+                                        </button>
+                                        <button type="button" data-ng-if="skuMaintCtrl.isUpdate && !skuMaintCtrl.isVendorLinkedToSku" class="btn btn-group-justified btn-sm btn-primary f-700 m-l-5 waves-effect"
+                                            data-ng-click="skuMaintCtrl.linkNewVendors(skuMaintCtrl.linkVendor,skuMaintCtrl.upc_number);"
+                                            style="flex:1" data-ng-disabled="!skuMaintCtrl.isVendorBtnEnable || vendor_purchase_info_form.$invalid || skuMaintCtrl.skuVendorSuccessMessage || skuMaintCtrl.skuVendorErrorMessage || skuMaintCtrl.invalidCheckDigit || skuMaintCtrl.upcalreadyexists">
+                                            Update Purchase Infomation
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+
+                <div class="maintenanceworkspace o-auto" style="max-height:100%;border: 1px solid #efefef;" data-ng-if="skuMaintCtrl.showPurchseInfoForm && !skuMaintCtrl.isUpdate">
+                    <div class="linkvendor-name-container f-700 p-10">{{skuMaintCtrl.currentVendorInList.vendor}}</div>
+                    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12 f-11" style="background: #ffffff;padding: 10px 0px 0px 0px;">
+                        <ng-form name="link_vendor_purchase_info_form">
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-lg-6 col-md-6 p-0">
+                                    <span class="c-red" ng-show="link_vendor_purchase_info_form.vendor_item_number.$invalid">* </span>
+                                    <span class="c-green" ng-show="link_vendor_purchase_info_form.vendor_item_number.$valid">* </span>
+                                    <label class="maintenance-field-label">Vendor Item Number</label>
+                                    <input type="text" id="vendor_item_number" name="vendor_item_number" class="form-control input-sm" ng-pattern="skuMaintCtrl.as400FieldsRegularExpression" ng-model="skuMaintCtrl.currentVendorInList.vendor_item_number"
+                                        maxlength="20" placeholder="Enter vendor item number" auto-focus>
+                                    <div data-ng-if="link_vendor_purchase_info_form.vendor_item_number.$error.pattern">
+                                        <span class="text-danger">Vendor Item Number is invalid</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-4 col-lg-3 col-md-3 p-0">
+                                    <span class="c-red" ng-show="link_vendor_purchase_info_form.vendor_item_description.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="link_vendor_purchase_info_form.vendor_item_description.$valid">*
+                                    </span>
+                                    <label class="maintenance-field-label">Vendor Item Description</label>
+                                </div>
+                                <span class="text-info zmdi zmdi-info-outline" style="font-size:20px" title="Vendor Item Description can be upto 30 characters per line and upto 24 lines"
+                                    title-direction="right">
+                                </span>
+                                <textarea type="text" rows="5" cols="10" onInput="limitTextareaLine();" id="purchase_info_vendor_item_description" name="vendor_item_description"
+                                    class="form-control input-sm" ng-model="skuMaintCtrl.currentVendorInList.vendor_item_description"
+                                    placeholder="Enter vendor item description" onblur="checkLimit();" ng-pattern="skuMaintCtrl.as400FieldsRegularExpression"></textarea>
+                                <span class="text-danger" id="errMsg"></span>
+                                <div data-ng-if="link_vendor_purchase_info_form.vendor_item_description.$error.pattern">
+                                    <span class="text-danger">Vendor Item Description must be a valid string</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-r-0 p-l-0">
+                                    <span class="c-red" ng-show="link_vendor_purchase_info_form.first_cost.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="link_vendor_purchase_info_form.first_cost.$valid">*
+                                    </span>
+                                    <label class="maintenance-field-label">First Cost</label>
+                                    <input type="text" id="first_cost" name="first_cost" class="form-control input-sm currency-field" ng-model="skuMaintCtrl.currentVendorInList.first_cost"
+                                        placeholder="Enter first cost" style="text-align:right;" ng-pattern="/^([0-9]{0,9})([.][0-9]+)?$/"
+                                        decimal-numbers currency="2" currency-point="." ng-model-options="{ updateOn: 'blur'}">
+                                    <span class="text-danger" ng-if="link_vendor_purchase_info_form.first_cost.$error.pattern">
+                                        Range 0.00 - 999999999.99
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-r-0">
+                                    <label class="maintenance-field-label">Net Cost</label>
+                                    <input type="text" id="net_cost" name="net_cost" class="form-control input-sm" ng-model="skuMaintCtrl.currentVendorInList.net_cost"
+                                    style="text-align:right;" ng-pattern="/^([0-9]{0,9})([.][0-9]+)?$/" decimal-numbers currency="2" currency-point="." ng-model-options="{ updateOn: 'blur'}" disabled>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-r-0">
+                                    <label class="maintenance-field-label">Average Cost</label>
+                                    <input type="text" id="average_cost" name="average_cost" class="form-control input-sm" decimal-numbers currency="2" currency-point="."
+                                        ng-model="skuMaintCtrl.currentVendorInList.average_cost" disabled>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-r-0">
+                                    <label class="maintenance-field-label">Landed Cost</label>
+                                    <input type="text" id="landed_cost" name="average_cost" class="form-control input-sm" decimal-numbers currency="2" currency-point="."
+                                        ng-model="skuMaintCtrl.currentVendorInList.landed_cost" disabled>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 p-0">
+                                    <div class="col-xs-12 p-0">
+                                        <span class="c-red" ng-show="link_vendor_purchase_info_form.hts_number.$invalid">*
+                                        </span>
+                                        <span class="c-green" ng-show="link_vendor_purchase_info_form.hts_number.$valid">*
+                                        </span>
+                                        <label class="maintenance-field-label">Harmonized Tariff Schedule</label>
+                                        <input type="text" id="hts_number" name="hts_number" class="form-control input-sm" ng-model="skuMaintCtrl.currentVendorInList.hts_number"
+                                            placeholder="Enter HTS" maxlength="20" ng-pattern="/^([0-9]{4})([.][0-9]{2})([.][0-9]{4})$/"
+                                            ng-model-options="{ updateOn: 'blur' }">
+                                    </div>
+                                    <!-- Error message for invalid pattern for HTS when First cost invalid message is displayed -->
+                                    <div class="col-xs-12" ng-if="link_vendor_purchase_info_form.first_cost.$error.pattern">
+                                        <span class="text-danger" ng-if="link_vendor_purchase_info_form.hts_number.$error.pattern">Invalid Harmonized Tariff Schedule ! (E.g - nnnn.nn.nnnn)</span>
+                                    </div>
+                                    <!-- Error message for invalid pattern for HTS when First cost invalid message is not displayed (margin-left adjustment) -->
+                                    <div class="col-xs-12" ng-if="!link_vendor_purchase_info_form.first_cost.$error.pattern">
+                                        <span class="text-danger" ng-if="link_vendor_purchase_info_form.hts_number.$error.pattern">Invalid Harmonized Tariff Schedule ! (E.g - nnnn.nn.nnnn)</span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 p-0">
+                                    <div class="col-xs-12 col-lg-12 col-md-12">
+                                        <span class="c-red" ng-show="link_vendor_purchase_info_form.upc_number.$invalid">*
+                                        </span>
+                                        <span class="c-green" ng-show="link_vendor_purchase_info_form.upc_number.$valid">*
+                                        </span>
+                                        <label class="maintenance-field-label">UPC Number</label>
+                                    </div>
+                                    <div class="col-xs-12 col-lg-12 col-md-12 p-r-0">
+                                        <div class="d-flex" style1="flex-direction:row-reverse">
+                                            <input type="text" id="upc_number" name="upc_number" class="form-control input-sm" ng-model="skuMaintCtrl.upc_number" minlength="{{skuMaintCtrl.upc_configuration.minimum_length}}"
+                                                maxlength="{{skuMaintCtrl.upc_configuration.maximum_length-1}}" only-integer placeholder="Enter UPC Number" data-ng-disabled="skuMaintCtrl.disableupc"
+                                               
+                                            />
+                                            <!-- <input type="text" id="check_digit" name="check_digit" title="Check Digit" only-integer title-direction="bottom" class="form-control input-sm upcnumber upc_number-check-digit  text-center upc_number-box"
+                                                ng-model="skuMaintCtrl.checkDigit" minlength="1" maxlength="1" data-ng-change="skuMaintCtrl.CheckDigitValidation();"
+                                                ng-model-options="{ updateOn: 'blur' }" data-ng-required="skuMaintCtrl.upc_number" data-ng-disabled="skuMaintCtrl.upcalreadyexists"> -->
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="link_vendor_purchase_info_form.upc_number.$error.minlength || link_vendor_purchase_info_form.upc_number.$error.maxlength">
+                                            <span>UPC number must be of {{skuMaintCtrl.upc_configuration.minimum_length}} to {{skuMaintCtrl.upc_configuration.maximum_length-1}}
+                                                digits
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="!skuMaintCtrl.upcalreadyexists && 
+                                        !link_vendor_purchase_info_form.upc_number.$error.minlength && 
+                                        !link_vendor_purchase_info_form.upc_number.$error.maxlength && skuMaintCtrl.invalidCheckDigit">
+                                            <span data-ng-if="skuMaintCtrl.invalidCheckDigit">Check digit is incorrect!</span>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="skuMaintCtrl.upc_number && !skuMaintCtrl.upcalreadyexists && link_vendor_purchase_info_form.check_digit.$error.required">
+                                            <span>Check digit is required!</span>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="skuMaintCtrl.upc_number && skuMaintCtrl.upcalreadyexists">
+                                            <span>UPC Already Exists for ({{skuMaintCtrl.exisitng_sku_upc}})!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-0">
+                                    <span class="c-red" ng-show="link_vendor_purchase_info_form.tariff_percentage.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="link_vendor_purchase_info_form.tariff_percentage.$valid">*
+                                    </span>
+                                    <label class="maintenance-field-label">Tariff Percentage</label>
+                                    <div class="d-flex">
+                                        <input type="number" id="tariff_percentage" name="tariff_percentage" class="form-control input-sm"
+                                            ng-model="skuMaintCtrl.currentVendorInList.tariff_percentage" placeholder="Enter tariff" style="text-align:right;"
+                                            ng-model-options="{ updateOn: 'blur'}" min="0" max="100">
+                                        <input type="text" style="width: 15%; color: black; background-color: lightgray; border: 1px solid lightgray; cursor: default; text-align: center;"
+                                            id="tariff_percentage_append" name="tariff_percentage_append" value="%" disabled>
+                                    </div>
+                                    <span class="text-danger"
+                                        ng-if="link_vendor_purchase_info_form.tariff_percentage.$error.min || link_vendor_purchase_info_form.tariff_percentage.$error.max">
+                                        Range 0.00 - 100.00
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 form-group">
+                                <div class="col-xs-12 col-lg-12 col-md-12 p-0">
+                                    <span class="c-red" ng-show="link_vendor_purchase_info_form.purchasing_information.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="link_vendor_purchase_info_form.purchasing_information.$valid">* </span>
+                                    <label class="maintenance-field-label">Additional Information</label>
+                                    <textarea type="text" id="purchasing_information" name="purchasing_information" class="form-control input-sm rc-text-area"
+                                        ng-model="skuMaintCtrl.currentVendorInList.purchasing_information" placeholder="Enter Additional information"
+                                       ng-minlength="1" ng-maxlength="335" ng-pattern="skuMaintCtrl.globalRegularExpression" rows="3"></textarea>
+                                    <span class="text-danger" ng-if="(link_vendor_purchase_info_form.purchasing_information.$error.minlength || link_vendor_purchase_info_form.purchasing_information.$error.maxlength) && !link_vendor_purchase_info_form.purchasing_information.$error.pattern">Additional Information out of range. Can take up to 335 characters.</span>
+                                    <span class="text-danger" ng-if="link_vendor_purchase_info_form.purchasing_information.$error.pattern">Invalid string</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-lg-12 col-md-12 col-sm-12 m-b-10">
+                                <div class="col-xs-12 col-md-6 col-lg-7">
+                                    <div class="col-xs-12 alert alert-success m-0 p-t-5 p-b-5" data-ng-show="skuMaintCtrl.skuVendorSuccessMessage">
+                                        <button type="button" class="close" data-ng-click="skuMaintCtrl.skuVendorSuccessMessage = null" aria-hidden="true">&times;</button> {{skuMaintCtrl.skuVendorSuccessMessage}}
+                                    </div>
+                                    <div class="col-xs-12 alert alert-danger m-0 p-t-5 p-b-5" data-ng-show="skuMaintCtrl.skuVendorErrorMessage">
+                                        <button type="button" class="close" data-ng-click="skuMaintCtrl.skuVendorErrorMessage = null" aria-hidden="true">&times;</button> {{skuMaintCtrl.skuVendorErrorMessage}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 col-lg-5 p-0 pull-right">
+                                    <div class="maintenance-btn-container">
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-danger bgm-firebrick f-700 m-l-5 waves-effect" style="flex:0.5"
+                                            data-ng-if="skuMaintCtrl.isVendorLinkedToSku" data-ng-click="skuMaintCtrl.removeVendorFromList(skuMaintCtrl.currentVendorInList);">Delete</button>
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-cancel m-l-5 f-700 waves-effect" style="flex:0.5" data-ng-click="skuMaintCtrl.continueFn('close');">Close</button>
+                                        <button type="button" data-ng-if="!skuMaintCtrl.isVendorLinkedToSku" class="btn btn-group-justified btn-sm btn-primary f-700 m-l-5 waves-effect"
+                                            data-ng-click="skuMaintCtrl.addVendorToList(skuMaintCtrl.currentVendorInList,skuMaintCtrl.upc_number)"
+                                            style="flex:1" data-ng-disabled="link_vendor_purchase_info_form.$invalid || skuMaintCtrl.invalidCheckDigit || skuMaintCtrl.upcalreadyexists">
+                                            Save Purchase Infomation
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Vendor purchase terms information form - END -->
+    </div>
+</div>

@@ -1,0 +1,100 @@
+<!--SIDE PANEL START-->
+<div id="rightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':skuRetailCtrl.showCopyRetailForm === true}">
+    <div class="m-t-25 d-flex">
+        <div class="p-0 p-absolute cursor-pointer" data-ng-click="skuRetailCtrl.toggleCopyRetailSidePanel(false)">
+            <a>
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="p-0 m-auto">
+            <label class="rclabel editformlabel"> Copy <strong> Retail</strong></label>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="d-flex m-b-10 m-t-10" ng-if="!retailCtrl.retailUpdateFlag">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/retail.svg'"></div>
+            </div>
+        </div>
+        <div class="rcpscrollbar o-auto" ng-if="!retailCtrl.retailPublish">
+            <ng-form name="skuRetailCtrl.retailform" role="form" novalidate="novalidate">
+                <!-- if no retails  -->
+                <div class="col-lg-12 p-0">
+                    <div class="col-lg-12 p-0 form-group">
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="skuRetailCtrl.copy_retail_form.price_type.$invalid">* </span>
+                            <span style="color:green;" ng-show="skuRetailCtrl.copy_retail_form.price_type.$valid">* </span>
+                            <label>Select Existing Retail Date</label>
+                            <select name="price_type" class="form-control select-component input-sm" ng-model="skuRetailCtrl.retailCopyHead.exisiting_retail" ng-options="p as (p.effective_date+' '+p.reason) for p in skuRetailCtrl.retails" required data-ng-change="skuRetailCtrl.disableRetailProceed();">
+                                <option value="" disabled>Select Existing Retail</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="skuRetailCtrl.copy_retail_form.price_type.$invalid">* </span>
+                            <span style="color:green;" ng-show="skuRetailCtrl.copy_retail_form.price_type.$valid">* </span>
+                            <label>Price Type</label>
+                            <select name="price_type" class="form-control select-component input-sm" ng-model="skuRetailCtrl.retailCopyHead.price_type_id" ng-options="p.id as p.name for p in skuRetailCtrl.price_types" required data-ng-change="skuRetailCtrl.disableRetailProceed();">
+                                <option value="" disabled>Select Price Type</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="skuRetailCtrl.copy_retail_form.reason.$invalid">* </span>
+                            <span style="color:green;" ng-show="skuRetailCtrl.copy_retail_form.reason.$valid">* </span>
+                            <label>Price Change Reason</label>
+                            <select name="reason" class="form-control select-component input-sm" ng-model="skuRetailCtrl.retailCopyHead.retail_reason_id" data-ng-options="reason.id as reason.name for reason in skuRetailCtrl.retail_reasons" required data-ng-change="skuRetailCtrl.disableRetailProceed();">
+                                <option value="" disabled>Select Price Change Reason</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" valdr-form-group>
+                            <span style="color:red;" ng-show="skuRetailCtrl.copy_retail_form.effective_date.$invalid">* </span>
+                            <span style="color:green;" ng-show="skuRetailCtrl.copy_retail_form.effective_date.$valid">* </span>
+                            <label>Effective Date</label>
+                            <input type="text" name="effective_date" id="effective_date" class="form-control input-sm rcp-mydatepicker" ng-model="skuRetailCtrl.retailCopyHead.effective_date" ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+                                model-view-value="true" is-effective-date="false">
+                        </div>
+                        <div class="form-group">
+                            <label>Apply to</label>
+                            <select class="form-control select-component input-sm" name="price_class" ng-model="skuRetailCtrl.retailCopyHead.applyTo" ng-options="each as each.price_class for each in skuRetailCtrl.price_groups" data-ng-change="skuRetailCtrl.disableRetailProceed();">
+                                         <option value="">All Pricing Class</option>
+                                    </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Entry Method</label>
+                            <div class="col-lg-12 p-0 form-group">
+                                <label class="radio radio-inline">
+                                        <input type="radio" name="method" ng-model="skuRetailCtrl.retailCopyHead.method" value="manual" checked="">
+                                        <i class="input-helper"></i> Manual
+                                    </label>
+                                <label class="radio radio-inline">
+                                        <input type="radio" name="method" ng-model="skuRetailCtrl.retailCopyHead.method" value="off">
+                                        <i class="input-helper"></i> %Off
+                                    </label>
+                                <label class="radio radio-inline">
+                                        <input type="radio" name="method" ng-model="skuRetailCtrl.retailCopyHead.method" value="inc">
+                                        <i class="input-helper"></i> %Inc
+                                    </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Percent: </label>
+                            <input type="number" class="form-control input-sm" ng-model="skuRetailCtrl.retailCopyHead.percentNumber" />
+                        </div>
+
+                    </div>
+                    <div class="col-lg-12 p-0 form-group">
+                        <button data-ng-if1="skuRetailCtrl.isSave===true" type="button" class="btn-secondary btn-block btn-lg" ng-click="skuRetailCtrl.isCopyRetail=true;skuRetailCtrl.createPriceChange();" data-ng-disabled="skuRetailCtrl.copy_retail_form.$invalid">
+                                <strong>Create Price Change</strong>
+                        </button>
+                    </div>
+                    <div class="col-xs-12 p-0">
+                        <div data-ng-show="skuRetailCtrl.retail_error_message" class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close" data-ng-click="skuRetailCtrl.retail_error_message = null" aria-hidden="true">&times;</button> {{skuRetailCtrl.retail_error_message}}
+                        </div>
+                    </div>
+                </div>
+            </ng-form>
+        </div>
+    </div>
+    <!--SIDE PANEL END-->
+</div>

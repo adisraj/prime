@@ -1,0 +1,38 @@
+<li>
+    <input type="checkbox" id="promotion-{{promotion.id}}-{{$index}}" checked
+        data-ng-click="marketingCampaignsCtrl.singleClickAction($index, promotion, 'Promotion');">
+    <label class="d-flex justify-content-between" for="promotion-{{promotion.id}}-{{$index}}">
+        <div class="d-flex d-flex-v-center flex-fill justify-content-between">
+            <div class="d-flex d-flex-v-center" style="flex:3;">
+                {{promotion.description}}
+            </div>
+            <div style="width:60px;">
+                <div class="tag" data-ng-if="promotion.discount_type == 'Percentage'">{{promotion.discount_type_value}}%</div>
+                <div class="tag" data-ng-if="promotion.discount_type == 'Dollar Amount'">${{promotion.discount_type_value}}</div>
+            </div>
+        </div>
+        <div>
+            <button class="m-l-10 btn btn-sm btn-link"
+                data-ng-click="marketingCampaignsCtrl.openForm('Promotion', marketingCampaign, promotion);">
+                <span class="fa fa-plus fa-fw"></span> New Promotion
+            </button>
+            <button class="m-l-10 btn btn-sm btn-link"
+                data-ng-click="marketingCampaignsCtrl.dblClickAction(promotion, 'Promotion', marketingCampaign);">
+                <span class="fa fa-pen fa-fw"></span> Edit
+            </button>
+        </div>
+    </label>
+    <ul>
+        <div data-ng-if="(!promotion.promotions || promotion.promotions.length === 0) && !promotion.isLoaded">
+            <span>Loading...</span>
+        </div>
+        <div data-ng-if="promotion.promotions.length === 0 && promotion.isLoaded">
+            <span class="text-muted">No promotions exists!</span>
+        </div>
+    </ul>
+    <!-- Values for selected promotion - START -->
+    <ul class="list-lakes" data-ng-repeat="promotion in promotion.promotions track by promotion.id">
+        <div data-ng-include="'./application/modules/marketing.campaigns/marketing.promotions.list.html'"></div>
+    </ul>
+    <!-- Values for selected promotion - END -->
+</li>

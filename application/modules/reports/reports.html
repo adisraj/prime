@@ -1,0 +1,81 @@
+<div class="container col-lg-12" data-ng-controller="ReportController as rctrl">
+    <!--list panel-->
+    <div class="listview lv-bordered lv-lg  z-depth-1-top">
+        <div class="lv-header-alt clearfix" style="cursor:pointer;">
+            <h4 class="c-blue f-700">Reports</h4>
+
+        </div>
+        <div class="listview lv-bordered lv-lg  z-depth-1-top alert">
+            <span> <h5>Entity </h5></span>
+            <select ng-options="o.id as o.entity for o in rctrl.modules" ng-model="rctrl.entity_details_id" class="form-control" ng-change="rctrl.columnsById();">
+              <option value=""></option>
+            </select>
+        </div>
+
+        <div class="listview lv-bordered lv-lg  z-depth-1-top alert">
+            <query-builder group="filter.group" fields="rctrl.fields"></query-builder>
+            <div style="margin-top:2%;">
+                <b> Query : <span ng-bind-html="output"></span></b>
+            </div>
+
+        </div>
+        <div class="listview lv-bordered lv-lg  z-depth-1-top alert">
+            <div style="margin-top:2%;">
+
+                <span><button ng-click="rctrl.searchQuery()" class="btn btn-sm btn-success">Search</button></span>
+                <a class="btn pull-right" export export-data="rctrl.data" export-filename="rctrl.table_name">
+                    <i class="zmdi zmdi-download"></i></a>
+
+
+
+            </div>
+            <div class="table-responsive" style="margin-top:2%;">
+                <span> <h5>Search Results </h5></span>
+                <table ng-table-dynamic="rctrl.tableParams with rctrl.cols" class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                    <tr ng-repeat="row in $data">
+                        <td ng-repeat="col in $columns">{{row[col.field]}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Directive Template -->
+
+<script type="text/ng-template" id="/queryBuilderDirective.html">
+    <div>
+        <span> <h5>Search Criteria </h5></span>
+        <div class="form-inline">
+            <select ng-options="o.name as o.name for o in operators" ng-model="group.operator" class="form-control">
+              <option value=""></option>
+            </select>
+            <button style="margin-left: 5px" ng-click="addCondition()" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Condition</button>
+            <button style="margin-left: 5px" ng-click="addGroup()" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Group</button>
+            <button style="margin-left: 5px" ng-click="removeGroup()" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Remove Group</button>
+        </div>
+        <div class="group-conditions">
+            <div ng-repeat="rule in group.rules | orderBy:'index'" class="condition">
+                <div ng-switch="rule.hasOwnProperty('group')">
+                    <div ng-switch-when="true">
+                        <query-builder group="rule.group" fields="fields"></query-builder>
+                    </div>
+                    <div ng-switch-default="ng-switch-default">
+                        <div class="form-inline">
+                            <select ng-options="t.column_name as t.column_name for t in fields" ng-model="rule.field" class="form-control">
+                              <option value=""></option>
+                            </select>
+                            <select style="margin-left: 5px" ng-options="c.name as c.name for c in conditions" ng-model="rule.condition" class="form-control">
+                              <option value=""></option>
+                            </select>
+                            <input style="margin-left: 5px" type="text" ng-model="rule.data" class="form-control" />
+                            <button style="margin-left: 5px" ng-click="removeCondition($index)" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

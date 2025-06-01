@@ -1,0 +1,49 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':discountTypeCtrl.showDependencyDetails === true}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a class="cursor-pointer" data-ng-click="discountTypeCtrl.showDependencyDetails = false;">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel">
+                    <strong>Delete Discount Type</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-12" data-ng-if1="">
+            <div class="rc-alert rc-alert-info m-t-10 col-xs-12" aria-hidden="false" role="alert">
+                <div class="col-xs-12 d-flex m-b-5 p-0">
+                    <div class="rc-alert-icon-section">
+                        <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                        </span>
+                    </div>
+                    <div class="col-xs-12 p-0 f-15">
+                        <div class="f-16 f-700 text-info m-b-5">Discount Type
+                            <strong>{{discountTypeCtrl.selectedNode.description}}</strong> might have been used.
+                        </div>
+                        <div>
+                            <div class="m-t-10">
+                                <span> Deleting discount type will remove values for it.
+                                </span>
+                            </div>
+                            <div class="m-t-10">
+                                <span> Deleting discount type will remove discount given to the customers.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 d-flex p-0 alert-button-section">
+                <div class="col-xs-12 d-flex p-10">
+                    <button class="btn btn-success" type="button" ng-click="discountTypeCtrl.selectedNode && (discountTypeCtrl.selectedNode.parent_id || discountTypeCtrl.selectedNode.parent_id === null) ? discountTypeCtrl.delete(discountTypeCtrl.selectedNode,'DiscountTypeValue') :
+                     discountTypeCtrl.delete(discountTypeCtrl.selectedNode)" data-ng-disabled="!discountTypeCtrl.isBtnEnable">
+                        <strong>Yes, Delete!</strong>
+                    </button>
+                    <button class="btn btn-cancel" type="button" ng-click="discountTypeCtrl.showDependencyDetails = false;">
+                        <strong>Cancel</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>

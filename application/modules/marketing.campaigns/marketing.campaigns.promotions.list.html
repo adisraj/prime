@@ -1,0 +1,45 @@
+<div class="list-lake-type-container"
+    data-ng-repeat="marketingCampaign in marketingCampaignsCtrl.allMarketingCampaigns | filterBy : ['description','long_description'] : marketingCampaignsCtrl.search">
+    <ul class="list-lake-types">
+        <li>
+            <input type="checkbox" id="marketingCampaign{{$index}}" data-ng-model="marketingCampaign.checked"
+                data-ng-checked="true"
+                data-ng-click="marketingCampaignsCtrl.singleClickAction($index, marketingCampaign, 'Campaign');">
+            <label class="d-flex justify-content-between" for="marketingCampaign{{$index}}">
+                <div>
+                    <span class="d-flex d-flex-v-center f-14">
+                        {{marketingCampaign.description}}
+                    </span>
+                </div>
+                <div>
+                    <button class="m-l-10 btn btn-sm btn-link"
+                        data-ng-click="marketingCampaignsCtrl.openForm('Promotion', marketingCampaign);"
+                        data-ng-disabled="!permissionsMap.create"
+                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                        <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">
+                            <span class="fa fa-plus fa-fw"></span> New Promotion
+                        </span>
+                    </button>
+                    <button class="m-l-10 btn btn-sm btn-link"
+                        data-ng-click="marketingCampaignsCtrl.dblClickAction(marketingCampaign, 'Campaign');">
+                        <span class="fa fa-pen fa-fw"></span> Edit
+                    </button>
+                </div>
+            </label>
+            <ul>
+                <div
+                    data-ng-if="(!marketingCampaign.promotions || marketingCampaign.promotions.length === 0) && !marketingCampaign.isLoaded">
+                    <span>Loading...</span>
+                </div>
+                <div data-ng-if="marketingCampaign.promotions.length === 0  && marketingCampaign.isLoaded">
+                    <span class="text-muted">No promotions exists!</span>
+                </div>
+            </ul>
+            <!-- Values for selected marketing campaigns - START -->
+            <ul class="list-lakes" data-ng-repeat="promotion in marketingCampaign.promotions track by $index">
+                <div data-ng-include="'./application/modules/marketing.campaigns/marketing.promotions.list.html'"></div>
+            </ul>
+            <!-- Values for selected marketing campaigns - END -->
+        </li>
+    </ul>
+</div>

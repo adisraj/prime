@@ -1,0 +1,190 @@
+<div class="container col-lg-12 p-0" data-ng-controller="InventoryQualityController as invqCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/inventory-quality.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Inventory Qualities</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" ng-if="invqCtrl.inventoryQualitiesList.length > 0 && permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!invqCtrl.search"> {{invqCtrl.rowsInfo}} </span>
+                        <span data-ng-if="invqCtrl.search"> Displaying {{(invqCtrl.inventoryQualitiesList|filterBy:['id','code','quality','description','nodescription']:invqCtrl.search).length}} of {{invqCtrl.inventoryQualitiesList.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex" ng-if="invqCtrl.inventoryQualitiesList.length > 0 && permissionsMap.view">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right">
+                                    <input class="form-control input-sm " type="text " ng-model="invqCtrl.search" indicate-quick-search placeholder="Quick Search " data-ng-disabled="!invqCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" ng-click="invqCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block waves-effect" data-ng-disabled="!invqCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link m-r-10">
+                            <a>
+                                <button type="button" ng-click="invqCtrl.getInventoryQualitiesList(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="!invqCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right">
+                                <li>
+                                    <a data-ng-click="invqCtrl.isLoaded ? invqCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': !invqCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li>
+                                    <a ng-click="invqCtrl.getInventoryQualitiesList(true);" data-ng-class="{'cursor-not-allowed': !invqCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!invqCtrl.rowsCount && !invqCtrl.isLoaded && invqCtrl.isViewAuthorized">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="invqCtrl.rowsCount !== 0 && invqCtrl.isLoaded">
+        <div class="rcp-table-container" ng-if="permissionsMap.view && invqCtrl.isLoaded">
+            <div class="col-xs-12 p-0" data-ng-if="invqCtrl.isLoaded">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/inventory.quality/hideShowColumns.html'"></div>
+                <div class="table-responsive module-content-configuration" data-ng-init="invqCtrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered no-icon-table grid sticky-head-table">
+                            <thead data-ng-show="invqCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="invqCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                    data-ng-hide="invqCtrl.inventoryQualitiesGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="invqCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="invqCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="code_col_head" drag-me drop-me data-handle=".handle" ng-click="invqCtrl.sortType = 'code'; sortReverse = !sortReverse" data-ng-hide="invqCtrl.inventoryQualitiesGrid.columns.code.visible == 0">
+                                    <span class="handle">Code</span>
+                                    <span ng-show="invqCtrl.sortType == 'code' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                    <span ng-show="invqCtrl.sortType == 'code' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="quality_col_head" drag-me drop-me data-handle=".handle" ng-click="invqCtrl.sortType = 'quality'; sortReverse = !sortReverse" data-ng-hide="invqCtrl.inventoryQualitiesGrid.columns.quality.visible == 0">
+                                        <span class="handle">Quality</span>
+                                        <span ng-show="invqCtrl.sortType == 'quality' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="invqCtrl.sortType == 'quality' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="description_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="invqCtrl.sortType = 'description'; sortReverse = !sortReverse" data-ng-hide="invqCtrl.inventoryQualitiesGrid.columns.description.visible == 0">
+                                        <span class="handle">Description</span>
+                                        <span ng-show="invqCtrl.sortType == 'description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="invqCtrl.sortType == 'description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="inventoryQuality in invqCtrl.inventoryQualitiesList|filterBy:['id','code','quality','description','nodescription']:invqCtrl.search|orderBy:invqCtrl.sortType:sortReverse|itemsPerPage:invqCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === invqCtrl.selectedRow}" data-ng-click="invqCtrl.setClickedRow($index);"
+                                    ios-dblclick1="invqCtrl.dblClickAction(inventoryQuality);" selectedrow="{{inventoryQuality}}">
+                                    <td class="id_col iconcolumnWidth" data-ng-hide="invqCtrl.inventoryQualitiesGrid.columns.id.visible == 0">{{inventoryQuality.id}}</td>
+                                    <td class="code_col" data-ng-hide="invqCtrl.inventoryQualitiesGrid.columns.code.visible == 0">{{inventoryQuality.code}}</td>
+                                    <td class="quality_col" data-ng-hide="invqCtrl.inventoryQualitiesGrid.columns.quality.visible == 0">{{inventoryQuality.quality}}</td>
+                                    <td class="description_col" data-ng-hide="invqCtrl.inventoryQualitiesGrid.columns.description.visible == 0">{{inventoryQuality.nodescription = inventoryQuality.description || "Not Available"}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="align-items-center col-lg-12 d-flex justify-content-between p-15">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="invqCtrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="invqCtrl.pageSize = 10" ng-class="{'active':invqCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="invqCtrl.pageSize = 25" ng-class="{'active':invqCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="invqCtrl.pageSize = 50" ng-class="{'active':invqCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="invqCtrl.pageSize = 100" ng-class="{'active':invqCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div ng-if="permissionsMap && !permissionsMap.view && invqCtrl.isLoaded"
+            ng-include="'./application/templates/restricted.access.html'"></div>
+    </div>
+        <!--Details section for each inventoryQuality data -->
+        <div class="col-lg-12 p-0">
+            <div id="refresh-table" class="p-15" data-ng-class="{'toggled':invqCtrl.isRefreshTable}">
+                <div class="col-xs-6 p-0">
+                    <span class="f-15 f-300 pull-left">{{invqCtrl.refreshTableText}}</span>
+                </div>
+                <div class="col-xs-6 p-0" data-ng-if="invqCtrl.totalTimeText">
+                    <span class="pull-right f-300">
+                        <strong>{{invqCtrl.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{invqCtrl.totalRecordsText}}</span>
+                        <span ng-bind-html="invqCtrl.totalTimeText"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    <div ng-if="!invqCtrl.isViewAuthorized" data-ng-include="'./application/templates/restricted.access.html'"></div>
+
+    <div data-ng-if="invqCtrl.rowsCount === 0 && invqCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No inventory quality exists. Please add inventory quality.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/inventory.quality/panel.inventory.quality.form.html'"></div>
+</div>

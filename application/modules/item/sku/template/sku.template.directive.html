@@ -1,0 +1,80 @@
+<div data-ng-class="{'disable-actions':skuMaintCtrl.disableActions}">
+    <div class="col-xs-12 configure-header-section">
+        <div class="col-xs-4">
+            <span class="f-500">SKU Template</span>
+        </div>
+        <div class="col-xs-8" data-ng-if="skuHead.description">
+            <span class="pull-right text-muted">{{skuHead.description}}
+                <span class="f-700" data-ng-if="skuHead.sku"> ( {{skuHead.sku }} )</span>
+            </span>
+        </div>
+    </div>
+    <!-- Section to add component to the sku -->
+    <div class="col-xs-12 p-0 cursor-pointer maintenance-header-section">
+        <div class="d-flex p-5">
+            <span class="col-xs-11 p-0 m-0 c-white f-500" style="color: #636363;line-height:1.6;">
+                Add Components to SKU
+            </span>
+        </div>
+    </div>
+
+    <div class=" col-lg-12 p-0 m-b-5" ng-repeat="item in templateController.items" ng-init="item.show=false;">
+        <div class="bgm-black col-lg-12 p-10">
+            <div class="col-lg-6">
+                <span class="f-13">
+                    <a ng-click="templateController.getSkusForItem(item);" style="color: #e8dddf;">{{ item.description }} </a>
+                </span>
+            </div>
+            <div class="col-lg-6" data-ng-if="item.show === true">
+                <a class="pull-right cursor-pointer col-lg-1" ng-click="item.show = false">Close</a>
+            </div>
+        </div>
+        <div ng-if="item.show === true" class="col-lg-12 p-0 m-t-5 m-b-5" style="border-left: 1px solid #ececec;border-right: 1px solid #ececec; ">
+            <div class="brd-1 col-lg-12 p-10">
+                <div class="col-lg-12">
+                    <div class="col-lg-12 form-group">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Template Header</label>
+                                <input id="template_header" name="template_header" class="form-control input-sm"
+                                    ng-model="item.header" type="text" ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Description">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 form-group">
+                            <div>
+                                <label>Minimum Units</label>
+                                <input id="minimum_units" name="minimum_units" class="form-control input-sm"
+                                    ng-model="item.minimum_units" errorvalue="itemTypeUDDCtrl.new_type_udd.maintenance_description_error"
+                                    type="number" placeholder="Enter Minimum units">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="checkbox">
+                                <label>Is Mandatory
+                                    <input hidden="hidden" id="inventory_control" name="inventory_control" ng-false-value="0" ng-model="item.is_mandatory" ng-true-value="1"
+                                        type="checkbox">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 form-group">
+                            <label>SKU</label>
+                            <multiselect class="" ng-model="item.childSkuIds" options="each.child_sku_id as each.description for each in item.skus" select-limit="100"
+                                header="Select Skus" selected-header="options selected" multiple="true" required enable-filter="true"
+                                filter-placeholder="Quick Search" ng-class="{'highlight-filter':item.childSkuIds.length>0}">
+                        </div>
+                        <div class="col-lg-3" data-ng-if="!item.$update">
+                            <div ng-click="templateController.addTemplateObject(item);" class="aligncenter add-new-btn btn-primal btn-block f-700">Add</div>
+                        </div>
+                        <div class="col-lg-3" data-ng-if="item.$update">
+                            <div ng-click="templateController.insertOrUpdateSkuTemplate(item);" class="aligncenter add-new-btn btn-primal btn-block f-700">Save</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="item.templateAddedError">
+                <span class="alert-danger">{{item.templateAddedError}}</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,480 @@
+<style>
+  .entity-header {
+    background: #e2f5ff;
+    color: #029ef1;
+    font-size: 17px;
+    padding: 5px 10px;
+  }
+
+  .individual-module-container {
+    padding: 10px 5px;
+    border-bottom: 1px solid #ececec;
+  }
+
+  .entity-list-body {
+    height: auto;
+    max-height: 320px;
+    overflow: auto;
+    border-left: 1px solid #ececec;
+    border-right: 1px solid #ececec;
+  }
+
+  .table>thead>tr>th {
+    background: #f1f0f0;
+  }
+
+  .table>tbody+tbody {
+    border-top: 0;
+  }
+
+  select {
+    width: 100%;
+    box-shadow: none !important;
+    border: 1px solid #e2e2e2;
+    border-left: 3px solid #d8d8d8;
+    height: 30px;
+  }
+
+  #rcrightsidebar.toggled.changehistory {
+    top: 58px
+  }
+</style>
+<div data-ng-controller="NotificationsController as notificationCtrl">
+  <span title="Notifications" title-direction="top" fixed-position="true"
+    data-ng-click="notificationCtrl.showNotifications = true;notificationCtrl.initializeNotifications()">
+    <i class="f-25 zmdi zmdi-notifications c-white"></i>
+  </span>
+  <div id="rcrightsidebar-large"
+    data-ng-class="{'toggled':notificationCtrl.showNotifications, 'changeposition':notificationCtrl.showSkusDetail}">
+    <div class="col-xs-12 d-flex d-flex-v-center sidepanel-header m-t-15">
+      <div class="close-icon">
+        <a data-ng-click="notificationCtrl.showNotifications = false;notificationCtrl.showSkusDetail = false;notificationCtrl._search = '';notificationCtrl._searchmercury = '';notificationCtrl.resetJobsFilters();notificationCtrl.resetmercuryFilters()"
+          class="cursor-pointer">
+          <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </a>
+      </div>
+      <div class="d-flex-h-center d-flex panel-name-section" style="flex:1;">
+        <label class="rclabel editformlabel" style="margin-left: -50px;">
+          <strong>Notifications</strong>
+        </label>
+      </div>
+    </div>
+
+    <div class="col-lg-12 d-flex justify-content-center">
+      <div class="m-b-10 m-t-10">
+        <div class="m-auto updatepanel">
+          <div data-ng-include="'./img/sidebar-icons/bell.svg'" style="height: 150px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="col-xs-12 m-b-30">
+    <div class="col-xs-12 p-0 p-t-10">
+      <div class="col-xs-12 p-0 m-b-10 reapete-div">
+          <div class="align-items-center col-xs-12 d-flex entity-header justify-content-between">
+            <span><i class="fa fa-receipt  p-r-5"></i><strong class="ng-binding">Task</strong> Name</span>
+          </div>
+          <div class="col-xs-12 p-0 entity-list-body rc-scroll-bar m-b-5">
+              <div class="col-xs-12 d-flex align-items-center justify-content-between p-5 reapete-div" style="border-bottom: 1px solid #efefef">
+                  <div class="d-flex justify-content-between col-xs-12 p-0">
+                    <div class="d-flex flex-column p-0">
+                      <span class="f-14"><strong class="ng-binding">Task One</strong></span>
+                      <span class="f-11 text-muted ng-binding">Task one description...</span>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div> -->
+
+
+    <div class="col-xs-12">
+      <div class="col-xs-12 p-0 notification-tab">
+        <div class="col-xs-6 text-center p-10 f-700 cursor-pointer"
+          data-ng-click="notificationCtrl.showJobs=true; notificationCtrl.showMercuryChanges=false;"
+          data-ng-class="{'notification-tabselected':notificationCtrl.showJobs}">
+          <span class="f-14">Jobs</span>
+        </div>
+        <div class="col-xs-6 text-center p-10 f-700 cursor-pointer"
+          data-ng-click="notificationCtrl.showMercuryChanges=true;notificationCtrl.showJobs=false;"
+          data-ng-class="{'notification-tabselected':notificationCtrl.showMercuryChanges}">
+          <span class="f-14">Mercury Changes</span>
+        </div>
+      </div>
+      <div class="col-lg-12 text-center m-t-30" data-ng-if="notificationCtrl.isLoading">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+      </div>
+      <div data-ng-if="!notificationCtrl.isLoading">
+        <div class="col-xs-12 p-0 m-t-10" data-ng-if="notificationCtrl.showJobs">
+          <div class="col-xs-12 m-b-10 p-0">
+            <!-- !!!!!!!!!! DO NOT REMOVE THIS CODE !!!!!!!! -->
+            <!-- <div class="col-xs-12 f-16 notification-header">
+            <span class="f-700 main-header">Notification</span>
+            <div>
+              <small>task are listed here.</small>
+            </div>
+          </div> -->
+            <div>
+              <input type="search" class="full-height form-group input-sm globalsearch"
+                data-ng-model="notificationCtrl._search" type="text" name="Search" placeholder="Quick Search"
+                id="gobalNotificationsearch" autocomplete="off" style="border: 1px solid;width: 85%;">
+              <button type="button" class="btn btn-default"
+                style="height: 32px;background-color: #0d7bb1;color: white;float: right;"
+                data-ng-click="notificationCtrl.resetJobsFilters()"> Refresh
+              </button>
+            </div>
+            <div class="col-xs-12 p-0 m-t-10">
+              <div class="col-xs-12 p-0">
+                <div class="col-xs-12 filter-search-header" ng-click="notificationCtrl.notificationJobSearch()">
+                  <span>Advanced Search For Job Notifications</span>
+                  <span class="zmdi zmdi-chevron-down c-white cursor-pointer f-19 pull-right p-r-5"
+                    ng-if="notificationCtrl.isNotificationSearchJob"></span>
+                  <span class="zmdi zmdi-chevron-up c-white cursor-pointer f-19 pull-right p-r-5"
+                    ng-if="!notificationCtrl.isNotificationSearchJob"></span>
+                </div>
+                <div class="col-xs-12 filter-search-content" ng-if="notificationCtrl.isNotificationSearchJob">
+                  <ng-form name="notificationCtrl.jobform" class="col-xs-12 p-0">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label class="w-100">Task Name</label>
+                        <span class="p-absolute cart-mandatory-field fail"
+                          ng-show="notificationCtrl.jobform.task_type_ids.$invalid"></span>
+                        <span class="p-absolute cart-mandatory-field pass"
+                          ng-show="notificationCtrl.jobform.task_type_ids.$valid"></span>
+                        <multiselect class="" ng-model="notificationCtrl.filters.task_type_ids"
+                          options="type for type in notificationCtrl.uniqueChars|orderBy:'type'" select-limit="100"
+                          header="Select task name" selected-header="options selected" multiple="true" required
+                          enable-filter="true" filter-placeholder="Quick Search"
+                          ng-class="{'highlight-filter':notificationCtrl.filters.task_type_ids.length>0}">
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label class="w-100">Requester</label>
+                        <span class="p-absolute cart-mandatory-field fail"
+                          ng-show="notificationCtrl.jobform.requesters.$invalid"></span>
+                        <span class="p-absolute cart-mandatory-field pass"
+                          ng-show="notificationCtrl.jobform.requesters.$valid"></span>
+                        <multiselect class="" ng-model="notificationCtrl.filters.requester_ids"
+                          options="user.id as user.name for user in notificationCtrl.requesters|orderBy:'name'"
+                          select-limit="100" header="Select Requester" selected-header="options selected"
+                          multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                          ng-class="{'highlight-filter':notificationCtrl.filters.requester_ids.length>0}">
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label class="w-100">Request date</label>
+                        <span class="p-absolute cart-mandatory-field fail"
+                          ng-show="notificationCtrl.jobform.request_date.$invalid"></span>
+                        <span class="p-absolute cart-mandatory-field pass"
+                          ng-show="notificationCtrl.jobform.request_date.$valid"></span>
+                        <input type="text" name="request_date" id="request_date"
+                          class="form-control input-sm rcp-mydatepicker"
+                          ng-model="notificationCtrl.filters.request_date" ui-mask="{{ui_date_mask}}" autocomplete="off"
+                          mydatepicker model-view-value="true" placeholder="__/__/____">
+                      </div>
+                    </div>
+                    <div class="col-xs-6 d-flex">
+                      <div class="form-group m-t-20">
+                        <button type="button" class="btn-primary btn"
+                          data-ng-click="notificationCtrl.enable_filter = true;notificationCtrl.applyJobsFilters()">
+                          <strong>Apply Filters</strong>
+                        </button>
+                        <button type="button" class="btn btn-cancel"
+                          data-ng-click="notificationCtrl.resetJobsFilters()">
+                          <strong>Reset Filters</strong>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-form>
+                </div>
+              </div>
+              <div class="col-xs-6 p-0" data-ng-if="notificationCtrl.message && notificationCtrl.showJobs">
+                <div data-ng-if="notificationCtrl.message&&notificationCtrl.message.length>0"
+                  class="alert alert-success alert-dismissable">
+                  <button type="button" class="close" data-ng-click="notificationCtrl.message = null"
+                    aria-hidden="true">&times;</button>{{notificationCtrl.message}}
+                </div>
+                <div data-ng-if="notificationCtrl.error&&notificationCtrl.error.length>0"
+                  class="alert alert-danger alert-dismissable">
+                  <button type="button" class="close" data-ng-click="notificationCtrl.error=null"
+                    aria-hidden="true">&times;</button>
+                  {{notificationCtrl.error}}
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 m-t-10 o-auto p-0" data-ng-if="notificationCtrl.taskRequests.length > 0">
+              <table class="table table-condensed table-bordered-sm table-bordered table-vmiddle notification-table">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>SKU Number</th>
+                    <th>Status</th>
+                    <th>Requested by</th>
+                    <th>Requested date</th>
+                  </tr>
+                </thead>
+                <tbody data-ng-if="!notificationCtrl.isLoading"
+                  data-ng-repeat="(groupName,tasks) in notificationCtrl.taskRequests|groupBy:'task_name' track by $index">
+                  <tr>
+                    <td colspan="5" class="task-name-header" title="Group name" title-direction="top">{{groupName}}</td>
+                  </tr>
+                  <tr data-ng-repeat="task in tasks| orderBy:'-request_date' | filter: notificationCtrl._search">
+                    <td title="{{task.request_title}}">{{task.request_title| truncate:40}}</td>
+                    <td data-ng-if="isloadingsku">
+                      <i class="fa fa-spinner fa-spin m-r-5"></i>
+                    </td>
+                    <td data-ng-if="!isloadingsku">{{task.sku_number}}</td>
+                    <td
+                      data-ng-class="{'text-success': task.task_state_name.toLowerCase() === 'completed', 'text-danger': task.task_state_name.toLowerCase() === 'failed', 'text-info': task.task_state_name.toLowerCase() === 'queued'}">
+                      {{task.task_state_name}}</td>
+                    <td>{{task.requester_name}}</td>
+                    <td>{{task.request_date|FormatDate}}</td>
+                  </tr>
+                </tbody>
+                <!-- <tfoot>
+                  <tr>
+                    <td colspan="12">
+                      <ul class="pager form-inline col-xs-12 text-center">
+                        <li><button type="button" class="btn btn-secondary"
+                            ng-click="notificationCtrl.first()">&nbsp;First
+                          </button></li>
+                        <li>
+                          <button type="button" class="btn" ng-click="notificationCtrl.prev()"
+                            ng-disabled="notificationCtrl.isFirstPage"><i class="fa fa-arrow-left"></i>&nbsp;</button>
+                        </li>
+                        <li>
+                          <button type="button" class="btn" ng-click="notificationCtrl.next()"
+                            ng-disabled="notificationCtrl.isLastPage">&nbsp;<i class="fa fa-arrow-right"></i>
+                          </button>
+                        </li>
+                        <li><button type="button" class="btn btn-secondary" ng-disabled="notificationCtrl.isLastPage"
+                            ng-click="notificationCtrl.last()">&nbsp;Last
+                          </button></li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tfoot> -->
+              </table>
+            </div>
+            <!-- <div id="notFoundDiv" ng-show="(tasks|filter: notificationCtrl._search).length==0" class="text-info text-muted f-17">No Records Found</div>   -->
+            <div class="col-xs-12 m-t-30 text-center"
+              data-ng-if="notificationCtrl.taskRequests && notificationCtrl.taskRequests.length === 0">
+              <span class="text-info text-muted f-17">No records found.
+                <span
+                  data-ng-if="notificationCtrl.filters.task_type_ids || notificationCtrl.filters.requester_ids || notificationCtrl.filters.request_date">Please
+                  amend the search criteria.</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-xs-12 aligncenter m-b-20"
+            data-ng-if="notificationCtrl.totalRecordsCount > notificationCtrl.limit && notificationCtrl.totalRecordsCount > notificationCtrl.taskRequests.length">
+            <button class="btn btn-sm btn-inverse" data-ng-disabled="notificationCtrl.isLoadingMore"
+              data-ng-click="notificationCtrl.loadMoreTaskRequests()">
+              <span data-ng-if="notificationCtrl.isLoadingMore">
+                <i class="fa fa-spinner fa-spin m-r-5"></i>
+              </span>
+              Load More</button>
+          </div>
+        </div>
+        <div class="col-xs-12 p-0 m-t-10" data-ng-if="notificationCtrl.showMercuryChanges">
+          <div class="col-xs-12 m-b-10 p-0">
+            <!-- !!!! DO NOT REMOVE !!!! -->
+            <div>
+              <input type="search" class="full-height form-group input-sm globalsearch"
+                data-ng-model="notificationCtrl._searchmercury" type="text" name="Search" placeholder="Quick Search"
+                id="mercuryNotificationsearch" autocomplete="off" style="border: 1px solid;width: 85%;">
+              <button type="button" class="btn btn-default"
+                style="height: 32px;background-color: #0d7bb1;color: white;float: right;"
+                data-ng-click="notificationCtrl.resetmercuryFilters()"> Refresh
+              </button>
+            </div>
+            <div class="col-xs-12 p-0 m-t-10">
+              <div class="col-xs-12 p-0">
+                <div class="col-xs-12 filter-search-header" ng-click="notificationCtrl.notificationMercurySearch()">
+                  <span>Advanced Search For Mercury Notifications</span>
+                  <span class="zmdi zmdi-chevron-down c-white cursor-pointer f-19 pull-right p-r-5"
+                    ng-if="notificationCtrl.isNotificationSearchMercury"></span>
+                  <span class="zmdi zmdi-chevron-up c-white cursor-pointer f-19 pull-right p-r-5"
+                    ng-if="!notificationCtrl.isNotificationSearchMercury"></span>
+                </div>
+                <div class="col-xs-12 filter-search-content" ng-if="notificationCtrl.isNotificationSearchMercury">
+                  <ng-form class="col-xs-12 p-0">
+                    <!-- <div class="col-xs-6">
+                      <div class="form-group">
+                        <label class="w-100">Status</label>
+                        <multiselect class="" ng-model="notificationCtrl.filters.task_type_ids"
+                          options="type.id as type.type for type in notificationCtrl.taskTypes|orderBy:'type'"
+                          select-limit="100" header="Select task type" selected-header="options selected"
+                          multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                          ng-class="{'highlight-filter':notificationCtrl.filters.task_type_ids.length>0}">
+                      </div>
+                    </div> -->
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label class="w-100">Requester</label>
+                        <multiselect class="" ng-model="notificationCtrl.mercuryFilters.vendor_id"
+                          options="user.id as user.name for user in notificationCtrl.requesters|orderBy:'name'"
+                          select-limit="100" header="Select Requester" selected-header="options selected"
+                          multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                          ng-class="{'highlight-filter':notificationCtrl.mercuryFilters.vendor_id.length>0}">
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label class="w-100">Request date</label>
+                        <input type="text" name="request_date" id="request_date"
+                          class="form-control input-sm rcp-mydatepicker" ng-model="notificationCtrl.created_dt"
+                          ui-mask="{{ui_date_mask}}" mydatepicker model-view-value="true" placeholder="__/__/____">
+                      </div>
+                    </div>
+                    <div class="col-xs-6 d-flex">
+                      <div class="form-group m-t-20">
+                        <button type="button" class="btn-primary btn"
+                          data-ng-click="notificationCtrl.enablemercury_filter = true;notificationCtrl.applymercuryFilters()">
+                          <strong>Apply Filters</strong>
+                        </button>
+                        <button type="button" class="btn btn-cancel"
+                          data-ng-click="notificationCtrl.resetmercuryFilters()">
+                          <strong>Reset Filters</strong>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-form>
+                </div>
+              </div>
+              <div class="col-xs-12 p-0" data-ng-if="notificationCtrl.mercurymessage || notificationCtrl.error && notificationCtrl.showMercuryChanges">
+                <div data-ng-if="notificationCtrl.mercurymessage&&notificationCtrl.mercurymessage.length>0"
+                  class="alert alert-success alert-dismissable">
+                  <button type="button" class="close" data-ng-click="notificationCtrl.mercurymessage = null"
+                    aria-hidden="true">&times;</button>{{notificationCtrl.mercurymessage}}
+                </div>
+                <div data-ng-if="notificationCtrl.mercuryerror&&notificationCtrl.mercuryerror.length>0"
+                  class="alert alert-danger alert-dismissable">
+                  <button type="button" class="close" data-ng-click="notificationCtrl.mercuryerror=null"
+                    aria-hidden="true">&times;</button>
+                  {{notificationCtrl.mercuryerror}}
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 m-t-10 p-0"
+              data-ng-repeat="notification in notificationCtrl.mercuryRequests | filter: notificationCtrl._searchmercury">
+              <div class="border">
+                <div
+                  data-ng-class="{'border-success-left': notification.status === 'completed', 'border-danger-left': notification.status === 'failed', 'border-info-left': notification.status === 'reverted', 'border-warning-left': notification.status === 'approved'}">
+                  <div class="notification-box"
+                    data-ng-class="{'notification-tab': notificationCtrl.selectedNotification.id === notification.id}">
+                    <div class="d-flex align-items-center justify-content-between flex-fill">
+                      <div class="d-flex flex-fill p-0">
+                        <strong class="m-r-5 text-nowrap"
+                          title="{{notification.maintenance_description}}">{{notification.maintenance_description |
+                          truncate: 30}}</strong>
+                        <span class="text-nowrap"
+                          data-ng-if="notification.maintenance_description.toLowerCase() !== 'image[s]'"> value is
+                          <span data-ng-if="notification.status !== 'reverted'">changed</span>
+                          <span data-ng-if="notification.status === 'reverted'">reverted</span> to </span>
+                        <span class="text-nowrap"
+                          data-ng-if="notification.maintenance_description.toLowerCase() === 'image[s]'"> uploaded
+                        </span>
+                        <span data-ng-if="notification.maintenance_description.toLowerCase() !== 'image[s]'">
+                          <span title="{{ notification.valueDescription}}" class="line-clamp-1 "
+                            data-ng-if="notification.valueDescription">
+                            <strong class="p-l-5">
+                              <span data-ng-if="notification.maintenance_description.toLowerCase() === 'first cost'">${{
+                                notification.valueDescription | DecimalPrecision:2}}</span>
+                              <span data-ng-if="notification.maintenance_description.toLowerCase() !== 'first cost'">{{
+                                notification.valueDescription | truncate: 50}} </span>
+                            </strong>
+                          </span>
+                          <span class="line-clamp-1 " data-ng-if="!notification.valueDescription">
+                            <strong class="p-l-5"> Null </strong>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-10">
+                    <div class="d-flex justify-content-between m-b-5">
+                      <div>
+                        <span>
+                          <strong>Requested By: </strong>
+                        </span>
+                        <span
+                          data-ng-if="notification.created_by">{{notificationCtrl.usersMap[notification.created_by].name}}</span>
+                        <span
+                          data-ng-if="!notification.created_by && notification.email_id">{{notification.email_id}}</span>
+                      </div>
+                      <div>
+                        <span>
+                          <strong>Requested Date: </strong>
+                        </span>
+                        <span> {{notification.created_dt|FormatDate}} {{notification.created_dt|FormatTime}}</span>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <span>
+                          <strong>Status: </strong>
+                        </span>
+                        <span
+                          data-ng-class="{'text-success': notification.status === 'completed', 'text-danger': notification.status === 'failed', 'text-info': notification.status === 'reverted', 'text-warning': notification.status === 'approved'}">{{notification.status|titleCase}}</span>
+                      </div>
+                      <div>
+                        <button class="btn btn-primary btn-sm rounded-0" type="button"
+                          data-ng-click="notificationCtrl.showSkus(notification)">
+                          More Details </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 aligncenter m-b-20"
+            data-ng-if="notificationCtrl.mercuryRecordsCount > notificationCtrl.limit && notificationCtrl.mercuryRecordsCount > notificationCtrl.mercuryRequests.length">
+            <button class="btn btn-sm btn-inverse" data-ng-disabled="notificationCtrl.isLoadingMore"
+              data-ng-click="notificationCtrl.loadMoreMercuryRequests()">
+              <span data-ng-if="notificationCtrl.isLoadingMore">
+                <i class="fa fa-spinner fa-spin m-r-5"></i>
+              </span>Load More</button>
+          </div>
+        </div>
+        <div class="col-xs-12 m-t-30 text-center"
+          data-ng-if="notificationCtrl.mercuryRequests && notificationCtrl.mercuryRequests.length === 0 && !notificationCtrl.showJobs">
+          <span class="text-info text-muted f-17">No records found.
+            <span data-ng-if="notificationCtrl.mercuryFilters.vendor_id || notificationCtrl.created_dt">Please
+              amend the search criteria.</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div id="rcrightsidebar" class="changehistory" ng-class="{'toggled':notificationCtrl.showSkusDetail}">
+    <div class="col-xs-12 d-flex d-flex-v-center sidepanel-header m-t-15">
+      <div class="close-icon">
+        <a data-ng-click="notificationCtrl.showSkusDetail = false;" class="cursor-pointer">
+          <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </a>
+      </div>
+      <div class="d-flex-h-center d-flex panel-name-section" style="flex:1;">
+        <label class="rclabel editformlabel" style="margin-left: -7px;">
+          <strong>Sku Details</strong>
+        </label>
+      </div>
+    </div>
+
+    <div class="col-lg-12 d-flex justify-content-center">
+      <div class="m-b-10 m-t-10">
+        <div class="m-auto updatepanel">
+          <div data-ng-include="'./img/sidebar-icons/more.svg'" style="height: 150px;"></div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div data-ng-include="'./application/modules/notifications/panel.sku.details.html'"></div>
+
+</div>

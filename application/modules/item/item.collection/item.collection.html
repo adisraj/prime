@@ -1,0 +1,286 @@
+<div class="container col-lg-12 p-0" data-ng-controller="ItemCollectionController as itemColCtrl">
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="itemColCtrl.openForm()" />
+        </li>
+    </ul>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+            <div style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;display:grid;">
+                <div class="d-flex p-l-5">
+                    <span class="image-module align-items-center" style="display: grid">
+                        <img src="./img/sidebar-icons/toolbar-quick-access.svg" />
+                    </span>
+                    <span class="label-module align-items-center"
+                        style="font-size: 1em;font-weight: 500;display: grid;">
+                        <a href="javascript:void(0)" style="width:auto;line-height: inherit;">Item Collections</a>
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+                    <div class="tableheader-btn">
+                        <span data-ng-if="!itemColCtrl.search"> {{itemColCtrl.rowsInfo}} </span>
+                        <span data-ng-if="itemColCtrl.search"> Displaying
+                            {{(itemColCtrl.allItemCollections|filterBy:['id','status','short_description']:itemColCtrl.search).length}}
+                            of {{itemColCtrl.allItemCollections.length}} Records
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    ng-if="itemColCtrl.allItemCollections.length > 0">
+                                    <input class="form-control input-sm " type="text " ng-model="itemColCtrl.search"
+                                        indicate-quick-search placeholder="Quick Search "
+                                        data-ng-disabled="!itemColCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link"
+                            ng-if="itemColCtrl.allItemCollections.length > 0&&permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="itemColCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block waves-effect" data-ng-disabled="!itemColCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link"
+                            ng-if="itemColCtrl.allItemCollections.length > 0&&permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="itemColCtrl.reload(true);"
+                                    class="btn-primal btn-block waves-effect" data-ng-disabled="!itemColCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect"
+                                    data-ng-click="itemColCtrl.openForm();" data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Item
+                                        Collection</span>
+                                </button>
+                            </a>
+
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="add-btn cursor-pointer">
+                                    <button data-ng-click="itemColCtrl.openForm();" style="padding: 8px 20px"
+                                        class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Item Collection
+                                    </button>
+                                </li>
+                                <li ng-if="itemColCtrl.allItemCollections.length > 0">
+                                    <a data-ng-click="itemColCtrl.isLoaded ? itemColCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': !itemColCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="itemColCtrl.allItemCollections.length > 0">
+                                    <a data-ng-click="itemColCtrl.isLoaded ? itemColCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': !itemColCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration"
+        data-ng-if="!itemColCtrl.rowsCount && !itemColCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="itemColCtrl.rowsCount !== 0 && itemColCtrl.isLoaded && permissionsMap && permissionsMap.view">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/item/item.collection/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration"
+                    data-ng-init="itemColCtrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="itemColCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="itemColCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="itemColCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="itemColCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" style="width:10%" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="itemColCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="itemColCtrl.sortType == 'status' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="itemColCtrl.sortType == 'status' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="short_description_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="itemColCtrl.sortType = 'short_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.shortDescription.visible == 0">
+                                        <span class="handle">Short Description</span>
+                                        <span ng-show="itemColCtrl.sortType == 'short_description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="itemColCtrl.sortType == 'short_description' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="link_description_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="itemColCtrl.sortType = 'link_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.link.visible == 0">
+                                        <span class="handle">Link</span>
+
+                                    </th>
+
+                                    <th class="text-center iconcolumnwidth" id="datalake_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.datalake.visible == 0">
+                                        <span class="handle">Documents</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="itemcollection in itemColCtrl.allItemCollections|filterBy:['id','status','short_description']:itemColCtrl.search|orderBy:itemColCtrl.sortType:sortReverse|itemsPerPage:itemColCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="itemColCtrl.setClickedRow($index);"
+                                    ios-dblclick="itemColCtrl.dblClickAction(itemcollection);"
+                                    selectedrow="{{itemcollection}}">
+                                    <td class="id_col iconcolumnWidth"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.id.visible == 0">
+                                        {{itemcollection.id}}</td>
+                                    <td class="status_col"
+                                        ng-class="{'text-success f-500': itemcollection.status==='Active' , 'text-warning f-300': itemcollection.status ==='Pending Active', 'text-primary f-300': itemcollection.status ==='Inactive','text-info f-300': itemcollection.status==='Pending Inactive'}"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.status.visible == 0">
+                                        {{itemcollection.status}}</td>
+                                    <td class="short_description_col"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.shortDescription.visible == 0">
+                                        {{itemcollection.short_description}}</td>
+                                    <td class="link_description_col iconcolumnwidth text-center p-l-5"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.link.visible == 0">
+                                        <a class="text-center f-700"
+                                            ng-click="itemColCtrl.openLinkVendor(itemcollection);">Vendors</a>
+                                    </td>
+                                    <td class="datalake_col iconcolumnwidth text-center p-l-5"
+                                        data-ng-hide="itemColCtrl.itemCollectionsGrid.columns.datalake.visible == 0">
+                                        <button type="button" class="p-l-5 header-button datalake-button"
+                                            ng-click="showMetaData(itemColCtrl.entityInformation,itemcollection, permissionsMap);"
+                                            data-ng-disabled="!permissionsMap.drop">
+                                            <span class="zmdi zmdi-cloud zmdi-hc-fw" data-ng-if="permissionsMap.drop"
+                                                title="Click here to manage documents" title-direction="right"
+                                                fixed-position="true"></span>
+                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw"
+                                                data-ng-if="!permissionsMap.drop" title="Access denied"
+                                                title-direction="right" fixed-position="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="align-items-center col-lg-12 d-flex justify-content-between p-15">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                            boundary-links="true" on-page-change="itemColCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="itemColCtrl.pageSize = 10"
+                                ng-class="{'active':itemColCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="itemColCtrl.pageSize = 25"
+                                ng-class="{'active':itemColCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="itemColCtrl.pageSize = 50"
+                                ng-class="{'active':itemColCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="itemColCtrl.pageSize = 100"
+                                ng-class="{'active':itemColCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Details section for each itemCollections data -->
+        <!-- <div data-ng-include="'./application/modules/item/item.collection/panel.item.collection.link.html'"></div> -->
+        <div data-ng-include="'./application/modules/item/item.collection/panel.item.collection.dependency.html'"></div>
+        <div data-ng-include="'./application/modules/item/item.collection/item.collection.vendor.dependency.html'">
+        </div>
+        <meta-data-panel></meta-data-panel>
+        <div class="col-lg-12 p-0">
+            <div id="refresh-table" class="p-15" data-ng-class="{'toggled':itemColCtrl.isRefreshTable}">
+                <div class="col-xs-6 p-0">
+                    <span class="f-15 f-300 pull-left">{{itemColCtrl.refreshTableText}}</span>
+                </div>
+                <div class="col-xs-6 p-0" data-ng-if="itemColCtrl.totalTimeText">
+                    <span class="pull-right f-300">
+                        <strong>{{itemColCtrl.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{itemColCtrl.totalRecordsText}}</span>
+                        <span ng-bind-html="itemColCtrl.totalTimeText"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="permissionsMap && !permissionsMap.view  && itemColCtrl.isLoaded"
+        data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="itemColCtrl.rowsCount === 0 && itemColCtrl.isLoaded && permissionsMap.view"
+        class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No item collection exists. Please add item collection.</span>
+        </div>
+    </div>
+    <ui-view></ui-view>
+</div>

@@ -1,0 +1,26 @@
+<div id="rcrightsidebar" class="toggled">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a data-ng-click="mtoTypeUDDCtrl.closeForm();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel" title="{{mtoTypeUDDCtrl.entityInformation.name}}">Delete <strong>{{mtoTypeUDDCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!mtoTypeUDDCtrl.isUnauthorized">
+        <div class="form-group col-xs-12 p-0">
+            <rcp-delete-form data-ng-if="!mtoTypeUDDCtrl.isDeleteSuccess" image-name="entity-config-made-to-order.svg" close-fn="mtoTypeUDDCtrl.dblClickAction(mtoTypeUDDCtrl.new_type_udd);" delete-fn="mtoTypeUDDCtrl.delete(mtoTypeUDDCtrl.new_type_udd);"></rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="mtoTypeUDDCtrl.createAnotherForm();" close-fn="mtoTypeUDDCtrl.closeForm(); " update-success="mtoTypeUDDCtrl.isUpdateSuccess" save-success="mtoTypeUDDCtrl.isSaveSuccess" delete-success="mtoTypeUDDCtrl.isDeleteSuccess"></rcp-success-form>
+            <div class="col-xs-12 p-0" ng-if="!mtoTypeUDDCtrl.isShowAdd && mtoTypeUDDCtrl.isShowHistory" data-ng-include="'./application/templates/history.html'"></div>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="mtoTypeUDDCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="mtoTypeUDDCtrl.message = null" aria-hidden="true">&times;</button> {{mtoTypeUDDCtrl.message}}
+            </div>
+        </div>
+    </div>
+    <div ng-if="mtoTypeUDDCtrl.isUnauthorized" data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>

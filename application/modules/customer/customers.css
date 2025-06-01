@@ -1,0 +1,276 @@
+.customer-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ececec;
+    padding: 12px 10px;
+    background: #fbfbfb;
+}
+
+.customer-card.selected {
+  background: #f5fff8
+}
+
+.customer-name {
+    flex: 1;
+    display: flex;
+    align-items: baseline;
+    color: #3abf65;
+}
+
+.customer-name .business-name {
+    color: #ca5967;
+}
+
+.other-details {
+    flex: 2;
+    display: flex;
+    align-items: baseline;
+    color: #747474;
+    justify-content: flex-end;
+}
+
+.customer-contact {
+    flex: 1;
+    display: flex;
+    align-items: baseline;
+    color: #747474;
+}
+
+.customer-exist {
+    background: #f6fffa;
+    padding: 10px;
+}
+
+.no-customer-exist {
+    background: #efefef;
+    padding: 10px;
+}
+
+.rowInfo {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e8e8e8;
+}
+.label-section {
+    font-weight: 500;
+    font-size: 13px;
+}
+.value-section {
+    font-weight:  400;
+    font-size: 14px;
+    font-family: 'lato',sans-serif;
+}
+
+.discount-type-header {
+    padding: 10px 20px;
+    background: #146977;
+    color: #ffffff;
+    font-family: lato;
+    font-weight: 700;
+    border-bottom: 1px solid #b7b7b7;
+}
+  
+  /*
+  * Style for the discount treeview start
+  */
+
+  .treeview {
+    float: left;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    background: #ffffff;
+  }
+  
+  .treeview label {
+    margin-bottom: 0px;
+  }
+  
+  .treeview ul {
+    -webkit-transition-duration: 1s;
+    -moz-transition-duration: 1s;
+    -ms-transition-duration: 1s;
+    -o-transition-duration: 1s;
+    transition-duration: 1s;
+    list-style: none;
+    padding-left: 1.2em;
+    line-height: 2.2;
+    border-bottom: 1px solid #ececec;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-bottom: 0px;
+  }
+
+  .treeview ul:last-child {
+    border-bottom: 0px
+  }
+
+    
+  .treeview ul:hover input ~ label:before {
+    opacity: 1;
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+    -ms-transition-duration: 0.5s;
+    -o-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+    border-right-color: rgb(63, 63, 63);
+    border-bottom-color: rgb(63, 63, 63);
+  }
+
+  .treeview ul:hover>li>label.d-flex {
+    color: #af3737;
+    font-weight: 700;
+  }
+  
+  .treeview ul li span {
+    -webkit-transition-property: color;
+    -moz-transition-property: color;
+    -ms-transition-property: color;
+    -o-transition-property: color;
+    transition-property: color;
+    -webkit-transition-duration: 1s;
+    -moz-transition-duration: 1s;
+    -ms-transition-duration: 1s;
+    -o-transition-duration: 1s;
+    transition-duration: 1s;
+  }
+  
+  .treeview input {
+    display: none;
+  }
+  
+  .treeview input:checked ~ ul {
+    display: none;
+  }
+  
+  .treeview input ~ label {
+    cursor: pointer;
+    color: #e88f00;
+    font-weight: 400;
+    font-family: "Lato", "roboto", sans-serif;
+  }
+  
+  .treeview input ~ label:before {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    margin-left: -1em;
+    margin-top: 0.6em;
+    border-width: 4px;
+    border-style: solid;
+    border-top-color: transparent;
+    border-right-color: rgba(189, 189, 189, 0.5);
+    border-bottom-color: rgba(155, 155, 155, 0.5);
+    border-left-color: transparent;
+    opacity: 1;
+    -webkit-transition-property: opacity;
+    -moz-transition-property: opacity;
+    -ms-transition-property: opacity;
+    -o-transition-property: opacity;
+    transition-property: opacity;
+    -webkit-transition-duration: 1s;
+    -moz-transition-duration: 1s;
+    -ms-transition-duration: 1s;
+    -o-transition-duration: 1s;
+    transition-duration: 1s;
+  }
+  
+  .treeview ul input:checked ~ label:before {
+    margin-left: -0.8em;
+    border-width: 5px;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: rgba(189, 189, 189, 0.5);
+    /* background: url('/images/files.png') no-repeat; */
+  }
+  
+  /* .treeview input[type="checkbox"] + label::after {
+    content: "";
+  } */
+  
+  .treeview input:checked ~ label {
+    color: black;
+  }
+
+  .testdiv {
+      height: 100px;
+      width: 50%;
+      background: #e88f00;
+      color: white;
+  }
+
+
+.treeview .tags {
+  list-style: none;
+  margin: 0;
+  overflow: hidden; 
+  padding: 0;
+}
+
+.treeview .tags li {
+  float: left; 
+}
+
+.treeview .tag,
+.value-section .tag {
+  background: linear-gradient(to right, #469a49, #4caf50);
+  border-radius: 3px 0 0 3px;
+  color: #fff;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 18px 0 5px;
+  width: 64px;
+  position: relative;
+  margin: 0px;
+  font-weight: 700;
+  text-decoration: none;
+  -webkit-transition: color 0.2s;
+}
+
+.treeview .tag::after,
+.value-section .tag::after {
+  background: #fff;
+  border-bottom: 12px solid transparent;
+  border-left: 10px solid #49a84d;
+  border-top: 12px solid transparent;
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+
+.select_customer_carts_detail button {
+  width: 140px;
+  height: 32px;
+  float: none;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 0;
+}
+
+.customer-cart-section {
+  margin-bottom: 5px;
+  border-bottom: 1px solid #d4d4d4;
+  border: 1px solid #ececec;
+  margin-top: 5px;
+}
+
+.customer-cart-section-header {
+  justify-content: space-between;
+  border-bottom: 2px solid #337ab7;
+  background: linear-gradient(to right, #f3f8ff, #ffffff);
+}
+
+.customer-cart-section-content {
+  background: #ffffff;
+}

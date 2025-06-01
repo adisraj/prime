@@ -1,0 +1,294 @@
+<style>
+    .hierarchy {
+        background-image: url('application/modules/hierarchy/hierarchy.png');
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .group {
+        background-image: url('application/modules/hierarchy/group.png');
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+</style>
+<div class="container col-lg-12 p-0" data-ng-controller="HierarchyController as hierCtrl" ui-view="values">
+    <!--START: HIERARCHY -->
+    <!--list panel-->
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="hierCtrl.goToCreateHierarchy()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="hierCtrl.closeForm();hierCtrl.isColumnSettingsVisible = false" />
+            <keybinding on="ctrl+f" invoke="hierCtrl.focusSearchField()" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="hierCtrl.reload('refresh')" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="hierCtrl.isColumnSettingsVisible = true" />
+        </li>
+    </ul>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/hierarchy-levels.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Hierarchies</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!hierCtrl.search" class="f-12"> {{hierCtrl.rowsFound}} </span>
+                        <span data-ng-if="hierCtrl.search" class="f-12"> Displaying {{(hierCtrl.Hierarchies|filterBy:['id','status','entity','description','short_description','buyer_hierarchy']:hierCtrl.search).length}} Of {{hierCtrl.Hierarchies.length}}
+                            Records </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="hierCtrl.Hierarchies.length > 0">
+                                    <input class="form-control input-sm " type="text" id="inlineSearch"
+                                    name="inlineSearch" data-ng-init="hierCtrl.focusSearchField()" ng-model="hierCtrl.search" indicate-quick-search placeholder="Quick Search " data-ng-disabled="hierCtrl.isLoading" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="hierCtrl.Hierarchies.length > 0">
+                            <a>
+                                <button type="button" id="hideshowColumnsButton" ng-click="hierCtrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect" data-ng-disabled="hierCtrl.isLoading">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="hierCtrl.Hierarchies.length > 0">
+                            <a>
+                                <button type="button" id="refreshButton" ng-click="hierCtrl.reload(1);" class="btn-primal btn-block waves-effect" data-ng-disabled="hierCtrl.isLoading">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success waves-effect f-700" data-ng-click="hierCtrl.goToCreateHierarchy();"
+                                data-ng-disabled="!hierCtrl.hierarchyPermissions.create">
+                                <span title="{{!hierCtrl.hierarchyPermissions.create ? 'Access denied' : ''}}">Create Hierarchy</span>
+                            </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" style="border-left:3px solid #e8e8e8" uib-dropdown-toggle class="full-height bg-none p-15" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button type="button" data-ng-click="hierCtrl.goToCreateHierarchy();" style="padding: 8px 20px" class="restricted-btn" title="{{!hierCtrl.hierarchyPermissions.create ? 'Access denied' : ''}}" data-ng-disabled="!hierCtrl.hierarchyPermissions.create" data-ng-class="{'opacity50' : !hierCtrl.hierarchyPermissions.create}"><i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Hierarchy
+                                    </button>
+                                </li>
+                                <li ng-if="hierCtrl.Hierarchies.length > 0">
+                                    <button type="button"  style="padding: 8px 20px" class="restricted-btn" data-ng-click="!hierCtrl.isRefreshTable ? hierCtrl.ShowHideColumnSettings() : '' " data-ng-class="{'cursor-not-allowed': hierCtrl.isRefreshTable}"
+                                        href="">
+                                        <i class="zmdi zmdi-view-week text-info f-17 m-r-15"></i> Columns </button>
+                                </li>
+                                <li ng-if="hierCtrl.Hierarchies.length > 0">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn" data-ng-click="!hierCtrl.isRefreshTable ? hierCtrl.reload(1) : '' " data-ng-class="{'cursor-not-allowed': hierCtrl.isRefreshTable}"
+                                        href="">
+                                        <i class="zmdi zmdi-refresh text-warning f-17 m-r-15"></i> Refresh</button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!hierCtrl.rowsCount && hierCtrl.isLoading">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="hierCtrl.rowsCount && hierCtrl.rowsCount !== 0 && !hierCtrl.isLoading">
+        <div class="rcp-table-container">
+            <div data-ng-include="'./application/modules/hierarchy/hideShowColumns.html'"></div>
+            <div class="col-xs-12 p-0 module-content-configuration" style="margin-top: 80px">
+                <div class="col-xs-12 p-0 m-b-10">
+                    <i class="pull-right" style="color: #615f5f;font-weight:300;font-style:italic;"> Significant hierarchies are highlighted</i>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div class="table-responsive" ng-if="!hierCtrl.$grid" data-ng-init="hierCtrl.paginationHandler(hierCtrl.currentPage)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="hierCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="hierCtrl.hierarchyGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="hierCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="hierCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" style="width:10%" drag-me drop-me data-handle=".handle" ng-click="hierCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="hierCtrl.hierarchyGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="hierCtrl.sortType == 'status' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="hierCtrl.sortType == 'status' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="entity_col_head" drag-me drop-me data-handle=".handle" ng-click="hierCtrl.sortType = 'entity'; sortReverse = !sortReverse"
+                                        data-ng-hide="hierCtrl.hierarchyGrid.columns.entity.visible == 0">
+                                        <span class="handle">Entity</span>
+                                        <span ng-show="hierCtrl.sortType == 'entity' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="hierCtrl.sortType == 'entity' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="description_col_head" drag-me drop-me data-handle=".handle" ng-click="hierCtrl.sortType = 'description'; sortReverse = !sortReverse"
+                                        data-ng-hide="hierCtrl.hierarchyGrid.columns.description.visible == 0">
+                                        <span class="handle">Description</span>
+                                        <span ng-show="hierCtrl.sortType == 'description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="hierCtrl.sortType == 'description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="short_description_col_head" drag-me drop-me data-handle=".handle" ng-click="hierCtrl.sortType = 'short_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="hierCtrl.hierarchyGrid.columns.shortDescription.visible == 0">
+                                        <span class="handle">Short Description</span>
+                                        <span ng-show="hierCtrl.sortType == 'short_description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="hierCtrl.sortType == 'short_description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="as400_data_tag_col_head" drag-me drop-me data-handle=".handle" data-ng-hide="hierCtrl.hierarchyGrid.columns.as400_data_tag.visible == 0">
+                                        <span class="handle">AS400 Data Tag</span>
+                                    </th>
+                                    <th class="text-center" id="from_col_head" style="width:5%" drag-me drop-me data-handle=".handle" data-ng-hide="hierCtrl.hierarchyGrid.columns.specialHierarchy.visible == 0">
+                                        <span class="handle">Special Hierarchy</span>
+                                    </th>
+                                    <th class="text-center" id="format_col_head" drag-me drop-me data-handle=".handle" data-ng-hide="hierCtrl.hierarchyGrid.columns.hierarchyGroups.visible == 0">
+                                        <span class="handle">H/G</span>
+                                    </th>
+                                    <th id="values_col_head" class="text-center" style="width:5%" drag-me drop-me data-handle=".handle" data-ng-hide="hierCtrl.hierarchyGrid.columns.values.visible == 0">
+                                        <span class="handle">Values</span>
+                                    </th>
+                                    <th id="datalake_col_head" class="text-center" style="width:5%" drag-me drop-me data-handle=".handle" data-ng-hide="hierCtrl.hierarchyGrid.columns.datalake.visible == 0">
+                                        <span class="handle">Documents</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="hierarchy in hierCtrl.Hierarchies|filterBy:['id','status','entity','description','short_description','buyer_hierarchy']:hierCtrl.search|orderBy:hierCtrl.sortType:sortReverse|itemsPerPage:hierCtrl.pageSize"
+                                    ios-dblclick="hierCtrl.goToUpdateHierarchyForm(hierarchy);" ng-click="setClickedRow($index)">
+                                    <td class="id_col" data-ng-hide="hierCtrl.hierarchyGrid.columns.id.visible == 0">{{hierarchy.id}}</td>
+                                    <td class="status_col" ng-class="{'text-success f-500': hierarchy.status==='Active' , 'text-warning f-300': hierarchy.status ==='Pending Active', 'text-primary f-300': hierarchy.status ==='Inactive','text-info f-300': hierarchy.status==='Pending Inactive'}"
+                                        data-ng-hide="hierCtrl.hierarchyGrid.columns.status.visible == 0">{{hierarchy.status = hierCtrl.statusIdsMap[hierarchy.status_id].description}}</td>
+                                    <td class="entity_col" data-ng-hide="hierCtrl.hierarchyGrid.columns.entity.visible == 0">{{hierarchy.entity = hierCtrl.entityIdsMap[hierarchy.entity_id].entity}}</td>
+                                    <td class="description_col" data-ng-hide="hierCtrl.hierarchyGrid.columns.description.visible == 0">{{hierarchy.description}}</td>
+                                    <td class="short_description_col" data-ng-hide="hierCtrl.hierarchyGrid.columns.shortDescription.visible == 0">{{hierarchy.short_description}}</td>
+                                    <td class="as400_data_tag_col" data-ng-hide="hierCtrl.hierarchyGrid.columns.as400_data_tag.visible == 0">{{hierarchy.as400_data_tag}}</td>
+
+                                    <td class="to_col" ng-class="{'highlight-text-success f-400 f-13': hierarchy.is_product_explorer_hierarchy_id===1 || hierarchy.is_buyer_hierarchy_id===1 || hierarchy.is_primary_location_hierarchy_id=== 1 || hierarchy.is_pricing_classification_group_id===1 || hierarchy.is_assortment_classification_group_id===1|| hierarchy.is_primary_item_hierarchy_id===1} "
+                                        data-ng-hide="hierCtrl.hierarchyGrid.columns.specialHierarchy.visible == 0">
+                                        {{hierarchy.primary_item_hierarchy }}
+                                        <span class="p-l-5 p-r-5" ng-if="hierarchy.product_explorer_hierarchy && hierarchy.primary_item_hierarchy">/</span>{{
+                                        hierarchy.product_explorer_hierarchy}} {{hierarchy.primary_location_hierarchy}} {{hierarchy.buyer_hierarchy}}
+                                        {{hierarchy.assortment_classification_group}} {{hierarchy.pricing_classification_group}}
+                                    </td>
+                                    <td class="from_col hierarchy" data-ng-if="!hierarchy.is_group || hierarchy.is_group == 0" data-ng-hide="hierCtrl.hierarchyGrid.columns.hierarchyGroups.visible == 0"
+                                        title="'Hierarchy'" title-direction="right" fixed-position="true">
+                                    </td>
+                                    <td class="from_col group" data-ng-if="hierarchy.is_group && hierarchy.is_group != 0" data-ng-hide="hierCtrl.hierarchyGrid.columns.hierarchyGroups.visible == 0"
+                                        title="'Group'" title-direction="right" fixed-position="true">
+                                    </td>
+                                    <td class="values_col text-center " data-ng-hide="hierCtrl.hierarchyGrid.columns.values.visible == 0">
+                                        <div>
+                                            <button type="button" class="text-center f-700 bg-none border-none btn-link" ng-click="hierCtrl.gotoHierarchyValues(hierarchy);">View</button>
+                                        </div>
+                                    </td>
+                                    <td class="datalake_col text-center " data-ng-hide="hierCtrl.hierarchyGrid.columns.datalake.visible == 0">
+                                        <button type="button" class="p-l-5 header-button datalake-button " ng-click="showMetaData(hierCtrl.entityInformation,hierarchy,hierCtrl.hierarchyPermissions);" data-ng-disabled="!hierCtrl.hierarchyPermissions.drop && hierCtrl.isLoading">
+                                            <span class="zmdi zmdi-cloud zmdi-hc-fw" data-ng-if="hierCtrl.hierarchyPermissions.drop" title="Click here to manage documents" title-direction="right" fixed-position="true"></span>
+                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw" data-ng-if="!hierCtrl.hierarchyPermissions.drop" title="Access denied" title-direction="right" fixed-position="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="align-items-center col-lg-12 d-flex justify-content-between">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left " boundary-links="true " on-page-change="hierCtrl.paginationHandler(newPageNumber) "></dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts ">
+                            <button type="button " class="btn btn-default f-12 noboxshadow " ng-click="hierCtrl.pageSize=10 " ng-class="{ 'active':hierCtrl.pageSize===10} ">10</button>
+                            <button type="button " class="btn btn-default f-12 noboxshadow " ng-click="hierCtrl.pageSize=25 " ng-class="{ 'active':hierCtrl.pageSize===25} ">25</button>
+                            <button type="button " class="btn btn-default f-12 noboxshadow " ng-click="hierCtrl.pageSize=50 " ng-class="{ 'active':hierCtrl.pageSize===50} ">50</button>
+                            <button type="button " class="btn btn-default f-12 noboxshadow " ng-click="hierCtrl.pageSize=100 " ng-class="{ 'active':hierCtrl.pageSize===100} ">100</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div ng-include=" 'application/modules/hierarchy/panel.hierarchy.form.html'"></div> -->
+                <meta-data-panel></meta-data-panel>
+            </div>
+        </div>
+        <!-- END: HIERARCHY -->
+        <!--START: HIERARCHY VALUES-->
+    </div>
+    <div ng-if="hierCtrl.hierarchyPermissions && !hierCtrl.hierarchyPermissions.view && !hierCtrl.isLoading && !hierCtrl.rowsCount" ng-include=" 'application/templates/restricted.access.html' ">
+    </div>
+    <div data-ng-if="hierCtrl.rowsCount===0" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No hierarchy exists. Please add hierarchy.</span>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0" ng-if="hierCtrl.hierarchyPermissions.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':hierCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left" id="refreshNotificationSpan">{{hierCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="hierCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <span id="refreshDataCount">
+                        <strong>{{hierCtrl.totalRecords}}</strong>
+                    </span>
+                <span class="f-14 c-gray">{{hierCtrl.totalRecordsText}}</span>
+                <span id="refreshTimeTaken" ng-bind-html="hierCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ui-view="operations"></div>
+    <configure-udd udd-object="hierCtrl.hierarchyUdd" uuid="hierCtrl.uuid" close-fn="hierCtrl.closeConfigureUddPanel();"
+        configure-img="hierCtrl.hierarchyUdd.entity_id == 1 ? './img/sidebar-icons/entity-config-location.svg'
+                : hierCtrl.hierarchyUdd.entity_id == 7 ? './img/sidebar-icons/entity-config-item.svg'
+                    : hierCtrl.hierarchyUdd.entity_id == 23 ? './img/sidebar-icons/entity-config-vendor.svg'
+                        : hierCtrl.hierarchyUdd.entity_id == 314 ? './img/sidebar-icons/entity-config-made-to-order.svg'
+                            : './img/sidebar-icons/file_configuration.svg'"
+        data-ng-if="hierCtrl.showConfigureUdd">
+    </configure-udd>
+    <!-- <div ng-include=" 'application/modules/hierarchy/panel.hierarchy.form.html'"></div> -->
+</div>

@@ -1,0 +1,78 @@
+<div id="rightsidebar" data-ng-class="{'toggled':cmpyCtrl.isColumnSettingsVisible === true}">
+    <div class="m-t-25 d-flex">
+        <button type="button" class="p-0 cursor-pointer p-absolute bg-none border-none btn-link" ng-click="cmpyCtrl.isColumnSettingsVisible = false;">
+            <i class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x" aria-hidden="true"></i>
+        </button>
+        <div class="m-auto p-0 text-center">
+            <label class="editformlabel">Hide/Show
+                <strong> Columns</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12 updatepanel">
+        <svg height="130" width="200">
+            <svg version="1.1" id="Capa_1" class="sidebar-svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="60px" y="20px" viewBox="0 0 19 19" style="enable-background:new 0 0 19 19;" xml:space="preserve" height="80"
+                width="150">
+                <g>
+                    <circle cx="2.5" cy="16.5" r="2.5" />
+                    <circle cx="2.5" cy="9.5" r="2.5" />
+                    <circle cx="2.5" cy="2.5" r="2.5" />
+                    <circle cx="9.5" cy="16.5" r="2.5" />
+                    <circle cx="9.5" cy="9.5" r="2.5" />
+                    <circle cx="9.5" cy="2.5" r="2.5" />
+                    <circle cx="16.5" cy="16.5" r="2.5" />
+                    <circle cx="16.5" cy="9.5" r="2.5" />
+                    <circle cx="16.5" cy="2.5" r="2.5" />
+                </g>
+            </svg>
+        </svg>
+    </div>
+    <div class="col-lg-12">
+        <div id="columns_container" class="col-lg-12 p-0">
+            <div class="checkbox col-xs-12 form-group">
+                <label for="id_col">
+                    <input id="id_col" type="checkbox" ng-true-value=true ng-false-value=false data-ng-model="cmpyCtrl.companyGrid.columns.id.visible"> Id
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="status_col">
+                    <input id="status_col" type="checkbox" ng-true-value=true ng-false-value=false data-ng-model="cmpyCtrl.companyGrid.columns.status.visible"
+                        checked> Status
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="name_col">
+                    <input id="name_col" type="checkbox" ng-true-value=true ng-false-value=false data-ng-model="cmpyCtrl.companyGrid.columns.name.visible" checked> Name
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="short_code_col">
+                    <input id="short_code_col" type="checkbox" ng-true-value=true ng-false-value=false data-ng-model="cmpyCtrl.companyGrid.columns.shortName.visible" checked> Short Code
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="address_col">
+                    <input id="address_col" type="checkbox" ng-true-value=true ng-false-value=false data-ng-model="cmpyCtrl.companyGrid.columns.addressContact.visible" checked> Address and Contact
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="view_departments_col">
+                    <input id="view_departments_col" type="checkbox" ng-true-value=true ng-false-value=false data-ng-model="cmpyCtrl.companyGrid.columns.departments.visible" checked> Departments
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="datalake_col">
+                    <input id="datalake_col" type="checkbox" ng-true-value=true ng-false-value=false data-ng-model="cmpyCtrl.companyGrid.columns.datalake.visible" checked> Documents
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>

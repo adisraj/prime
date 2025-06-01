@@ -1,0 +1,160 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+</style>
+<div id="rcrightsidebar" class="c-overflow"
+    data-ng-class="{'toggled':marketingCampaignsCtrl.isShowDetails === true || marketingCampaignsCtrl.isShowDetails === 1,'changeposition': marketingCampaignsCtrl.showErrorDetailsData === true || showhistory === true}">
+    <div class="col-xs-12 m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0"
+            data-ng-click="marketingCampaignsCtrl.closeForm(); closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!marketingCampaignsCtrl.isDeleteSuccess && marketingCampaignsCtrl.isShowAdd && !marketingCampaignsCtrl.isConfirmDelete)"
+                title="Campaign">Create <strong>Campaign</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(!marketingCampaignsCtrl.isDeleteSuccess && !marketingCampaignsCtrl.isShowAdd && !marketingCampaignsCtrl.isConfirmDelete)"
+                title="Campaign">Update <strong>Campaign</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(marketingCampaignsCtrl.isDeleteSuccess || marketingCampaignsCtrl.isConfirmDelete && !marketingCampaignsCtrl.isShowAdd)"
+                title="Campaign">Delete <strong>Campaign</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!marketingCampaignsCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="marketingCampaignsCtrl.showErrorDetails || !(marketingCampaignsCtrl.isUpdateSuccess || marketingCampaignsCtrl.isSaveSuccess || marketingCampaignsCtrl.isConfirmDelete || marketingCampaignsCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/marketing-campaigns-promotions.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-if="!marketingCampaignsCtrl.showErrorDetails" valdr-form-group>
+            <div
+                ng-if="!(marketingCampaignsCtrl.isUpdateSuccess || marketingCampaignsCtrl.isSaveSuccess || marketingCampaignsCtrl.isConfirmDelete || marketingCampaignsCtrl.isDeleteSuccess)">
+                <ng-form name="marketingCampaignsCtrl.marketing_campaign_form" role="form" novalidate="novalidate"
+                    valdr-type="RULES-106">
+                    <div data-ng-if="!marketingCampaignsCtrl.isLoading">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red"
+                                ng-show="marketingCampaignsCtrl.marketing_campaign_form.description.$invalid">*
+                            </span>
+                            <span class="c-green"
+                                ng-show="marketingCampaignsCtrl.marketing_campaign_form.description.$valid">*
+                            </span>
+                            <label>Description</label>
+                            <input id="description" name="description" type="text" class="form-control input-sm"
+                                ng-model="marketingCampaignsCtrl.marketing_campaign_details.description"
+                                placeholder="Enter Description" required
+                                errorvalue="marketingCampaignsCtrl.marketing_campaign_details.description_error"
+                                ng-model-options="{ updateOn: 'blur' }" ng-change="
+                                !marketingCampaignsCtrl.isDeleteSuccess &&
+                                marketingCampaignsCtrl.isShowAdd &&
+                                !marketingCampaignsCtrl.isConfirmDelete &&
+                                !marketingCampaignsCtrl.marketing_campaign_details.long_description ?
+                                    marketingCampaignsCtrl.marketing_campaign_details.long_description = marketingCampaignsCtrl.marketing_campaign_details.description :
+                                    ''
+                            ">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red"
+                                ng-show="marketingCampaignsCtrl.marketing_campaign_form.long_description.$invalid">*
+                            </span>
+                            <span class="c-green"
+                                ng-show="marketingCampaignsCtrl.marketing_campaign_form.long_description.$valid">*
+                            </span>
+                            <label>Long Description</label>
+                            <textarea id="long_description" name="long_description" type="text"
+                                class="form-control input-sm"
+                                ng-model="marketingCampaignsCtrl.marketing_campaign_details.long_description"
+                                ng-model-options="{ updateOn: 'blur' }" placeholder="Enter long description">
+                        </textarea>
+                        </div>
+                        <rcp-edit-form-btns new-form="marketingCampaignsCtrl.isShowAdd"
+                            save-fn="marketingCampaignsCtrl.save(marketingCampaignsCtrl.marketing_campaign_details, 'Campaign');"
+                            save-btn-text="marketingCampaignsCtrl.saveBtnText"
+                            save-btn-error="marketingCampaignsCtrl.saveBtnError"
+                            update-fn="marketingCampaignsCtrl.update(marketingCampaignsCtrl.marketing_campaign_details, 'Campaign'); closeShowHistory();"
+                            update-btn-text="marketingCampaignsCtrl.updateBtnText"
+                            update-btn-error="marketingCampaignsCtrl.updateBtnError"
+                            confirm-fn="marketingCampaignsCtrl.showconfirm('Campaign'); closeShowHistory();"
+                            confirm-delete="marketingCampaignsCtrl.isConfirmDelete"
+                            update-success="marketingCampaignsCtrl.isUpdateSuccess"
+                            entity-id="marketingCampaignsCtrl.marketing_campaign_details.id"
+                            enable-button="marketingCampaignsCtrl.marketing_campaign_form.$invalid || marketingCampaignsCtrl.isProcessing"
+                            access-permissions="permissionsMap">
+                        </rcp-edit-form-btns>
+                    </div>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="marketingCampaignsCtrl.isConfirmDelete"
+                image-name="marketing-campaigns-promotions.svg"
+                close-fn="marketingCampaignsCtrl.isConfirmDelete = false; marketingCampaignsCtrl.isShowHistory = true;"
+                delete-fn="marketingCampaignsCtrl.delete(marketingCampaignsCtrl.marketing_campaign_details, 'Campaign');"
+                confirm-delete="marketingCampaignsCtrl.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg"
+                create-new-fn="marketingCampaignsCtrl.createAnotherForm('Campaign');"
+                close-fn="marketingCampaignsCtrl.closeForm();" update-success="marketingCampaignsCtrl.isUpdateSuccess"
+                save-success="marketingCampaignsCtrl.isSaveSuccess"
+                delete-success="marketingCampaignsCtrl.isDeleteSuccess">
+            </rcp-success-form>
+            <div
+                ng-if="isMaintenance !== true && !marketingCampaignsCtrl.isUpdateSuccess && !marketingCampaignsCtrl.isSaveSuccess && !marketingCampaignsCtrl.isDeleteSuccess && !marketingCampaignsCtrl.isConfirmDelete && !marketingCampaignsCtrl.isShowAdd">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn" data-ng-click="loadHistory('Campaign');"
+                    data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">
+                    View History
+                </button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">
+                    Loading history...
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-if="marketingCampaignsCtrl.showErrorDetails">
+            <div>
+                <h4 class="aligncenter dependency-errorMessage">Cannot be deleted!</h4>
+            </div>
+            <div class="col-xs-12 p-0"
+                ng-repeat="($groupName,$dependencyMain) in ( marketingCampaignsCtrl.dependencyList | groupBy : 'dependent_entity')">
+                <div class="rcpscrollbar dependency-entityBox">
+                    <h4> Dependent Entities - {{ $groupName }} </h4>
+                    <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                        <div data-ng-if="$groupName.toLowerCase() === 'promotions'" class="dependency-entityList"
+                            ng-click="marketingCampaignsCtrl.showDependencyListDetails(dependency);">
+                            <span
+                                title="{{ dependency.description }}">{{ dependency.description | truncate : 50 }}</span>
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                        <div data-ng-if="$groupName.toLowerCase() === 'cart items'" class="dependency-entityList"
+                            ng-click="marketingCampaignsCtrl.showDependencyListDetails(dependency);">
+                            <span
+                                title="{{ dependency.description }}">{{ dependency.description | truncate : 50 }}</span>
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="marketingCampaignsCtrl.closeDependencyList();">
+                    <span><b>Cancel</b></span>
+                </button>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-if="marketingCampaignsCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="marketingCampaignsCtrl.message = null"
+                    aria-hidden="true">&times;</button>
+                {{ marketingCampaignsCtrl.message }}
+            </div>
+        </div>
+    </div>
+    <div ng-if="marketingCampaignsCtrl.isUnauthorized && (marketingCampaignsCtrl.isShowAdd || !marketingCampaignsCtrl.isShowAdd || marketingCampaignsCtrl.isConfirmDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-xs-12" ng-if="!marketingCampaignsCtrl.isShowAdd && marketingCampaignsCtrl.isShowHistory"
+    data-ng-include="'./application/templates/history.html'">
+</div>

@@ -1,0 +1,137 @@
+<div class="col-lg-12 p-0" data-ng-class="{'disable-actions':itemMaintCtrl.disableActions}">
+    <div class="col-xs-12 f-16 panel-header d-flex d-flex-v-center" style="justify-content:space-between;">
+        <div>
+            <span class="f-700 main-header">User defined data</span>
+            <div>
+                <small>
+                    The building blocks and provide structure and behaviour to SKU.
+                </small>
+            </div>
+        </div>
+    </div>
+    <!-- MTO Configuration for MTO and Stock SKUs START -->
+    <div class="col-lg-12 p-0" ng-if="skuHead.sku_type.toLowerCase()==='mto'||skuHead.sku_type.toLowerCase()==='stock plus'">
+        <div class="col-xs-12 cursor-pointer maintenance-header-section">
+            <div class="d-flex">
+                <span class="col-xs-11 p-0 m-0 f-500" style="color: #636363;line-height:1.6;">
+                    MTO Option Details
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0 collapse in bgm-white">
+            <div class="col-xs-12 p-10" ng-show="item_udd_options.length===0">
+                <span class="f-500 text-muted">No UDDs are configured</span>
+            </div>
+            <div class="m-t-10" ng-show="item_udd_options.length>0">
+                <div class="col-lg-12 p-10" data-ng-repeat="each in item_udd_options" ng-if="each.description != null && skuHead.sku_type !== 'Stock'">
+                    <div class="col-lg-12">
+                        <label>{{each.description}}</label>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="input-group full-width">
+                            <span class="input-group-addon optionIcon family" data-ng-if="each.value_level === 'Family'">
+                                <span data-ng-include="'./img/sidebar-icons/mto-family.svg'"></span>
+                            </span>
+                            <div class="input-group-addon optionIcon collection" data-ng-if="each.value_level === 'Collection'">
+                                <div data-ng-include="'./img/sidebar-icons/mto_collections.svg'"></div>
+                            </div>
+                            <div class="input-group-addon optionIcon choice" data-ng-if="each.value_level === 'Choice'">
+                                <div data-ng-include="'./img/sidebar-icons/mto-choice.svg'"></div>
+                            </div>
+                            <div class="input-group-addon optionIcon all" data-ng-if="each.value_level === 'All'">
+                                <div data-ng-include="'./application/modules/item/sku/icons/list.svg'"></div>
+                            </div>
+                            <div class="input-group full-width">
+                                <select class="select-component form-control input-sm" ng-model="each.value_level" ng-change="setOptionValueLevel(each);each.value_id=null;"
+                                    ng-init="setOptionValueLevel(each);" style="width:100%;">
+                                    <option value="" disabled>Select Option</option>
+                                    <option value="Family">Family</option>
+                                    <option value="Collection">Collection</option>
+                                    <option value="Choice">Choice</option>
+                                    <option value="All">All</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7" ng-if="each.value_level !=='All' && each.value_level !=='Choice'">
+                        <div class="fg-line">
+                            <select class="form-control select-component input-sm" ng-model="each.value_id" ng-options="e.id as e.description for e in each.genericList"
+                                ng-change="each.changed=1;">
+                                <option value="" disabled>Select Option</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-7" ng-if="each.value_level=='Choice'">
+                        <div class="fg-line">
+                            <select class="form-control select-component input-sm" ng-model="each.value_id" ng-options="e.id as e.description group by e.associated_desc for e in each.genericList"
+                                ng-change="each.changed=1;showOptDetails(each.genericList,each.value_id);">
+                                <option value="" disabled>Select Option</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MTO Configuration for MTO and Stock SKUs END -->
+
+    <!-- MTO Configuration for Stock Plus SKUs START -->
+    <div class="col-lg-12 p-0" ng-if="skuHead.sku_type.toLowerCase()==='stock'" style="border-bottom: 1px solid #ececec;">
+        <div class="col-xs-12 cursor-pointer maintenance-header-section">
+            <div class="d-flex">
+                <span class="col-xs-11 p-0 m-0 f-500" style="color: #636363;line-height:1.6;">
+                    MTO Option Details
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0 collapse in bgm-white">
+            <div class="col-xs-12 p-10" ng-show="item_udd_options.length===0">
+                <span class="f-500 text-muted">No option details to show</span>
+            </div>
+            <div class="m-t-10" ng-show="item_udd_options.length>0">
+                <div class="col-lg-12 p-10" data-ng-repeat="each in item_udd_options" ng-if="each.description != null">
+                    <div class="col-lg-12">
+                        <label>{{each.description}}</label>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="input-group full-width">
+                            <div class="input-group-addon optionIcon choice" data-ng-if="each.value_level === 'Choice'">
+                                <div data-ng-include="'./img/sidebar-icons/mto-choice.svg'"></div>
+                            </div>
+                            <div class="input-group full-width" data-ng-init="each.value_level='Choice'">
+                                <select class="select-component form-control input-sm" ng-model="each.value_level" ng-change="setOptionValueLevel(each);"
+                                    ng-init="setOptionValueLevel(each);" style="width:100%;">
+                                    <option value="" disabled>Select Option</option>
+                                    <option value="Choice">Choice</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7" ng-if="each.value_level=='Choice'">
+                        <div class="fg-line">
+                            <select class="form-control select-component input-sm" ng-model="each.value_id" ng-options="e.id as e.description group by e.associated_desc for e in each.genericList"
+                                ng-change="each.changed=1;showOptDetails(each.genericList,each.value_id);">
+                                <option value="" disabled>Select Choice</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MTO Configuration for Stock Plus SKUs SKUs END -->
+
+    <div class="col-xs-12 p-0 m-t-5">
+        <div class="col-lg-12 cursor-pointer maintenance-header-section">
+            <div class="d-flex">
+                <span class="col-xs-11 p-0 m-0 f-500" style="color: #636363;line-height:1.6;">
+                    SKU UDD Details
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0 bgm-white">
+            <div data-ng-include="'./application/modules/item/sku/sku.udd.directive.html'"></div>
+        </div>
+    </div>
+
+</div>

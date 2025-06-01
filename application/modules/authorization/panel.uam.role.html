@@ -1,0 +1,55 @@
+<div id="rightsidebar" class="c-overflow" data-ng-class="{'toggled':roleCtrl.isShowRole === true || roleCtrl.isShowRole === 1}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a class="cursor-pointer" data-ng-click="roleCtrl.isShowRole = false;">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel">Create <strong>Role</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div>
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(roleCtrl.isSaveSuccess)">
+                    <ng-form role="form" novalidate="novalidate" name="user_form" valdr-type="user">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="user_form.role.$invalid">* </span>
+                            <span class="c-green" ng-show="user_form.role.$valid">* </span>
+                            <label>Role</label>
+                            <input id="name" name="role" type="text" class="form-control input-sm" ng-model="roleCtrl.role.role" placeholder="Enter Role Name" errorvalue="roleCtrl.role.role_error" required="" ng-model-options="{ updateOn: 'blur' }" style="height:40px;" auto-focus
+                                />
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="user_form.code.$invalid">* </span>
+                            <span class="c-green" ng-show="user_form.code.$valid">* </span>
+                            <label>Code</label>
+                            <input id="username" name="code" type="text" class="form-control input-sm" ng-model="roleCtrl.role.code" placeholder="Enter Role Code" errorvalue="roleCtrl.role.code_error" required="" ng-model-options="{ updateOn: 'blur' }" style="height:40px;" auto-focus
+                                />
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="user_form.details.$invalid">* </span>
+                            <span class="c-green" ng-show="user_form.details.$valid">* </span>
+                            <label>Details</label>
+                            <input id="password" name="details" type="text" class="form-control input-sm" ng-model="roleCtrl.role.details" placeholder="Enter Role Details" errorvalue="roleCtrl.role.details_error" ng-model-options="{ updateOn: 'blur'}" style="height:40px;" required="">
+                        </div>
+                        <rcp-edit-form-btns new-form="roleCtrl.isShowRole" save-fn="roleCtrl.createRole(roleCtrl.role);" save-btn-text="roleCtrl.saveBtnText" save-btn-error="roleCtrl.saveBtnError" update-fn="roleCtrl.updateUser(
+                                    roleCtrl.role);" update-btn-text="roleCtrl.updateBtnText" update-btn-error="roleCtrl.updateBtnError" confirm-fn="roleCtrl.showconfirm()" confirm-delete=" roleCtrl.isConfirmDelete " update-success="roleCtrl.isUpdate"
+                            entity-id="roleCtrl.role.id" enable-button="roleCtrl.role_form.$invalid "></rcp-edit-form-btns>
+                    </ng-form>
+                </div>
+                <rcp-success-form success-tick="success_tick.svg" close-fn="roleCtrl.isShowRole = false;" update-success="roleCtrl.isUpdateSuccess" save-success="roleCtrl.isSaveSuccess" delete-success="roleCtrl.isDeleteSuccess ">
+                </rcp-success-form>
+            </div>
+            <div class="col-xs-12">
+                <div data-ng-show="roleCtrl.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="roleCtrl.message = null" aria-hidden="true">&times;</button> {{roleCtrl.message}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 ">
+        <div growl></div>
+    </div>
+</div>

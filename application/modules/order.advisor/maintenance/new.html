@@ -1,0 +1,178 @@
+<style>
+    .selectize-input.items {
+        line-height: 1.3;
+    }
+
+    .selectize-input.items .option {
+        white-space: nowrap;
+    }
+</style>
+<div class="col-lg-12 col-sm-12 col-xs-12 p-0" data-ng-init="advisorController.InitializeCreateForm()"
+    ng-keyup="$event.keyCode == 27 && advisorController.Exit()">
+    <div class="form-page-size">
+        <div class="maintainence-details-section p-t-10 p-l-10 p-b-10 p-r-0 Order Advisor">
+            <div class="p-0 inheritheight col-xs-12">
+                <div class="col-lg-12 inheritheight">
+                    <!--Master Details Configuration START -->
+                    <div class="col-lg-12 p-0" ng-show="advisorController.createForm"
+                        ng-init="advisorController.setStageIndication('createform');">
+                        <div class="col-lg-12 p-0" data-ng-class="{'disable-actions':advisorController.disableActions}">
+                            <ng-form name="advisorController.order_advisor_form" valdr-type="RULES-100" role="form"
+                                novalidate="novalidate">
+                                <div class="col-xs-12 p-0">
+                                    <div class="col-xs-12 update-maintenance-screen-title">
+                                        <span class=""><i class="fa fa-edit"></i> Create Sale Order
+                                            Advisor </span>
+                                    </div>
+                                    <div class="col-xs-12 p-0 box maintenanceworkspace">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Master Details</span>
+                                            <div>
+                                                <small>The primary details of the sale order advisor</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-10">
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-lg-4 col-md-5 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red"
+                                                            ng-show="advisorController.order_advisor_form.adviser_type_id.$invalid">*
+                                                        </span>
+                                                        <span class="c-green"
+                                                            ng-show="advisorController.order_advisor_form.adviser_type_id.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Sale Order Advisor Type</label>
+                                                        <select selectize="advisorController.selectOrderAdvisorTypes"
+                                                            name="adviser_type_id" id="adviser_type_id"
+                                                            items="advisorController.OrderAdvisor.adviser_type_id"
+                                                            class="form-control select-component input-sm"
+                                                            options="advisorController.OrderAdvisorTypes"
+                                                            ng-model="advisorController.OrderAdvisor.adviser_type_id"
+                                                            ng-change="advisorController.LoadUDDs();advisorController.onchangeOrderAdvisorType(advisorController.OrderAdvisor)"
+                                                            data-ng-class="{'error-field-validation': advisorController.order_advisor_form.adviser_type_id.$invalid && advisorController.isInvalidForm}">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red"
+                                                            ng-show="advisorController.order_advisor_form.status_id.$invalid">*
+                                                        </span>
+                                                        <span class="c-green"
+                                                            ng-show="advisorController.order_advisor_form.status_id.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Current Status</label>
+                                                        <select id="status_id" name="status_id"
+                                                            class="form-control select-component input-sm"
+                                                            ng-change="advisorController.OrderAdvisor.status=(statuses|filter:{code:advisorController.OrderAdvisor.status_id})[0].description;advisorController.reloadUDDs();"
+                                                            ng-options="each.code as each.description for each in advisorController.Statuses"
+                                                            ng-model="advisorController.OrderAdvisor.status_id"
+                                                            errorvaluechosen="advisorController.OrderAdvisor.status_id_error"
+                                                            required
+                                                            data-ng-class="{'error-field-validation': advisorController.order_advisor_form.status_id.$invalid && advisorController.isInvalidForm}">
+                                                            <option value="" disabled>Select Current Status</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-4 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <!-- <span class="c-red"
+                                                            ng-show="advisorController.order_advisor_form.buyer.$invalid">*
+                                                        </span> -->
+                                                        <span class="c-green">*</span>
+                                                        <label class="panel-body-label">Buyer</label>
+                                                        <input id="buyer" name="buyer" type="text" placeholder="Buyer"
+                                                            class="form-control input-sm"
+                                                            ng-model="advisorController.OrderAdvisor.buyer"
+                                                            errorvalue="advisorController.OrderAdvisor.buyer_error"
+                                                            auto-focus disabled
+                                                            data-ng-class="{'error-field-validation': advisorController.order_advisor_form.buyer.$invalid}" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red"
+                                                            ng-show="advisorController.order_advisor_form.description.$invalid">*
+                                                        </span>
+                                                        <span class="c-green"
+                                                            ng-show="advisorController.order_advisor_form.description.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Description</label>
+                                                        <input id="description"
+                                                            name="description" type="text" class="form-control input-sm"
+                                                            ng-model="advisorController.OrderAdvisor.description"
+                                                            errorvalue="advisorController.OrderAdvisor.description_error"
+                                                            placeholder="Enter Sale Order Advisor Description" required
+                                                            auto-focus autocomplete="off"
+                                                            data-ng-class="{'error-field-validation': advisorController.isNoDescription&&!advisorController.OrderAdvisor.description}" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-form>
+                            <div class="col-xs-12 p-0 p-t-10" ng-if="!advisorController.configureScreen">
+                                <div class="col-xs-2 p-0 pull-right d-flex">
+                                    <button type="button"
+                                        class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect"
+                                        data-ng-click="advisorController.Exit();">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Master Details Configuration END -->
+                    <!--Div is for the configure Order Advisor-->
+                    <div class="col-lg-12 p-0 m-t-10" ng-show="advisorController.configureScreen"
+                        ng-init="advisorController.setStageIndication('configureform');">
+                        <div class="col-xs-12 p-0">
+                            <div class="col-xs-12 p-0 box maintenanceworkspace">
+                                <div class="col-xs-12 p-0 rcpscrollbar">
+                                    <order-advisor-udd-directive></order-advisor-udd-directive>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 p-t-10">
+                                <div class="col-xs-4 p-0 pull-right d-flex"
+                                    data-ng-if="advisorController.configureScreen">
+                                    <button type="button" data-ng-disabled="advisorController.isProcessing"
+                                        class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect"
+                                        data-ng-click="advisorController.Exit();">Cancel
+                                    </button>
+                                    <button type="button"
+                                        class="btn btn-group-justified btn-success f-700 m-l-5 waves-effect"
+                                        data-ng-click="advisorController.CreateOrderAdvisor(advisorController.OrderAdvisor);"
+                                        data-ng-disabled="advisorController.isProcessing || !(advisorController.OrderAdvisor.description&&advisorController.OrderAdvisor.adviser_type_id)">Publish</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--End of configure Order Advisor div -->
+                    <!-- Section to show the response of the published data start -->
+                    <div class="col-lg-4 pull-right m-t-10 p-l-0" data-ng-if="advisorController.isCreateSuccess">
+                        <div class="alert-success">
+                            <div class="p-10">
+                                <span class="text-success">
+                                    Order Advisor published successfully.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 pull-right m-t-10 p-l-0" data-ng-if="advisorController.error">
+                        <div class="alert-danger">
+                            <div class="p-10">
+                                <span>
+                                    {{advisorController.error}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Section to show the response of the published data end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

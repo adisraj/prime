@@ -1,0 +1,27 @@
+<div class="dialog-contents">
+    <div class="hierDialog">
+        <div class="hierClass">
+            <span><b>Selected Property :</b></span>
+            <br />
+            <span style="color:blue;"><b>{{path_name}}</b></span>
+        </div>
+        <hr>
+        <div>
+            <input class="form-control" ng-model='treeSearchQuery' type="text" placeholder="Search in tree..." />
+        </div>
+
+        <!--
+            [TREE attribute]
+            angular-treeview: the treeview directive
+            tree-id : each tree's unique id.
+            tree-model : the tree model on $scope.
+            node-id : each node's id
+            node-label : each node's label
+            node-children: each node's children
+          -->
+        <div data-angular-treeview="true" data-tree-id="hierarchyTree" data-tree-model="hierarchyList" data-node-id="id"
+            data-node-label="short_description" data-node-children="children" data-search-query='treeSearchQuery'>
+        </div>
+
+    </div>
+</div>

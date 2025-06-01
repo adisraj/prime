@@ -1,0 +1,122 @@
+<div data-ng-class="{'disable-actions':skuMaintCtrl.disableActions}">
+    <!-- Section to add component to the sku -->
+    <div class="col-xs-12 f-16 panel-header">
+        <span class="f-700 main-header">SKU Set</span>
+        <div>
+            <small>Components can be added to the SKU.</small>
+        </div>
+        <ul class="f-12 m-t-5">
+            <li>Only Active SKUs are loaded in the list.</li>
+        </ul>
+    </div>
+    <!-- Section to show the added set components -->
+    <div class="col-lg-12 bgm-white m-t-10 m-b-10" data-ng-if="vm.isLoadingItemSets">
+        Loading ...
+    </div>
+    <div class="col-lg-12 p-0 set-page-bottom-border bgm-white" data-ng-if="!vm.isLoadingItemSets">
+        <ng-form name="skuMaintCtrl.set_form" role="form" novalidate="novalidate">
+            <div class="col-lg-12 p-0 m-t-10">
+                <div class="col-lg-4">
+                    <div class="form-group" data-ng-if="vm.itemSets&&vm.itemSets.length>0">
+                        <label class="maintenance-field-label f-13">Select Item</label>
+                        <select class="form-control select-component input-sm" name="item_set" id="item_set" ng-model="vm.itemSetId" data-ng-change="vm.getSkusForItems(vm.itemSetId)"
+                            ng-options="each.child_item_id as each.description for each in vm.itemSets" errorvaluechosen="vm.item_set_id_error"
+                            required>
+                            <option value="" disabled>Select an Option</option>
+                        </select>
+                    </div>
+                    <div class="form-group" data-ng-if="vm.itemSets.length===0">
+                        <span>No Items Sets Available.</span>
+                    </div>
+                </div>
+                <div class="col-lg-6" ng-if="vm.itemSetId">
+                    <div class="m-t-20 form-group" data-ng-if="vm.isLoading">
+                        <span>Loading...</span>
+                    </div>
+                    <div class="form-group" data-ng-if="vm.skus.length>0 && !vm.isLoading">
+                        <label class="maintenance-field-label f-13">Select Sku</label>
+                        <select class="form-control select-component input-sm" name="description" id="description" ng-model="vm.set" ng-options="each.description + ' : ' + each.status for each in vm.skus"
+                            errorvaluechosen="vm.set_error" required="">
+                            <option value="" disabled>Select an Option</option>
+                        </select>
+                    </div>
+                    <div class="m-t-20 form-group" data-ng-if="!vm.isLoading && (!vm.skus||vm.skus.length===0)">
+                        <span>No SKU components available for selected item.</span>
+                    </div>
+                </div>
+                <div class="col-lg-2" ng-if="vm.skus.length>0 && vm.itemSetId && vm.set.child_sku_id">
+                    <label class="maintenance-field-label f-13">Quantity</label>
+                    <input id="quantity" name="quantity" max="10000" type="number" class="form-control input-sm" ng-model="vm.set.quantity" errorvalue="set.quantity_error"
+                        placeholder="Quantity" required="" numeric-field/>
+                    <span class="text-danger f-10 f-300" ng-if="skuMaintCtrl.set_form.quantity.$error.max">Quantity should be within 10000.</span>
+                </div>
+                <div class="col-xs-12 p-0">
+                    <div class="col-lg-2 pull-right">
+                        <button ng-show="vm.skus.length>0 && vm.set && vm.set.quantity" ng-click="vm.checkInsertId(vm.set);" class="aligncenter m-b-10 btn-primal btn-block f-700">Add</button>
+                    </div>
+                </div>
+            </div>
+        </ng-form>
+    </div>
+
+    <!-- Section to show the added set components -->
+    <div class="col-lg-12 p-0 bgm-white m-t-10 m-b-10 text-center" data-ng-if="vm.isLoadingSKUSet">
+        Loading ...
+    </div>
+    <div class="col-lg-12 p-0 bgm-white m-t-10" data-ng-if="vm.setSkus.length>0 && !vm.isLoadingSKUSet">
+        <div class="col-xs-12 m-t-5">
+            <div class="d-flex" style="justify-content:space-between;align-items:center;">
+                <h4 style="color:#ab491a;">
+                    Set Components
+                </h4>
+                <div class="d-flex" style="flex-direction:column;">
+                    <small>
+                        <span class="c-black f-12 f-700">{{vm.setSkus.length}}</span>
+                        SKUs in a Set
+                    </small>
+                </div>
+            </div>
+            <div>
+                <span class="text-success pull-right" data-ng-if="vm.isDeleteAction">Deleted component from SKU set successfully.</span>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0 m-b-10 m-t-10 p-l-10 p-r-10">
+            <div class="col-xs-12 p-0 table-responsive">
+                <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Item</th>
+                            <th class="text-center">SKU Description</th>
+                            <th class="text-center">SKU #</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-center">Remove</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="setSku in vm.setSkus">
+                            <td> {{setSku.item_description}}</td>
+                            <td>
+                                {{setSku.description}}
+                            </td>
+                            <td>
+                                {{setSku.sku}}
+                            </td>
+                            <td class="text-center">{{setSku.quantity}}</td>
+                            <td class="text-center">
+                                <span class="zmdi zmdi-delete zmdi-hc-fw c-firebrick" data-ng-click="vm.checkDeleteId(setSku);vm.isDeleteAction=true;"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0 set-page-bottom-border ng-scope" data-ng-if="vm.setSkus.length===0 && !vm.isLoadingSKUSet">
+        <div class="col-xs-12 m-t-15 m-b-15">
+            <div class="col-xs-12 text-center text-info ng-scope">
+                <span class="f-15 f-300">No components exists. Please add components.</span>
+            </div>
+        </div>
+    </div>
+</div>

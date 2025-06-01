@@ -1,0 +1,37 @@
+<div class="col-sm-12">
+    <div class="hidden-lg">
+        <div class="col-md-1 col-sm-1 col-xs-1" ng-hide="searchbutton" style="padding-top: 5px;width: 3%;float: left;">
+            <p ng-click="searchbutton=true;"><i class="zmdi zmdi-search zmdi-hc-2x" ng-style="styleClass"></i></p>
+        </div>
+        <div class="col-md-1 col-sm-1 col-xs-1" ng-show="searchbutton" style="padding-top: 4px;width: 3%;float: left;">
+            <p ng-click="searchbutton=false;searchresult.term=''"><i class=" zmdi zmdi-close zmdi-hc-2x " ng-style="styleClass "></i></p>
+        </div>
+        <div class="col-md-5 col-sm-5 col-xs-5 " ng-hide="searchbutton ">
+            <h4 class="c-blue f-700 ">{{moduleName}}</h4>
+        </div>
+        <div class="col-md-5 col-sm-5 col-xs-5 " ng-show="searchbutton ">
+            <input class="form-control input-sm animated fadeIn " type="text " ng-model="searchresult.term " indicate-quick-search placeholder="Quick Search " />
+        </div>
+
+    </div>
+    <div class="hidden-md hidden-sm hidden-xs ">
+        <div class="col-lg-2 col-md-2 col-sm-2 " style="padding-top:5px; ">
+            <span>{{rcpTable.data.length}} of {{rcpTable.total()}} Records found</span>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 ">
+            <h4 class="c-blue f-700 ">{{moduleName}}</h4>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 ">
+            <input class="form-control input-sm " type="text " ng-model="searchresult.term " indicate-quick-search placeholder="Quick Search " />
+
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 " style="padding-bottom:5px;float:right; ">
+        <button class="header-button " ng-click="reloadFn(); " style="float:right "><i class="zmdi zmdi-refresh zmdi-hc-fw c-brown " ng-style="styleClass "></i><span style="font-size:12px;padding-right: 4px; "><b>Refresh</b></span></button>
+        <button class="header-button " data-ng-click="createNewFn() " style="float:right " ng-show="moduleName !='Active Users' "><i class="zmdi zmdi-plus c-green zmdi-hc-fw "></i><span style="font-size:12px;padding-right: 4px; "><b>Create</b></span></button>
+        <button data-ng-if="hasParent " class="header-button " data-ng-click="backFn(); " style="float:right "><i class="zmdi zmdi-arrow-left zmdi-hc-fw " style="color: #00BCD4; "></i><span style="font-size:12px;padding-right: 4px; "><b>Back</b></span></button>
+        <!--<button class="btn btn-success btn-icon-text btn-sm waves-effect " ng-if="attrCtrl.$listFullScreen " ng-click="attrCtrl.fullScreenAttribute(); " data-change-layout="mactrl.layoutType "><i class="zmdi zmdi-fullscreen-exit "></i></button>
+                <button class="btn btn-success btn-icon-text btn-sm waves-effect " ng-if="!attrCtrl.$listFullScreen " ng-click="attrCtrl.fullScreenAttribute(); " data-change-layout="mactrl.layoutType "><i class="zmdi zmdi-fullscreen-alt "></i></button>-->
+    </div>
+</div>

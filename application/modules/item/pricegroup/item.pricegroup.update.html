@@ -1,0 +1,43 @@
+<div id="rcrightsidebar" class="toggled" data-ng-init="priceGroupCtrl.gotoUpdateStateIfIdExists()">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a class="cursor-pointer" data-ng-click="priceGroupCtrl.closeForm();">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Price Group">Update <strong> Price Group</strong></label>
+        </div>
+    </div>
+
+    <div class="col-xs-12" ng-if="!priceGroupCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10" ng-if="!(priceGroupCtrl.isUpdateSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/entity-config-item.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-class="{'disable-actions':priceGroupCtrl.disableActions}">
+            <div ng-if="!(priceGroupCtrl.isUpdateSuccess)">
+                <ng-form name="priceGroupCtrl.itemPG_form" novalidate="novalidate" role="form">
+                    <div class="form-group">
+                        <label>{{priceGroupCtrl.new_pg.value_short_description}}</label>
+                        <input id="price_percentage" name="price_percentage" type="number" class="form-control input-sm" ng-model="priceGroupCtrl.new_pg.price_percentage" errorvalue="new_pg.price_percentage_error" ng-model-options="{ updateOn: 'blur' }"
+                            min="50" max="200" auto-focus placeholder="Price Percentage" required>
+                            <span class="f-11 f-400 text-danger" ng-if="priceGroupCtrl.itemPG_form.price_percentage.$error.max || priceGroupCtrl.itemPG_form.price_percentage.$error.min || priceGroupCtrl.itemPG_form.price_percentage.$invalid">*Please enter price percentage within 50 to 200</span>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-block btn-primal btn-lg" id="update_btn" ng-click="updatepricegroup(priceGroupCtrl.new_pg);" ng-class="{'btn-danger': priceGroupCtrl.updateBtnError === true}" data-ng-disabled="priceGroupCtrl.itemPG_form.price_percentage.$error.max || priceGroupCtrl.itemPG_form.price_percentage.$error.min || priceGroupCtrl.itemPG_form.price_percentage.$invalid"><strong>{{priceGroupCtrl.updateBtnText}}</strong>
+                        </button>
+                    </div>
+                </ng-form>
+            </div>
+            <rcp-success-form success-tick="success_tick.svg" close-fn="priceGroupCtrl.closeForm();" update-success="priceGroupCtrl.isUpdateSuccess">
+            </rcp-success-form>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div growl></div>
+    </div>
+    <div ng-if="priceGroupCtrl.isUnauthorized && priceGroupCtrl.isShowDetails" data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>

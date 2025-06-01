@@ -1,0 +1,47 @@
+#metadataModal .modal-header {
+    border-bottom: 2px solid #4b306d;
+    padding: 18px 26px;
+    /* background: #f4ecff; */
+}
+
+#metadataModal .modal-dialog {
+    width: 600px;
+}
+
+.meta-data-groupheader {
+    background: #4f5977;
+    color: white;
+}
+
+.meta-data-groupheader:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e080";
+    float: right;
+    color: white;
+}
+
+.meta-data-groupheader.uncollapsed:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e114";
+    float: right;
+    color: white;
+}
+.widthValues{
+    height: 30px;
+    width: 70%;
+    border-left: 3px solid #d8d8d8;
+    border: 1px solid #d8d8d8;
+    font-size: 13px;
+    border-radius: 0px;
+
+  }
+  .borders{
+    border-color: rgb(212, 3, 3) !important;
+  }
+  .backing{
+    display: flex;
+    align-items: center;
+  }
+  .margin_left{
+    margin-left: 3px;
+  }

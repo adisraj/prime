@@ -1,0 +1,107 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':mtoTypeCtrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a class="cursor-pointer" data-ng-click="mtoTypeCtrl.closeDependencyDetails();">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel" title="Dependency Details">
+                <strong data-ng-if="!mtoTypeCtrl.isPricingMethodChanged">Dependency Details</strong>
+                <strong data-ng-if="mtoTypeCtrl.isPricingMethodChanged">Update Pricing Method</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" data-ng-if="!mtoTypeCtrl.isPricingMethodChanged">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>MTO Type Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Short Description</td>
+                        <td class="highlight-text-success" title="{{mtoTypeCtrl.new_type.short_description}}">{{mtoTypeCtrl.new_type.short_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtoTypeCtrl.new_type.status}}">{{mtoTypeCtrl.new_type.status}}</td>
+                    </tr>
+                </table>
+                <h4>MTO Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success" title="{{mtoTypeCtrl.errorDependentData.description}}">{{mtoTypeCtrl.errorDependentData.description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vendor</td>
+                        <td title="{{mtoTypeCtrl.errorDependentData.vendor}}">{{mtoTypeCtrl.errorDependentData.vendor}}</td>
+                    </tr>
+                </table>
+                </br>
+                <div class="dependency-notifyMessage">
+                    <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i>
+                    <span>{{mtoTypeCtrl.errorDependentData.message}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12" data-ng-if="mtoTypeCtrl.isPricingMethodChanged">
+        <div class="rc-alert rc-alert-info m-t-10 col-xs-12" aria-hidden="false" role="alert">
+            <div class="col-xs-12 d-flex m-b-5 p-0">
+                <div class="rc-alert-icon-section">
+                    <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                    </span>
+                </div>
+                <div class="col-xs-12 p-0 f-15">
+                    <div class="f-16 f-700 text-info m-b-5">MTO Type
+                        <strong>{{mtoTypeCtrl.new_type.short_description}}</strong> pricing method is being used.</div>
+                    <div>
+                        <div data-ng-if="mtoTypeCtrl.isRemoveRetails">
+                            <div class="m-t-10">
+                                <span> Updating pricing method from
+                                    <strong>{{mtoTypeCtrl.oldMTOTypeDetails.pricing_method_value}}</strong> to
+                                    <strong>{{mtoTypeCtrl.new_type.pricing_method_value}}</strong> for
+                                    <strong>{{mtoTypeCtrl.new_type.short_description}}</strong>
+                                    will remove retails if exists for the options.
+                                </span>
+                            </div>
+                            <div class="m-t-10">
+                                <span> Updating pricing method from
+                                    <strong>{{mtoTypeCtrl.oldMTOTypeDetails.pricing_method_value}}</strong> to
+                                    <strong>{{mtoTypeCtrl.new_type.pricing_method_value}}</strong>                                   
+                                    will remove options added to the cart.
+                                </span>
+                            </div>
+                        </div>
+                        <div data-ng-if="mtoTypeCtrl.isAssignPriceGroups || mtoTypeCtrl.isAssignNewRetails">
+                            <div>
+                                <div class="m-t-10">
+                                    <span data-ng-if="mtoTypeCtrl.isAssignPriceGroups">
+                                        You have to assign the price groups to the choices of
+                                        <strong>{{mtoTypeCtrl.new_type.short_description}}</strong> type.
+                                    </span>
+                                </div>
+                                <div class="m-t-10">
+                                    <span data-ng-if="mtoTypeCtrl.isAssignNewRetails">
+                                        You have to add new retails for the options of
+                                        <strong>{{mtoTypeCtrl.new_type.short_description}}</strong> type configured for the Items/SKUs.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 d-flex p-0 alert-button-section">
+            <div class="col-xs-12 d-flex p-10">
+                <button class="btn btn-success" type="button" ng-click="mtoTypeCtrl.removeRetailsAndUpdate(mtoTypeCtrl.new_type);" data-ng-disabled="!mtoTypeCtrl.isBtnEnable">
+                    <strong>Yes, Update!</strong>
+                </button>
+                <button class="btn btn-cancel" type="button" ng-click="mtoTypeCtrl.showDependencyDetailsData = false;">
+                    <strong>Cancel</strong>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

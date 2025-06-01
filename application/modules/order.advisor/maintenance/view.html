@@ -1,0 +1,163 @@
+<style>
+    .selectize-input,
+    .selectize-control {
+        height: 30px !important;
+        min-height: 30px !important;
+    }
+
+    .selectize-input>div.option {
+        width: auto;
+        max-width: inherit;
+    }
+</style>
+<div class="container col-lg-12 p-0 p-b-30" data-ng-controller="OrderAdvisorController as advisorController" data-auto-scroll>
+    <!--list panel-->
+    <!-- This ui-view will replace the main state with different state(eg:new or update state) -->
+    <ul style="display:none">
+        <li>
+            <keybinding on="ctrl+f" invoke="advisorController.focusSearchField()" />
+        </li>
+    </ul>
+    <div ui-view>
+        <div data-ng-init="advisorController.setInitialHeight();">
+            <div class="col-lg-12 p-0 rc-module-header-wrapper" style="height: auto;">
+                <!-- Section to show the module header section -->
+                <div class="rc-module-header" style="height: auto;">
+                    <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+                        <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                            <div class="p-relative">
+                                <div class="image-module p-absolute top-10">
+                                    <img src="./img/sidebar-icons/order-advisor.svg" />
+                                </div>
+                                <div class="label-module top-10">
+                                    <a class="p-l-40" href="javascript:void(0)">Order Advisors</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex" style="flex: 5;" data-ng-if = "permissionsMap.view">
+                            <div class="d-flex d-flex-v-center p-l-20">
+                                <span data-ng-show="!advisorController.groupByField" class="f-12">Loaded
+                                    <i class="zmdi zmdi-hourglass-alt" ng-if="!advisorController.OrderAdvisors.length && advisorController.OrderAdvisors.length != 0"></i>{{advisorController.OrderAdvisors.length}} Records
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex p-0" data-ng-if="advisorController.isFilterApplied && advisorController.appliedFilterCount">
+                            <a>
+                                <span class="c-red m-t-10 cursor-pointer" data-toggle="collapse" data-target="#advanced-search" data-ng-click="advisorController.showAdvancedSearchPanel(true);">
+                                    <i class="fa fa-filter p-r-5"></i>{{advisorController.appliedFilterCount}} Filter(s) Applied
+                                </span>
+                            </a>
+                            <a>
+                                <span class="m-t-10 m-l-10 cursor-pointer" data-ng-click="advisorController.resetFilters();">
+                                    <i class="fa fa-undo f-12 p-r-5" aria-hidden="true"></i>Reset Filters</span>
+                            </a>
+                        </div>
+                        <div class="d-flex">
+                            <div id1="navbar" class="p-r-15">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li data-ng-if = "permissionsMap.view">
+                                        <a>
+                                            <div class="search-section tableheader-btn pull-right" ng-if="advisorController.OrderAdvisors.length > 0">
+                                                <div class="input-group full-width">
+                                                    <input class="form-control input-sm" type="text" ng-model="advisorController.search" id="inlineSearch" indicate-quick-search
+                                                        placeholder="Quick Search" data-ng-disabled="!advisorController.isLoaded"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="" data-ng-if = "permissionsMap.view">
+                                        <a>
+                                            <button type="button" data-ng-click="advisorController.FetchOrderAdvisors(true);" data-ng-disabled="!advisorController.isLoaded"
+                                                class="btn-primal btn-block waves-effect">
+                                                <span class="f-700 ng-binding">Refresh</span>
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="m-r-10">
+                                        <a>
+                                            <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="advisorController.NewOrderAdvisor();" data-ng-disabled="disableActions || !permissionsMap.create">
+                                                <span title="{{!permissionsMap.create ? 'Access denied' : ''}}" title-direction="top">Create Sale Order Advisor</span>
+                                            </button>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-12 text-center module-content" data-ng-if="!advisorController.recordsCount && !advisorController.isLoaded">
+                <div class="m-t-25">
+                    <span class="f-17 f-700 c-black">Loading</span>
+                    <span class="f-700" style="letter-spacing: 3px;">....</span>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 module-content" data-ng-if1="advisorController.recordsCount && advisorController.recordsCount !== 0">
+                <div class="col-xs-12 p-l-0 p-r-0" id="searchPanel" data-ng-if="permissionsMap.view">
+                    <div class="col-xs-12">
+                        <div class="col-xs-12 p-5 d-flex align-items-center" style="background-color: #fff;
+                             border: 1px solid #efefefef;" ng-repeat="orderadviser in advisorController.OrderAdvisors | orderBy:'description' | filterBy:['id','description','status','adviser_type','buyer']:advisorController.search ">
+                            <div style="flex: 1;">
+                                <label class="f-14 m-l-10" ng-class="{'text-success f-400': orderadviser.status_id===200 ,
+                                        'text-warning f-300': orderadviser.status_id ===100,
+                                        'text-primary f-300': orderadviser.status_id ===300,
+                                        'text-info f-300': orderadviser.status_id===400}">
+                                    {{orderadviser.status = advisorController.statusMap[orderadviser.status_id].description}}</label>
+                            </div>
+                            <div class="text-overflow-desc-auto" style="flex: 6;">
+                                <span class="f-15 f-700 c-black" title="{{orderadviser.description}}">{{orderadviser.description}}</span>
+                            </div>
+
+                            <div class="text-overflow-desc-auto" style="flex:3">
+                                <span class="m-l-5">Type - </span>
+                                <span class="m-l-5 c-gray" title="{{orderadviser.adviser_type}}">{{orderadviser.adviser_type | truncate : 30}}</span>
+                            </div>
+                            <div class="text-overflow-desc-auto" style="flex:3">
+                                <span class="m-l-5">Buyer - </span>
+                                <span class="m-l-5 c-gray" title="{{orderadviser.buyer}}">{{orderadviser.buyer | truncate : 20}}</span>
+                            </div>
+                            <div style="flex:1" class="d-flex justify-content-end">
+                                <button class="btn btn-sm btn-primal" data-ng-click="advisorController.UpdateOrderAdvisor(orderadviser)">
+                                    <i class="fa fa-cogs p-r-5"></i>Configure Order Advisor</button>
+                            </div>
+                            <div style1="flex:1" class="m-l-20 d-flex justify-content-end" ios-dblclick="advisorController.dblClickAction();" title="Clone">
+                                <a class="cursor-pointer" data-ng-click="advisorController.openClonePanel(orderadviser);" data-ng-if1="advisorController.isCloneAllowed">
+                                    <i class="zmdi zmdi-copy zmdi-hc-fw f-16"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ui-view></div>
+                <div class="col-lg-12 p-0">
+                    <div id="refresh-table" class="p-15" data-ng-class="{'toggled':advisorController.isRefreshing}">
+                        <div class="col-xs-6 p-0">
+                            <span class="f-15 f-300 pull-left">{{advisorController.refreshTableText}}</span>
+                        </div>
+                        <div class="col-xs-6 p-0" data-ng-if="advisorController.totalTimeText">
+                            <span class="pull-right f-300">
+                                <strong>{{advisorController.OrderAdvisors.length}}</strong>
+                                <span class="f-14 c-gray">{{advisorController.totalRecordsText}}</span>
+                                <span ng-bind-html="advisorController.totalTimeText"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="permissionsMap && !permissionsMap.view && advisorController.isLoaded" data-ng-include="'./application/templates/restricted.access.html'"></div>
+            <div data-ng-if="permissionsMap.view&&advisorController.isShowClonePanel===true">
+                <div data-ng-include="'./application/modules/order.advisor/maintenance/panel.clone.order.advisor.html'">
+                </div>
+            </div>
+        </div>
+        <!-- If orderadvisor record count is zero and no filter applied then displays as NO orderadvisor exists  -->
+        <div class="col-xs-12 p-0 module-content" data-ng-if="advisorController.OrderAdvisors.length===0 && advisorController.isLoaded">
+            <div class="col-xs-12 text-center text-info m-t-25">
+                <span class="f-15 f-300">No orderadvisor exists. Please add orderadvisor.</span>
+            </div>
+        </div>
+    </div>
+</div>

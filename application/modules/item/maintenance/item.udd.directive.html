@@ -1,0 +1,327 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6!important
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    .select2-container-active,
+    trix-editor:focus,
+    input[type="radio"]:focus {
+        border-left: 3px solid #f9c10c!important;
+    }
+
+    .checkbox .input-helper:before {
+        top: 6px;
+        width: 17px;
+        height: 17px;
+        left: 10px;
+    }
+
+    .checkbox input:checked+.input-helper:before {
+        left: 10px;
+    }
+
+    .checkbox .input-helper:after {
+        left: 13px;
+        top: 9px;
+    }
+
+    /* css for multiselect and select ui for udd screen only*/
+
+    multiselect .btn-group button.btn.btn-default.dropdown-toggle.waves-effect {
+        white-space: nowrap;
+        width: 0;
+        min-width: 100%;
+    }
+
+    select+.selectize-control .selectize-input input[type="select-one"] {
+        width: 100% !important;
+    }
+</style>
+<div class="col-lg-12 p-0">
+    <div class="col-lg-12 f-16 panel-header">
+        <span class="f-700 main-header">User defined data</span>
+        <div>
+            <small>User defined datas are the building blocks and provide structure and behaviour to item.</small>
+        </div>
+    </div>
+
+    <div class="col-lg-12 text-center m-t-25" data-ng-if="!vmCtrl.isUddLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div class="col-xs-12 p-10" ng-if="vmCtrl.item_udd_data.length===0 && !vmCtrl.noItemTypeSelected && vmCtrl.isUddLoaded">
+        <span class="f-500 text-muted">No UDDs are configured</span>
+    </div>
+    <div class="col-xs-12 p-10" ng-if="vmCtrl.noItemTypeSelected && vmCtrl.isUddLoaded">
+        <span class="f-500 text-muted">Item Type not selected. Please select the Item Type.</span>
+    </div>
+    <div data-ng-if="vmCtrl.isUddLoaded && vmCtrl.item_udd_data.length > 0" class="col-lg-12 p-0">
+        <div data-ng-include="'./template/immediate.activation.field.labels.html'"></div>
+        <div class="col-lg-12 p-0" data-ng-class="{'disable-actions':itemMaintCtrl.disableActions}">
+            <ng-form class="col-lg-12 col-xs-12 p-0 udd-screen-form" name="itemMaintCtrl.uddForm" novalidate valdr-type="UddRules">
+                <div ng-repeat="each in vmCtrl.item_udd_data | orderBy : 'display_sequence'" ng-if="each.maintenance_description != null">
+                    <div data-ng-if="each.visibility_id.includes(vmCtrl.primeVisibilityId) && each.isShowUdd">
+                        <script type="text/ng-template" id="itementrylevel.html">
+                            <span class="c-bluegray f-12"> {{each.entry_level}} </span>
+                        </script>
+                        <div class="col-lg-6 height70 form-group" ng-if="each.has_values ==1 && ( each.format.toLowerCase() === 'list of values' || each.format.toLowerCase() === 'value list' || each.format.toLowerCase() === 'rating' || each.format.toLowerCase() === 'multiselect' )">
+                            <label class="p-0 maintenance-field-label" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon bgm-floralwhite" data-ng-class="{'significant-attr':each.significant ===1}">
+                                    <div ng-include="each.requiredImgScript"></div>
+                                </span>
+                                <div class="input-group" style="width:94%;float:left;">
+                                    <span class="input-group-addon maintenance-entrylevel-label p-0">
+                                        <div ng-include="'itementrylevel.html'"></div>
+                                    </span>
+                                    <select data-ng-if="each.format.toLowerCase() !== 'multiselect'" name="{{each.maintenance_description}}" selectize="selectUddDropDown[each.maintenance_description]"
+                                        items="each" class="dropdown-to-label maintenanceworkspace" options="each.values" ng-model="each.udd_value_id"
+                                        data-ng-init="vmCtrl.initDropDown(each)" data-ng-required="each.isRequired" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.maintenance_description].$invalid && itemMaintCtrl.isInvalidForm}">
+                                    </select>
+                                    <multiselect data-ng-if="each.format.toLowerCase() == 'multiselect'" name="{{each.maintenance_description}}" ng-model="each.selectedValueIds"
+                                        options="selecteach.id as selecteach.description for selecteach in each.values"
+                                        header="Select {{each.maintenance_description}}" selected-header="options selected" data-ng-required="each.isRequired"
+                                        multiple="true" enable-filter="true" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.maintenance_description].$invalid && itemMaintCtrl.isInvalidForm}">
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:3%;float:right;" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 height70 form-group checkbox" ng-if="each.format.toLowerCase() === 'yes/no'">
+                            <label class="p-0 maintenance-field-label m-b-3" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon bgm-floralwhite" data-ng-class="{'significant-attr':each.significant ===1}">
+                                    <div ng-include="each.requiredImgScript"></div>
+                                </span>
+                                <div class="input-group" style="width:95%;float:left;">
+                                    <span class="input-group-addon input-sm maintenance-entrylevel-label border-right-input p-0">
+                                        <div ng-include="'itementrylevel.html'"></div>
+                                    </span>
+                                    <label class="form-control input-sm" style="border-left:0;">
+                                        <input type="checkbox" ng-model="each.value" ng-init="each.value = setValue(each.to_from_val,each.value);" ng-true-value="'1'"
+                                            ng-false-value="'0'" name="checkbox" data-ng-required="each.isRequired">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:3%;float:right;" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 height70" ng-if="each.format.toLowerCase() === 'date'" valdr-form-group ng-init="each.value=setDateValue(each.to_from_val,each.value);">
+                            <label class="p-0 maintenance-field-label" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon bgm-floralwhite" data-ng-class="{'significant-attr':each.significant ===1}">
+                                    <div ng-include="each.requiredImgScript"></div>
+                                </span>
+                                <div class="input-group" style="width:94%;float:left;">
+                                    <span class="input-group-addon maintenance-entrylevel-label p-0">
+                                        <div ng-include="'itementrylevel.html'"></div>
+                                    </span>
+                                    <input type="text" name="{{each.map_id}}" id="{{each.map_id}}" class="form-control input-sm rcp-mydatepicker" ng-model="each.value"
+                                        ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                        data-ng-required="each.isRequired" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.map_id].$invalid && itemMaintCtrl.isInvalidForm}">
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:4%;float:right;" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 height70" ng-if="each.format.toLowerCase() === 'date range'" valdr-form-group>
+                            <label class="p-0 maintenance-field-label" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon bgm-floralwhite" data-ng-class="{'significant-attr':each.significant ===1}">
+                                    <div ng-include="each.requiredImgScript"></div>
+                                </span>
+                                <div class="input-group" style="width:94%;float:left;">
+                                    <span class="input-group-addon maintenance-entrylevel-label p-0">
+                                        <div ng-include="'itementrylevel.html'"></div>
+                                    </span>
+                                    <div class="d-flex">
+                                        <input type="text" name="{{each.map_id}}-1" id="{{each.map_id}}-1" class="form-control input-sm rcp-mydatepicker m-r-5" ng-model="each.from_date_value"
+                                            ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                            data-ng-required="each.isRequired || each.to_date_value" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.map_id+'-1'].$invalid && itemMaintCtrl.isInvalidForm}"
+                                            data-ng-change="vmCtrl.addValidations(each, itemMaintCtrl.uddForm)">
+                                        <input type="text" name="{{each.map_id}}-2" id="{{each.map_id}}-2" class="form-control input-sm rcp-mydatepicker m-l-5" ng-model="each.to_date_value"
+                                            ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                            data-ng-required="each.isRequired || each.from_date_value" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.map_id+'-2'].$invalid && itemMaintCtrl.isInvalidForm}"
+                                            data-ng-change="vmCtrl.addValidations(each, itemMaintCtrl.uddForm)">
+                                    </div>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:4%;float:right;" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                            <div data-ng-if="each.showError">
+                                <span style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;">To date must be greater than From date.</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 height70 form-group" ng-if="each.user_defined_data_type.toLowerCase() === 'hierarchy'">
+                            <label class="p-0 maintenance-field-label" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon bgm-floralwhite" data-ng-class="{'significant-attr':each.significant ===1}">
+                                    <div ng-include="each.requiredImgScript"></div>
+                                </span>
+                                <div class="input-group" style="width:97%;float:left;">
+                                    <span class="input-group-addon maintenance-entrylevel-label p-0">
+                                        <div ng-include="'itementrylevel.html'"></div>
+                                    </span>
+                                    <input type="text" hidden="hidden" for="each.map_id" data-ng-model="selectedHierarchyProperty[each.map_id].property_id" data-ng-required="each.isRequired">
+                                    <hierarchy-tree-view-select id="each.map_id" name="each.map_id" value-id="each.udd_value_id" props="each.props" selected-hierarchy-property="selectedHierarchyProperty"
+                                        set-property-fn="setPropertyFn(directiveData);" form-header="{{each.maintenance_description}}"
+                                        disable-ids="disabledIds" data-ng-class="{'error-field-validation': each.isRequired && !selectedHierarchyProperty[each.map_id].property_id && itemMaintCtrl.isInvalidForm}">
+                                    </hierarchy-tree-view-select>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:3%;float:right;" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 height70 form-group" ng-if="each.user_defined_data_type.toLowerCase() === 'optiontype'">
+                            <label class="p-0 maintenance-field-label" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon bgm-floralwhite" data-ng-class="{'significant-attr':each.significant === 1}">
+                                    <div ng-include="each.requiredImgScript"></div>
+                                </span>
+                                <div class="input-group" style="width:96%;float:left">
+                                    <span class="input-group-addon maintenance-entrylevel-label p-0">
+                                        <div ng-include="'itementrylevel.html'"></div>
+                                    </span>
+                                    <select data-ng-if="each.format.toLowerCase() !== 'multiselect'" name="{{each.maintenance_description}}" selectize="selectMTOUddDropDown[each.maintenance_description]"
+                                        items="each" class="dropdown-to-label maintenanceworkspace" options="each.values" ng-model="each.udd_value_id"
+                                        data-ng-init="vmCtrl.initOptionTypeDropDown(each)" data-ng-required="each.isRequired"
+                                        data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.maintenance_description].$invalid && itemMaintCtrl.isInvalidForm}">
+                                    </select>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:4%;float:right;" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 height70 form-group" ng-if="each.user_defined_data_type.toLowerCase() === 'option'">
+                            <label class="p-0 maintenance-field-label" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon bgm-floralwhite" data-ng-class="{'significant-attr':each.significant ===1}">
+                                    <div ng-include="each.requiredImgScript"></div>
+                                </span>
+                                <div class="input-group" style="width:96%;float:left;">
+                                    <span class="input-group-addon maintenance-entrylevel-label p-0">
+                                        <div ng-include="'itementrylevel.html'"></div>
+                                    </span>
+                                    <select name="{{each.maintenance_description}}" selectize="selectMTOChoiceUddDropDown[each.maintenance_description]" items="each"
+                                        class="dropdown-to-label maintenanceworkspace" options="each.values" ng-model="each.udd_value_id"
+                                        data-ng-init="vmCtrl.initChoiceDropDown(each)" data-ng-required="each.isRequired" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.maintenance_description].$invalid && itemMaintCtrl.isInvalidForm}">
+                                    </select>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:4%;float:right;" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 height70 form-group" ng-if="each.format.toLowerCase() === 'integer' ||each.format.toLowerCase() === 'number select' || each.format.toLowerCase() === 'percentage' || each.format.toLowerCase() === 'decimal' || each.format.toLowerCase() === 'dimension' || each.format.toLowerCase() === 'text'"
+                            valdr-form-group>
+                            <label class="p-0 maintenance-field-label" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon bgm-floralwhite" ng-class="{'significant-attr':each.significant ===1}">
+                                    <div ng-include="each.requiredImgScript"></div>
+                                </span>
+                                <div class="input-group" style="width:94%;float:left;">
+                                    <span class="input-group-addon maintenance-entrylevel-label p-0">
+                                        <div ng-include="'itementrylevel.html'"></div>
+                                    </span>
+                                    <input data-ng-if="each.format.toLowerCase() === 'percentage'" class="form-control input-sm" name="{{each.map_id}}" id="each.map_id"
+                                        ng-model="each.value" data-ng-focus="itemMaintCtrl.uddForm[each.map_id].$touched = true;"
+                                        type="text" data-ng-required="each.isRequired" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.map_id].$invalid && itemMaintCtrl.isInvalidForm}"
+                                    />
+                                    <span class="input-group-addon percentage-append maintenance-entrylevel-label p-0" data-ng-if="each.format.toLowerCase() === 'percentage'">
+                                        %
+                                    </span>
+                                    <input data-ng-if="each.format.toLowerCase() !== 'text' && each.format.toLowerCase() !== 'percentage'" class="form-control input-sm"
+                                        name="{{each.map_id}}" id="each.map_id" ng-model="each.value" ng-init="each.value = setValue(each.to_from_val,each.value);"
+                                        data-ng-focus="itemMaintCtrl.uddForm[each.map_id].$touched = true;" type="text" data-ng-required="each.isRequired"
+                                        data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.map_id].$invalid && itemMaintCtrl.isInvalidForm}"
+                                    />
+                                    <textarea data-ng-if="each.format.toLowerCase() === 'text'" class="resize-none input-sm" name="{{each.map_id}}" id="each.map_id"
+                                        ng-model="each.value" ng-init="each.value = setValue(each.to_from_val,each.value);" data-ng-focus="itemMaintCtrl.uddForm[each.map_id].$touched = true;"
+                                        type="text" data-ng-required="each.isRequired" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.map_id].$invalid && itemMaintCtrl.isInvalidForm}"
+                                        style="height: 30px"></textarea>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:4%;float:right;" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                            <div class="col-sm-12 p-0 info-msg text-overflow-desc-auto" title="{{each.message}}" style="color: #8f96a9;" data-ng-if="(!Object.keys(itemMaintCtrl.uddForm[each.map_id].$error).length && !itemMaintCtrl.uddForm[each.map_id].$invalid) || itemMaintCtrl.uddForm[each.map_id].$pristine">
+                                {{each.message}}
+                            </div>
+                        </div>
+
+                        <!--URL Attribute UDD Start-->
+                        <div class="col-lg-12 height70 form-group" ng-if="each.format.toLowerCase() === 'url'" valdr-form-group data-ng-init="vmCtrl.setLinkTextAndUrlPathModel(each)">
+                            <label class="p-0 maintenance-field-label" title="{{each.maintenance_description}}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                data-ng-class="{'f-700' : each.significant ===1,'c-black' : each.significant ===1}">
+                                {{each.maintenance_description}}
+                            </label>
+                            <div class="col-xs-12 p-0 input-group">
+                                <div style="width:96%;float:left;">
+                                    <div class="d-flex input-group">
+                                        <div class="col-xs-6 col-lg-8 p-0 d-flex">
+                                            <span class="input-group-addon bgm-floralwhite" ng-class="{'significant-attr':each.significant ===1}">
+                                                <div ng-include="each.requiredImgScript"></div>
+                                            </span>
+                                            <span style="border-left: 1px solid #e2e2e2;" class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0">
+                                                <div ng-include="'itementrylevel.html'"></div>
+                                            </span>
+                                            <span class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0" style="border-left: 1px solid #ececec;">
+                                                <span class="f-13 c-bluegray">Text</span>
+                                            </span>
+                                            <div valdr-enabled="false" class="w-100">
+                                                <input class="form-control input-sm" name="{{each.map_id}}link_text_value" id="{{each.map_id}}" ng-model="each.link_text_value"
+                                                    ng-pattern="globalRegularExpression" data-ng-change="each.value=each.link_text_value+'::'+each.url_path_value"
+                                                    data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.map_id+'link_text_value'].$invalid}"
+                                                    type="text" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-1 justify-content-center d-flex">
+                                            <div class="d-flex align-items-center">
+                                                <img class="m-r-5 m-l-5" src="./img/right-arrow.svg" style="width:35px;height:18px;" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 p-0 d-flex">
+                                            <div class="d-flex flex-1 input-group">
+                                                <span class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0">
+                                                    <span class="f-13 c-bluegray">URL</span>
+                                                </span>
+                                                <input class="form-control input-sm" name="{{each.map_id}}" id="each.map_id" ng-model="each.url_path_value" data-ng-change="each.value=each.link_text_value+'::'+each.url_path_value"
+                                                    data-ng-focus="itemMaintCtrl.uddForm[each.map_id].$touched = true;" type="text"
+                                                    data-ng-required="each.isRequired" data-ng-class="{'error-field-validation': itemMaintCtrl.uddForm[each.map_id].$invalid && itemMaintCtrl.isInvalidForm}"
+                                                    style="height: 30px" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" style="width:3%;float:right;" title="Reset value" data-ng-click="resetUddValue(each);"></div>
+                            </div>
+                            <div class="col-sm-12 p-0 info-msg text-overflow-desc-auto" title="{{each.message}}" data-ng-class="{'c-deeporange' : itemMaintCtrl.uddForm[each.map_id+'link_text_value'].$invalid}"
+                                style="color: #8f96a9;" data-ng-if="(!Object.keys(itemMaintCtrl.uddForm[each.map_id].$error).length && !itemMaintCtrl.uddForm[each.map_id].$invalid) || itemMaintCtrl.uddForm[each.map_id].$pristine">
+                                {{each.message}}</div>
+                        </div>
+                        <!--URL Attribute UDD End-->
+                    </div>
+                </div>
+
+            </ng-form>
+        </div>
+    </div>
+</div>

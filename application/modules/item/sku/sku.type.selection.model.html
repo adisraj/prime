@@ -1,0 +1,243 @@
+<style>
+    #skuSelectionModel .modal-dialog {
+        margin: 30px auto;
+    }
+
+    .sku-selection-gcard {
+        animation: fly-in-from-left .5s .1s ease both;
+        border-radius: 3px;
+        box-shadow: 0 1px 2px #aaa;
+        padding: 1rem 1rem 1.6rem 1.6rem;
+        margin: 0 2px 1rem;
+        user-select: none;
+        transform-origin: top left;
+        position: relative;
+        float: left;
+    }
+
+    @media (max-width: 1024px) {
+        .sku-selection-gcard {
+            width: calc(100%);
+        }
+        .sku-selection-dialog-width-for-set,
+        .sku-selection-dialog-width-for-regular {
+            width: 100%;
+        }
+    }
+
+    @media (min-width: 1025px) {
+        .sku-selection-gcard {
+            width: calc(100% - 4px);
+        }
+
+        .sku-selection-dialog-width-for-set {
+            width: 1030px;
+        }
+
+        .sku-selection-dialog-width-for-regular {
+            width: 700px;
+        }
+    }
+
+    .sku-selection-gcard:nth-child(even) {
+        animation-delay: .2s;
+        animation-name: fly-in-from-right;
+        transform-origin: top right;
+    }
+
+    .sku-selection-subheading {
+        color: gray;
+        font-weight: 400;
+        line-height: 1.250rem;
+        margin: 0;
+        min-height: 40px;
+    }
+
+    .disable-btn {
+        opacity: 0.7;
+    }
+</style>
+<div ui-view>
+    <keybinding on="esc" invoke="skuMaintCtrl.hideSKUSelectionModal()" />
+    <div id="skuSelectionModel" class="modal fade" role="dialog">
+        <div class="modal-dialog" data-ng-class="{'sku-selection-dialog-width-for-regular':selected_item.item_sub_type.toLowerCase() !== 'item' && !skuHead.sku_sub_type,
+        'sku-selection-dialog-width-for-set':selected_item.item_sub_type.toLowerCase() === 'item' || skuHead.sku_sub_type}">
+            <!-- Modal content-->
+            <div class="col-xs-12 modal-content p-0">
+                <div class="col-xs-12 p-10" style="border-bottom: 1px solid lightgray;">
+                    <span class="f-17 f-700" style="color: sandybrown;">
+                        <span data-ng-if="selected_item.item_sub_type.toLowerCase() === 'set'">Set </span>SKU</span>
+                    <span class="text-muted p-l-15">Select a SKU sub type to continue</span>
+                </div>
+                <div class="col-xs-12 p-10 modal-body">
+                    <div class="p-10 hidden-xs hidden-sm hidden-md" data-ng-class="{'col-xs-12 col-lg-6':selected_item.item_sub_type.toLowerCase() !== 'item' && !skuHead.sku_sub_type, 'col-xs-4':selected_item.item_sub_type.toLowerCase() === 'item' || skuHead.sku_sub_type}">
+                        <img src="./img/furniture.jpg" alt="" height="320">
+                    </div>
+
+                    <div class="p-t-10" data-ng-class="{'col-xs-12 col-lg-6':selected_item.item_sub_type.toLowerCase() !== 'item' && !skuHead.sku_sub_type, 'col-xs-12 col-lg-8':selected_item.item_sub_type.toLowerCase() === 'item' || skuHead.sku_sub_type}">
+                        <div class="col-xs-12 p-0">
+                            <!-- Section to select the subtype of a regular product for a non set item-->
+                            <div data-ng-class="{'col-xs-12':selected_item.item_sub_type.toLowerCase() !== 'item', 'col-xs-6':selected_item.item_sub_type.toLowerCase() === 'item'}">
+                                <section class="sku-selection-gcard" data-ng-if="selected_item.item_sub_type.toLowerCase() !== 'set'" style="box-shadow: 0px 0px 4px 1px #e1e2e6; background: linear-gradient(to right, #ffffff, #e0dcd5);"
+                                    data-ng-class="{'hidden':skuHead.sku_sub_type && skuHead.sku_sub_type !== 'SKU'}">
+                                    <div>
+                                        <span class="gheading" style="color: #985802">Regular SKU</span>
+                                    </div>
+                                    <div class="sku-selection-subheading">One of the skus that we sell – for example a chair, a table, a vase, a toy.</div>
+                                    <div data-ng-if="!skuHead.sku_sub_type">
+                                        <button class="btn-primal btn-sm f-14 f-500 waves-effect btn-block m-t-10" data-ng-click="skuHead.sku_sub_type = 'sku';"
+                                            style="background: #ad6202;  /* fallback for old browsers */">
+                                            Create Regular SKU
+                                        </button>
+                                    </div>
+                                </section>
+                            </div>
+                            <div data-ng-class="{'col-xs-12':selected_item.item_sub_type.toLowerCase() !== 'item', 'col-xs-6':selected_item.item_sub_type.toLowerCase() === 'item'}">
+                                <section class="sku-selection-gcard" style="box-shadow: 0px 0px 4px 1px #e1e2e6; background: linear-gradient(to right, #ffffff, #e0dcd5);"
+                                    data-ng-class="{'hidden':selected_item.item_sub_type.toLowerCase() !== 'item' || skuHead.sku_sub_type}">
+                                    <div>
+                                        <span class="gheading" style="color: #505b98">Component SKU</span>
+                                    </div>
+                                    <div class="sku-selection-subheading">A sku that can make a regular sku as one complete set.
+                                    </div>
+                                    <div data-ng-if="!skuHead.sku_sub_type">
+                                        <button class="btn-primal btn-sm f-14 f-500 waves-effect btn-block m-t-10" data-ng-click="skuHead.sku_sub_type='component';"
+                                            style="background: #5c69af;  /* fallback for old browsers */">
+                                            Create Component SKU
+                                        </button>
+                                    </div>
+                                </section>
+                            </div>
+                            <div data-ng-class="{'col-xs-12':selected_item.item_sub_type.toLowerCase() !== 'item', 'col-xs-6':selected_item.item_sub_type.toLowerCase() === 'item'}">
+                                <section class="sku-selection-gcard" data-ng-if="selected_item.item_sub_type.toLowerCase() === 'item'" style="box-shadow: 0px 0px 4px 1px #e1e2e6; background: linear-gradient(to right, #ffffff, #e0dcd5);"
+                                    data-ng-class="{'hidden':selected_item.item_sub_type.toLowerCase() !== 'item' || skuHead.sku_sub_type}">
+                                    <div>
+                                        <span class="gheading" style="color: #04771f">Installation/Fee SKU</span>
+                                    </div>
+                                    <div class="sku-selection-subheading">A sku that can make a regular sku as a service SKU.
+                                    </div>
+                                    <div data-ng-if="!skuHead.sku_sub_type">
+                                        <button class="btn-primal btn-sm f-14 f-500 waves-effect btn-block m-t-10" data-ng-click="skuHead.sku_sub_type='installation_fee';"
+                                            style="background: #04771f;  /* fallback for old browsers */">
+                                            Create Installation/Fee SKU
+                                        </button>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <section class="sku-selection-gcard m-b-20" justify-content: style="box-shadow: 0px 0px 4px 1px #e1e2e6; background: linear-gradient(to right, #ffffff, #e0dcd5);"
+                                data-ng-if="selected_item.item_sub_type.toLowerCase() === 'set'" data-ng-class="{'visible':skuHead.sku_sub_type,'hidden':skuHead.sku_sub_type && skuHead.sku_sub_type !== 'Set'}">
+                                <div>
+                                    <span class="gheading" style="color: #a94545">Set SKU</span>
+                                </div>
+                                <div class="sku-selection-subheading">A sku built from many components together – build from regular sku already available.
+                                </div>
+                                <!-- button section in card -->
+                                <div data-ng-if="!skuHead.sku_sub_type">
+                                    <button class="btn-primal btn-sm f-14 f-500 waves-effect btn-block m-t-10" data-ng-click="skuHead.sku_sub_type='set';" style="background: #af4949;  /* fallback for old browsers */">
+                                        Create Set SKU
+                                </div>
+
+                            </section>
+
+                            <!-- Can be used in future -->
+                            <!-- <section class="sku-selection-gcard"
+                                style="box-shadow: 0px 0px 4px 1px #e1e2e6; background: linear-gradient(to right, #ffffff, #e0dcd5);"
+                                data-ng-if="selected_item.item_sub_type.toLowerCase() === 'set'"
+                                data-ng-class="{'visible':skuHead.sku_sub_type,'hidden':skuHead.sku_sub_type && skuHead.sku_sub_type !== 'Template'}">
+                                <div>
+                                    <span class="gheading" style="color: #557544">Template SKU</span>
+                                </div>
+                                <span class="sku-selection-subheading">A template sku is same as set sku but provide
+                                    configuration capability to the buyer.</span>
+                                <div data-ng-if="!skuHead.sku_sub_type">
+                                    <button class="btn-primal btn-sm f-14 f-500 waves-effect btn-block m-t-10"
+                                        data-ng-click="skuHead.sku_sub_type='template'"
+                                        data-ng-disabled="skuHead.sku_sub_type"
+                                        style="background: #62884e;  /* fallback for old browsers */">
+                                        Create Template SKU
+                                    </button>
+                                </div>
+                            </section> -->
+                        </div>
+                        <!-- Section to select the subtype when item is a set start-->
+                        <div data-ng-if="skuHead.sku_sub_type">
+                            <section class="sku-selection-gcard" style="padding: 1rem 1rem 1.3rem 1.5rem; box-shadow: 0px 0px 4px 1px #e1e2e6; background: linear-gradient(to right, rgb(245, 246, 241), rgb(245, 246, 241));">
+                                <div class="col-xs-12 rc-alert rc-alert-info flex-column m-b-10" data-ng-if="skuHead.sku_sub_type==='installation_fee'">
+                                    <div class="col-xs-12 d-flex p-0" style="height: 30px">
+                                        <div class="rc-alert-icon m-r-10">
+                                            <span class="text-info zmdi zmdi-info-outline" style="font-size:35px;color: #3b5ca3;">
+                                            </span>
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div>
+                                                <div>
+                                                    <span class="c-black f-14">
+                                                        <div class="p-5 bg-info">
+                                                            Only Stock SKUs can be created for installation fee SKU type.
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-0">
+                                    <fieldset class="form__options">
+                                        <div class="col-xs-12 m-t-10 m-b-10 p-0">
+                                            <span class="f-400 f-15">Which
+                                                <span class="c-black">'Type of SKU'</span> do you prefer ? </span>
+                                        </div>
+                                        <div class="col-xs-12 p-0 d-flex" style="justify-content:space-between;">
+                                            <span class="form__answer">
+                                                <input type="radio" name="match" id="match-stock" ng-model="skuHead.sku_type" value="stock">
+                                                <label class="form-match-label" for="match-stock" ios-dblclick="skuMaintCtrl.openForm('SKUMaster',skuHead.sku_type,skuHead.sku_sub_type);">
+                                                    <div data-ng-include="'./img/sku-type-selection/stock.svg'"></div>
+                                                </label>
+                                                <div>
+                                                    <span class="f-14 f-500 c-black">Stock</span>
+                                                </div>
+                                            </span>
+                                            <span class="form__answer">
+                                                <input type="radio" name="match" id="match-stock-plus" ng-model="skuHead.sku_type" ng-disabled="skuHead.sku_sub_type==='installation_fee'"
+                                                    data-ng-class="{'cursor-not-allowed': skuHead.sku_sub_type==='installation_fee'}"
+                                                    value="stock plus">
+                                                <label class="form-match-label" for="match-stock-plus" ng-disabled="skuHead.sku_sub_type==='installation_fee'" data-ng-class="{'cursor-not-allowed': skuHead.sku_sub_type==='installation_fee'}"
+                                                    ios-dblclick="skuMaintCtrl.openForm('SKUMaster',skuHead.sku_type,skuHead.sku_sub_type);">
+                                                    <div data-ng-include="'./img/sku-type-selection/stock-plus.svg'">
+                                                    </div>
+                                                </label>
+                                                <div>
+                                                    <span class="f-14 f-500 c-black">Stock Plus</span>
+                                                </div>
+                                            </span>
+                                            <span class="form__answer">
+                                                <input type="radio" name="match" id="match-mto" ng-disabled="skuHead.sku_sub_type==='installation_fee'" data-ng-class="{'cursor-not-allowed': skuHead.sku_sub_type==='installation_fee'}"
+                                                    ng-model="skuHead.sku_type" value="mto">
+                                                <label class="form-match-label" for="match-mto" ng-disabled="skuHead.sku_sub_type==='installation_fee'" data-ng-class="{'cursor-not-allowed': skuHead.sku_sub_type==='installation_fee'}"
+                                                    ios-dblclick="skuMaintCtrl.openForm('SKUMaster',skuHead.sku_type,skuHead.sku_sub_type);">
+                                                    <div data-ng-include="'./img/sku-type-selection/made-to-order.svg'">
+                                                    </div>
+                                                </label>
+                                                <div>
+                                                    <span class="f-14 f-500 c-black">MTO</span>
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </fieldset>
+                                    <div class="col-xs-12 p-0 ">
+                                        <button class="btn-primal btn-sm f-14 f-500 waves-effect m-t-10 m-b-5 btn-block" ng-class="{'disable-btn': !skuHead.sku_type}"
+                                            style="background-color: #9e7461; border-color: #945f5f;" ng-disabled="!skuHead.sku_type"
+                                            data-ng-click="skuMaintCtrl.openForm('SKUMaster',skuHead.sku_type,skuHead.sku_sub_type);">Create SKU
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

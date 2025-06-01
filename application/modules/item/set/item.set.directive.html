@@ -1,0 +1,313 @@
+<style>
+    .disable-div {
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+
+    .disable-div div.hierarchyfield.input-sm {
+        background: url(../img/components/hierarchy.svg) 8px / 20px no-repeat #f3f3f3 !important;
+    }
+
+    .enable-div {
+        pointer-events: auto;
+    }
+
+    .item-component-section {
+        background-color: #ffffff;
+        border: 1px solid #ececec;
+    }
+
+    .item-component-label {
+        width: 100px;
+        color: #a2a2a2;
+    }
+
+    .item-component-section-header {
+        border-bottom: 1px solid #dadada;
+        background: #f9f9f9;
+        color: #2b7bb0;
+    }
+
+    .item-sku-list-insight-container {
+        height: auto;
+        max-height: calc(150px - 30px);
+        overflow: auto;
+    }
+
+    .availability-sku-list {
+        box-shadow: 2px 3px 10px -3px #ababab !important;
+    }
+
+    .availability-sku-list:after {
+        content: "" !important;
+        position: absolute !important;
+        top: 90px;
+        right: 1% !important;
+        filter: drop-shadow(0px -3px 0px #dfdfdf) !important;
+        border-bottom: 0px solid #fffdf9 !important;
+        border-left: 0px solid transparent !important;
+        border-right: 0px solid transparent !important;
+    }
+
+    .dropdown-menu.dropdown-menu-lg {
+        width: 315px;
+        left: -435px;
+    }
+
+    .td-box-shadow {
+        box-shadow: 0 0px 1px rgb(51 51 51 / 38%);
+    }
+</style>
+<div data-ng-class="{'disable-actions':itemMaintCtrl.disableActions}">
+    <div class="col-xs-12 f-16 panel-header">
+        <span class="f-700 main-header">Add Items to set</span>
+        <div>
+            <small>Items can be added to the item which is set to make a component.</small>
+        </div>
+        <ul class="f-12 m-t-5">
+            <li>Select PE Hierarchy Value/Search with a SKU number.</li>
+            <li>Selecting PE Hierarchy/Searching for a SKU number loads items under the chosen hierarchy value/SKU number.</li>
+            <li>Component/Regular items under the selected hierarchy value/SKU number can be added to the current set.</li>
+            <li>Only Active items are loaded in the list.</li>
+        </ul>
+    </div>
+    <div class="col-lg-12 p-0 set-page-bottom-border" data-ng-if1="vm.isSetLoaded">
+        <div class="col-lg-12 p-t-10">
+            <div class="col-lg-12 p-0">
+                <div class="form-group" valdr-form-group style="width:97%;float:left;">
+                    <label class="maintenance-field-label">Vendor</label>
+                    <select selectize="selectVendorConfiguration" items="head.vendor" class="form-control select-component input-sm" options="allVendors"
+                        ng-model="vm.vendor.id" required>
+                    </select>
+                </div>
+                <div class="resetbtn fa fa-times-circle m-t-20 f-16 ng-isolate-scope" data-ng-click="vm.resetSelectedVendor();" style="width:3%;float:right;"></div>
+            </div>
+            <div class="col-lg-12 p-0">
+                <div class="col-lg-12 p-0" data-ng-class="{'disable-div': vm.sku_number&&vm.sku_number.length > 0, 'enable-div': !vm.sku_number||vm.sku_number.length===0 }">
+                    <div class="form-group" valdr-form-group>
+                        <label class="maintenance-field-label">Product Explorer Hierarchy</label>
+                        <div class="d-flex">
+                            <hierarchy-tree-view class="flex-1" primary-hierarchy-id="itemConfig.primary_item_hierarchy_id" path="vm.pe_item_hierarchy_value_path"
+                                primary-hierarchy-value-id="vm.pe_item_hierarchy_value_id" directive-end-fn='vm.end(directiveData)'
+                                form-data="head" form-header="Product Explorer Hierarchy" clear-path="vm.clearPath"></hierarchy-tree-view>
+                            <div class="resetbtn fa fa-times-circle m-l-5 f-16 ng-isolate-scope" data-ng-click="vm.resetComponentHierarchyValue();resetSelectedHierarchy();"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="m-b-5 text-muted text-uppercase f-700">
+                <span>or</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 p-0">
+                <div class="form-group">
+                    <label class="maintenance-field-label">SKU #</label>
+                    <div class="d-flex">
+                        <div class="full-width" valdr-form-group>
+                            <input type="text" ng-disabled="vm.pe_item_hierarchy_value_id || (vm.vendor&&vm.vendor.id)" id="sku_number_search" class="form-control input-sm"
+                                ng-model="vm.sku_number" placeholder="SKU Number" allow-only-numbers ng-keyup="$event.keyCode == 13 ? vm.getItemBySKUNumber():null"
+                                data-ng-change="vm.isLoading = undefined;" />
+                        </div>
+                        <div class="resetbtn fa fa-times-circle m-l-5 f-16 ng-isolate-scope" data-ng-click="vm.resetSKUNumberValue();"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 m-t-20">
+                <button ng-if="vm.pe_item_hierarchy_value_id || vm.vendor.id || (vm.sku_number&&vm.sku_number.length>0)" ng-click="vm.searchItemComponents();"
+                    class="aligncenter btn-primal btn-block f-700">Search</button>
+            </div>
+        </div>
+        <div class="col-lg-12 m-b-10 text-danger" data-ng-if="vm.isLoading===false && (vm.pe_item_hierarchy_value_id || vm.sku_number) && (!vm.items||vm.items.length===0)">
+            <span>No Item Components Found.</span>
+        </div>
+        <div class="col-lg-12 m-b-10 text-muted" data-ng-if="vm.isLoading">
+            <span>Loading...</span>
+        </div>
+        <div class="col-lg-12 p-0" data-ng-if="vm.items.length > 0 && selectItemConfiguration&&vm.isLoading===false">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="maintenance-field-label">Select Item</label>
+                    <select selectize="selectItemConfiguration" items="vm.set" class="form-control select-component input-lg" options="vm.items"
+                        data-ng-model="vm.set.child_item_id" data-ng-change="vm.checkDuplicateItem();"></select>
+                    <p class="text-muted p-5 m-0 c-red" data-ng-if="vm.duplicateItemMessage">{{vm.duplicateItemMessage}}</p>
+                </div>
+            </div>
+            <div class="col-sm-2 p-l-0">
+                <button ng-show="vm.set['child_item_id'] && vm.showBtn" ng-click="vm.addValueToNewSet();" class="btn aligncenter add-new-btn btn-primal btn-block f-700 d-flex justify-content-center align-items-center">Add</button>
+            </div>
+            <div class="col-sm-2 p-l-0">
+                <button ng-show="vm.set['child_item_id'] && vm.showBtn" ng-click="vm.resetValue()" class="btn aligncenter add-new-btn btn-cancel d-flex align-items-center justify-content-center btn-block f-700">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0 set-page-bottom-border" data-ng-if="vm.isSetLoaded">
+        <div class="col-xs-12 m-t-15 m-b-15">
+            <div class="col-xs-12 text-center text-info" data-ng-if="vm.setItems.length === 0">
+                <span class="f-15 f-300">No item exists for selected item set. Please add item to set.</span>
+            </div>
+            <div class="d-flex" data-ng-if="vm.setItems.length>0" style="justify-content:space-between;align-items:center;padding:0px 10px;">
+                <h4 data-ng-if="vm.setItems.length <= 1">
+                    Set Component
+                </h4>
+                <h4 data-ng-if="vm.setItems.length > 1">
+                    Set Components
+                </h4>
+                <div class="d-flex" style="flex-direction:column;">
+                    <small>
+                        <span class="c-black f-12 f-700">
+                            {{vm.setItems.length}}
+                        </span> SKU
+                        <span data-ng-if="vm.setItems.length > 1">s</span> in a Set
+                    </small>
+                </div>
+            </div>
+            <div data-ng-if="vm.setDeleteMessage">
+                <span class="text-success">{{vm.setDeleteMessage}}</span>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0 m-b-20 p-l-20 p-r-20" data-ng-if="vm.setItems.length === 1">
+            <div class="col-xs-12 p-0 item-component-section" data-ng-repeat="sitem in vm.setItems">
+                <div class="item-component-section-header d-flex align-items-center justify-content-between p-5">
+                    <div>{{sitem.description | truncate: 80}}</div>
+                    <div class="text-center">
+                        <button class="btn btn-danger btn-sm" ng-disabled="vm.isDeleting" title="Remove from the set"
+                            ng-click="vm.deleteValueFromSet(sitem);">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5" style="line-height:1.7">
+                    <div class="d-flex">
+                        <div class="item-component-label">Division :</div>
+                        <span>{{sitem.division}}</span>
+                    </div>
+                    <div class="d-flex">
+                        <div class="item-component-label">Department :</div>
+                        <span>{{sitem.department || sitem.item_type}}</span>
+                    </div>
+                    <div class="d-flex">
+                        <div class="item-component-label">Class :</div>
+                        <span>{{sitem.class_info}}</span>
+                    </div>
+                    <div class="d-flex">
+                        <div class="item-component-label">Vendor :</div>
+                        <span>{{sitem.vendor}}</span>
+                    </div>
+                    <div class="d-flex">
+                        <div class="item-component-label">Collection :</div>
+                        <span data-ng-show="sitem.collection !== 'NA'">{{sitem.collection}}</span>
+                        <span data-ng-show="sitem.collection === 'NA'" title="{{sitem.collection}}">N/A</span>
+                    </div>
+                    <div class="d-flex">
+                        <div class="item-component-label">
+                            SKU Details <i class="fa fa-info-circle" title="Installation Fee SKUs are not displayed"></i> :
+                        </div>
+                        <span class="text-muted" data-ng-if="sitem.skuLoading">Loading ...</span>
+                        <span class="text-muted" data-ng-if="sitem.availableSkus.length == 0 && !sitem.skuLoading">No SKUs Available</span>
+                    </div>
+                    <div class="p-10 table-responsive">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered">
+                            <thead>
+                                <tr data-ng-if="sitem.availableSkus.length > 0 && !sitem.skuLoading">
+                                    <th style="width: 50%;">SKU Description</th>
+                                    <th style="width: 20%;">SKU #</th>
+                                    <th style="width: 30%;">Vendor Item Number</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white" data-ng-if="sitem.availableSkus.length > 0 && !sitem.skuLoading"
+                                    ng-repeat="availableSku in sitem.availableSkus">
+                                    <td title="{{availableSku.description}}" style="cursor: default !important;">{{availableSku.description | truncate : 65}}</td>
+                                    <td title="{{availableSku.sku}}" style="cursor: default !important;">{{availableSku.sku}}</td>
+                                    <td style="cursor: default !important;">
+                                        <span data-ng-if="availableSku.vendor_item_number" title="{{availableSku.vendor_item_number}}">
+                                            {{availableSku.vendor_item_number | truncate : 30}}
+                                        </span>
+                                        <span class="text-muted" data-ng-if="!availableSku.vendor_item_number">Not Available</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0 m-b-20 p-l-20 p-r-20" data-ng-if="vm.setItems.length > 1">
+            <div class="col-xs-12 p-0 table-responsive">
+                <table class="table table-hover table-vmiddle table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center"></th>
+                            <th class="text-center">Description</th>
+                            <th class="text-center">Division</th>
+                            <th class="text-center">Department</th>
+                            <th class="text-center">Class</th>
+                            <th class="text-center">Vendor</th>
+                            <th class="text-center">Collection</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat-start="sitem in vm.setItems" data-ng-class="{'background-hover' : sitem.showAvailableSKUs}"
+                            data-ng-click="sitem.showAvailableSKUs = !sitem.showAvailableSKUs">
+                            <td class="p-l-10 p-r-10" title="Click to expand SKU Details" title-direction="right">
+                                <i data-ng-if="sitem.showAvailableSKUs" class="fa fa-angle-down"></i>
+                                <i data-ng-if="!sitem.showAvailableSKUs" class="fa fa-angle-right"></i>
+                            </td>
+                            <td title="{{sitem.description}}">{{sitem.description | truncate: 30}}</td>
+                            <td title="{{sitem.division}}">{{sitem.division | truncate : 20}}</td>
+                            <td title="{{sitem.department}}">{{sitem.department | truncate : 20 || 'NA'}}</td>
+                            <td title="{{sitem.class_info}}">{{sitem.class_info | truncate : 20}}</td>
+                            <td title="{{sitem.vendor}}">{{sitem.vendor | truncate : 30}}</td>
+                            <td>
+                                <span title="{{sitem.collection}}"
+                                    data-ng-show="sitem.collection !== 'NA'">{{sitem.collection | truncate : 20}}</span>
+                                <span data-ng-show="sitem.collection === 'NA'" title="{{sitem.collection}}">N/A</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="zmdi zmdi-delete zmdi-hc-fw c-firebrick" title="Remove" ng-disabled="vm.isDeleting"
+                                    ng-click="vm.deleteValueFromSet(sitem);"></span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end data-ng-if="sitem.showAvailableSKUs">
+                            <td colspan="8" class="table-responsive p-10">
+                                <table class="table table-hover table-vmiddle table-condensed table-bordered">
+                                    <thead>
+                                        <tr data-ng-if="sitem.skuLoading">
+                                            <td class="text-center text-muted bg-white f-13 td-box-shadow">Loading ...</td>
+                                        </tr>
+                                        <tr data-ng-if="sitem.availableSkus.length == 0 && !sitem.skuLoading">
+                                            <td class="text-center text-muted bg-white f-13 td-box-shadow">No SKUs Available</td>
+                                        </tr>
+                                        <tr data-ng-if="sitem.availableSkus.length > 0 && !sitem.skuLoading">
+                                            <th style="width: 50%;">
+                                                SKU Description
+                                                <i class="fa fa-info-circle" title="Installation Fee SKUs are not displayed"></i>
+                                            </th>
+                                            <th style="width: 20%;">SKU #</th>
+                                            <th style="width: 30%;">Vendor Item Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-white" data-ng-if="sitem.availableSkus.length > 0 && !sitem.skuLoading"
+                                            ng-repeat="availableSku in sitem.availableSkus">
+                                            <td title="{{availableSku.description}}" style="cursor: default !important;">{{availableSku.description | truncate : 65}}</td>
+                                            <td title="{{availableSku.sku}}" style="cursor: default !important;">{{availableSku.sku}}</td>
+                                            <td style="cursor: default !important;">
+                                                <span data-ng-if="availableSku.vendor_item_number" title="{{availableSku.vendor_item_number}}">
+                                                    {{availableSku.vendor_item_number | truncate : 30}}
+                                                </span>
+                                                <span class="text-muted" data-ng-if="!availableSku.vendor_item_number">Not Available</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>

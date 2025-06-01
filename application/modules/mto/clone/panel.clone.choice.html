@@ -1,0 +1,161 @@
+<style>
+    .styled-checkbox {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .styled-checkbox+label {
+        position: relative;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .styled-checkbox+label:before {
+        content: '';
+        margin-right: 10px;
+        display: inline-block;
+        vertical-align: bottom;
+        width: 20px;
+        height: 20px;
+        background: #e2e2e2;
+    }
+
+    .styled-checkbox:hover+label:before {
+        background: #5f99f3;
+    }
+
+    .styled-checkbox:checked+label:before {
+        background: #5f99f3;
+    }
+
+    .styled-checkbox:disabled+label {
+        color: #b8b8b8;
+        cursor: auto;
+    }
+
+    .styled-checkbox:disabled+label:before {
+        box-shadow: none;
+        background: #ddd;
+    }
+
+    .styled-checkbox:checked+label:after {
+        content: '';
+        position: absolute;
+        left: 4px;
+        top: 9px;
+        background: white;
+        width: 2px;
+        height: 2px;
+        box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+</style>
+<div data-ng-controller="ChoiceCloneController as clonectrl">
+    <div id="rcrightsidebar" class="toggled" data-ng-if="!clonectrl.showLockedScreen">
+        <div class="m-t-25" style="display:flex">
+            <div class="p-0 p-absolute cursor-pointer">
+                <a class="cursor-pointer" ng-click="clonectrl.exit()">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="p-0 m-auto">
+                <label class="rclabel editformlabel" title="UPC">Clone
+                    <strong>MTO Choice</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-12" data-ng-if="clonectrl.choice_description && !clonectrl.isSaveSuccess">
+            <div class="d-flex m-b-10 m-t-10">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/clone/module.svg'"></div>
+                </div>
+            </div>
+            <!-- container -->
+            <div class="m-5" data-ng-init="clonectrl.showDetails = true;clonectrl.showAdvanced=false;clonectrl.showNewProperties = false" style="display: flex;flex-direction: column;align-items: flex-start;">
+                <span class="f-700 c-orange text-center">{{clonectrl.choice_description}}</span>
+                <div>
+                    <button type="button" class="btn btn-link waves-effect p-0" ng-click="clonectrl.showDetails = !clonectrl.showDetails">Choice Details</button>
+                    <button type="button" class="btn btn-link waves-effect p-0 m-l-5" ng-click="clonectrl.showAdvanced = !clonectrl.showAdvanced;">| &nbsp Advanced</button>
+                    <button type="button" class="btn btn-link waves-effect p-0 m-l-5" ng-click="clonectrl.showNewProperties = !clonectrl.showNewProperties;">| &nbsp New Properties</button>
+                </div>
+            </div>
+            <div>
+                <div class="m-10" data-ng-if="clonectrl.showDetails">
+                    <hr />
+                    <div class="text-center text-info f-15 underlineGreen">MTO Choice Details</div>
+                    <div data-ng-repeat="data in clonectrl.ChoiceDetails" style="display: flex;
+                justify-content: space-between;">
+                        <span class="f-300 m-b-5 c-gray">{{data[0] | replace: '_':' ' |titleCase }}
+                            <span class="f-400 text-info"> : {{data[1]}}</span>
+                        </span>
+                    </div>
+                </div>
+    
+                <div class="m-t-10 p-5" data-ng-if="clonectrl.showAdvanced">
+                    <hr />
+                    <div class="text-center text-info f-15 underlineGreen">Advanced Cloning Options</div>
+                   <!--  <div>
+                        <input class="styled-checkbox" type="checkbox" ng-model="clonectrl.isCloneHistory" data-ng-init="clonectrl.isCloneHistory=false"
+                            id="choice_clone_history_checkbox">
+                        <label for="choice_clone_history_checkbox">Include Choice History</label>
+                    </div> -->
+                    <div>
+                        <input class="styled-checkbox" type="checkbox" ng-model="clonectrl.isCloneDrops" data-ng-init="clonectrl.isCloneDrops=false"
+                            id="choice_clone_drops_checkbox">
+                        <label for="choice_clone_drops_checkbox">Include Choice Drops ( Images/Documents etc )</label>
+                    </div>
+                </div>
+                <div class="m-t-10 p-5" ng-if="clonectrl.showNewProperties">
+                        <hr />
+                        <div class="text-center text-info f-15 p-b-10 underlineGreen">New Properties</div>
+                        <div>
+                            <input class="styled-checkbox" type="checkbox" ng-model="clonectrl.isNewDescription" data-ng-init="clonectrl.isNewDescription=true"
+                                id="new_description">
+                            <label for="new_description">Description for new MTO Choice</label>
+                        </div>
+                        <div ng-if="clonectrl.isNewDescription" class="m-t-10">
+                            <textarea class="input-sm description-text-area rc-text-area" rows="4" cols="50"  name="description" id="description"
+                                ng-model="clonectrl.new_description" placeholder="Enter Description"></textarea>
+                        </div>
+            
+                    </div>
+    
+                <div class="m-t-20" data-ng-init="clonectrl.showCloningForm=true" data-ng-if="clonectrl.showCloningForm == true">
+                    <hr>
+                    <div style="display: flex;justify-content: space-around;align-items: baseline;justify-items: center;flex-direction: row-reverse;">
+                        <!-- <span class="f-700 c-amber" style="display: flex;flex: 2;">Copies</span>
+                        <input type="number" class="form-control input-sm m-r-10 m-l-10 text-center" placeholder="Copies " style="display: flex;flex: 1;" ng-model="clonectrl.copycount" data-ng-disabled="clonectrl.clones.length > 0" min="1" max="10" allow-only-numbers limit-to-max
+                        /> -->
+                        <rcp-edit-form-btns data-ng-disabled="clonectrl.clones.length > 0||clonectrl.isProcessing" new-form="true"
+                            save-fn="clonectrl.startCloning();"
+                            save-btn-text="clonectrl.cloneBtnLabel">
+                        </rcp-edit-form-btns>
+                    </div>
+                    <div class="m-t-5 f-12 text-muted">
+                        Cloning choice will create a copy of choice master details and user defined fields.
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0">
+                        <div class="m-b-0 pull-left alert alert-success alert-dismissable" data-ng-show="clonectrl.message">
+                                <button type="button" class="close" data-ng-click="clonectrl.message = null" aria-hidden="true">&times;</button>{{clonectrl.message}}
+                            </div>
+                    <div data-ng-if="clonectrl.error" class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-ng-click="clonectrl.error = null" aria-hidden="true">&times;</button> {{clonectrl.error}}
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <rcp-success-form  success-tick="success_tick.svg"
+            clone-success="clonectrl.isSaveSuccess" close-fn="clonectrl.closeForm();"></rcp-success-form>
+        </div>
+    </div>
+    <secondary-authentication
+        feature-code="'choice-clone'"
+        show-locked-screen="clonectrl.showLockedScreen"
+        close-fn="clonectrl.exit();"
+        data-ng-if="clonectrl.showLockedScreen">
+    </secondary-authentication>
+</div>

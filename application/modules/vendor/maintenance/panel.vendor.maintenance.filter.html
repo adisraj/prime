@@ -1,0 +1,91 @@
+<div id="rcrightsidebar" class="toggled" data-ng-init="venMaintCtrl.InitializeCreateUpdateForm()">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a class="cursor-pointer" data-ui-sref="common.prime.vendor">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Filter Vendors">Filter <strong>Vendors</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-t-10 m-b-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/filters.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <ng-form name="venMaintCtrl.vendor_filter_from" role="form" novalidate="novalidate">
+
+                 
+                <div class="form-group">
+                        <div class="checkbox col-xs-12 form-group">
+                                <label for="status_col">
+                                    <input id="status_col" type="checkbox" ng-true-value="true" ng-false-value="false"  checked="" class="ng-pristine ng-untouched ng-valid ng-not-empty"> Status
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                    <!-- <div class="btn-group colors">
+                        <label class="btn rcp-select-btn" ng-class="{'active':venMaintCtrl.filters.individualOrCompany === 'Company'}">
+                            <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                            <input ng-model="venMaintCtrl.filters.individualOrCompany" type="radio" value="Company" class="d-none"> Company
+                        </label>
+                        <label class="btn rcp-select-btn" ng-class="{'active':venMaintCtrl.filters.individualOrCompany === 'Individual'}">
+                            <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                            <input ng-model="venMaintCtrl.filters.individualOrCompany" type="radio" value="Individual" class="d-none"> Individual
+                        </label>
+                    </div> -->
+                </div>
+                <div class="form-group" data-ng-if="venMaintCtrl.filters.individualOrCompany === 'Company'" data-ng-init="venMaintCtrl.filters.individualOrCompanyIds = [];">
+                    <label>Company</label>
+                    <multiselect ng-model="venMaintCtrl.filters.individualOrCompanyIds" options="company.id as company.name for company in venMaintCtrl.allCompanies" select-limit="100" header="Select Company" selected-header="options selected" multiple="true" required enable-filter="true"
+                        filter-placeholder="Quick Search" ng-class="{'highlight-filter':venMaintCtrl.filters.individualOrCompanyIds.length>0}">
+                </div>
+                <div class="form-group" data-ng-if="venMaintCtrl.filters.individualOrCompany === 'Individual'" data-ng-init="venMaintCtrl.filters.individualOrCompanyIds = [];">
+                    <label>Individual</label>
+                    <multiselect ng-model="venMaintCtrl.filters.individualOrCompanyIds" options="individual.id as individual.name for individual in venMaintCtrl.allindividuals" select-limit="100" header="Select Individual" selected-header="options selected" multiple="true"
+                        required enable-filter="true" filter-placeholder="Quick Search" ng-class="{'highlight-filter':venMaintCtrl.filters.individualOrCompanyIds.length>0}">
+                </div>
+                <div class="form-group">
+                    <label>Vendor Type</label>
+                    <multiselect ng-model="venMaintCtrl.filters.vendorTypeIds" options="type.id as type.short_description for type in venMaintCtrl.allVendorTypes" select-limit="100" header="Select Type" selected-header="options selected" multiple="true" required enable-filter="true"
+                        filter-placeholder="Quick Search" ng-class="{'highlight-filter':venMaintCtrl.filters.vendorTypeIds.length>0}">
+                </div>
+                <div class="form-group">
+                    <label>Vendor Term</label>
+                    <multiselect ng-model="venMaintCtrl.filters.vendorTermIds" options="term.id as term.description for term in venMaintCtrl.allVendorPurchaseTerms" select-limit="100" header="Select Term" selected-header="options selected" multiple="true" required enable-filter="true"
+                        filter-placeholder="Quick Search" ng-class="{'highlight-filter':venMaintCtrl.filters.vendorTermIds.length>0}">
+                </div>
+                <div class="form-group">
+                    <label>Current Status</label>
+                    <multiselect ng-model="venMaintCtrl.filters.currentStatusIds" options="status.code as status.description for status in statuses" select-limit="100" header="Select Current Status" selected-header="options selected" multiple="true" required enable-filter="true"
+                        filter-placeholder="Quick Search" ng-class="{'highlight-filter':venMaintCtrl.filters.currentStatusIds.length>0}">
+                </div>
+                <div class="form-group">
+                    <label>Next Status</label>
+                    <multiselect class="" ng-model="venMaintCtrl.filters.nextStatusIds" options="status.code as status.description for status in next_statuses" select-limit="100" header="Select Next Status" selected-header="options selected" multiple="true" required enable-filter="true"
+                        filter-placeholder="Quick Search" ng-class="{'highlight-filter':venMaintCtrl.filters.nextStatusIds.length>0}">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn-block btn-primal btn-lg" id="filter_vendor_btn" ng-click="venMaintCtrl.applyFilters();">
+                            <strong>{{venMaintCtrl.applyFiltersBtnLabel}}</strong>
+                        </button>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn-block btn-secondary btn-lg" id="vendor_filter_reset_btn" ng-click="venMaintCtrl.resetFilters();">
+                            <strong>Reset Filters</strong>
+                        </button>
+                </div>
+            </ng-form>
+        </div>
+        <div class="col-xs-12 p-0">
+            <div data-ng-if="venMaintCtrl.message" class="alert alert-success">
+                <button type="button" class="close" data-ng-click="venMaintCtrl.message = null" aria-hidden="true">&times;</button> {{venMaintCtrl.message}}
+            </div>
+            <div data-ng-if="venMaintCtrl.errorMessage" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="venMaintCtrl.errorMessage = null" aria-hidden="true">&times;</button> {{venMaintCtrl.errorMessage}}
+            </div>
+        </div>
+    </div>
+</div>

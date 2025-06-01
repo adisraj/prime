@@ -1,0 +1,302 @@
+<!--SIDE PANEL START-->
+<div id="rightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':retailCtrl.showRetailForm === true}">
+    <div class="m-t-25 d-flex">
+        <div class="p-0 p-absolute cursor-pointer" data-ng-click="retailCtrl.toggleRetailSidePanel(false)">
+            <a>
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="p-0 m-auto">
+            <label class="rclabel editformlabel"> Set<strong> Retail</strong></label>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="d-flex m-b-10 m-t-10" ng-if="!retailCtrl.retailUpdateFlag">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/retail.svg'"></div>
+            </div>
+        </div>
+        <div class="rcpscrollbar o-auto" ng-if="!retailCtrl.retailPublish">
+            <ng-form name="retailCtrl.retail_form" role="form" novalidate="novalidate" ng-if="!retailCtrl.retailUpdateFlag" valdr-type="RULES-RETAIL">
+                <div class="col-lg-12 p-0" ng-if="!isCurrentRetail">
+                    <div class="col-lg-12 m-t-10 p-0">
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="retailCtrl.retail_form.status.$invalid">* </span>
+                            <span style="color:green;" ng-show="retailCtrl.retail_form.status.$valid">* </span>
+                            <label>Retail Status</label>
+                            <select class="form-control select-component input-sm" name="status" ng-model="retailCtrl.retailHead.status_id" ng-options="each.code as each.description for each in statuses" data-ng-change="retailCtrl.disableRetailProceed();" required>
+                                <option value="" disabled>Select Option</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="retailCtrl.retail_form.reason.$invalid">* </span>
+                            <span style="color:green;" ng-show="retailCtrl.retail_form.reason.$valid">* </span>
+                            <label>Retail Reason</label>
+                            <select class="form-control select-component input-sm" name="reason" ng-model="retailCtrl.retailHead.retail_reason_id" data-ng-options="reason.id as reason.name for reason in retailCtrl.retail_reasons" data-ng-change="retailCtrl.disableRetailProceed();"
+                                required>
+                                <option value="" disabled>Select Retail Reason</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="retailCtrl.retail_form.price_type.$invalid">* </span>
+                            <span style="color:green;" ng-show="retailCtrl.retail_form.price_type.$valid">* </span>
+                            <label>Price Type</label>
+                            <select class="form-control select-component input-sm" name="price_type" ng-model="retailCtrl.retailHead.price_type_id" ng-options="p.id as p.name for p in retailCtrl.price_types" data-ng-change="retailCtrl.disableRetailProceed();" required>
+                                <option value="" disabled>Select Price Type</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="retailCtrl.retail_form.s_effective_date.$invalid">* </span>
+                            <span style="color:green;" ng-show="retailCtrl.retail_form.s_effective_date.$valid">* </span>
+                            <label>Effective Date</label>
+                            <input type="text" name="s_effective_date" id="s_effective_date" class="form-control input-sm rcp-mydatepicker" ng-model="retailCtrl.retailHead.effective_date" ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+                                model-view-value="true" data-ng-change="retailCtrl.disableRetailProceed();">
+                        </div>
+                    </div>
+                    <div class="col-lg-12 p-0">
+                        <button ng-if="retailCtrl.isSave === false" type="button" class="btn-block btn-primal btn-lg" id="create_price_change_btn" ng-click="retailCtrl.createPriceChange(1);" data-ng-disabled="retailCtrl.retail_form.$invalid">
+                                <strong>Create Price Change</strong>
+                        </button>
+
+                        <div class="col-lg-12 p-0 form-group">
+                            <button ng-if="retailCtrl.isSave === true" type="button" class="btn-block btn-secondary btn-lg" id="apply_to_all_btn" ng-click="retailCtrl.retailHead.applyTo.pricing_class = 1;retailCtrl.createPriceChange(1,true);" data-ng-disabled="retailCtrl.retail_form.$invalid">
+                                <strong>Apply To All</strong>
+                            </button>
+                            <small ng-if="retailCtrl.isSave === true" class="text-danger"> Apply base {{retailCtrl.meta.priceGroups[0]['value_short_description'] }} to other classifications </small>
+                        </div>
+                        <div class="col-lg-12 p-0 form-group">
+                            <button type="button" ng-if="retailCtrl.isSave === true" class="btn-primal btn-block btn-lg" id="proceed_btn" ng-click="retailCtrl.applynproceed();" data-ng-disabled="retailCtrl.retail_form.$invalid || retailCtrl.disableRetailProceedBtn || retailCtrl.disableActions">
+                                <strong>Proceed</strong>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 p-0" ng-if="isCurrentRetail">
+                    <div class="col-lg-12 p-0 form-group">
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="retailCtrl.retail_form.existingRetailDateId.$invalid">* </span>
+                            <span style="color:green;" ng-show="retailCtrl.retail_form.existingRetailDateId.$valid">* </span>
+                            <label>Existing Retail Dates</label>
+                            <select id="existingRetailDateId" class="form-control select-component input-sm" name="existingRetailDateId" ng-model="retailCtrl.retailHead.selectedRetailDate" ng-options="each as each.date_price_type_name for each in retailCtrl.meta.retail_dates" auto-focus
+                             data-ng-change="retailCtrl.disableRetailProceed();"><option value="" disabled >Select Existing Retails</option></select>
+                        </div>
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="retailCtrl.retail_form.reason.$invalid">* </span>
+                            <span style="color:green;" ng-show="retailCtrl.retail_form.reason.$valid">* </span>
+                            <label>Price Change Reason</label>
+                            <select name="reason" class="form-control select-component input-sm" ng-model="retailCtrl.retailHead.retail_reason_id" data-ng-options="reason.id as reason.name for reason in retailCtrl.retail_reasons" required data-ng-change="retailCtrl.disableRetailProceed();">
+                            <option value="" disabled>Select Price Change Reason</option>
+                        </select>
+                        </div>
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="retailCtrl.retail_form.price_type.$invalid">* </span>
+                            <span style="color:green;" ng-show="retailCtrl.retail_form.price_type.$valid">* </span>
+                            <label>Price Type</label>
+                            <select name="price_type" class="form-control select-component input-sm" ng-model="retailCtrl.retailHead.price_type_id" ng-options="p.id as p.name for p in retailCtrl.price_types" required data-ng-change="retailCtrl.disableRetailProceed();">
+                                <option value="" disabled>Select Price Type</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Apply to</label>
+                            <select class="form-control select-component input-sm" name="price_class" ng-model="retailCtrl.retailHead.applyTo" ng-options="each as each.value_short_description for each in retailCtrl.meta.priceGroups" data-ng-change="retailCtrl.disableRetailProceed();">
+                                         <option value="">All Pricing Class</option>
+                                    </select>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span style="color:red;" ng-show="retailCtrl.retail_form.effective_date.$invalid">* </span>
+                            <span style="color:green;" ng-show="retailCtrl.retail_form.effective_date.$valid">* </span>
+                            <label>Effective Date</label>
+                            <input type="text" name="effective_date" id="effective_date" class="form-control input-sm rcp-mydatepicker" ng-model="retailCtrl.retailHead.effective_date" ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+                                model-view-value="true" data-ng-change="retailCtrl.disableRetailProceed();" is-effective-date="false">
+                        </div>
+                        <div class="form-group">
+                            <label>Change Applies To </label>
+                            <form name="myForm" style="display: -webkit-box;" class="retailSelect">
+                                <div class="checkbox m-r-15">
+                                    <label class="p-l-20"> Stock Plus
+                                        <input id="license_plating" type="checkbox" hidden="hidden" ng-model="retailCtrl.retailHead.isStockPlus" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox m-r-15 m-t-0">
+                                    <label class="p-l-20"> Stock
+                                        <input id="license_plating" type="checkbox" hidden="hidden" ng-model="retailCtrl.retailHead.isStock" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox m-r-15 m-t-0">
+                                    <label class="p-l-20"> MTO
+                                    <input id="license_plating" type="checkbox" hidden="hidden" ng-model="retailCtrl.retailHead.isMTO" ng-true-value="1" ng-false-value="0">
+                                    <i class="input-helper"></i>
+                                </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="form-group">
+                            <label>Entry Method</label>
+                            <div class="col-lg-12 p-0 form-group">
+                                <label class="radio radio-inline">
+                                        <input type="radio" name="method" ng-model="retailCtrl.retailHead.method" value="manual" checked="">
+                                        <i class="input-helper"></i> Manual
+                                    </label>
+                                <label class="radio radio-inline">
+                                        <input type="radio" name="method" ng-model="retailCtrl.retailHead.method" value="off">
+                                        <i class="input-helper"></i> %Off
+                                    </label>
+                                <label class="radio radio-inline">
+                                        <input type="radio" name="method" ng-model="retailCtrl.retailHead.method" value="inc">
+                                        <i class="input-helper"></i> %Inc
+                                    </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Percent: </label>
+                            <input type="number" class="form-control input-sm" ng-model="retailCtrl.retailHead.percentNumber" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12 p-0 form-group">
+                        <button data-ng-if="retailCtrl.isSave===true" type="button" class="btn-secondary btn-block btn-lg" id="delete_btn" ng-click="retailCtrl.createPriceChange(2,true);">
+                                <strong>Apply</strong>
+                        </button>
+                        <button data-ng-if="retailCtrl.isSave===true" type="button" class="btn-secondary btn-block btn-lg" id="delete_btn" data-ng-click="retailCtrl.isRetailRoundingRules()">
+                            <strong>Apply Rounding Rules</strong>
+                        </button>
+                        <button ng-if="retailCtrl.isSave === false" type="button" class="btn-primal btn-block btn-lg" id="delete_btn" ng-click="retailCtrl.createPriceChange(2);" data-ng-disabled="retailCtrl.retail_form.$invalid">
+                                <strong>Create Price Change</strong>
+                            </button>
+                        <button type="button" ng-if="retailCtrl.isSave === true" class="btn-primal btn-block btn-lg" id="delete_btn" ng-click="retailCtrl.applynproceed();" data-ng-disabled="retailCtrl.retail_form.$invalid || retailCtrl.disableRetailProceedBtn || retailCtrl.disableActions">
+                                <strong>Proceed</strong>
+                            </button>
+                    </div>
+                    <div class="col-xs-12 p-0">
+                        <div data-ng-show="retailCtrl.retail_error_message" class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close" data-ng-click="retailCtrl.retail_error_message = null" aria-hidden="true">&times;</button> {{retailCtrl.retail_error_message}}
+                        </div>
+                    </div>
+                </div>
+            </ng-form>
+            <div ng-if="retailCtrl.retailUpdateFlag" class="form-group col-xs-12 p-0">
+                <img class="updatesuccessicon" src="./img/success_tick.svg" />
+                <label class="editformlabel success-page-text text-center" ng-if="retailCtrl.retailUpdateFlag">You have created <strong>Successfully!</strong></label>
+                <button type="button" class="btn-block btn-primal btn-lg" id="update_title_btn" data-ng-click="retailCtrl.closeForm();">
+                   <strong>Done</strong>
+                 </button>
+                <button type="button" class="btn-block btn-secondary btn-lg" id="update_title_btn" data-ng-click="retailCtrl.createNew();">
+                   <strong>Create New</strong>
+                 </button>
+            </div>
+        </div>
+
+        <div data-ng-include="'./application/modules/item/retail/retail.rounding.rule.groups.form.html'"></div>
+
+        <div ng-if="retailCtrl.retailPublish">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Retail Summary</h4>
+                <div class="col-lg-12 p-0 form-group">
+                    <div class="form-group" data-ng-if="!isCurrentRetail">
+                        <span style="color:red;" ng-show="retailCtrl.retail_form.existingRetailDateId.$invalid">* </span>
+                        <span style="color:green;" ng-show="retailCtrl.retail_form.existingRetailDateId.$valid">* </span>
+                        <label>Retail Status</label>
+                        <div>
+                            <strong>
+                                <select class="dropdown-to-label" name="status" ng-model="retailCtrl.retailHead.status_id" ng-options="each.code as each.description for each in statuses" data-ng-change="retailCtrl.disableRetailProceed();" disabled>
+                                    <option value="" disabled>Select Option</option>
+                                </select>
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="form-group" data-ng-if="isCurrentRetail">
+                        <span style="color:red;" ng-show="retailCtrl.retail_form.existingRetailDateId.$invalid">* </span>
+                        <span style="color:green;" ng-show="retailCtrl.retail_form.existingRetailDateId.$valid">* </span>
+                        <label>Existing Retail Dates</label>
+                        <div>
+                            <strong>
+                                    <label>{{retailCtrl.retailHead.selectedRetailDate.effective_date | FormatDate}}</label>
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span style="color:red;" ng-show="retailCtrl.retail_form.reason.$invalid">* </span>
+                        <span style="color:green;" ng-show="retailCtrl.retail_form.reason.$valid">* </span>
+                        <label>Price Change Reason</label>
+                        <div>
+                            <strong>
+                                <select name="reason" class="dropdown-to-label" ng-model="retailCtrl.retailHead.retail_reason_id" data-ng-options="reason.id as reason.name for reason in retailCtrl.retail_reasons" disabled>
+                                    <option value="" disabled>Select Price Change Reason</option>
+                                </select>
+                                </strong>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span style="color:red;" ng-show="retailCtrl.retail_form.price_type.$invalid">* </span>
+                        <span style="color:green;" ng-show="retailCtrl.retail_form.price_type.$valid">* </span>
+                        <label>Price Type</label>
+                        <div>
+                            <strong>
+                                <select name="price_type" class="dropdown-to-label" ng-model="retailCtrl.retailHead.price_type_id" ng-options="p.id as p.name for p in retailCtrl.price_types" disabled>
+                                    <option value="" disabled>Select Price Type</option>
+                                </select>
+                                </strong>
+                        </div>
+                    </div>
+                    <div class="form-group" data-ng-if="isCurrentRetail">
+                        <label>Apply to</label>
+                        <div>
+                            <strong>
+                                    <select class="dropdown-to-label" name="price_class" ng-model="retailCtrl.retailHead.applyTo" ng-options="each as each.value_short_description for each in retailCtrl.meta.priceGroups" disabled>
+                                         <option value="">All Pricing Class</option>
+                                    </select>
+                                </strong>
+                        </div>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span style="color:red;" ng-show="retailCtrl.retail_form.effective_date.$invalid">* </span>
+                        <span style="color:green;" ng-show="retailCtrl.retail_form.effective_date.$valid">* </span>
+                        <label>Effective Date</label>
+                        <div>
+                            <strong>
+                                    <label>{{retailCtrl.retailHead.effective_date}}</label>
+                                </strong>
+                        </div>
+                    </div>
+                    <div class="form-group" data-ng-if="isCurrentRetail">
+                        <label>Change Applies To</label>
+                        <div>
+                            <strong>
+                                    <label data-ng-if="retailCtrl.retailHead.isStock"> Stock </label> 
+                                    <label data-ng-if="retailCtrl.retailHead.isStockPlus"> Stock Plus </label>
+                                    <label data-ng-if="retailCtrl.retailHead.isMTO"> MTO</label>
+                                </strong>
+                        </div>
+                    </div>
+                    <div class="form-group" data-ng-if="isCurrentRetail">
+                        <label>Entry Method</label>
+                        <div class="col-lg-12 p-0 form-group">
+                            <strong>
+                                    <label> {{retailCtrl.retailHead.percentNumber}}%  {{retailCtrl.retailHead.method}}</label>
+                            </strong>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-12 p-0 form-group">
+                    <button ng-if="retailCtrl.isSave === true && !isCurrentRetail" type="button" class="btn-block btn-primal btn-lg" id="delete_btn" ng-click="retailCtrl.save_current_retail(1);" data-ng-disabled="retailCtrl.retail_form.$invalid">
+                                <strong>Publish Retail</strong>
+                            </button>
+                    <button type="button" ng-if="retailCtrl.isSave === true && isCurrentRetail" class="btn-primal btn-block btn-lg" id="delete_btn" ng-click="retailCtrl.save_current_retail(2);" data-ng-disabled="retailCtrl.retail_form.$invalid || retailCtrl.disableRetailSaveBtn || retailCtrl.disableActions">
+                            <strong>Publish Retail</strong>
+                        </button>
+                    <button data-ng-if="retailCtrl.isSave===true" type="button" class="btn-secondary btn-block btn-lg" id="delete_btn" ng-click="retailCtrl.retailPublish=false;">
+                            <strong>Go Back</strong>
+                        </button>
+                </div>
+                <div class="col-xs-12 p-0">
+                    <div data-ng-show="retailCtrl.retail_error_message" class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-ng-click="retailCtrl.retail_error_message = null" aria-hidden="true">&times;</button> {{retailCtrl.retail_error_message}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--SIDE PANEL END-->
+</div>

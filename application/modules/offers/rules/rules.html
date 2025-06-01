@@ -1,0 +1,193 @@
+<div class="container col-lg-12 p-0" data-ng-controller="RulesController as ruleController" data-ng-init="ruleController.fetchOfferRules();">
+    <div>
+        <nav class="navbar navbar-toolbar navbar-default fixed-top">
+            <div class="bgm-white header-module">
+                <div class="navbar-header p-relative" style="min-height: inherit;">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                    <div class="image-module p-absolute">
+                        <img src="./img/sidebar-icons/offers.svg" />
+                    </div>
+                    <div class="label-module p-absolute">
+                        <a class="navbar-brand" href="javascript:void(0)">Offer Rules</a>
+                    </div>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li> <a ui-sref="common.prime.offers"><button type="button" class="btn btn-cancel btn-block  waves-effect">Go Back</button></a></li>
+                        <li> <a><button type="button" class="btn btn-success waves-effect f-700 " data-ng-click="ruleController.PanelNewRule();">Add Rule</button></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="col-lg-12 text-center m-t-25" data-ng-if="!ruleController.rulesRowsCount  && !ruleController.isLoaded">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div data-ng-if="ruleController.rulesRowsCount && ruleController.rulesRowsCount !== 0">
+            <div class="rcp-table-container">
+                <div class="col-sm-12 m-b-10 p-0">
+                    <div class="entitygroupheader">
+                        <div class="col-lg-12 col-md-12 p-0 table-header-section">
+                            <div class="p-l-0 col-lg-3 col-md-3 col-sm-12 col-xs-12 p-0 tableheader-btn p-t-5">
+                                <span class="searchMessage" data-ng-if="!search"> {{ruleController.rulesRowsInfo}} </span>
+                                <span class="searchMessage" data-ng-if="search">Displaying {{offerRules.length}} of {{ruleController.OfferRules.length}} Records</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <input id="inlineSearch" class="form-control input-sm" type="text" ng-model="search" indicate-quick-search placeholder="Quick Search"/>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            </div>
+                            <div class="col-lg-1 col-md-2 col-sm-6 col-xs-12 tableheader-btn">
+                                <button type="button" id="refreshButton" ng-click="ruleController.fetchOfferRules(true);" class="btn-primal btn-block  waves-effect"><span class="f-700 ng-binding">Refresh</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-ng-include="'./application/modules/attributes/hideShowColumns.html'"></div>
+                <div>
+                    <script type="text/javascript">
+                        function hide_show_table(col_name) {
+                            if (!col_name) {
+                                let searchElements = {};
+                                let column_names = [];
+                                if (document.getElementById("columns_container") !== null) {
+                                    searchElements = document.getElementById("columns_container").children;
+                                    for (let k = 0; k < searchElements.length; k++) {
+                                        column_names.push(searchElements[k].children[0].children[0].id);
+                                    }
+                                    for (let i = 0; i < column_names.length; i++) {
+                                        document.getElementById(column_names[i] + "_head").style.display = "table-cell";
+                                        document.getElementById(column_names[i]).value = "hide";
+                                        document.getElementById(column_names[i]).checked = true;
+                                    }
+                                }
+                            } else {
+                                var checkbox_val = document.getElementById(col_name).value;
+                                if (checkbox_val == "hide") {
+                                    var all_col = document.getElementsByClassName(col_name);
+                                    for (var i = 0; i < all_col.length; i++) {
+                                        all_col[i].style.display = "none";
+                                    }
+                                    document.getElementById(col_name + "_head").style.display = "none";
+                                    document.getElementById(col_name).value = "show";
+                                } else {
+                                    var all_col = document.getElementsByClassName(col_name);
+                                    for (var i = 0; i < all_col.length; i++) {
+                                        all_col[i].style.display = "table-cell";
+                                    }
+                                    document.getElementById(col_name + "_head").style.display = "table-cell";
+                                    document.getElementById(col_name).value = "hide";
+                                }
+                            }
+                        }
+                        $(function() {
+                            var pressed = false;
+                            var start = undefined;
+                            var startX, startWidth;
+
+                            $("table th").dblclick(function(e) {
+                                start = $(this);
+                                pressed = true;
+                                startX = e.pageX;
+                                startWidth = $(this).width();
+                                $(start).addClass("resizing");
+                            });
+
+                            $(document).mousemove(function(e) {
+                                if (pressed) {
+                                    $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                                }
+                            });
+
+                            $(document).mouseup(function() {
+                                if (pressed) {
+                                    $(start).removeClass("resizing");
+                                    pressed = false;
+                                }
+                            });
+                        });
+                    </script>
+                    <div class="table-responsive">
+                        <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                            <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="ruleController.rulesSortType = 'id'; sortReverse = !sortReverse">
+                                            <span class="handle">ID</span>
+                                            <span ng-show="ruleController.rulesSortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="ruleController.rulesSortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="offer_rule_type_col_head" drag-me drop-me data-handle=".handle" ng-click="ruleController.rulesSortType = 'offer_rule_type'; sortReverse = !sortReverse">
+                                            <span class="handle">Offer Rule Type</span>
+                                            <span ng-show="ruleController.rulesSortType == 'offer_rule_type' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="ruleController.rulesSortType == 'offer_rule_type' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="value_col_head" drag-me drop-me data-handle=".handle" ng-click="ruleController.rulesSortType = 'value'; sortReverse = !sortReverse">
+                                            <span class="handle">Value</span>
+                                            <span ng-show="ruleController.rulesSortType == 'value' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="ruleController.rulesSortType == 'value' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span class="handle">Items</span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span class="handle">SKUs</span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span class="handle">Collections</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="rule in offerRules = (ruleController.OfferRules|filter:search)|orderBy:ruleController.rulesSortType:sortReverse|itemsPerPage:ruleController.rulesPageSize" ng-dblclick="ruleController.PanelUpdateRule(rule.id)">
+                                        <td>{{rule.id}}</td>
+                                        <td>{{rule.offer_rule_type}}</td>
+                                        <td class="text-center">{{rule.value}}</td>
+                                        <td class="text-center f-700"><a data-ng-click="ruleController.showItems(rule.id);">View</a></td>
+                                        <td class="text-center f-700"><a data-ng-click="ruleController.showSkus(rule.id);">View</a></td>
+                                        <td class="text-center f-700"><a data-ng-click="ruleController.showCollections(rule.id);">View</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-12">
+                            <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="ruleController.paginationHandler(newPageNumber)"></dir-pagination-controls>
+                            <div class="btn-group pull-right ng-table-counts">
+                                <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="ruleController.rulesPageSize = 10" ng-class="{'active':ruleController.rulesPageSize === 10}">10</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="ruleController.rulesPageSize = 25" ng-class="{'active':ruleController.rulesPageSize === 25}">25</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="ruleController.rulesPageSize = 50" ng-class="{'active':ruleController.rulesPageSize === 50}">50</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="ruleController.rulesPageSize = 100" ng-class="{'active':ruleController.rulesPageSize === 100}">100</button>
+                            </div>
+                        </div>
+                        <meta-data-panel></meta-data-panel>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 p-0">
+                    <div id="refresh-table" class="p-15" data-ng-class="{'toggled':ruleController.isRefreshTable}">
+                        <div class="col-xs-6 p-0">
+                            <span class="f-15 f-300 pull-left">{{ruleController.refreshTableText}}</span>
+                        </div>
+                        <div class="col-xs-6 p-0" data-ng-if="ruleController.totalTimeText">
+                            <span class="pull-right f-300">
+                        <strong>{{ruleController.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{ruleController.totalRecordsText}}</span>
+                            <span ng-bind-html="ruleController.totalTimeText"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-if="ruleController.rulesRowsCount === 0">
+                <div class="col-xs-12 text-center text-info">
+                    <span class="f-15 f-300">No rule exists for selected offer. Please add rule.</span>
+                </div>
+            </div>
+            <ui-view></ui-view>
+        </div>
+    </div>

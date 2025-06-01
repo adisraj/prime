@@ -1,0 +1,1009 @@
+<style>
+    .search-panel-section ::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    /* Track */
+
+    .search-panel-section ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        width: 5px;
+    }
+
+    /* Handle */
+
+    .search-panel-section ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+
+    .search-panel-section ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+        cursor: pointer;
+    }
+
+    .correction-list:hover span {
+        color: #dbdbdb;
+    }
+
+    .last-child span.separator {
+        display: none;
+    }
+
+    /* Style for scroll bar end */
+
+    .auto-complete-section {
+        background: #ececec;
+    }
+
+    .auto-complete-section .auto-complete-term {
+        padding: 10px;
+    }
+
+    .auto-complete-section .auto-complete-term:hover {
+        background: white;
+        cursor: pointer;
+    }
+
+    .document-list {
+        background: white;
+        border: 1px solid #ececec;
+        margin-bottom: 5px;
+        line-height: 1.9;
+    }
+
+    .document-list:hover {
+        background: #fefff2;
+        cursor: pointer;
+    }
+
+    .document-description {
+        font-size: 15px;
+        font-weight: 500;
+        color: darkseagreen;
+    }
+
+    .document-type,
+    .document-vendor-type {
+        font-size: 12px;
+        font-weight: 300;
+    }
+
+    .load-more-section {
+        text-align: left;
+        padding-left: 5px;
+        background: #efefc1;
+    }
+
+    .group-by-container {
+        height: 360px;
+        overflow: auto;
+    }
+
+    .group-by-item {
+        border-radius: 3px;
+        padding: 5px 10px 5px 0px;
+        margin-bottom: 4px;
+        cursor: pointer;
+    }
+
+    .group-by-item .zmdi-close {
+        display: none;
+    }
+
+    .group-by-item-selected {
+        background: #ca7a4b;
+        color: white;
+        font-weight: 700;
+        padding: 5px 10px;
+    }
+
+    .group-by-item-selected .zmdi-close {
+        display: inline-block;
+    }
+
+    .group-by-item-selected .zmdi-caret-right {
+        display: none;
+    }
+
+    .group-by-item-selected a {
+        color: white;
+    }
+
+    .group-by-item:hover {
+        background: #fffcde;
+    }
+
+    .group-by-item-selected:hover {
+        background: #a5643f;
+    }
+
+    .search-panel-section .placeholder-image {
+        opacity: 0.5;
+    }
+
+    .sku-path {
+        background: #e7f0ff;
+        padding: 7px;
+        border: 1px solid #dee5f1;
+    }
+
+    .sku-path .description {
+        color: #e01b1b;
+        font-size: 13px;
+        font-style: normal;
+    }
+
+    .sku-path .description.division {
+        color: #b77b7b;
+        font-size: 13px;
+        font-style: normal;
+    }
+
+    .sku-path .description.department {
+        color: #b94d4d;
+        font-size: 13px;
+        font-style: normal;
+    }
+
+    .sku-path span.zmdi {
+        color: #10c39a;
+    }
+
+    .search-criteria-panel .search-panel-section-header {
+        border-bottom: 1px solid #ececec;
+    }
+
+    .search-criteria-panel .search-panel-section-header>div {
+        background: #184361;
+    }
+
+    .search-criteria-panel .search-label {
+        flex: 0.75;
+    }
+
+    .search-criteria-panel .search-value {
+        flex: 4;
+    }
+
+    .search-criteria-panel .search-value input {
+        border: none;
+        border-bottom: 1px solid #ababab;
+        border-radius: 0px;
+    }
+
+    .search-criteria-panel .search-value>multiselect button {
+        overflow-y: auto !important;
+    }
+
+    .search-tab-container.active .tab-img svg,
+    .search-tab-container.active .tab-name {
+        fill: #fffda2;
+        color: #fffda2;
+        font-weight: 700;
+    }
+
+    .tab-img svg,
+    .tab-name {
+        fill: #ececec;
+        color: #ececec;
+    }
+
+    .searchField {
+        position: absolute;
+        left: 1px;
+    }
+
+    .searchBtn {
+        position: absolute;
+        top: 19px;
+        right: 12px;
+        font-size: 14px;
+        color: #029ef1;
+        text-align: center;
+        border-width: 0;
+        cursor: pointer;
+        z-index: 1;
+        background: transparent;
+    }
+
+    @media screen and (max-width: 768px) {
+        .searchBtn {
+            visibility: hidden;
+            display: none;
+        }
+    }
+
+    .skuSearchfield {
+        flex-direction: column;
+        background-color: #fff;
+        position: absolute;
+        width: 560px;
+        top: 44px;
+        left: 0px;
+        border: 1px solid #efefef;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .16);
+    }
+
+    @media screen and (max-width: 768px) {
+        .skuSearchfield {
+            visibility: hidden;
+            display: none;
+        }
+    }
+
+    .skuSearchfield button.close {
+        /* position: absolute; */
+        right: 5px;
+        color: white;
+        opacity: 1;
+        top: 4px;
+        z-index: 1;
+        font-weight: bold;
+        background: #e33e41;
+        font-size: 12px;
+        width: 14px;
+        height: 14px;
+        border: 1px solid #e33e41;
+        border-radius: 50%;
+        display: inline-block;
+        padding-right: 1px;
+    }
+
+    input::-webkit-calendar-picker-indicator {
+        display: none;
+    }
+
+    .globalsearch {
+        height: 32px;
+        border: none;
+        font-size: 14px !important;
+        font-weight: initial;
+        width: 560px;
+        position: relative;
+        font-family: 'roboto', sans-serif !important;
+
+    }
+
+    .sku-number {
+        background: #eaeaea;
+        border: 1px solid #d6d6d6;
+        padding: 3px;
+        font-weight: 700;
+        color: #949494;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .close:active {
+        color: #4e0002;
+    }
+
+    @media screen and (max-width: 768px) {
+        .globalsearch {
+            visibility: hidden;
+            display: none;
+        }
+    }
+
+    .ui-menu .ui-menu-item {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        padding: 5px 12px;
+        line-height: 16px;
+        white-space: normal;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .ui-state-active,
+    .ui-widget-content .ui-state-active,
+    .ui-widget-header .ui-state-active,
+    a.ui-button:active,
+    .ui-button:active,
+    .ui-button.ui-state-active:hover {
+        border: 1px solid transparent;
+        /*border: none;*/
+        height: 100%;
+        /*background: #f1f0f0;*/
+        font-weight: normal;
+        color: royalblue;
+    }
+
+    .ui-widget {
+        font-family: 'roboto', sans-serif;
+        font-size: 12px;
+    }
+
+    .suggestion-option {
+        padding: 0px;
+        background: transparent;
+    }
+
+    .highlight-suggestion {
+        background: #f1f1f1;
+    }
+
+    .suggestion-option:hover {
+        background: #ececec;
+    }
+
+    .rc-global-search-dropdown {
+        top: 43px;
+        left: 0px;
+        box-shadow: 1px 2px 10px -3px;
+        width: 100%;
+    }
+
+    .placeholder-image {
+        padding: 5px !important;
+    }
+
+    .reset-search {
+        right: 0px;
+        top: 2px;
+        background: #ffffff;
+        height: 28px;
+        padding-right: 7px;
+        padding-left: 7px;
+        font-size: 18px;
+        position: absolute;
+        display: flex;
+        align-items: center;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        var globalSearchData = [
+            { label: "LOCATION", value: "LOCATION:" },
+            { label: "VENDOR DESCRIPTION", value: "VENDOR:" },
+            { label: "ITEM DESCRIPTION", value: "ITEM:" },
+            { label: "SKU DESCRIPTION", value: "SKU DESCRIPTION:" },
+            { label: "SKU NUMBER", value: "SKU:" },
+            { label: "MTO DESCRIPTION", value: "MTO DESCRIPTION:" },
+        ];
+        $('#autoSuggest').autocomplete({
+            source: globalSearchData,
+            minLength: 0,
+            delay: 0
+        }).focus(function () {
+            $(this).autocomplete("search");
+        });
+
+    });
+</script>
+<div data-ng-controller="HeaderController as hCtrl">
+    <ul style="display:none">
+        <li>
+            <keybinding on="ctrl+g" invoke="hCtrl.focusGlobalSearchField()" />
+        </li>
+    </ul>
+    <nav class="navbar rcp-navbar m-b-0" style="background:inherit;">
+        <div class="container-fluid p-l-0">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="header-logo navbar-header p-t-5">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#profile-navbar" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="hidden-lg pull-left cursor-pointer p-t-5" data-target="sidebar" data-toggle-sidebar data-model-left="mactrl.sidebarToggle.left"
+                    data-ng-class="{ 'open': mactrl.sidebarToggle.left === true }">
+                    <div class="line-wrap">
+                        <div class="line top"></div>
+                        <div class="line center"></div>
+                        <div class="line bottom"></div>
+                    </div>
+                </a>
+                <a class="cursor-pointer pull-left hidden-md hidden-sm hidden-xs c-white" data-target="sidebar" data-change-layout="mactrl.layoutType"
+                    data-ng-click="mactrl.sidebarStat($event)" style="font-size: 25px;padding:10px;">
+                    <i class="zmdi zmdi-menu"></i>
+                </a>
+                <a class="cursor-pointer pull-left" data-ui-sref="common.dashboard">
+                    <img class="rc-logo" src="./img/logo-mono.png" alt="" />
+                </a>
+            </div>
+            <div class="collapse navbar-collapse d-flex justify-content-end" id="profile-navbar" data-ng-init="mactrl.getDimensionalAttributesList();">
+                <!-- GLOBAL Search Start-->
+                <div class="pull-left m-r-20 hidden-sm hidden-md p-relative " ng-controller="DataSearchController as DSCtrl">
+                    <div class="m-t-10">
+                        <div class="p-relative ui-widget">
+                            <input type="search" class="full-height form-group input-sm globalsearch" data-ng-model="DSCtrl._search" ng-focus="DSCtrl.checkforSearchTermChanges();"
+                                ng-keydown="$event.keyCode == 13 ? DSCtrl.filterAndSetSuggestionOption($event) : ''" data-ng-change="DSCtrl.checkforSearchTermChanges();DSCtrl.goBack();DSCtrl.resetSearch()"
+                                type="text" name="Search" placeholder="Search" id="gobalsuggestion" autocomplete="off" rc-autocomplete-input-field
+                                selected-index="DSCtrl.selectedIndex" suggestion-dropdown-id="rc-global-search-dropdown" result-div-id="rc-global-search-result"
+                                suggestions-list="DSCtrl.globalSearchData" not-found-id="not-found" show-suggestion-dropdown="DSCtrl.showSuggestionList"
+                                show-no-results-dropdown="DSCtrl.isNotFoundResult" result-section-variable="DSCtrl.showResultSection"
+                                set-suggestion-option="" data-ng-class="{'p-l-25': DSCtrl._search && DSCtrl._search.length && DSCtrl.searchOptionImg}"
+                                style="border-left:none;" data-ng-blur="DSCtrl.onFocusOutResetToSKU111()">
+                            <span class="reset-search cursor-pointer" data-ng-click="DSCtrl.resetSearch();DSCtrl._search=''">&times;</span>
+                            <img ng-src="{{DSCtrl.searchOptionImg}}" data-ng-if="DSCtrl._search && DSCtrl._search.length && DSCtrl.searchOptionImg" style="position: absolute;top: 9px;left: 7px;height: 13px;width: 15px;opacity: 0.5;"
+                                alt="">
+                        </div>
+                    </div>
+                    <div class="skuSearchfield p-l-5" data-ng-if="DSCtrl.isLoading">
+                        Loading...
+                    </div>
+                    <div id="not-found" class="skuSearchfield" data-ng-show="DSCtrl.isNotFoundResult && !DSCtrl.isLoading">
+                        <div class="text-center f-13" style="color: #b93333;font-family: 'roboto',sans-serif;padding: 3px 9px;">
+                            Result not found
+                        </div>
+                    </div>
+                    <div id="rc-global-search-dropdown" class="p-absolute bgm-white rc-global-search-dropdown" data-ng-show="DSCtrl.showSuggestionList">
+                        <div class="col-xs-12 suggestion-option cursor-pointer" data-ng-repeat="option in DSCtrl.globalSearchData | filterBy:['label']:DSCtrl._search"
+                            data-ng-click="DSCtrl.setSuggestionOption(option);" data-ng-mouseover="DSCtrl.selectedIndex=$index;"
+                            ng-class="{'highlight-suggestion':DSCtrl.selectedIndex==$index}">
+                            <div class="d-flex align-items-center" style="padding-top:0px;background: transparent;">
+                                <div style=" padding:5px 10px;background: #efe3ca">
+                                    <img class="m-r-5" ng-src="{{option.imgSrc}}" style="width:15px;height:15px;" alt="">
+                                </div>
+
+                                <a class="f-13" style="color: #0c94fb;">
+                                    <mark style="border-radius: 0px; padding:5px 10px; background: transparent">{{option.label}}</mark>&#8674;
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="rc-global-search-result" style="background: #fff; width: 100%; display:none;" data-ng-show="DSCtrl.showResultSection">
+                        <!--SKU Number Search -->
+                        <div class="p-0 d-flex skuSearchfield" data-ng-if="DSCtrl.isSkuSearch && !DSCtrl.isLoading && !DSCtrl.isMtoSearch && !DSCtrl.isVendorSearch && !DSCtrl.isIteamSearch && !DSCtrl.isLocationSearch && !DSCtrl.enablespinner">
+                            <div class="d-flex flex-1 flex-column" style="border-bottom: 1px solid #d6d4d4;background: #faffe2;">
+                                <div class="cursor-pointer d-flex justify-content-between align-items-center" style="padding: 4px;" data-ng-click="DSCtrl.ViewItemDetails(DSCtrl.itemDetails);DSCtrl.resetSearch()">
+                                    <div class="d-flex align-items-center">
+                                        <span>Item
+                                            <i class="fa fa-arrow-right"></i>
+                                        </span>
+                                        <span class="f-14 text-capitalize m-l-5 text-primary" title="{{DSCtrl.sku.item_description}}">{{DSCtrl.sku.item_description | truncate : 40}}
+                                        </span>
+                                    </div>
+                                    <span class="text-capitalize" style="padding: 3px 9px;color: cyan;background: #138c13;" title="Item type">
+                                        {{DSCtrl.itemDetails.item_type}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-fill p-5">
+                                <div class="d-flex">
+                                    <img check-image class="img-responsive m-auto cursor-pointer" image-name="sku.svg" ng-src="{{DSCtrl.sku.imgUrl}}" style="height:50px;width:50px;"
+                                        data-ng-click="DSCtrl.ViewSkuDetails(DSCtrl.sku);DSCtrl.resetSearch()" />
+                                </div>
+                                <div class="m-l-5 p-l-5 p-r-5" style="flex:1;border-left: 1px solid #f5f5f5;line-height: 2">
+                                    <div class="col-xs-12">
+                                        <div class="cursor-pointer" data-ng-click="DSCtrl.ViewSkuDetails(DSCtrl.sku);DSCtrl.resetSearch()">
+                                            <span class="c-gray">Description: </span>
+                                            <span class="text-capitalize text-info f-700" title="{{DSCtrl.sku.description}}">{{DSCtrl.sku.description | truncate : 50}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="col-lg-4 p-l-0" data-ng-click="DSCtrl.ViewSkuDetails(DSCtrl.sku);DSCtrl.resetSearch()">
+                                            <span class="c-gray">SKU #: </span>
+                                            <span title="SKU Number">{{DSCtrl.sku.sku}}</span>                                  
+                                        </div>
+                                        <div class="col-lg-8 p-l-0">
+                                            <span class="c-gray">Status: </span>
+                                            <span ng-class="{'text-success f-500':DSCtrl.sku.status==='Active' , 'text-warning f-300':DSCtrl.sku.status==='Pending', 'text-primary f-300':DSCtrl.sku.status==='Inactive','text-info f-300':DSCtrl.sku.status==='Discontinued'}" style="padding-right: 10px;">{{DSCtrl.sku.status}}</span>
+                                        </div> 
+                                        <div class="col-xs-12">
+                                          <div class="col-lg-6"></div>
+                                            <div class="col-lg-6" style="display: flex;justify-content: space-around;left: 20px;">
+                                               <div data-ng-if="DSCtrl.sku.sku_type!=='stock plus'" ng-class="{'installationfee' : DSCtrl.sku.sku_sub_type =='installation_fee'}" style="display: flex">
+                                                <a class="cursor-pointer f-13" title="Navigate to Retail Maintenance Screen" data-ng-click="DSCtrl.gotoRetailScreen(DSCtrl.sku);DSCtrl.resetSearch()" style="border: 1px dotted;padding-left: 3px;padding-right: 3px;">
+                                                    <span>View Retails</span>
+                                                </a> 
+                                                </div>
+                                                <div data-ng-if="DSCtrl.sku.sku_sub_type!=='installation_fee'" ng-class="{'stockplus' : DSCtrl.sku.sku_type =='stock plus'}" style="display: flex">
+                                                <a class="cursor-pointer f-13" title="Navigate to Availability Screen" data-ng-click="DSCtrl.gotoAvailabilityScreen(DSCtrl.sku);DSCtrl.resetSearch()" style="border: 1px dotted;padding-left: 3px;padding-right: 3px;">
+                                                    <span>View Availability</span>
+                                                </a> 
+                                                </div> 
+                                          </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-fill">
+                                <div class="col-lg-12 d-flex p-5 f-14 c-white align-items-center" style="background-color: #000000;">
+                                    <i class="fa fa-shopping-bag p-r-5"></i>
+                                    <label class="m-b-0">Related SKUs</label>
+                                </div>
+                                <div data-ng-if="DSCtrl.RelatedSkus.length===0">
+                                    <span>No related SKUs found.</span>
+                                </div>
+                                <div class="col-lg-12 p-0" data-ng-if="DSCtrl.RelatedSkus.length > 0">
+                                    <div class="col-xs-12 p-5 cursor-pointer d-flex justify-content-between align-items-center" data-ng-repeat="sku in DSCtrl.RelatedSkus"
+                                        data-ng-click="DSCtrl.ViewSkuDetails(sku);DSCtrl.resetSearch()" style="border-bottom: 1px solid #efefef;">
+
+                                        <a data-ng-click1="DSCtrl.ViewSkuDetails(sku);DSCtrl.resetSearch()" class="text-capitalize text-overflow-desc-auto c-gray"
+                                            title="{{sku.description}}">
+                                            <span class="p-r-5 c-amber">{{$index + 1}}</span>{{sku.description}}
+                                        </a>
+                                        <span class="sku-number p-l-5 p-r-5"> {{sku.sku}} </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div><img class="p-r-5" data-ng-if="DSCtrl.enablespinner" src="./img/loader.gif" alt="Loading" height="25px" style="padding-left: 50%;" /></div>
+                        <!--SKU Number end-->
+                        <!--Vendor Description start-->
+                        <div class="p-0 d-flex skuSearchfield" data-ng-if="DSCtrl.isVendorSearch && !DSCtrl.isLoading && !DSCtrl.isMtoSearch && !DSCtrl.isSkuSearch && !DSCtrl.isIteamSearch && !DSCtrl.isLocationSearch">
+                            <div class="d-flex flex-1 p-t-5 p-b-5 flex-column" style="border-bottom: 1px solid #468fd6;background: #2c679e;">
+                                <div class="d-flex p-r-5 p-l-5 justify-content-between align-items-center">
+                                    <div class="cursor-pointer" data-ng-click="DSCtrl.ViewVendorDetails(DSCtrl.vendor);DSCtrl.resetSearch()">
+                                        <span class="c-white m-r-10 f-14 text-capitalize" title="Name">{{DSCtrl.vendor.name}}</span>
+                                    </div>
+                                    <div>
+                                        <button class="close" data-ng-click="DSCtrl.showResultSection=false;">&times;
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-fill m-t-5">
+                                <div class="d-flex p-l-5">
+                                    <img check-image class="img-responsive m-auto cursor-pointer" image-name="entity-config-vendor.svg" ng-src="{{DSCtrl.vendor.imgUrl}}"
+                                        style="height:135px;width:135px;" data-ng-click="DSCtrl.ViewVendorDetails(DSCtrl.vendor);DSCtrl.resetSearch()"
+                                    />
+                                </div>
+                                <div class="p-l-10 m-l-10" style="flex:1;border-left: 1px solid #7d7962;">
+                                    <!--<div class="p-absolute" style="right:10px;">
+								   <span class="f-14" ng-class="{'text-success f-500': DSCtrl.vendor.status==='Active' , 'text-warning f-300': DSCtrl.vendor.status ==='Pending Active', 'text-primary f-300': DSCtrl.vendor.status ==='Inactive','text-info f-300': DSCtrl.vendor.status==='Pending Inactive'}">{{DSCtrl.vendor.status}}</span>
+                                       </div>-->
+                                    <div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Status: </span>
+                                            <span class="f-14" ng-class="{'text-success f-500': DSCtrl.vendor.status==='Active' , 'text-warning f-300': DSCtrl.vendor.status ==='Pending Active', 'text-primary f-300': DSCtrl.vendor.status ==='Inactive','text-info f-300': DSCtrl.vendor.status==='Pending Inactive'}">{{DSCtrl.vendor.status}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Vendor Type: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.vendor.VendorType}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Next Status: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.vendor.next_status}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Buyer: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.vendor.buyer}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Next Effective Date: </span>
+                                            <span class="m-r-10 f-14 text-capitalize" data-ng-show="DSCtrl.vendor.next_status !== 'None'">
+                                                {{DSCtrl.vendor.next_effective_date | FormatDate}}</span>
+                                            <span data-ng-show="DSCtrl.vendor.next_status === 'None'" class="m-r-10 f-14 text-capitalize">N/A</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Vendor Description end -->
+                        <!--item Description start-->
+                        <div class="p-0 d-flex skuSearchfield" data-ng-if="DSCtrl.isIteamSearch && !DSCtrl.isLoading && !DSCtrl.isMtoSearch && !DSCtrl.isVendorSearch && !DSCtrl.isSkuSearch && !DSCtrl.isLocationSearch">
+                            <div class="d-flex flex-1 p-t-5 p-b-5 flex-column" style="border-bottom: 1px solid #468fd6;
+                            background: #2c679e;">
+                                <div class="d-flex p-r-5 p-l-5 align-items-center justify-content-between">
+                                    <div style="cursor: pointer;">
+                                        <span class="c-white f-14 text-capitalize" title="Description">Available Items
+                                        </span>
+                                    </div>
+                                    <button class="close" data-ng-click="DSCtrl.showResultSection=false;">&times;
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-fill m-t-5" data-ng-repeat="item in DSCtrl.Items">
+                                <div class="d-flex p-l-5">
+                                    <img check-image class="img-responsive m-auto cursor-pointer" image-name="entity-config-item.svg" ng-src="{{item.imgUrl}}"
+                                        style="height:40px;min-height:40px;min-width:40px;" data-ng-click="DSCtrl.ViewItemDetails(item);DSCtrl.resetSearch()"
+                                    />
+                                </div>
+                                <div class="d-flex align-items-center m-l-5 p-l-5 p-r-5" style="flex:1;border-left: 1px solid #eaeaea;">
+                                    <div class="col-lg-12 p-0 d-flex align-items-center justify-content-between">
+                                        <a class="f-14 text-overflow-desc-auto" data-ng-click="DSCtrl.ViewItemDetails(item);DSCtrl.resetSearch()" title="{{item.description}}">{{item.description}}</a>
+                                        <a class="f-14" data-ng-click="DSCtrl.ViewItemDetails(item);DSCtrl.resetSearch()" ng-class="{'text-success f-500':item.status==='Active' , 'text-warning f-300':item.status==='Pending', 'text-primary f-300':item.status==='Inactive','text-info f-300':item.status==='Discontinued'}">{{item.status}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--item Description end-->
+                        <!--location search start-->
+                        <div class="p-0 d-flex skuSearchfield" data-ng-if="DSCtrl.isLocationSearch && !DSCtrl.isLoading && !DSCtrl.isMtoSearch && !DSCtrl.isIteamSearch && !DSCtrl.isVendorSearch && !DSCtrl.isSkuSearch">
+                            <div class="d-flex flex-1 p-t-5 p-b-5 flex-column" style="border-bottom: 1px solid #468fd6;background: #2c679e;">
+                                <div class="d-flex p-r-5 p-l-5 justify-content-between align-items-center">
+                                    <div data-ng-click="DSCtrl.ViewLocationDetails(DSCtrl.location);DSCtrl.resetSearch()" style="cursor: pointer;">
+                                        <span class="c-white f-14 text-capitalize" title="Name">{{DSCtrl.location.name | truncate : 40}}</span>
+                                    </div>
+                                    <button class="close" data-ng-click="DSCtrl.showResultSection=false;">&times;
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-fill m-t-5">
+                                <div class="d-flex p-l-5">
+                                    <img check-image class="img-responsive m-auto cursor-pointer" image-name="entity-config-location.svg" ng-src="{{DSCtrl.location.imgUrl}}"
+                                        style="height:135px;width:135px;" data-ng-click="DSCtrl.ViewLocationDetails(DSCtrl.location);DSCtrl.resetSearch()"
+                                    />
+                                </div>
+                                <div class="m-l-5 p-l-5 p-r-5" style="flex:1;border-left: 1px solid #7d7962;">
+                                    <div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Status: </span>
+                                            <span class="f-14" ng-class="{'text-success f-500': DSCtrl.location.status_id===200 , 'text-warning f-300': DSCtrl.location.status_id ===100, 'text-primary f-300': DSCtrl.location.status_id ===300,'text-info f-300': DSCtrl.location.status_id===400}">{{DSCtrl.location.status}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Price Group: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.location.assortment_classification_group_value_desc}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Location Type: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.location.type}}</span>
+                                        </div>
+
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Next Status: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.location.next_status}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Next Effective Date: </span>
+                                            <span class="m-r-10 f-14 text-capitalize" data-ng-show="DSCtrl.location.next_effective_date !== 'None'">{{DSCtrl.location.next_effective_date | FormatDate}}</span>
+                                            <span data-ng-show="DSCtrl.location.next_effective_date === 'None'">N/A</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--location search end-->
+                        <!--MTO search Start-->
+                        <div class="p-0 d-flex skuSearchfield" data-ng-if="DSCtrl.isMtoSearch && !DSCtrl.isLoading && !DSCtrl.isLocationSearch && !DSCtrl.isIteamSearch && !DSCtrl.isVendorSearch && !DSCtrl.isSkuSearch">
+                            <div class="d-flex flex-1 p-t-5 p-b-5 flex-column" style="border-bottom: 1px solid #468fd6;background: #2c679e;">
+                                <div class="d-flex p-r-5 p-l-5 justify-content-between align-items-center">
+                                    <div data-ng-click="DSCtrl.ViewMtoDetails(DSCtrl.mto);DSCtrl.resetSearch()" style="cursor: pointer;">
+                                        <span class="c-white m-r-10 f-14 text-capitalize" title="Description">{{DSCtrl.mto.description | truncate : 40}}</span>
+                                    </div>
+                                    <div>
+                                        <button class="close" data-ng-click="DSCtrl.showResultSection=false;">&times;
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-fill m-t-5">
+                                <div class="d-flex p-l-5">
+                                    <img check-image class="img-responsive m-auto cursor-pointer" image-name="entity-config-made-to-order.svg" ng-src="{{DSCtrl.mto.imgUrl}}"
+                                        style="height:135px;width:135px;" />
+                                </div>
+                                <div class="m-l-5 p-l-5 p-r-5" style="flex:1;border-left: 1px solid #7d7962;">
+                                    <div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Status: </span>
+                                            <span class="f-14" ng-class="{'text-success f-500': DSCtrl.mto.status==='Active' , 'text-warning f-300': DSCtrl.mto.status ==='Pending Active', 'text-primary f-300': DSCtrl.mto.status ==='Inactive','text-info f-300': DSCtrl.mto.status==='Pending Inactive'}">{{DSCtrl.mto.status}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Option Type: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.mto.option_type}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Effective Date: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.mto.effective_date | FormatDate}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Vendor: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.mto.vendor}}</span>
+                                        </div>
+                                        <div class="m-b-10">
+                                            <span class="c-gray">Pricing Method: </span>
+                                            <span class="m-r-10 f-14 text-capitalize">{{DSCtrl.mto.pricing_method}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--MTO search end-->
+                        <!--SKU Description start-->
+                        <div class="p-0 d-flex skuSearchfield" data-ng-if="DSCtrl.isSkuDescSearch && !DSCtrl.isLoading && !DSCtrl.isMtoSearch && !DSCtrl.isVendorSearch && !DSCtrl.isSkuSearch && !DSCtrl.isLocationSearch">
+                            <div class="d-flex flex-1 p-t-5 p-b-5 flex-column" style="border-bottom: 1px solid #468fd6;
+                          background: #2c679e;">
+                                <div class="d-flex p-r-5 p-l-5 align-items-center justify-content-between">
+                                    <div style="cursor: pointer;">
+                                        <span class="c-white f-14 text-capitalize" title="Description">Available SKUs
+                                        </span>
+                                    </div>
+                                    <button class="close" data-ng-click="DSCtrl.showResultSection=false;">&times;
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-fill m-t-5" data-ng-repeat="item in DSCtrl.Skus">
+                                <div class="d-flex p-l-5">
+                                    <img check-image class="img-responsive m-auto cursor-pointer" image-name="entity-config-item.svg" ng-src="{{item.imgUrl}}"
+                                        style="height:40px;min-height:30px;min-width:30px;" data-ng-click="DSCtrl.ViewSkuDetails(item);DSCtrl.resetSearch()"
+                                    />
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between m-l-5 p-l-5 p-r-5" style="flex:1;border-left: 1px solid #eaeaea;">
+                                    <div class="col-lg-12 p-0 d-flex align-items-center justify-content-between">
+                                        <a class="f-14 text-overflow-desc-auto cursor-pointer" data-ng-click="DSCtrl.ViewSkuDetails(item);DSCtrl.resetSearch()" title="{{item.description}}">{{item.description}}</a>
+                                        <span class="sku-number cursor-pointer" data-ng-click="DSCtrl.ViewSkuDetails(item);DSCtrl.resetSearch()">{{item.sku}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--SKU Description end-->
+                        
+                        </div>
+                    <div ng-if="DSCtrl.isLoaded" data-ng-include="'./application/modules/item/sku/inventory-availability/panel.sku.availability.as400.form.html'"></div>
+                    <!-- <div ng-if="DSCtrl.isLoaded" data-ng-include="'./application/modules/item/sku/inventory-availability/panel.skuset.availability.form.html'"></div> -->
+                </div>
+                <!-- GLOBAL Search End-->
+                <div>
+                    <ul class="nav navbar-nav navbar-right" style="display:flex;align-items: center" data-ng-init="mactrl.getWorkbenchAccessDetailsForUser();">
+                        <li class="m-r-20 dropdown dropdown-large cursor-pointer" data-ng-if="mactrl.isAllowedBusinessWorkbench && mactrl.isAllowedAdminWorkbench"
+                            data-ng-click="mactrl.showErroredListPanel = true;">
+                            <span>
+                                <i class="f-25 zmdi zmdi-shield-security c-white" title="System warnings" title-direction="bottom"></i>
+                            </span>
+                        </li>
+                        <li class="m-r-20 dropdown dropdown-large cursor-pointer" uib-dropdown="" data-ng-if="mactrl.isAllowedBusinessWorkbench && mactrl.isAllowedAdminWorkbench">
+                            <span uib-dropdown-toggle="" href="" class="dropdown-toggle" aria-haspopup="true" aria-expanded="true">
+                                <i class="f-25 zmdi zmdi-laptop-chromebook c-white" title="Workbench Controller" title-direction="bottom"></i>
+                            </span>
+                            <div data-ng-controller="WorkbenchCtrl as wbctrl">
+                                <div class="workbench-dropdown dropdown-menu dropdown-menu-lg pull-right" style="    margin-top: 13px;">
+                                    <div class="col-xs-12 workbench-container" data-ng-class="{'active':mactrl.selected_workbench.toLowerCase() === 'administrator'}"
+                                        style="border-bottom:1px solid #ececec;display: flex;align-items: center;    justify-content: space-between;">
+                                        <div style="display: flex;justify-content: space-around;align-items: center;">
+                                            <img src="./img/administrator_worbench.svg" class="leftof" style="width: 60px;" alt="">
+                                            <span style="font-size: 17px;color: darkgray;font-family: lato;">Administrator Mode
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <button ng-show="mactrl.selected_workbench.toLowerCase() === 'administrator'" type="button" disabled ng-click="wbctrl.enableWorkspace('administrator',mactrl)"
+                                                class="btn btn-secondary btn-block waves-effect">
+                                                <span class="f-700 ng-binding">Enabled</span>
+
+
+                                            </button>
+
+                                            <button ng-show="mactrl.selected_workbench.toLowerCase() !== 'administrator'" type="button" ng-click="wbctrl.enableWorkspace('administrator',mactrl)"
+                                                class="btn btn-primal btn-block waves-effect">
+                                                <span class="f-700 ng-binding">Enable</span>
+
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 workbench-container" data-ng-class="{'active':mactrl.selected_workbench.toLowerCase() === 'business'}"
+                                        style="border-bottom:1px solid #ececec;display: flex;align-items: center;    justify-content: space-between;">
+                                        <div style="display: flex;justify-content: space-around;align-items: center;">
+                                            <img src="./img/business_workbench.svg" class="leftof" style="width: 60px;" alt="">
+                                            <span style="font-size: 17px;color: darkgray;font-family: lato;">Business Mode
+                                            </span>
+                                        </div>
+
+                                        <div>
+                                            <button ng-show="mactrl.selected_workbench.toLowerCase() === 'business'" type="button" disabled ng-click="wbctrl.enableWorkspace('business',mactrl)"
+                                                class="btn btn-secondary btn-block waves-effect">
+                                                <span class="f-700 ng-binding">Enabled</span>
+
+
+                                            </button>
+
+                                            <button ng-show="mactrl.selected_workbench.toLowerCase() !== 'business'" type="button" ng-click="wbctrl.enableWorkspace('business',mactrl)"
+                                                class="btn btn-primal btn-block waves-effect">
+                                                <span class="f-700 ng-binding">Enable</span>
+
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </li>
+                        <li class="m-r-20 cursor-pointer" data-toggle="modal" data-target=".bd-example-modal-lg">
+                            <span title="Shortcuts" title-direction="top" fixed-position="true">
+                                <i class="f-25 zmdi zmdi-pin-help c-white"></i>
+                            </span>
+                        </li>
+                        <li class="m-r-10 cursor-pointer">
+                            <div data-ng-include="'./application/modules/notifications/notifications.html'"></div>
+                        </li>
+                        <li style="border-left:1px solid rgb(78, 84, 86);background: #2a3147;">
+                            <div class="p-10 text-center">
+                                <div class="text-start">
+                                    <span style="color: #ffed8e" data-ng-if="mactrl.selected_workbench">{{mactrl.selected_workbench | titleCase}}</span>
+                                    <span style="color: #ffed8e" data-ng-if="!mactrl.selected_workbench"> No available
+                                    </span>
+                                </div>
+                                <a class="f-12 f-300 text-capitalize" style="color: #9d97a5;">Workspace</a>
+                            </div>
+                        </li>
+                        <li style="border-left:1px solid rgb(78, 84, 86);" data-ng-init="hCtrl.getUserDetails();">
+                            <div class="p-10">
+                                <div class="text-center">
+                                    <span class="c-white f-700">{{hCtrl.username}}</span>
+                                </div>
+                                <a data-ng-if="hCtrl.sessionCount!==0" class="f-10" style="text-decoration: none;color: #9d97a5;">Active Sessions : {{hCtrl.sessionCount}}
+                                </a>
+                            </div>
+                        </li>
+                        <li data-ui-sref="logout" class="cursor-pointer" data-ng-if="sessionModuleID != -1" name="logoutButton" title="Log out" title-direction="bottom-left">
+                            <span>
+                                <i class="f-25 zmdi zmdi-power c-white"></i>
+                            </span>
+                        </li>
+                        <li data-ng-click="hCtrl.closeApp()" data-ng-if="sessionModuleID == -1" class="cursor-pointer" title="Close module" title-direction="bottom-left">
+                            <span>
+                                <i class="c-white f-25 zmdi zmdi-close-circle"></i>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0" ng-if="mactrl.showErroredListPanel" data-ng-include="'./application/templates/panel.errored.list.html'"></div>
+        <!-- /.navbar-collapse -->
+</div>
+<!-- /.container-fluid -->
+</nav>
+</div>
+<style>
+    .short-cut-ctrl {
+        padding: 2px 8px 3px 8px;
+        background: black;
+        border-radius: 2px;
+        color: #ded3d3;
+        margin-right: 5px;
+        font-size: 12px;
+        font-family: monospace;
+    }
+
+    .short-cut-alt {
+        padding: 2px 8px 3px 8px;
+        background: black;
+        border-radius: 2px;
+        color: #ded3d3;
+        margin-right: 5px;
+        font-size: 12px;
+        font-family: monospace;
+    }
+
+    .short-cut-shift {
+        padding: 2px 8px 3px 8px;
+        background: black;
+        border-radius: 2px;
+        color: #ded3d3;
+        margin-right: 5px;
+        font-size: 12px;
+        font-family: monospace;
+    }
+
+    .short-cut {
+        padding: 2px 8px 3px 8px;
+        border-radius: 5px;
+        color: #77ab79;
+        margin-right: 5px;
+        font-size: 14px;
+        font-family: cursive;
+    }
+
+    .short-cut-section {
+        flex: 1;
+    }
+
+    .short-cut-description-section {
+        flex: 1.5;
+    }
+</style>
+<div class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="p-10" style="border-bottom: 1px solid lightgray;">
+                <span class="f-17 f-700" style="color: sandybrown;">Application Shortcuts</span>
+            </div>
+            <div class="">
+                <div class="col-lg-12 bgm-white p-10">
+                    <div class="col-md-7 m-t-10">
+                        <span class="f-700 p-5">Global Shortcuts</span>
+                        <ul style="line-height: 2;list-style: none;padding: 5px;">
+                            <li>
+                                <div class=" d-flex d-flex-v-center f-700">
+                                    <div class="short-cut-section">
+                                        <span class="short-cut-ctrl">Ctrl</span>
+                                        <span class="short-cut-shift">Shift</span>
+                                        <span class="short-cut">1</span>
+                                    </div>
+                                    <div class="short-cut-description-section">
+                                        <span class="f-13 f-300" style="color: #0f1424;"> Change to Administrator workbench
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class=" d-flex d-flex-v-center f-700">
+                                    <div class="short-cut-section">
+                                        <span class="short-cut-ctrl">Ctrl</span>
+                                        <span class="short-cut-shift">Shift</span>
+                                        <span class="short-cut">2</span>
+                                    </div>
+                                    <div class="short-cut-description-section">
+                                        <span class="f-13 f-300" style="color: #0f1424;"> Change to Business Developer workbench
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class=" d-flex d-flex-v-center f-700">
+                                    <div class="short-cut-section">
+                                        <span class="short-cut-ctrl">Ctrl</span>
+                                        <span class="short-cut">f</span>
+                                    </div>
+                                    <div class="short-cut-description-section">
+                                        <span class="f-13 f-300" style="color: #0f1424;"> Focus inline search field.
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class=" d-flex d-flex-v-center f-700">
+                                    <div class="short-cut-section">
+                                        <span class="short-cut-ctrl">Ctrl</span>
+                                        <span class="short-cut">g</span>
+                                    </div>
+                                    <div class="short-cut-description-section">
+                                        <span class="f-13 f-300" style="color: #0f1424;"> Global search field.</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class=" d-flex d-flex-v-center f-700">
+                                    <div class="short-cut-section">
+                                        <span class="short-cut-ctrl">Alt</span>
+                                        <span class="short-cut">r</span>
+                                    </div>
+                                    <div class="short-cut-description-section">
+                                        <span class="f-13 f-300" style="color: #0f1424;">Refresh table</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="col-md-5 m-t-10">
+                        <span class="f-700 p-5">Maintenance</span>
+                        <ul style="line-height: 2;list-style: none;padding: 5px;">
+                        </ul>
+                    </div>
+
+                    <div class="col-md-7 m-t-10">
+                        <span class="f-700 p-5">Table</span>
+                        <ul style="line-height: 2;list-style: none;padding: 5px;">
+                            <li>
+                                <div class=" d-flex d-flex-v-center f-700">
+                                    <div class="short-cut-section">
+                                        <span class="short-cut-ctrl">Alt</span>
+                                        <span class="short-cut">n</span>
+                                    </div>
+                                    <div class="short-cut-description-section">
+                                        <span class="f-13 f-300" style="color: #0f1424;">Create new form side panel
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class=" d-flex d-flex-v-center f-700">
+                                    <div class="short-cut-section">
+                                        <span class="short-cut-ctrl">Alt</span>
+                                        <span class="short-cut-shift">Shift</span>
+                                        <span class="short-cut">1</span>
+                                    </div>
+                                    <div class="short-cut-description-section">
+                                        <span class="f-13 f-300" style="color: #0f1424;">Hide and show column settings side panel</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

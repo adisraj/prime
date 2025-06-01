@@ -1,0 +1,12 @@
+<div class="card box p-b-5 ">
+    <h2 ng-if="label !== 'Sales Assistant'" class="counts">{{count}}</h2>
+    <p class="count-label">{{label}}</p>
+    <div class="btn-group-justified group-button">
+        <div class="btn-group hometilebutton noboxshadow m-b-10" style="display: flex;width:100%;">
+            <button type="button" class="btn addonbutton" data-ng-click="openForm()(path);"><i class="zmdi zmdi-plus"></i></button>
+            <a data-ui-sref="{{path}}" style="height: inherit;width: 100%;">
+                <button type="button" class="btn addontext" style="margin-left:-1px;z-index: 2">Show All</button>
+            </a>
+        </div>
+    </div>
+</div>

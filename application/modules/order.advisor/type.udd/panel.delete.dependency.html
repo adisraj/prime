@@ -1,0 +1,24 @@
+<div id="rcrightsidebar" class="toggled">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a data-ng-click="locTypeUDDCtrl.closeForm();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel">Delete <strong>{{locTypeUDDCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!locTypeUDDCtrl.isUnauthorized && !locTypeUDDCtrl.isDeleteSuccess">
+        <rcp-delete-form image-name="entity-config-location.svg" close-fn="locTypeUDDCtrl.dblClickAction(locTypeUDDCtrl.new_location_udd);" delete-fn="locTypeUDDCtrl.delete(locTypeUDDCtrl.new_location_udd);" confirm-delete="locTypeUDDCtrl.isConfirmDelete"></rcp-delete-form>
+    </div>
+    <div class="col-xs-12">
+        <rcp-success-form success-tick="success_tick.svg" close-fn="locTypeUDDCtrl.closeForm(); " update-success="locTypeUDDCtrl.isDeleteSuccess"></rcp-success-form>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-show="locTypeUDDCtrl.message" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="locTypeUDDCtrl.message = null" aria-hidden="true">&times;</button> {{locTypeUDDCtrl.message}}
+        </div>
+    </div>
+    <div ng-if="locTypeUDDCtrl.isUnauthorized" data-ng-include="'./application/templates/restricted.access.compact.html'"></div>
+</div>

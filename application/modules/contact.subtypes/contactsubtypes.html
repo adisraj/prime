@@ -1,0 +1,119 @@
+<div data-ng-controller="ContactTypeController as contacttypeCtrl">
+  <!--list panel-->
+  <div class="rc-module-header d-flex">
+    <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+      <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+        <div class="p-relative">
+          <div class="image-module p-absolute top-10">
+            <img src="./img/sidebar-icons/submenu_contact.svg" />
+          </div>
+          <div class="label-module top-10">
+            <a class="p-l-40" href="javascript:void(0)">Contact Sub Types</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex">
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="d-flex nav navbar-nav navbar-right">
+            <li>
+              <a>
+                <div class="search-section tableheader-btn pull-right"
+                  ng-if="permissionsMap.view && contacttypeCtrl.isLoaded">
+                  <input class="form-control input-sm" type="text" ng-model="contacttypeCtrl.search.sub_type" id="inlineSearch" 
+                    name="inlineSearch" data-ng-init="contacttypeCtrl.focusSearchField()"
+                    indicate-quick-search placeholder="Quick Search "/>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a>
+                <button type="button" ng-click="contacttypeCtrl.getSubTypes(true);"
+                  ng-if="permissionsMap.view && contacttypeCtrl.isLoaded" class="btn-primal btn-block  waves-effect">
+                  <span class="f-700 ng-binding">Refresh</span>
+                </button>
+              </a>
+            </li>
+            <li class="m-r-10">
+              <a>
+                <button type="button" class="btn btn-success f-700 waves-effect"
+                  data-ng-click="contacttypeCtrl.openForm();" data-ng-disabled="!permissionsMap.create">
+                  <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create
+                    Sub Types</span>
+                </button>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12 text-center module-content-configuration"
+    data-ng-if="!contacttypeCtrl.rowsCount && !contacttypeCtrl.isLoaded">
+    <span class="f-17 f-700 c-black">Loading</span>
+    <span class="f-700" style="letter-spacing: 3px;">....</span>
+  </div>
+  <div
+    data-ng-if="contacttypeCtrl.rowsCount !== 0 && contacttypeCtrl.isLoaded && permissionsMap && permissionsMap.view">
+    <div class=" rcp-table-container">
+      <div class="col-xs-12 p-0">
+        <div class="table-responsive module-content-configuration">
+          <div class="col-xs-12 p-0 o-auto sticky-head-container">
+            <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+              <tbody data-ng-repeat="(name, subTypevalues) in ContactsSubTypes = (
+              contacttypeCtrl.ContactsSubTypes |
+                filter : contacttypeCtrl.search |
+                orderBy : contacttypeCtrl.sortType : sortReverse |
+                groupBy : 'name')">
+                <tr ios-dblclick="contacttypeCtrl.dblClickAction(templateValues[0], 'Toolbar')"
+                  ng-dblclick="contacttypeCtrl.dblClickAction(templateValues[0], 'Toolbar')">
+                  <td colspan="3"
+                    style="background: #292929; color: #fff68f; padding: 7px; font-weight: 700; font-family: lato;">
+                    {{ name }}
+                  </td>
+                </tr>
+                <tr data-ng-repeat="subType in subTypevalues">
+                  <td style="cursor: default;">{{ subType.sub_type }}</td>
+                  <td class="text-center" style="width:10%; color:#069fde">
+                    <button class="restricted-btn p-0" data-ng-click="contacttypeCtrl.updateForm(subType);"
+                      data-ng-disabled="!permissionsMap.update"
+                      title="{{!permissionsMap.update ? 'Access denied' : ''}}">
+                      <span class="f-13 f-300"><i class="fa fa-edit m-r-5"></i>Edit
+                      </span>
+                    </button>
+                  </td>
+                  <td class="text-center" style="width:10%;">
+                    <button class="restricted-btn p-0" data-ng-click="contacttypeCtrl.showconfirm(subType);"
+                      ng-disabled="!permissionsMap.delete" title="{{!permissionsMap.delete ? 'Access denied' : ''}}">
+                      <span class="f-13 f-300 c-firebrick"><i class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                      </span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12 p-0">
+    <div id="refresh-table" class="p-15" data-ng-class="{'toggled':contacttypeCtrl.isRefreshTable}">
+      <div class="col-xs-6 p-0">
+        <span class="f-15 f-300 pull-left">{{contacttypeCtrl.refreshTableText}}</span>
+      </div>
+      <div class="col-xs-6 p-0" data-ng-if="contacttypeCtrl.totalTimeText">
+        <span class="pull-right f-300">
+          <strong>{{contacttypeCtrl.totalRecords}}</strong>
+          <span class="f-14 c-gray">{{contacttypeCtrl.totalRecordsText}}</span>
+          <span ng-bind-html="contacttypeCtrl.totalTimeText"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 p-t-10 m-b-15 p-0"
+    data-ng-include="'./application/modules/contact.subtypes/panel.contacts_subtype.form.html'">
+  </div>
+  <div ng-if="permissionsMap && !permissionsMap.view && contacttypeCtrl.isLoaded"
+    data-ng-include="'./application/templates/restricted.access.html'"></div>
+</div>

@@ -1,0 +1,1603 @@
+<!-- Side panel for create and update Retail -->
+<style>
+    .header-section {
+        background: #46647d;
+        color: white;
+        font-size: 14px;
+    }
+
+    .validation-error-message {
+        display: block;
+        font-size: 11px;
+        color: #e41708;
+        font-family: 'lato', 'Roboto';
+        margin: 3px 1px 1px 1px;
+    }
+
+    img.updatesuccessicon {
+        margin: 10% 0;
+    }
+
+    button#create_new_btn {
+        display: none;
+    }
+
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+
+    multiselect .btn-default:focus:focus {
+        background-color: transparent !important;
+        border-left: 3px solid #f9c10c !important;
+        margin-left: -3px;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+        border-left: 3px solid #f9c10c !important;
+    }
+
+    input[type="radio"]:focus,
+    input[type="radio"]:checked {
+        border: 2px solid #f9c10c !important;
+        border-radius: 50%;
+        background-color: #009688;
+        box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, .4), 0 1px 1px hsla(0, 0%, 100%, .8);
+        content: '';
+        height: 20px;
+        width: 20px;
+    }
+
+    input[type="radio"] {
+        border: 1px solid #5d4565;
+        border-radius: 50%;
+        cursor: pointer;
+        display: inline-block;
+        height: 20px;
+        margin-right: 5px;
+        position: relative;
+        width: 20px;
+        -webkit-appearance: none;
+    }
+
+    input[data-ng-readonly="true"]:focus {
+        border: 3px solid #f9c10c !important;
+    }
+
+    input[ng-readonly="true"]:focus {
+        border: 3px solid #f9c10c !important;
+    }
+</style>
+<div id="rcrightsidebar-large" data-ng-class="{'toggled':skuRetailCtrl.showSetRetailPanel === true}"
+    data-ng-if="skuRetailCtrl.showSetRetailPanel">
+    <div class="col-xs-12 d-flex m-t-25">
+        <button class="close-icon bg-none border-none btn-link"
+            data-ng-click="skuRetailCtrl.showSetRetailPanel = false;skuRetailCtrl.focusSetRetail();skuRetailCtrl.focusThreedotMenu();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="d-flex-h-center d-flex panel-name-section" style="flex:1;">
+            <label class="rclabel editformlabel" style="margin-left: -60px;" title="Dependency Details">
+                <strong>Retail Maintenance</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12 m-t-25 p-0" data-ng-if="!skuRetailCtrl.isSaveSuccess">
+        <div class="col-xs-12 p-0">
+            <div class="d-flex" style="justify-content:space-between;">
+                <div class="p-0 d-flex d-flex-h-center d-flex-v-center full-width"
+                    ng-if="skuRetailCtrl.isParameterSetupForm || skuRetailCtrl.isPackageRetailForm || skuRetailCtrl.isNewRetailForm || skuRetailCtrl.isRetailRoundingForm||skuRetailCtrl.reviewScreen">
+                    <ol class="breadcrumb d-flex m-b-0 p-l-0 rcbreadcrumb" style="margin-left: -10px;">
+                        <li class="d-flex">
+                            <a class="full-width d-flex d-flex-h-center"
+                                data-ng-class="{'active':skuRetailCtrl.isParameterSetupForm  || skuRetailCtrl.isPackageRetailForm || skuRetailCtrl.isNewRetailForm || skuRetailCtrl.reviewScreen || skuRetailCtrl.isRetailRoundingForm}">
+                                <label class="rclabel m-0 d-flex d-flex-v-center">
+                                    <span class="f-15 step-count"> 1. </span>
+                                    <span class="f-15 step-description m-l-5 text-nowrap">Price Type</span>
+                                </label>
+                            </a>
+                        </li>
+                        <li class="d-flex" data-ng-if="!skuRetailCtrl.showPackageRetailTab">
+                            <a class="full-width d-flex d-flex-h-center"
+                                data-ng-class="{'active':skuRetailCtrl.isNewRetailForm || skuRetailCtrl.isPackageRetailForm || skuRetailCtrl.reviewScreen || skuRetailCtrl.isRetailRoundingForm}">
+                                <label class="rclabel m-0 d-flex d-flex-v-center">
+                                    <span class="f-15 step-count"> 2. </span>
+                                    <span class="f-15 step-description m-l-5 text-nowrap">Retails</span>
+                                </label>
+                            </a>
+                        </li>
+                        <li class="d-flex"
+                            data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase() === 'stock' && skuRetailCtrl.isPackageRetails && skuRetailCtrl.showPackageRetailTab">
+                            <a class="full-width d-flex d-flex-h-center" data-ng-class="{'active': skuRetailCtrl.isPackageRetailForm || skuRetailCtrl.isPackageRetailForm
+                                 || skuRetailCtrl.reviewScreen || skuRetailCtrl.isRetailRoundingForm}">
+                                <label class="rclabel m-0 d-flex d-flex-v-center">
+                                    <span class="f-15 step-count"> 2. </span>
+                                    <span class="f-15 step-description m-l-5 text-nowrap">Package Retails</span>
+                                </label>
+                            </a>
+                        </li>
+                        <li class="d-flex">
+                            <a class="full-width d-flex d-flex-h-center"
+                                data-ng-class="{'active':skuRetailCtrl.reviewScreen || skuRetailCtrl.isRetailRoundingForm}"
+                                style="padding: 0.4em 0.6em;">
+                                <label class="rclabel m-0 d-flex d-flex-v-center">
+                                    <span class="f-15 step-count"> 3. </span>
+                                    <span class="f-15 step-description m-l-5 text-nowrap">Rounding</span>
+                                </label>
+                            </a>
+                        </li>
+                        <li class="d-flex">
+                            <a class="full-width d-flex d-flex-h-center"
+                                data-ng-class="{'active': skuRetailCtrl.reviewScreen }">
+                                <label class="rclabel m-0 d-flex d-flex-v-center">
+                                    <span class="f-15 step-count"> 4. </span>
+                                    <span class="f-15 step-description m-l-5 text-nowrap">Publish</span>
+                                </label>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+                <div class="m-t-10 m-b-10 p-0 d-flex d-flex-h-center d-flex-v-center full-width"
+                    ng-if="skuRetailCtrl.showCopyRetailForm">
+                    <ol class="breadcrumb m-b-0 p-l-0 rcbreadcrumb">
+                        <li>
+                            <a data-ng-class="{'active':true}">
+                                <label class="rclabel m-0 d-flex d-flex-v-center">
+                                    <span class="f-15 step-count"> 1. </span>
+                                    <span class="f-15 step-description m-l-5">Copy Retails</span>
+                                </label>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Clone Retails Start -->
+            <div data-ng-if="skuRetailCtrl.showCopyRetailForm">
+                <div class="col-lg-12 m-t-20">
+                    <div class="rcpscrollbar o-auto" ng-if="!retailCtrl.retailPublish">
+                        <ng-form name="skuRetailCtrl.copy_retail_form" role="form" novalidate="novalidate"
+                            valdr-type='RULES-SKU-RETAIL'>
+                            <div class="col-lg-12 p-0" data-ng-init="skuRetailCtrl.fetchRetailRuleGroups()">
+                                <div class="col-lg-12 p-10 form-group bgm-white"
+                                    data-ng-if="skuRetailCtrl.showCopyRetailForm">
+                                    <div class="col-xs-12 p-0 rc-alert rc-alert-type-info m-b-10" aria-hidden="false"
+                                        role="alert">
+                                        <div class="col-xs-12 p-5 d-flex">
+                                            <span class="text-danger zmdi zmdi-alert-polygon" style="font-size:35px"
+                                                title="Maintain Document" title-direction="right" fixed-position="true">
+                                            </span>
+                                            <div style="line-height: 1.7; margin-left: -10px;">
+                                                <ul>
+                                                    <div class="f-14 f-700 text-info">Note</div>
+                                                    <li>
+                                                        Maximum Retails <strong>99999.99</strong> will be copied.
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.existing_retail.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.existing_retail.$valid">* </span>
+                                        <label>Select Existing Retail Date</label>
+                                        <select name="existing_retail" class="form-control select-component input-sm"
+                                            ng-model="skuRetailCtrl.retailHead.exisiting_retail"
+                                            data-ng-init="skuRetailCtrl.getPriceTypesBySkuAndDate(skuRetailCtrl.retail.sku_id,skuRetailCtrl.retailHead.exisiting_retail);"
+                                            ng-options="retail_date.effective_date as (retail_date.effective_date| FormatDate) for retail_date in skuRetailCtrl.retail_dates"
+                                            required
+                                            data-ng-change="skuRetailCtrl.disableRetailProceed();skuRetailCtrl.getPriceTypesBySkuAndDate(skuRetailCtrl.retail.sku_id,skuRetailCtrl.retailHead.exisiting_retail);">
+                                            <option value="" disabled>Select Existing Retail</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-10 form-group bgm-white">
+                                    <div class="form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.price_type.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.price_type.$valid">* </span>
+                                        <label>Price Types</label>
+                                        <multiselect class="multiselect" name="price_type" id="price_type"
+                                            data-ng-init="skuRetailCtrl.focusCopyRetailField();"
+                                            ng-model="skuRetailCtrl.retailHead.price_type_ids"
+                                            options="p.id as p.name for p in skuRetailCtrl.sku_retail_price_type"
+                                            header="Select Price Type" selected-header="options selected"
+                                            multiple="true" required ng-click="skuRetailCtrl.copyRetailToPriceTypes()">
+                                            <!-- <div class="checkbox rclabel col-xs-12 m-t-5 m-b-5" ng-repeat="price_type in skuRetailCtrl.price_types|orderBy:['-is_default','id']">
+                                            <label> {{price_type.name}}
+                                                <input id="is_copy_price_type" type="checkbox" hidden="hidden" ng-model="price_type.isChecked" ng-true-value="1" ng-click="skuRetailCtrl.copyRetailToPriceTypes(price_type)"
+                                                    ng-false-value="0">
+                                                <i class="input-helper"></i>
+                                            </label>
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-10">
+                                    <div class="form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.retail_change_reason_type.$invalid">*
+                                        </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.retail_change_reason_type.$valid">*
+                                        </span>
+                                        <label>Price Change Type</label>
+                                        <select name="retail_change_reason_type"
+                                            class="form-control select-component input-sm"
+                                            ng-model="skuRetailCtrl.retailHead.reason_type_id"
+                                            ng-options="p.id as p.reason_type for p in skuRetailCtrl.retail_reason_types"
+                                            data-ng-change="skuRetailCtrl.filterRetailReason();" required>
+                                            <option value="" disabled>Select Price Change Type</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-10" ng-if="skuRetailCtrl.retailHead.reason_type_id">
+                                    <div class="form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.retail_change_reason.$invalid">*
+                                        </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.retail_change_reason.$valid">*
+                                        </span>
+                                        <label>Price Change Reason</label>
+                                        <select name="retail_change_reason"
+                                            class="form-control select-component input-sm"
+                                            ng-model="skuRetailCtrl.retailHead.reason_id"
+                                            ng-options="p.id as p.name for p in skuRetailCtrl.retail_filtered_reasons"
+                                            required>
+                                            <option value="" disabled>Select Price Change Reason</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-10">
+                                    <div class="form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.effective_date.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.effective_date.$valid">* </span>
+                                        <label>Start Date</label>
+                                        <input type="text" name="effective_date" id="effective_date"
+                                            class="form-control input-sm rcp-mydatepicker"
+                                            ng-model="skuRetailCtrl.retailHead.effective_date"
+                                            ui-mask="{{ui_date_mask}}" mydatepicker model-view-value="true"
+                                            data-ng-change="skuRetailCtrl.disableRetailProceed();skuRetailCtrl.ValidationFromTo();"
+                                            is-effective-date="false" required>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-10" ng-if="skuRetailCtrl.retailHead.reason_type_id == 2">
+                                    <div class="form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.end_date.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.end_date.$valid">* </span>
+                                        <label>End Date</label>
+                                        <input type="text" id="end_date" name="end_date"
+                                            class="form-control input-sm rcp-mydatepicker"
+                                            ng-model="skuRetailCtrl.retailHead.end_date" ui-mask="{{ui_date_mask}}"
+                                            mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                            is-effective-date="false"
+                                            start-date="skuRetailCtrl.retailHead.effective_date"
+                                            data-ng-change="skuRetailCtrl.ValidationFromTo();">
+                                        <span class="validation-error-message"
+                                            data-ng-if="skuRetailCtrl.ValidationError">
+                                            {{skuRetailCtrl.ValidationError}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-10 form-group bgm-white"
+                                    data-ng-if="skuRetailCtrl.showCopyRetailForm">
+                                    <div class="col-lg-12 p-0 m-b-30 form-group">
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.price_class.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.price_class.$valid">* </span>
+                                        <label>Apply to</label>
+                                        <select class="form-control select-component input-sm" name="price_class"
+                                            ng-model="skuRetailCtrl.retailHead.applyTo"
+                                            ng-options="each as each.price_class for each in skuRetailCtrl.price_groups"
+                                            data-ng-change="skuRetailCtrl.disableRetailProceed();">
+                                            <option value="">All Pricing Class</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-12 p-0 m-b-30 form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.method.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.method.$valid">* </span>
+                                        <label>Entry Method</label>
+                                        <div class="resetbtn fa fa-times-circle f-16" title="Reset Entry Method"
+                                            style="width:3%; float:right;"
+                                            data-ng-click="skuRetailCtrl.retailHead.method = null; skuRetailCtrl.retailHead.percentNumber = null">
+                                        </div>
+                                        <div class="col-lg-12 p-0 form-group m-b-0 d-flex">
+                                            <!-- <label class="radio radio-inline">
+                                                <input type="radio" name="method" ng-model="skuRetailCtrl.retailHead.method" value="manual" checked="">
+                                                <i class="input-helper"></i> Manual
+                                            </label> -->
+                                            <label class="align-items-center d-flex m-r-20">
+                                                <input type="radio" name="method" class="m-t-0"
+                                                    ng-model="skuRetailCtrl.retailHead.method" value="off">
+                                                <i class="input-helper"></i> Decrease Percentage
+                                            </label>
+                                            <label class="align-items-center d-flex">
+                                                <input type="radio" name="method" class="m-t-0"
+                                                    ng-model="skuRetailCtrl.retailHead.method" value="inc">
+                                                <i class="input-helper"></i> Increase Percentage
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 p-0 form-group" valdr-form-group
+                                        data-ng-if="skuRetailCtrl.retailHead.method.length">
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.percentage.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.percentage.$valid">* </span>
+                                        <label>Percent </label>
+                                        <input type="number" name="percentage" min="1" max="100" id="percentage"
+                                            class="form-control input-sm" required
+                                            ng-model="skuRetailCtrl.retailHead.percentNumber" />
+                                        <span class="text-danger"
+                                            ng-if="skuRetailCtrl.copy_retail_form.percentage.$error.min||skuRetailCtrl.copy_retail_form.percentage.$error.max">Percentage
+                                            value can be between 1 to 100.</span>
+                                    </div>
+                                    <div class="col-lg-12 p-0 form-group">
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.rule_group_id.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.copy_retail_form.rule_group_id.$valid">* </span>
+                                        <label>Rounding Rule</label>
+                                        <div class="d-flex">
+                                            <select name="rule_group_id" id="rule_group_id"
+                                                class="form-control select-component input-sm"
+                                                ng-options="each.id as each.rule_group for each in skuRetailCtrl.roundingRuleGroups"
+                                                ng-model="skuRetailCtrl.retailHead.rule_group_id">
+                                                <option value="">None</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12"
+                                    data-ng-show="skuRetailCtrl.message && skuRetailCtrl.showCopyRetailForm">
+                                    <div class="alert alert-success alert-dismissible">
+                                        {{skuRetailCtrl.message}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 p-0 form-group pull-right">
+                                    <button data-ng-if="skuRetailCtrl.showCopyRetailForm" type="button"
+                                        class="btn btn-success pull-right" id="delete_btn"
+                                        ng-click="skuRetailCtrl.copyRetail();skuRetailCtrl.focusDoneCopyRetail();"
+                                        data-ng-disabled="skuRetailCtrl.copy_retail_form.$invalid">
+                                        <strong>Save Retails</strong>
+                                    </button>
+                                </div>
+                                <div class="col-xs-12 p-0">
+                                    <div data-ng-show="skuRetailCtrl.retail_error_message"
+                                        class="alert alert-danger alert-dismissable">
+                                        <button type="button" class="close"
+                                            data-ng-click="skuRetailCtrl.retail_error_message = null"
+                                            aria-hidden="true">&times;</button>{{skuRetailCtrl.retail_error_message}}
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+            </div>
+            <!-- Clone Retails End -->
+
+            <!-- Create New Retails Start -->
+            <div data-ng-if="skuRetailCtrl.isParameterSetupForm">
+                <div class="col-lg-12 m-t-10">
+                    <div class="rcpscrollbar o-auto" ng-if="!retailCtrl.retailPublish">
+                        <ng-form class="col-xs-12 p-0" style="margin-bottom:200px;" name="skuRetailCtrl.retail_form"
+                            data-ng-init="skuRetailCtrl.focusPriceChange();" role="form" novalidate="novalidate"
+                            valdr-type='RULES-SKU-RETAIL'>
+                            <!-- if no retails  -->
+                            <!-- <div class="col-xs-12 p-0 m-b-10">
+                                <button data-ng-if="!skuRetailCtrl.showCopyRetailForm" type="button"
+                                    class="btn btn-success pull-right" id="delete_btn"
+                                    ng-click="skuRetailCtrl.createPriceChange();"
+                                    data-ng-disabled="skuRetailCtrl.retail_form.$invalid || skuRetailCtrl.ValidationError || skuRetailCtrl.retail_error_message">
+                                    <strong>Next</strong>
+                                </button>
+                                <button data-ng-if="skuRetailCtrl.showCopyRetailForm" type="button"
+                                    class="btn btn-success pull-right" id="delete_btn"
+                                    ng-click="skuRetailCtrl.copyRetail()"
+                                    data-ng-disabled="skuRetailCtrl.retail_form.$invalid">
+                                    <strong>Save & Continue</strong>
+                                </button>
+                            </div> -->
+                            <div class="col-xs-12 p-0 form-group bgm-white">
+                                <div class="col-xs-12 p-10">
+                                    <div class="form-group">
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.retail_form.price_type.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.retail_form.price_type.$valid">* </span>
+                                        <label>Price Type</label>
+                                        <multiselect class="multiselect" name="price_type" id="price_type"
+                                            data-ng-init="" ng-model="skuRetailCtrl.retailHead.price_type_ids"
+                                            options="p.id as p.name for p in skuRetailCtrl.price_types|orderBy:['order','id']"
+                                            header="Select Price Type" selected-header="options selected"
+                                            multiple="true"
+                                            data-ng-change="skuRetailCtrl.validateBySkuAndDate(skuRetailCtrl.retailHead); skuRetailCtrl.ValidationFromTo();"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-10">
+                                    <div class="form-group">
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.retail_form.retail_reason_type.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.retail_form.retail_reason_type.$valid">* </span>
+                                        <label>Price Change Type</label>
+                                        <select name="retail_reason_type" id="retail_reason_type"
+                                            class="form-control select-component input-sm"
+                                            ng-model="skuRetailCtrl.retailHead.reason_type_id"
+                                            ng-options="p.id as p.reason_type for p in skuRetailCtrl.retail_reason_types"
+                                            data-ng-change="skuRetailCtrl.validateBySkuAndDate(skuRetailCtrl.retailHead); skuRetailCtrl.ValidationFromTo();skuRetailCtrl.filterRetailReason();"
+                                            required>
+                                            <option value="" disabled>Select Price Change Type</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-10" ng-if="skuRetailCtrl.retailHead.reason_type_id">
+                                    <div class="form-group">
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.retail_form.retail_reason.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.retail_form.retail_reason.$valid">* </span>
+                                        <label>Price Change Reason</label>
+                                        <select name="retail_reason" class="form-control select-component input-sm"
+                                            ng-model="skuRetailCtrl.retailHead.reason_id"
+                                            ng-options="p.id as p.name for p in skuRetailCtrl.retail_filtered_reasons"
+                                            data-ng-change="skuRetailCtrl.ValidationFromTo();skuRetailCtrl.filterRetailReason();"
+                                            required>
+                                            <option value="" disabled>Select Price Change Reason</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-10">
+                                    <div class="form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.retail_form.effective_date.$invalid">* </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.retail_form.effective_date.$valid">* </span>
+                                        <label>Start Date</label>
+                                        <input type="text" name="effective_date" id="effective_date"
+                                            class="form-control input-sm rcp-mydatepicker"
+                                            ng-model="skuRetailCtrl.retailHead.effective_date"
+                                            ui-mask="{{ui_date_mask}}" mydatepicker model-view-value="true"
+                                            data-ng-change="skuRetailCtrl.validateBySkuAndDate(skuRetailCtrl.retailHead); skuRetailCtrl.ValidationFromTo();"
+                                            is-effective-date="false">
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-10" ng-if="skuRetailCtrl.retailHead.reason_type_id == 2">
+                                    <div class="form-group" valdr-form-group>
+                                        <span style="color:red;"
+                                            ng-show="skuRetailCtrl.retail_form.end_date.$invalid || skuRetailCtrl.ValidationError">*
+                                        </span>
+                                        <span style="color:green;"
+                                            ng-show="skuRetailCtrl.retail_form.end_date.$valid && !skuRetailCtrl.ValidationError">*
+                                        </span>
+                                        <label>End Date</label>
+                                        <input type="text" id="end_date" name="end_date"
+                                            class="form-control input-sm rcp-mydatepicker"
+                                            ng-model="skuRetailCtrl.retailHead.end_date" ui-mask="{{ui_date_mask}}"
+                                            mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                            is-effective-date="false"
+                                            start-date="skuRetailCtrl.retailHead.effective_date"
+                                            data-ng-change="skuRetailCtrl.ValidationFromTo();">
+                                        <span class="validation-error-message"
+                                            data-ng-if="skuRetailCtrl.ValidationError">
+                                            {{skuRetailCtrl.ValidationError}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 p-0"
+                                data-ng-show="skuRetailCtrl.message && skuRetailCtrl.showCopyRetailForm">
+                                <div class="alert alert-success alert-dismissible">
+                                    {{skuRetailCtrl.message}}
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 m-b-10">
+                                <button data-ng-if="!skuRetailCtrl.showCopyRetailForm" type="button"
+                                    class="btn btn-success pull-right" id="delete_btn"
+                                    ng-click="skuRetailCtrl.createPriceChange();"
+                                    data-ng-disabled="skuRetailCtrl.retail_form.$invalid || skuRetailCtrl.ValidationError || skuRetailCtrl.retail_error_message">
+                                    <strong>Next</strong>
+                                </button>
+                                <button data-ng-if="skuRetailCtrl.showCopyRetailForm" type="button"
+                                    class="btn btn-success pull-right" id="delete_btn"
+                                    ng-click="skuRetailCtrl.copyRetail()"
+                                    data-ng-disabled="skuRetailCtrl.retail_form.$invalid">
+                                    <strong>Save & Continue</strong>
+                                </button>
+                            </div>
+
+                            <div class="col-xs-12 p-0">
+                                <div class="col-lg-12 col-xs-12 maintenanceworkspace box-shadow-none"
+                                    data-ng-show="skuRetailCtrl.retail_error_message">
+                                    <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false"
+                                        role="alert">
+                                        <div class="col-xs-12 d-flex p-0">
+                                            <div class="rc-alert-icon m-r-10">
+                                                <span class="text-danger zmdi zmdi-alert-octagon ng-isolate-scope"
+                                                    style="font-size:35px" title-direction="bottom"
+                                                    fixed-position="true">
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <div class="f-15 f-700 text-danger">
+                                                    {{skuRetailCtrl.retail_error_message}}</div>
+                                                <div>
+                                                    <span class="c-black">{{skuRetailCtrl.retail_info_message}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <button type="button" class="close"
+                                                    data-ng-click="skuRetailCtrl.retail_error_message = null"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+            </div>
+            <!-- Create New Retails End -->
+
+            <!-- Section for Adding are updating the retails for price groups or choice etc Start -->
+            <div class="col-xs-12" data-ng-if="skuRetailCtrl.isNewRetailForm">
+
+                <!-- <div class="col-xs-12 p-0 content-region"> -->
+                <!-- <div class="col-xs-12 p-0 m-b-10 m-t-10 d-flex justify-content-end align-items-center">
+                    <div data-ng-if="skuRetailCtrl.isRetail === false" class="m-r-10">
+                        <div class="align-items-center d-flex p-0">
+                            <div class="align-items-center d-flex text-danger">
+                                <div>{{skuRetailCtrl.retailErrorMessage}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-success pull-right" id="retail_next" name="retail_next" ng-disabled="skuRetailCtrl.isRetailsValid===false"
+                            ng-click="skuRetailCtrl.checkIfRetails()">Next</button>
+                        <button data-ng-if="!skuRetailCtrl.showCopyRetailForm" class="btn btn-cancel pull-right m-r-5"
+                            ng-click="skuRetailCtrl.isParameterSetupForm=true;skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.reviewScreen=false;skuRetailCtrl.isRetailRoundingForm=false;skuRetailCtrl.isApplied=false;skuRetailCtrl.focusTypeNext();">
+                            Previous
+                        </button>
+                    </div>
+                </div> -->
+                <div class="col-xs-12 p-0 m-b-20 m-t-20">
+                    <div data-ng-repeat="type in skuRetailCtrl.price_types|orderBy:['-is_default','id']"
+                        data-ng-if="skuRetailCtrl.retailHead.price_type_ids.includes(type.id)">
+                        <div class="col-xs-12 p-0 o-auto rcpscrollbar m-b-10">
+                            <div class="col-xs-12 p-5 header-section d-flex d-flex-v-center">
+                                <div class="col-xs-4 p-0 right-section">
+                                    <span>Price type :</span>
+                                    <span class="m-l-5 f-700" data-ng-bind-html="type.name"></span>
+                                </div>
+                                <div class="col-xs-8 d-flex p-0 right-section">
+                                    <div class="m-r-10">
+                                        <span>Start date : </span>
+                                        <span class="f-700 m-l-5 m-r-5"
+                                            data-ng-bind-html="skuRetailCtrl.retail_effective_date"></span>
+                                    </div>
+                                    <div ng-if="skuRetailCtrl.retailHead.reason_type_id == 2">
+                                        <span>End date : </span>
+                                        <span class="m-l-5 f-700"
+                                            data-ng-bind-html="skuRetailCtrl.retail_end_date"></span>
+                                    </div>
+                                    <div style="position:absolute; right:0;" title="Delete Type"
+                                        data-ng-if="type.id != 1 && skuRetailCtrl.retailHead.price_type_ids.length > 1">
+                                        <span class="f-13 f-300 cursor-pointer"
+                                            ng-click="skuRetailCtrl.deletePriceType(type);"><i
+                                                class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Retail Price Groups -->
+                            <div class="col-xs-12 p-0">
+                                <div class="col-xs-12 box p-0" data-ng-if="type.sku_price_groups.length">
+                                    <div class="col-xs-12 p-5 data-division"
+                                        style="border-top: 0px solid;border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;align-items: center;"
+                                        data-ng-repeat="pg in type.sku_price_groups">
+                                        <div class="col-xs-5">
+                                            <span class="f-700 m-l-15 c-black"
+                                                style="color: #a99141;">{{pg.price_class}} </span>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <span class="f-700" style="color: #5ac94d;">
+                                                <input type="text" currency="2" decimals="2" currency-point="."
+                                                    maxlength="8" class="form-control retail-text"
+                                                    data-ng-model="type.retail[$index]"
+                                                    data-ng-readonly="skuRetailCtrl.isCopyRetail" placeholder="0.00"
+                                                    min="0"
+                                                    data-ng-change="skuRetailCtrl.applyCopyActionItem($index,pg,type)"
+                                                    data-ng-init="pg.oldRetailValue=0" id="retailIn">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-2" data-ng-if="skuRetailCtrl.isCopyRetail">
+                                            <span class="f-700" style="color: #5ac94d;">
+                                                <input type="text" min="0" currency="2" decimals="2" currency-point="."
+                                                    maxlength="8" class="form-control retail-text"
+                                                    ng-model="pg.new_retail" placeholder="0.00">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-2"
+                                            data-ng-if="$index==0 && type.sku_price_groups.length > 0 && type.retail[$index]">
+                                            <span data-ng-if="type.gross_margin" title="Gross Margin">(GM =
+                                                {{type.gross_margin}})</span>
+                                            <span data-ng-if="type.percentage_savings" title="Percentage Savings">(PS =
+                                                {{type.percentage_savings}})</span>
+                                        </div>
+                                        <div class="col-xs-3 cursor-pointer"
+                                            data-ng-if="$index==0 && type.sku_price_groups.length > 1 && type.isRetailValueChanged && type.retail[$index] && !skuRetailCtrl.retailErrorMessage">
+                                            <span class="f-12 f-700" style="color: #5ac94d;">
+                                                <a
+                                                    data-ng-click="skuRetailCtrl.applyToRespectiveClasses(pg,type);type.isRetailValueChanged=false;">
+                                                    Generate other pricing classifications</a>
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-5" ng-if="type.copyRule && !type.isRetailValueChanged"
+                                            ng-show="!$first">
+                                            <span class="f-12" data-ng-bind-html="type.copyRule"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 text-center text-info m-t-30 p-t-30"
+                                        data-ng-if="!skuRetailCtrl.sku_price_groups.length">
+                                        No price group for this item type
+                                    </div>
+                                    <div class="col-xs-12 p-0"
+                                        data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()==='mto'">
+                                        <div data-ng-if="type.mto_types_retails.length"
+                                            class="col-xs-12 p-5 d-flex d-flex-v-center" style="background: #b4cad8;">
+                                            <span>Options</span>
+                                        </div>
+                                        <div data-ng-if="!type.mto_types_retails.length" class="col-xs-12 p-5"
+                                            style="background: #f6fbff;">
+                                            <span class="fa fa-info m-r-10"></span>
+                                            <span>Options not available</span>
+                                        </div>
+                                        <div class="col-lg-12 p-0 data-division options"
+                                            data-ng-repeat="mto_type in type.mto_types_retails">
+                                            <div class="col-xs-12 p-5" style="background-color: #f6fbff !important;
+                                            border-bottom: 1px solid #e5e7e7;">
+                                                <span class="f-700">{{mto_type.type_desc}}</span>
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-xs-12 p-0">
+                                                    <!-- start price groups -->
+                                                    <div class="col-xs-12 p-0 option-data-division"
+                                                        data-ng-repeat="price_group in mto_type.subPriceGroups | orderBy: 'price_group_desc'">
+                                                        <div style="display:flex;align-items:center;justify-content:space-between; background: linear-gradient(#ffffff,#e8e8e8);
+                                                border-bottom: 1px solid;padding:7px;">
+                                                            <span
+                                                                class="c-black">{{price_group.price_group_desc}}</span>
+                                                            <span
+                                                                class="c-firebrick">{{price_group.mto_description}}</span>
+                                                        </div>
+                                                        <div class="col-xs-12 p-5" style="border-top: 0px solid;border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;
+                                                align-items: center;"
+                                                            data-ng-repeat="retail_pg in price_group.price_groups"
+                                                            ng-init="retail_pg.copyRule=null">
+                                                            <div class="col-xs-5">
+                                                                <span
+                                                                    class="f-700 m-l-15 c-black">{{retail_pg.price_class}}</span>
+                                                            </div>
+                                                            <div class="col-xs-2">
+                                                                <span class="f-700" style="color: #5ac94d;">
+                                                                    <input type="text" currency="2" decimals="2"
+                                                                        maxlength="8" currency-point="."
+                                                                        class="form-control retail-text"
+                                                                        ng-model="price_group.retail[$index]"
+                                                                        data-ng-readonly="skuRetailCtrl.isCopyRetail"
+                                                                        placeholder="0.00" min="0"
+                                                                        data-ng-change="skuRetailCtrl.applyCopyActionItem($index,retail_pg, price_group)"
+                                                                        data-ng-init="retail_pg.oldRetailValue=0"
+                                                                        id="retailIn"
+                                                                        ng-blur="retail_pg.oldRetailValue=price_group.retail[$index]">
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-xs-2"
+                                                                data-ng-if="skuRetailCtrl.isCopyRetail">
+                                                                <span class="f-700 pull-right" style="color: #5ac94d;">
+                                                                    <input type="text" currency="2" decimals="2"
+                                                                        currency-point="." maxlength="8"
+                                                                        class="form-control retail-text"
+                                                                        ng-model="retail_pg.new_retail"
+                                                                        placeholder="0.00">
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-xs-5 cursor-pointer"
+                                                                data-ng-if="$index==0 &&price_group.price_groups.length>1&& price_group.retail[$index] &&price_group.isRetailValueChanged">
+                                                                <span class="f-700" style="color: #5ac94d;">
+                                                                    <a
+                                                                        data-ng-click="skuRetailCtrl.applyToRespectiveClasses(price_group.price_groups,price_group);price_group.isRetailValueChanged=false;">
+                                                                        Generate other pricing classifications</a>
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-xs-5" ng-if="price_group.copyRule"
+                                                                ng-show="!$first">
+                                                                <span class="f-12"
+                                                                    data-ng-bind-html="price_group.copyRule"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- start choices -->
+                                                    <div class="col-xs-12 p-0 option-data-division"
+                                                        data-ng-repeat="choice in mto_type.subByChoices">
+                                                        <div
+                                                            style="display:flex;align-items:center;justify-content:space-between;background: linear-gradient(#ffffff,#e8e8e8);padding:5px;">
+                                                            <span class="c-black">{{choice.choice_desc}}</span>
+                                                            <span class="c-firebrick">{{choice.mto_description}}</span>
+                                                        </div>
+                                                        <div class="col-xs-12 p-5"
+                                                            style="border-top: 0px solid;
+                                                border-bottom: 1px solid #ececec; border-left: none;border-right: none;display: flex;align-items: center;"
+                                                            data-ng-repeat="retail_pg in choice.price_groups">
+                                                            <div class="col-xs-5">
+                                                                <span
+                                                                    class="f-700 m-l-15 c-black">{{retail_pg.price_class}}</span>
+                                                            </div>
+                                                            <div class="col-xs-2">
+                                                                <span class="f-700" style="color: #5ac94d;">
+                                                                    <input type="text" currency="2" decimals="2"
+                                                                        currency-point="." maxlength="8"
+                                                                        class="form-control retail-text"
+                                                                        ng-model="choice.retail[$index]"
+                                                                        data-ng-readonly="skuRetailCtrl.isCopyRetail"
+                                                                        placeholder="0.00" min="0"
+                                                                        data-ng-change="skuRetailCtrl.applyCopyActionItem($index,retail_pg,choice)"
+                                                                        data-ng-init="retail_pg.oldRetailValue=0"
+                                                                        id="retailIn"
+                                                                        ng-blur="retail_pg.oldRetailValue=choice.retail[$index]">
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-xs-2"
+                                                                data-ng-if="skuRetailCtrl.isCopyRetail">
+                                                                <span class="f-700 pull-right" style="color: #5ac94d;">
+                                                                    <input type="text" currency="2" decimals="2"
+                                                                        currency-point="." maxlength="8"
+                                                                        class="form-control retail-text"
+                                                                        ng-model="retail_pg.new_retail"
+                                                                        placeholder="0.00">
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-xs-5 cursor-pointer"
+                                                                data-ng-if="$index==0&&choice.price_groups.length>1 && choice.retail[$index] && choice.isRetailValueChanged">
+                                                                <span class="f-700" style="color: #5ac94d;">
+                                                                    <a
+                                                                        data-ng-click="skuRetailCtrl.applyToRespectiveClasses(choice.price_groups,choice);choice.isRetailValueChanged=false;">
+                                                                        Generate other pricing classifications</a>
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-xs-5" ng-if="choice.copyRule">
+                                                                <span class="f-12"
+                                                                    data-ng-bind-html="choice.copyRule"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0 m-b-10 m-t-10 d-flex justify-content-end align-items-center">
+                    <div data-ng-if="skuRetailCtrl.isRetail === false || skuRetailCtrl.retailErrorMessage"
+                        class="m-r-10">
+                        <div class="align-items-center d-flex p-0">
+                            <div class="align-items-center d-flex text-danger">
+                                <div>{{skuRetailCtrl.retailErrorMessage}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button data-ng-if="!skuRetailCtrl.showCopyRetailForm" class="btn btn-cancel m-r-5"
+                            ng-click="skuRetailCtrl.isParameterSetupForm=true;skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.reviewScreen=false;skuRetailCtrl.isRetailRoundingForm=false;skuRetailCtrl.isApplied=false;skuRetailCtrl.focusTypeNext();">
+                            Previous
+                        </button>
+                        <button class="btn btn-success pull-right" id="retail_next" name="retail_next"
+                            ng-disabled="skuRetailCtrl.isRetailsValid===false"
+                            ng-click="skuRetailCtrl.checkIfRetails()">Next</button>
+                        <!-- <button data-ng-if="!skuRetailCtrl.showCopyRetailForm" class="btn btn-cancel pull-right m-r-5"
+                            ng-click="skuRetailCtrl.isParameterSetupForm=true;skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.reviewScreen=false;skuRetailCtrl.isRetailRoundingForm=false;skuRetailCtrl.isApplied=false;skuRetailCtrl.focusTypeNext();">
+                            Previous
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section for Adding are PACKAGE BASE RETAILS START -->
+            <div class="col-xs-12"
+                data-ng-if="skuRetailCtrl.isPackageRetails && skuRetailCtrl.isPackageRetailForm && skuRetailCtrl.sku_detail.sku_type.toLowerCase() === 'stock' && skuRetailCtrl.showPackageRetailTab">
+                <div class="col-xs-12 p-0 m-t-10">
+                    <div class="col-xs-12 p-0 content-region">
+                        <!-- <div class="col-xs-12 p-0 m-b-10 m-t-10 d-flex justify-content-end align-items-center">
+                            <div data-ng-if="skuRetailCtrl.isRetail === false" class="m-r-10">
+                                <div class="align-items-center d-flex p-0">
+                                    <div class="align-items-center d-flex text-danger">
+                                        <div>{{skuRetailCtrl.retailErrorMessage}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-success pull-right"
+                                    ng-disabled="skuRetailCtrl.isRetailsValid===false"
+                                    ng-click="skuRetailCtrl.checkIfRetails(true)">Next</button>
+                                <button data-ng-if="!skuRetailCtrl.showCopyRetailForm"
+                                    class="btn btn-cancel pull-right m-r-5"
+                                    ng-click="skuRetailCtrl.isParameterSetupForm=true;skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.isPackageRetailForm=false;skuRetailCtrl.reviewScreen=false;skuRetailCtrl.isRetailRoundingForm=false;skuRetailCtrl.isApplied=false">
+                                    Previous
+                                </button>
+                            </div>
+                        </div> -->
+                        <div data-ng-repeat="orderAdvisor in skuRetailCtrl.OrderAdvisors">
+                            <div class="col-xs-12 p-0 text-info header-section p-5 c-white">
+                                <span>Order Advisor : </span>
+                                <span class="f-700">{{orderAdvisor.description}}</span>
+                            </div>
+                            <div data-ng-if="!orderAdvisor.isPachagesIncluded" class="col-xs-12 p-5"
+                                style="background: #f6fbff;">
+                                <span class="fa fa-info m-r-10"></span>
+                                <span>Packages are not available</span>
+                            </div>
+                            <div class="col-xs-12 p-0 m-b-10"
+                                data-ng-repeat="type in orderAdvisor.price_types | orderBy: ['-is_default','id']"
+                                data-ng-if="skuRetailCtrl.retailHead.price_type_ids.includes(type.id) && orderAdvisor.isPachagesIncluded">
+                                <div class="col-xs-12 p-0 o-auto rcpscrollbar">
+                                    <div class="col-xs-12 p-5 d-flex d-flex-v-center"
+                                        style="background: #f6fbff; border-bottom: 1px solid #e5e7e7;">
+                                        <div class="col-xs-4 p-0 right-section">
+                                            <span>Price type :</span>
+                                            <span class="m-l-5 c-bluegray f-700" data-ng-bind-html="type.name"></span>
+                                        </div>
+                                        <div class="col-xs-8 d-flex p-0 right-section">
+                                            <div class="m-r-10">
+                                                <span>Start date : </span>
+                                                <span class="m-l-5 m-r-5 f-700"
+                                                    data-ng-bind-html="skuRetailCtrl.retail_effective_date"></span>
+                                            </div>
+                                            <div ng-if="skuRetailCtrl.retailHead.reason_type_id == 2">
+                                                <span>End date : </span>
+                                                <span class="m-l-5 f-700"
+                                                    data-ng-bind-html="skuRetailCtrl.retail_end_date"></span>
+                                            </div>
+                                            <div style="position:absolute; right:0;" title="Delete Type"
+                                                data-ng-if="type.id != 1 && skuRetailCtrl.retailHead.price_type_ids.length > 1">
+                                                <span class="f-13 f-300 cursor-pointer"
+                                                    ng-click="skuRetailCtrl.deletePackagePriceType(type,orderAdvisor);"><i
+                                                        class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 p-0 rcpscrollbar"
+                                        data-ng-repeat="package in type.Packages track by package.uniqueId"
+                                        data-ng-if="orderAdvisor.included_packages.includes(package.id)">
+                                        <div class="col-xs-12 p-5 d-flex d-flex-v-center"
+                                            style="background: linear-gradient(#ffffff, #e8e8e8);">
+                                            <div class="col-xs-8 p-0 right-section">
+                                                <span>Package :</span>
+                                                <span class="c-brown m-l-5 f-700"
+                                                    data-ng-bind-html="package.description"></span>
+                                            </div>
+                                        </div>
+                                        <!-- Package Retail Price Groups -->
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-xs-12 box p-0"
+                                                data-ng-if="package.package_price_groups.length">
+                                                <div class="col-xs-12 p-5 data-division"
+                                                    style="border-top: 0px solid;border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;align-items: center;"
+                                                    data-ng-repeat="pg in package.package_price_groups track by pg.uniqueId">
+                                                    <div class="col-xs-5">
+                                                        <span class="f-700 m-l-15 c-black"
+                                                            style="color: #a99141;">{{pg.price_class}}</span>
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <span class="f-700" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2"
+                                                                currency-point="."
+                                                                name="{{package.id}}_{{pg.price_class_udd_line_id}}"
+                                                                class="form-control retail-text"
+                                                                data-ng-model="pg.retail"
+                                                                data-ng-readonly="skuRetailCtrl.isCopyRetail"
+                                                                placeholder="0.00" min="0"
+                                                                data-ng-change="skuRetailCtrl.applyCopyActionItem($index,pg, package)"
+                                                                data-ng-init="pg.oldRetailValue=0" id="retailIn"
+                                                                ng-blur="pg.oldRetailValue=pg.retail">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-2" data-ng-if="skuRetailCtrl.isCopyRetail">
+                                                        <span class="f-700" style="color: #5ac94d;">
+                                                            <input type="text" min="0" currency="2" decimals="2"
+                                                                maxlength="8" currency-point="."
+                                                                class="form-control retail-text"
+                                                                data-ng-model="pg.new_retail" placeholder="0.00">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-5 cursor-pointer"
+                                                        data-ng-if="$index==0&&package.package_price_groups.length>1&&package.isRetailValueChanged&&pg.retail">
+                                                        <span class="f-12 f-700" style="color: #5ac94d;">
+                                                            <a
+                                                                data-ng-click="skuRetailCtrl.applyToRespectiveClasses(undefined,package);pg.isRetailValueChanged=false;">
+                                                                Generate other pricing classifications</a>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-5" ng-if="pg.copyRule">
+                                                        <span class="f-12" data-ng-bind-html="pg.copyRule"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 text-center text-info m-t-30 p-t-30"
+                                                data-ng-if="!package.package_price_groups.length">
+                                                No price group packages for the selected SKU.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 text-center text-info m-t-30 p-t-30"
+                                        data-ng-if="!type.Packages||!type.Packages.length">
+                                        No packages for the selected SKU.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-0 m-b-10 m-t-10 d-flex justify-content-end align-items-center">
+                            <div data-ng-if="skuRetailCtrl.isRetail === false || skuRetailCtrl.retailErrorMessage"
+                                class="m-r-10">
+                                <div class="align-items-center d-flex p-0">
+                                    <div class="align-items-center d-flex text-danger">
+                                        <div>{{skuRetailCtrl.retailErrorMessage}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button data-ng-if="!skuRetailCtrl.showCopyRetailForm" class="btn btn-cancel m-r-5"
+                                    ng-click="skuRetailCtrl.isParameterSetupForm=true;skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.isPackageRetailForm=false;skuRetailCtrl.reviewScreen=false;skuRetailCtrl.isRetailRoundingForm=false;skuRetailCtrl.isApplied=false">
+                                    Previous
+                                </button>
+                                <button class="btn btn-success pull-right"
+                                    ng-disabled="skuRetailCtrl.isRetailsValid===false"
+                                    ng-click="skuRetailCtrl.checkIfRetails(true)">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Section for Adding are PACKAGE BASE RETAILS END -->
+
+        <!-- Section for Adding are updating the retails for price groups or choice etc End -->
+        <div class="col-xs-12" data-ng-if="skuRetailCtrl.isRetailRoundingForm">
+            <div class="col-xs-12 p-0 m-t-10">
+                <!-- <div class="col-xs-12 p-0 m-b-10">
+                    <button class="btn btn-success pull-right" id="rounding_next" name="rounding_next"
+                        ng-click="skuRetailCtrl.isRetailRoundingForm=false;skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.reviewScreen=true;">Next</button>
+                    <button class="btn btn-cancel pull-right m-r-5"
+                        ng-click="skuRetailCtrl.gotoPreviousScreen()">Previous</button>
+                </div> -->
+                <div class="col-xs-12 p-0 box">
+                    <div class="col-xs-12 p-0">
+                        <ng-form class="col-xs-12 p-0 bgm-white" role="form" name="cart_form" novalidate="novalidate"
+                            data-ng-init="skuRetailCtrl.fetchRetailRuleGroups()">
+                            <div class="bg-black-trp col-xs-12 p-10">
+                                <span class="col-xs-12 c-black f-700 p-0">Select a Rounding Rule</span>
+                            </div>
+                            <div class="d-flex d-flex-v-center p-10">
+                                <div class="col-xs-8 d-flex">
+                                    <select name="price_type" class="form-control select-component input-sm"
+                                        ng-model="skuRetailCtrl.ruleGroupId"
+                                        ng-options="each.id as each.rule_group for each in skuRetailCtrl.roundingRuleGroups">
+                                        <option value="">None</option>
+                                    </select>
+                                </div>
+                                <div class="col-xs-4 pull-right">
+                                    <div class="col-lg-12">
+                                        <button data-ng-disabled="!skuRetailCtrl.ruleGroupId || skuRetailCtrl.isApplied"
+                                            class="btn btn-primal pull-right f-700"
+                                            ng-click="skuRetailCtrl.applyRetailRules(skuRetailCtrl.ruleGroupId);">
+                                            <span data-ng-if="!skuRetailCtrl.isApplied">Apply</span>
+                                            <span data-ng-if="skuRetailCtrl.isApplied">Applied</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                    <div class="c-black col-xs-12 f-500 m-b-10 p-l-20 p-r-25"
+                        data-ng-if="skuRetailCtrl.rounding_rule_apply_msg">
+                        <div class="p-5" style="background:#b1efaa">{{skuRetailCtrl.rounding_rule_apply_msg}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0 m-b-25" data-ng-if="!skuRetailCtrl.showPackageRetailTab">
+                    <div data-ng-repeat="type in skuRetailCtrl.price_types|orderBy: ['-is_default','id']"
+                        data-ng-if="skuRetailCtrl.retailHead.price_type_ids.includes(type.id)">
+                        <div class="col-xs-12 box p-0 m-t-10 o-auto rcpscrollbar m-b-10">
+                            <div class="col-xs-12 p-0">
+                                <div class="col-xs-12 p-0 header-section d-flex d-flex-v-center">
+                                    <div class="col-xs-4 p-5 right-section">
+                                        <span>Price Type :</span>
+                                        <span class="f-700 m-l-5" data-ng-bind-html="type.name"></span>
+                                    </div>
+                                    <div class="col-xs-8 d-flex p-0 right-section">
+                                        <div class="m-r-10">
+                                            <span>Start date : </span>
+                                            <span class="f-700 m-l-5 m-r-5"
+                                                data-ng-bind-html="skuRetailCtrl.retail_effective_date"></span>
+                                        </div>
+                                        <div ng-if="skuRetailCtrl.retailHead.reason_type_id == 2">
+                                            <span>End date : </span>
+                                            <span class="f-700 m-l-5"
+                                                data-ng-bind-html="skuRetailCtrl.retail_end_date"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Retail Price Groups -->
+                                <div class="col-xs-12 p-5 data-division rounding-rules"
+                                    style="border-top: 0px solid; border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;align-items: center;"
+                                    data-ng-repeat="pg in type.sku_price_groups">
+                                    <div class="col-xs-5">
+                                        <span class="f-700 m-l-15 c-black"
+                                            style="color: #a99141;">{{pg.price_class}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span class="f-700">
+                                            <input type="text" currency="2" decimals="2" currency-point="."
+                                                maxlength="8"
+                                                class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                ng-model="type.retail[$index]" ng-readonly="true"
+                                                data-ng-readonly="skuRetailCtrl.isCopyRetail" placeholder="0.00">
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-2"></div>
+                                    <div class="col-xs-2"
+                                        data-ng-if="$index==0 && type.sku_price_groups.length > 0 && type.retail[$index]">
+                                        <span data-ng-if="type.gross_margin" title="Gross Margin">GM =
+                                            {{type.gross_margin}}</span>
+                                        <span data-ng-if="type.percentage_savings" title="Percentage Savings">PS =
+                                            {{type.percentage_savings}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0"
+                                data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()==='mto'">
+                                <div data-ng-if="type.mto_types_retails.length"
+                                    class="col-xs-12 p-5 d-flex d-flex-v-center" style="background: #b4cad8;">
+                                    <span>Options</span>
+                                </div>
+                                <div data-ng-if="!type.mto_types_retails.length" class="col-xs-12 p-5"
+                                    style="background: #f6fbff;">
+                                    <span class="fa fa-info m-r-10"></span>
+                                    <span>Options not available</span>
+                                </div>
+                                <div class="col-lg-12 p-0 data-division options rounding-rules"
+                                    data-ng-repeat="mto_type in type.mto_types_retails">
+                                    <div class="col-xs-12 p-5" style="background-color: #f6fbff !important;
+                                        border-bottom: 1px solid #e5e7e7;">
+                                        <span class="f-700">{{mto_type.type_desc}}</span>
+                                    </div>
+                                    <div class="col-xs-12 p-0">
+                                        <div class="col-xs-12 p-0">
+                                            <!-- start price groups -->
+                                            <div class="col-xs-12 p-0 option-data-division"
+                                                data-ng-repeat="price_group in mto_type.subPriceGroups | orderBy: 'price_group_desc'">
+                                                <div style="display:flex;align-items:center;justify-content:space-between; background: linear-gradient(#ffffff,#e8e8e8);
+                                                        border-bottom: 1px solid;padding:7px;">
+                                                    <span class="c-black">{{price_group.price_group_desc}}</span>
+                                                    <span class="c-firebrick">{{price_group.mto_description}}</span>
+                                                </div>
+                                                <div class="col-xs-12 p-5" style="border-top: 0px solid;border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;
+                                                        align-items: center;"
+                                                    data-ng-repeat="retail_pg in price_group.price_groups">
+                                                    <div class="col-xs-5">
+                                                        <span
+                                                            class="f-700 m-l-15 c-black">{{retail_pg.price_class}}</span>
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <span class="f-700" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2"
+                                                                currency-point="."
+                                                                class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                                ng-model="price_group.retail[$index]"
+                                                                data-ng-readonly="true" placeholder="0.00">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <span data-ng-if="skuRetailCtrl.isCopyRetail"
+                                                            class="f-700 pull-right" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2"
+                                                                currency-point="." class="form-control retail-text"
+                                                                ng-model="retail_pg.new_retail" placeholder="0.00">
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- start choices -->
+                                            <div class="col-xs-12 p-0 option-data-division"
+                                                data-ng-repeat="choice in mto_type.subByChoices">
+                                                <div
+                                                    style="display:flex;align-items:center;justify-content:space-between;background: linear-gradient(#ffffff,#e8e8e8);padding:5px;">
+                                                    <span class="c-black">{{choice.choice_desc}}</span>
+                                                    <span class="c-firebrick">{{choice.mto_description}}</span>
+                                                </div>
+                                                <div class="col-xs-12 p-5"
+                                                    style="border-top: 0px solid;border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;align-items: center;"
+                                                    data-ng-repeat="retail_pg in choice.price_groups">
+                                                    <div class="col-xs-5">
+                                                        <span
+                                                            class="f-700 m-l-15 c-black">{{retail_pg.price_class}}</span>
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <span class="f-700" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2"
+                                                                currency-point="."
+                                                                class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                                ng-model="choice.retail[$index]" data-ng-readonly="true"
+                                                                placeholder="0.00">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <span data-ng-if="skuRetailCtrl.isCopyRetail"
+                                                            class="f-700 pull-right" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2"
+                                                                currency-point="." class="form-control retail-text"
+                                                                ng-model="retail_pg.new_retail" placeholder="0.00">
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0 m-b-25" data-ng-if="skuRetailCtrl.showPackageRetailTab">
+                    <div data-ng-repeat="orderAdvisor in skuRetailCtrl.OrderAdvisors">
+                        <div class="col-xs-12 p-0 text-info header-section p-5 c-white">
+                            <span>Order Advisor : </span>
+                            <span class="f-700">{{orderAdvisor.description}}</span>
+                        </div>
+                        <div data-ng-if="!orderAdvisor.isPachagesIncluded" class="col-xs-12 p-5"
+                            style="background: #f6fbff;">
+                            <span class="fa fa-info m-r-10"></span>
+                            <span>Packages are not available</span>
+                        </div>
+                        <div class="col-xs-12 p-0 m-b-10"
+                            data-ng-repeat="type in orderAdvisor.price_types | orderBy: ['-is_default','id']"
+                            data-ng-if="skuRetailCtrl.retailHead.price_type_ids.includes(type.id) && orderAdvisor.isPachagesIncluded">
+                            <div class="col-xs-12 p-0 o-auto rcpscrollbar">
+                                <div class="col-xs-12 p-5 d-flex d-flex-v-center"
+                                    style="background: #f6fbff; border-bottom: 1px solid #e5e7e7;">
+                                    <div class="col-xs-4 p-0 right-section">
+                                        <span>Price type :</span>
+                                        <span class="m-l-5 c-bluegray f-700" data-ng-bind-html="type.name"></span>
+                                    </div>
+                                    <div class="col-xs-8 d-flex p-0 right-section">
+                                        <div class="m-r-10">
+                                            <span>Start date : </span>
+                                            <span class="m-l-5 m-r-5 f-700"
+                                                data-ng-bind-html="skuRetailCtrl.retail_effective_date"></span>
+                                        </div>
+                                        <div ng-if="skuRetailCtrl.retailHead.reason_type_id == 2">
+                                            <span>End date : </span>
+                                            <span class="m-l-5 f-700"
+                                                data-ng-bind-html="skuRetailCtrl.retail_end_date"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-0 rcpscrollbar"
+                                    data-ng-repeat="package in type.Packages track by package.uniqueId"
+                                    data-ng-if="orderAdvisor.included_packages.includes(package.id)">
+                                    <div class="col-xs-12 p-5 d-flex d-flex-v-center"
+                                        style="background: linear-gradient(#ffffff, #e8e8e8);">
+                                        <div class="col-xs-8 p-0 right-section">
+                                            <span>Package :</span>
+                                            <span class="c-brown m-l-5 f-700"
+                                                data-ng-bind-html="package.description"></span>
+                                        </div>
+                                    </div>
+                                    <!-- Package Retail Price Groups -->
+                                    <div class="col-xs-12 p-0">
+                                        <div class="col-xs-12 box p-0" data-ng-if="package.package_price_groups.length">
+                                            <div class="col-xs-12 p-5 data-division"
+                                                style="border-top: 0px solid;border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;align-items: center;"
+                                                data-ng-repeat="pg in package.package_price_groups track by pg.uniqueId">
+                                                <div class="col-xs-5">
+                                                    <span class="f-700 m-l-15 c-black"
+                                                        style="color: #a99141;">{{pg.price_class}}</span>
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <span class="f-700" style="color: #5ac94d;">
+                                                        <input type="text" currency="2" decimals="2" currency-point="."
+                                                            name="{{package.id}}_{{pg.price_class_udd_line_id}}"
+                                                            class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                            data-ng-model="pg.retail" data-ng-readonly="true"
+                                                            placeholder="0.00" min="0"
+                                                            data-ng-change="skuRetailCtrl.applyCopyActionItem($index,pg, package)"
+                                                            data-ng-init="pg.oldRetailValue=0" id="retailIn"
+                                                            ng-blur="pg.oldRetailValue=pg.retail">
+                                                    </span>
+                                                </div>
+                                                <div class="col-xs-2" data-ng-if="skuRetailCtrl.isCopyRetail">
+                                                    <span class="f-700" style="color: #5ac94d;">
+                                                        <input type="text" min="0" currency="2" decimals="2"
+                                                            currency-point="."
+                                                            class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                            data-ng-readonly="true" data-ng-model="pg.new_retail"
+                                                            placeholder="0.00">
+                                                    </span>
+                                                </div>
+                                                <div class="col-xs-5" ng-if="pg.copyRule">
+                                                    <span class="f-12" data-ng-bind-html="pg.copyRule"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 text-center text-info m-t-30 p-t-30"
+                                            data-ng-if="!package.package_price_groups.length">
+                                            No price group packages for the selected SKU.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 text-center text-info m-t-30 p-t-30"
+                                    data-ng-if="!type.Packages||!type.Packages.length">
+                                    No packages for the selected SKU.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 d-flex justify-content-end m-b-10 p-0">
+                    <button class="btn btn-cancel m-r-5" ng-click="skuRetailCtrl.gotoPreviousScreen()">Previous</button>
+                    <button class="btn btn-success pull-right" id="rounding_next" name="rounding_next"
+                        ng-click="skuRetailCtrl.isRetailRoundingForm=false;skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.reviewScreen=true;">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12" data-ng-if="skuRetailCtrl.reviewScreen">
+            <!-- <div class="col-xs-12 m-t-10 m-b-10">
+                <button class="btn btn-cancel pull-right"
+                    ng-click="skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.isRetailRoundingForm = true;skuRetailCtrl.reviewScreen=false;skuRetailCtrl.focusNextRounding();">
+                    Previous
+                </button>
+            </div> -->
+
+            <div class="col-xs-12 p-0 d-flex border m-b-15 p-l-10">
+                <div class="d-flex d-flex-v-center inheritheight">
+                    <img class="updatesuccessicon" src="./img/success_tick.svg" />
+                </div>
+                <div class="d-flex d-flex-h-center d-flex-v-center inheritheight"
+                    ng-class="{'col-xs-5 pull-right':skuRetailCtrl.isexpand === true}" style="flex-direction: column;">
+                    <label class="f-23">Almost there!! Go ahead and save retail</label>
+                    <div class="p-10" data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase() !== 'mto'">
+                        <button type="button" class="btn btn-success m-l-5 btn-lg pull-right f-16" id="delete_btn"
+                            data-ng-disabled="skuRetailCtrl.isProcessing"
+                            ng-click="skuRetailCtrl.saveSKURetails();skuRetailCtrl.focusThreedotMenu();skuRetailCtrl.focusSetRetail()">
+                            <strong>{{skuRetailCtrl.btnText}}</strong>
+                        </button>
+                    </div>
+                    <div class="p-10 pull-right" data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase() === 'mto'">
+                        <button type="button" class="btn btn-success m-l-5 btn-lg pull-right f-16" id="delete_btn"
+                            data-ng-disabled="skuRetailCtrl.isProcessing" ng-click="skuRetailCtrl.saveMTOSKURetails();">
+                            <strong>{{skuRetailCtrl.btnText}}</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 p-0 m-b-25" data-ng-if="!skuRetailCtrl.showPackageRetailTab">
+                <div data-ng-repeat="type in skuRetailCtrl.price_types|orderBy: ['-is_default','id']"
+                    data-ng-if="skuRetailCtrl.retailHead.price_type_ids.includes(type.id)">
+                    <div class="col-xs-12 p-0 o-auto rcpscrollbar m-b-10">
+                        <div class="col-xs-12 p-5 header-section d-flex d-flex-v-center">
+                            <div class="col-xs-4 p-0 right-section">
+                                <span>Price type :</span>
+                                <span class="f-700 m-l-5" data-ng-bind-html="type.name"></span>
+                            </div>
+                            <div class="col-xs-8 d-flex p-0 right-section">
+                                <div class="m-r-10">
+                                    <span>Start date : </span>
+                                    <span class="f-700 m-l-5 m-r-5"
+                                        data-ng-bind-html="skuRetailCtrl.retail_effective_date"></span>
+                                </div>
+                                <div ng-if="skuRetailCtrl.retailHead.reason_type_id == 2">
+                                    <span>End date : </span>
+                                    <span class="f-700 m-l-5" data-ng-bind-html="skuRetailCtrl.retail_end_date"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Retail Price Groups -->
+                        <div class="col-xs-12 p-0">
+                            <div class="col-xs-12 box p-0" data-ng-if="type.sku_price_groups.length">
+                                <div class="col-xs-12 p-5 data-division"
+                                    style="border-top: 0px solid;
+                                        border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;align-items: center;"
+                                    data-ng-repeat="pg in type.sku_price_groups">
+                                    <div class="col-xs-5">
+                                        <span class="f-700 m-l-15 c-black"
+                                            style="color: #a99141;">{{pg.price_class}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span class="f-700" style="color: #5ac94d;">
+                                            <input type="text" currency="2" decimals="2" currency-point="."
+                                                class="form-control retail-text bg-none background-none text-center border-none pointer-event-none"
+                                                ng-model="type.retail[$index]" ng-readonly="true"
+                                                data-ng-readonly="skuRetailCtrl.isCopyRetail" placeholder="0.00" min="0"
+                                                data-ng-change="skuRetailCtrl.applyCopyActionItem($index,pg)"
+                                                data-ng-init="pg.oldRetailValue=0" id="retailIn"
+                                                ng-blur="pg.oldRetailValue=pg.retail">
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-2" data-ng-if="skuRetailCtrl.isCopyRetail">
+                                        <span class="f-700" style="color: #5ac94d;">
+                                            <input type="text" min="0" currency="2" currency-point="."
+                                                class="form-control retail-text" ng-model="pg.new_retail"
+                                                placeholder="0.00">
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-5 cursor-pointer"
+                                        data-ng-if="$index==0&&skuRetailCtrl.sku_price_groups.length>1&&pg.isRetailValueChanged&&pg.retail">
+                                        <span class="f-12 f-700" style="color: #5ac94d;">
+                                            <a
+                                                data-ng-click="skuRetailCtrl.applyToRespectiveClasses(skuRetailCtrl.sku_price_groups);pg.isRetailValueChanged=false;">
+                                                Generate other pricing classifications</a>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-5" ng-if="pg.copyRule">
+                                        <span class="f-12" data-ng-bind-html="pg.copyRule"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 text-center text-info m-t-30 p-t-30"
+                                data-ng-if="!skuRetailCtrl.sku_price_groups.length">
+                                No price group for this item type
+                            </div>
+                            <div class="col-xs-12 p-0"
+                                data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()==='mto'">
+                                <div data-ng-if="type.mto_types_retails.length"
+                                    class="col-xs-12 p-5 d-flex d-flex-v-center" style="background: #b4cad8;">
+                                    <span>Options</span>
+                                </div>
+                                <div data-ng-if="!type.mto_types_retails.length" class="col-xs-12 p-5"
+                                    style="background: #f6fbff;">
+                                    <span class="fa fa-info m-r-10"></span>
+                                    <span>Options not available</span>
+                                </div>
+                                <div class="col-lg-12 p-0 data-division options"
+                                    data-ng-repeat="mto_type in type.mto_types_retails">
+                                    <div class="col-xs-12 p-5" style="background-color: #f6fbff !important;
+                                        border-bottom: 1px solid #e5e7e7;">
+                                        <span class="f-700">{{mto_type.type_desc}}</span>
+                                    </div>
+                                    <div class="col-xs-12 p-0">
+                                        <div class="col-xs-12 p-0">
+                                            <!-- start price groups -->
+                                            <div class="col-xs-12 p-0 option-data-division"
+                                                data-ng-repeat="price_group in mto_type.subPriceGroups | orderBy: 'price_group_desc'">
+                                                <div style="display:flex;align-items:center;justify-content:space-between; background: linear-gradient(#ffffff,#e8e8e8);
+                                                    border-bottom: 1px solid;padding:7px;">
+                                                    <span class="c-black">{{price_group.price_group_desc}}</span>
+                                                    <span class="c-firebrick">{{price_group.mto_description}}</span>
+                                                </div>
+                                                <div class="col-xs-12 p-5" style="border-top: 0px solid;border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;
+                                                    align-items: center;"
+                                                    data-ng-repeat="retail_pg in price_group.price_groups"
+                                                    ng-init="retail_pg.copyRule=null">
+                                                    <div class="col-xs-5">
+                                                        <span
+                                                            class="f-700 m-l-15 c-black">{{retail_pg.price_class}}</span>
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <span class="f-700" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2"
+                                                                currency-point="." maxlength="8"
+                                                                class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                                ng-model="price_group.retail[$index]"
+                                                                data-ng-readonly="true" placeholder="0.00" min="0"
+                                                                data-ng-change="skuRetailCtrl.applyCopyActionItem($index,retail_pg,price_group)"
+                                                                data-ng-init="retail_pg.oldRetailValue=0" id="retailIn"
+                                                                ng-blur="retail_pg.oldRetailValue=price_group.retail[$index]">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-2" data-ng-if="skuRetailCtrl.isCopyRetail">
+                                                        <span class="f-700 pull-right" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2" maxlength="8"
+                                                                currency-point="." class="form-control retail-text"
+                                                                ng-model="retail_pg.new_retail" placeholder="0.00">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-5 cursor-pointer"
+                                                        data-ng-if="$index==0&&price_group.price_groups.length>1&&retail_pg.isRetailValueChanged">
+                                                        <span class="f-700" style="color: #5ac94d;">
+                                                            <a
+                                                                data-ng-click="skuRetailCtrl.applyToRespectiveClasses(price_group.price_groups);retail_pg.isRetailValueChanged=false;">
+                                                                Generate other pricing classifications</a>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-5" ng-if="retail_pg.copyRule">
+                                                        <span class="f-12"
+                                                            data-ng-bind-html="retail_pg.copyRule"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- start choices -->
+                                            <div class="col-xs-12 p-0 option-data-division"
+                                                data-ng-repeat="choice in mto_type.subByChoices">
+                                                <div
+                                                    style="display:flex;align-items:center;justify-content:space-between;background: linear-gradient(#ffffff,#e8e8e8);padding:5px;">
+                                                    <span class="c-black">{{choice.choice_desc}}</span>
+                                                    <span class="c-firebrick">{{choice.mto_description}}</span>
+                                                </div>
+                                                <div class="col-xs-12 p-5"
+                                                    style="border-top: 0px solid;
+                                                    border-bottom: 1px solid #ececec; border-left: none;border-right: none;display: flex;align-items: center;"
+                                                    data-ng-repeat="retail_pg in choice.price_groups">
+                                                    <div class="col-xs-5">
+                                                        <span
+                                                            class="f-700 m-l-15 c-black">{{retail_pg.price_class}}</span>
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <span class="f-700" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2"
+                                                                currency-point="." maxlength="8"
+                                                                class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                                ng-model="choice.retail[$index]" data-ng-readonly="true"
+                                                                placeholder="0.00" min="0"
+                                                                data-ng-change="skuRetailCtrl.applyCopyActionItem($index,retail_pg,choice)"
+                                                                data-ng-init="retail_pg.oldRetailValue=0" id="retailIn"
+                                                                ng-blur="retail_pg.oldRetailValue=choice.retail[$index]">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-2" data-ng-if="skuRetailCtrl.isCopyRetail">
+                                                        <span class="f-700 pull-right" style="color: #5ac94d;">
+                                                            <input type="text" currency="2" decimals="2" maxlength="8"
+                                                                currency-point="." class="form-control retail-text"
+                                                                ng-model="retail_pg.new_retail" placeholder="0.00">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-5 cursor-pointer"
+                                                        data-ng-if="$index==0&&choice.price_groups.length>1&&retail_pg.isRetailValueChanged===true">
+                                                        <span class="f-700" style="color: #5ac94d;">
+                                                            <a
+                                                                data-ng-click="skuRetailCtrl.applyToRespectiveClasses(choice.price_groups);retail_pg.isRetailValueChanged=false;">
+                                                                Generate other pricing classifications</a>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-5" ng-if="retail_pg.copyRule">
+                                                        <span class="f-12"
+                                                            data-ng-bind-html="retail_pg.copyRule"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xs-12 p-0 m-b-25" data-ng-if="skuRetailCtrl.showPackageRetailTab">
+                <div data-ng-repeat="orderAdvisor in skuRetailCtrl.OrderAdvisors">
+                    <div class="col-xs-12 p-0 text-info header-section p-5 c-white">
+                        <span>Order Advisor : </span>
+                        <span class="f-700">{{orderAdvisor.description}}</span>
+                    </div>
+                    <div data-ng-if="!orderAdvisor.isPachagesIncluded" class="col-xs-12 p-5"
+                        style="background: #f6fbff;">
+                        <span class="fa fa-info m-r-10"></span>
+                        <span>Packages are not available</span>
+                    </div>
+                    <div class="col-xs-12 p-0 m-b-10"
+                        data-ng-repeat="type in orderAdvisor.price_types | orderBy: ['-is_default','id']"
+                        data-ng-if="skuRetailCtrl.retailHead.price_type_ids.includes(type.id) && orderAdvisor.isPachagesIncluded">
+                        <div class="col-xs-12 p-0 o-auto rcpscrollbar">
+                            <div class="col-xs-12 p-5 d-flex d-flex-v-center"
+                                style="background: #f6fbff; border-bottom: 1px solid #e5e7e7;">
+                                <div class="col-xs-4 p-0 right-section">
+                                    <span>Price type :</span>
+                                    <span class="m-l-5 c-bluegray f-700" data-ng-bind-html="type.name"></span>
+                                </div>
+                                <div class="col-xs-8 d-flex p-0 right-section">
+                                    <div class="m-r-10">
+                                        <span>Start date : </span>
+                                        <span class="m-l-5 m-r-5 f-700"
+                                            data-ng-bind-html="skuRetailCtrl.retail_effective_date"></span>
+                                    </div>
+                                    <div ng-if="skuRetailCtrl.retailHead.reason_type_id == 2">
+                                        <span>End date : </span>
+                                        <span class="m-l-5 f-700"
+                                            data-ng-bind-html="skuRetailCtrl.retail_end_date"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 rcpscrollbar"
+                                data-ng-repeat="package in type.Packages track by package.uniqueId"
+                                data-ng-if="orderAdvisor.included_packages.includes(package.id)">
+                                <div class="col-xs-12 p-5 d-flex d-flex-v-center"
+                                    style="background: linear-gradient(#ffffff, #e8e8e8);">
+                                    <div class="col-xs-8 p-0 right-section">
+                                        <span>Package :</span>
+                                        <span class="c-brown m-l-5 f-700"
+                                            data-ng-bind-html="package.description"></span>
+                                    </div>
+                                </div>
+                                <!-- Package Retail Price Groups -->
+                                <div class="col-xs-12 p-0">
+                                    <div class="col-xs-12 box p-0" data-ng-if="package.package_price_groups.length">
+                                        <div class="col-xs-12 p-5 data-division"
+                                            style="border-top: 0px solid;border-bottom: 1px solid #ececec;border-left: none;border-right: none;display: flex;align-items: center;"
+                                            data-ng-repeat="pg in package.package_price_groups track by pg.uniqueId">
+                                            <div class="col-xs-5">
+                                                <span class="f-700 m-l-15 c-black"
+                                                    style="color: #a99141;">{{pg.price_class}}</span>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                <span class="f-700" style="color: #5ac94d;">
+                                                    <input type="text" currency="2" decimals="2" currency-point="."
+                                                        name="{{package.id}}_{{pg.price_class_udd_line_id}}"
+                                                        class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                        data-ng-model="pg.retail" data-ng-readonly="true"
+                                                        placeholder="0.00" min="0"
+                                                        data-ng-change="skuRetailCtrl.applyCopyActionItem($index,pg, package)"
+                                                        data-ng-init="pg.oldRetailValue=0" id="retailIn"
+                                                        ng-blur="pg.oldRetailValue=pg.retail">
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-2" data-ng-if="skuRetailCtrl.isCopyRetail">
+                                                <span class="f-700" style="color: #5ac94d;">
+                                                    <input type="text" min="0" currency="2" decimals="2"
+                                                        currency-point="." maxlength="8"
+                                                        class="form-control retail-text bg-none text-center border-none pointer-event-none"
+                                                        data-ng-readonly="true" data-ng-model="pg.new_retail"
+                                                        placeholder="0.00">
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-5" ng-if="pg.copyRule">
+                                                <span class="f-12" data-ng-bind-html="pg.copyRule"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 text-center text-info m-t-30 p-t-30"
+                                        data-ng-if="!package.package_price_groups.length">
+                                        No price group packages for the selected SKU.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 text-center text-info m-t-30 p-t-30"
+                                data-ng-if="!type.Packages||!type.Packages.length">
+                                No packages for the selected SKU.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 m-t-10 m-b-10">
+                <button class="btn btn-cancel pull-right"
+                    ng-click="skuRetailCtrl.isNewRetailForm=false;skuRetailCtrl.isRetailRoundingForm = true;skuRetailCtrl.reviewScreen=false;skuRetailCtrl.focusNextRounding();">
+                    Previous
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-xs-12">
+        <rcp-success-form class="text-center" success-tick="success_tick.svg" save-success="skuRetailCtrl.isSaveSuccess"
+            close-fn="skuRetailCtrl.closeForm()">
+        </rcp-success-form>
+    </div>
+</div>

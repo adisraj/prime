@@ -1,0 +1,44 @@
+<div class="detailssection">
+    <div class="row">
+        <h1 class="homedetailheader"> Item Status</h1>
+    </div>
+    <div class="row timelinecontainer">
+        <div class="line"></div>
+        <div class="outerdiv">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <li style="border: 6px solid #35C96D;">
+                </li>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <li style="border: 6px solid #A74CF4;">
+                </li>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <li style="border: 6px solid #FEA131;">
+                </li>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <li style="border: 6px solid #F18B88;">
+                </li>
+            </div>
+        </div>
+    </div>
+    <div class="row" data-ng-controller="StatsController as statsCtrl">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <h2 class="counts">{{statsCtrl.uuidMap.Items}}</h2>
+            <p class="count-label">Active</p>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <h2 class="counts">{{statsCtrl.uuidMap.Items}}</h2>
+            <p class="count-label">Pending</p>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <h2 class="counts">{{statsCtrl.uuidMap.Items}}</h2>
+            <p class="count-label">Discontinued</p>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <h2 class="counts">{{statsCtrl.uuidMap.Items}}</h2>
+            <p class="count-label">Inactive</p>
+        </div>
+    </div>
+</div>

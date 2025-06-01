@@ -1,0 +1,358 @@
+<style>
+    button#create_new_btn {
+    display: none;
+    }
+
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div class="col-xs-12 p-0 rcp-scrollbar" data-ng-controller="AddressController as addrCtrl">
+    <div class="col-xs-12 m-t-20 p-0" data-ng-init="addrCtrl.getAddressList();" data-ng-if="!addrCtrl.isSaveSuccess && !addrCtrl.isUpdateSuccess && !addrCtrl.isDeleteSuccess">
+        <div class="col-xs-12 form-group">
+            <button class="f-500 btn-primal waves-block pull-right" ng-click="addrCtrl.displayAddressSection();">
+                <span>{{addrCtrl.addBtnLabel}}</span>
+            </button>
+            <button class="f-500 btn-primal waves-block pull-right m-r-10" ng-click="addrCtrl.getAddressList(true);"
+                data-ng-disabled="!addrCtrl.isLoaded">
+                <span>Refresh</span>
+            </button>
+        </div>
+        <div class="col-xs-12" ng-if="addrCtrl.isAddressSectionVisisble">
+            <ng-form role="form " novalidate="novalidate" name="addrCtrl.address_form">
+                <div class="form-group" valdr-form-group>
+                    <span style="color:red" ng-show="addrCtrl.address_form.status_id.$invalid">* </span>
+                    <span style="color:green" ng-show="addrCtrl.address_form.status_id.$valid">* </span>
+                    <label>Status</label>
+                    <select name="status_id" id="status_id"
+                        class="form-control select-component input-sm"
+                        ng-options="item.code as item.description for item in statuses |filter: {description: '!Discontinued'}"
+                        ng-model="addrCtrl.address_details.status_id"
+                        errorvaluechosen="addrCtrl.address_details.status_id_error"
+                        ng-change="addrCtrl.address_details.status=(statuses|filter:{code:addrCtrl.address_details.status_id})[0].description"
+                        required>
+                        <option value="" disabled>Select Status</option>
+                    </select>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span style="color:red" ng-show="addrCtrl.address_form.type_id.$invalid">* </span>
+                    <span style="color:green" ng-show="addrCtrl.address_form.type_id.$valid">* </span>
+                    <label>Address Type</label>
+                    <select name="type_id" id="type_id"
+                        class="form-control select-component input-sm"
+                        ng-options="type.id as type.address_type for type in addrCtrl.addressTypes"
+                        ng-model="addrCtrl.address_details.type_id"
+                        ng-change="addrCtrl.address_details.address_type=(addrCtrl.addressTypes|filter:{id:addrCtrl.address_details.type_id})[0].address_type"
+                        required>
+                        <option value="" disabled>Select Type</option>
+                    </select>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span style="color:red" ng-show="addrCtrl.address_form.country_id.$invalid">* </span>
+                    <span style="color:green" ng-show="addrCtrl.address_form.country_id.$valid">* </span>
+                    <label>Country</label>
+                    <select name="country_id" id="country_id"
+                        class="form-control select-component input-sm"
+                        ng-options="country.id as country.name for country in addrCtrl.countries"
+                        ng-model="addrCtrl.address_details.country_id"
+                        ng-change="addrCtrl.address_details.country = (addrCtrl.countries|filter:{id:addrCtrl.address_details.country_id})[0].name;addrCtrl.address_details.zipcode=undefined;"
+                        data-ng-init="addrCtrl.getRegions(addrCtrl.address_details.country_id)" required>
+                        <option value="" disabled>Select Country</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="form-group" valdr-form-group>
+                        <span style="color:red" ng-show="addrCtrl.address_form.zipcode.$invalid">*</span>
+                        <span style="color:green" ng-show="addrCtrl.address_form.zipcode.$valid">*</span>
+                        <label for="zipcode" class="form-labels">Zip
+                            code</label>
+                        <div class="input-group">
+                            <input type="text" class="form-input form-control input-sm" id="zipcode" name="zipcode"
+                                ng-model="addrCtrl.address_details.zipcode"
+                                data-ng-change="addrCtrl.setValues(addrCtrl.address_details.zipcode);" googleplace
+                                style="height: 33px;" required>
+                        </div>
+                        <span ng-if="addrCtrl.address_form.zipcode.$error.pattern" class="text-danger f-12">*Zip code
+                            must
+                            be
+                            numbers and length must be 5</span>
+                    </div>
+                    <div class="form-group" valdr-form-group
+                        data-ng-if="addrCtrl.isShowcontactRegions && addrCtrl.address_details.zipcode && addrCtrl.address_details.zipcode.length===5">
+                        <label for="region" class="form-labels">State</label>
+                        <div data-ng-if="!addrCtrl.isShowcontactRegions">
+                            <span>Loading ...</span>
+                        </div>
+                        <div class="p-relative full-width" data-ng-if="addrCtrl.isShowcontactRegions">
+                            <input type="text" class="form-input form-control input-sm" id="region" name="region"
+                                ng-model="addrCtrl.address_details.region_name" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group" valdr-form-group
+                        data-ng-if="addrCtrl.isShowcontactCities && addrCtrl.address_details.zipcode && addrCtrl.address_details.zipcode.length===5 && addrCtrl.address_details.city_name">
+                        <label for="city" class="form-labels">City</label>
+                        <div data-ng-if="addrCtrl.isLoadingCities">
+                            <span>Loading ...</span>
+                        </div>
+                        <select id="city_d" name="city_id" 
+                        ng-options="city.id as city.city_name for city in addrCtrl.regional_citiesList" class="form-control select-component input-sm"
+                        ng-model="addrCtrl.address_details.city_id" required>
+                        </select>
+                    </div>
+                    <div class="form-group"
+                        ng-if="addrCtrl.address_details.zipcode && addrCtrl.address_details.zipcode.length===5"
+                        valdr-form-group>
+                        <span style="color:red" ng-show="addrCtrl.address_form.address.$invalid">*
+                        </span>
+                        <span style="color:green" ng-show="addrCtrl.address_form.address.$valid">*
+                        </span>
+                        <label> Street Address
+                            <span>({{addrCtrl.address_details.address_type}})</span>
+                        </label>
+                        <textarea id="address" name="address" class="form-control input-sm rc-text-area" ng-pattern="contacttypeCtrl.as400FieldsRegExpression"
+                            ng-model="addrCtrl.address_details.address" placeholder="Enter Street Address"
+                            ng-model-options="{ updateOn: 'blur' }" style="height:50px">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn-block btn-primal btn-lg"
+                        ng-click="addrCtrl.save(addrCtrl.address_details);"
+                        ng-class="{'btn-danger': addrCtrl.saveBtnError === true}"
+                        data-ng-disabled="!addrCtrl.address_details.address||!addrCtrl.address_details.status_id||!addrCtrl.address_details.type_id || !addrCtrl.isLoaded || addrCtrl.address_form.$invalid">
+                        <strong>{{addrCtrl.saveBtnText}}</strong>
+                    </button>
+                </div>
+            </ng-form>
+        </div>
+        <div class="col-xs-12 m-t-10">
+            <div data-ng-if="addrCtrl.message && !addrCtrl.errorMessage" class="alert alert-success p-10">
+                <button type="button" class="close" data-ng-click="addrCtrl.message = null"
+                    aria-hidden="true">&times;</button> {{addrCtrl.message}}
+            </div>
+            <div data-ng-if="addrCtrl.errorMessage && !addrCtrl.message"
+                class="alert alert-danger alert-dismissable p-10">
+                <button type="button" class="close" data-ng-click="addrCtrl.errorMessage = null"
+                    aria-hidden="true">&times;</button> {{addrCtrl.errorMessage}}
+            </div>
+        </div>
+        <div class="col-xs-12 m-t-10 o-auto" ng-class="{'pre-scrollable':addrCtrl.isAddressSectionVisisble === true}">
+            <div class="col-xs-12 form-group d-flex p-0" style="justify-content:space-around;">
+                <div class="d-flex p-0">
+                    <div class="m-r-5"
+                        style="background: rgba(0, 128, 0, 0.47);height: 15px;width: 15px;border-radius: 1px;"> </div>
+                    Active
+                </div>
+                <div class="d-flex">
+                    <div class="m-r-5"
+                        style="background: rgba(255, 165, 0, 0.47);height: 15px;width: 15px;border-radius: 1px;"> </div>
+                    Pending Active
+                </div>
+                <div class="d-flex">
+                    <div class="m-r-5"
+                        style="background: rgba(255, 0, 0, 0.47);height: 15px;width: 15px;border-radius: 1px;"> </div>
+                    Inactive
+                </div>
+                <div class="d-flex">
+                    <div class="m-r-5"
+                        style="background: rgba(33, 150, 243, 0.47);height: 15px;width: 15px;border-radius: 1px;">
+                    </div> Pending Inactive
+                </div>
+            </div>
+            <div class="col-xs-12 p-10 text-center" data-ng-if="!addrCtrl.isLoaded">
+                <span><i class="fa fa-spinner fa-spin m-r-5 f-16"></i></span>
+            </div>
+            <div class="col-xs-12 m-b-10 p-10 address-card" ng-repeat="address in addrCtrl.addressList"
+                data-ng-if="addrCtrl.isLoaded">
+                <div class="col-xs-12 p-5 d-flex">
+                    <div class="p-0"
+                        ng-class="{'col-xs-10': !address.confirmDelete, 'col-xs-4': address.confirmDelete}">
+                        <div data-ng-if="address[$index] && (addrCtrl.currentIndex === $index)">
+                            <span class="f-700">Update Address</span>
+                        </div>
+                        <div class="d-flex" style="align-items:center;"
+                            data-ng-if="!address[$index] || (addrCtrl.currentIndex !== $index)">
+                            <div class="m-r-10 addr-acronym" ng-class="{
+                                'active' : address.status.toLowerCase() === 'active', 
+                                'pending' : address.status.toLowerCase() ==='pending active', 
+                                'inactive' : address.status.toLowerCase() ==='inactive', 
+                                'discontinued' : address.status.toLowerCase() === 'pending inactive'
+                            }">
+                                {{address.address_type | acronym}}
+                            </div>
+                            <span>{{address.address_type}}</span>
+                        </div>
+                    </div>
+                    <div data-ng-if="!address.confirmDelete" class="col-xs-2 p-0 d-flex"
+                        style="align-items:center;justify-content:flex-end;">
+                        <button type="button" data-ng-if="!address[$index] || (addrCtrl.currentIndex !== $index)"
+                            data-ng-click="addrCtrl.displayUpdateForm(address,true,$index);"
+                            class="zmdi zmdi-edit zmdi-hc-fw cursor-pointer f-21 c-green bg-none border-none"></button>
+                        <button type="button" data-ng-if="address[$index] && (addrCtrl.currentIndex === $index)"
+                            data-ng-click="addrCtrl.closeUpdateForm(address,$index);"
+                            class="zmdi zmdi-close zmdi-hc-fw cursor-pointer f-21 c-red bg-none border-none"></button>
+                        <button type="button" data-ng-if="!address[$index] || (addrCtrl.currentIndex !== $index)"
+                            data-ng-click="address.confirmDelete = true"
+                            class="zmdi zmdi-delete zmdi-hc-fw cursor-pointer f-21 bg-none border-none" style="color:darkred;"></button>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0 p-t-10" style="border-top: 1px solid #ececec;"
+                    data-ng-if="!address[$index] || (addrCtrl.currentIndex !== $index)">
+                    <div data-ng-if="address.confirmDelete" class="col-xs-12 p-0 d-flex m-b-10 p-b-10"
+                        style="align-items:center; justify-content: space-between; border-bottom: 1px solid #ececec">
+                        <span> Are you sure you want to delete address? </span>
+                        <div class="p-0">
+                            <button class="btn btn-primal btn-sm m-r-5" type="button"
+                                data-ng-click="addrCtrl.delete(address.address_id)" aria-hidden="true">
+                                Yes
+                            </button>
+                            <button class="btn btn-secondary btn-sm" type="button"
+                                data-ng-click="address.confirmDelete = false" aria-hidden="true">
+                                No
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <img style="max-width: 100%; max-height: 100%;" src="./img/map.jpeg" />
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="col-xs-12 p-0">
+                            <span class="f-700 m-r-5"> Address : </span>
+                        </div>
+                        <div class="col-xs-12 p-0">
+                            <span class="word-break-all">{{address.address}}</span>
+                        </div>
+                        <div class="col-xs-12 p-0">
+                            <span>{{address.city_name}}, {{address.region_name}}, {{address.zipcode}}</span>
+                        </div>
+                        <div class="col-xs-12 p-0">
+                            <span>{{address.country}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0 p-t-10" style="border-top: 1px solid #ececec;"
+                    data-ng-if="address[$index] && (addrCtrl.currentIndex === $index)">
+                    <ng-form role="form " novalidate="novalidate" name="addrCtrl.address_update_form">
+                        <div class="col-xs-6 m-b-10 p-l-0">
+                            <span style="color:red" ng-show="addrCtrl.address_update_form.status_id.$invalid">* </span>
+                            <span style="color:green" ng-show="addrCtrl.address_update_form.status_id.$valid">* </span>
+                            <label class="p-r-5">Status</label>
+                            <select name="status_id" id="status_id"
+                                class="form-control select-component input-sm"
+                                ng-options="item.code as item.description disable when (item.code === addrCtrl.statusCodes.Pending.ID && addrCtrl.oldAddress.status_id !== addrCtrl.statusCodes.Pending.ID)  for item in statuses|filter: {description: '!Discontinued'}"
+                                ng-model="addrCtrl.address_details.status_id"
+                                errorvaluechosen="addrCtrl.address_details.status_id_error"
+                                ng-change="addrCtrl.address_details.status=(statuses|filter:{code:addrCtrl.address_details.status_id})[0].description"
+                                required>
+                                <option value="" disabled>Select Status</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 m-b-10 p-r-0">
+                            <span style="color:red" ng-show="addrCtrl.address_update_form.type_id.$invalid">* </span>
+                            <span style="color:green" ng-show="addrCtrl.address_update_form.type_id.$valid">* </span>
+                            <label class="p-r-5">Type</label>
+                            <select name="type_id" id="type_id"
+                                class="form-control select-component input-sm"
+                                ng-options="type.id as type.address_type for type in addrCtrl.addressTypes"
+                                ng-model="addrCtrl.address_details.type_id"
+                                ng-change="addrCtrl.address_details.address_type=(addrCtrl.addressTypes|filter:{id:addrCtrl.address_details.type_id})[0].address_type"
+                                required>
+                                <option value="" disabled>Select Type</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-12 m-b-10 d-flex p-0" style="align-items:flex-end;">
+                            <div class="col-xs-9 p-0">
+                                <span style="color:red" ng-show="addrCtrl.address_update_form.country_id.$invalid">*
+                                </span>
+                                <span style="color:green" ng-show="addrCtrl.address_update_form.country_id.$valid">*
+                                </span>
+                                <label class="p-r-5">Country</label>
+                                <select name="country_id" id="country_id"
+                                    class="form-control select-component input-sm"
+                                    ng-options="country.id as country.name for country in addrCtrl. countries"
+                                    ng-model="addrCtrl.address_details.country_id"
+                                    ng-change="addrCtrl.address_details.country=(addrCtrl. countries|filter:{code:addrCtrl.address_details.country_id})[0].name;addrCtrl.getRegions(addrCtrl.address_details.country_id);addrCtrl.address_details.region_id=undefined;addrCtrl.address_details.city_id=undefined;addrCtrl.address_details.zipcode=undefined"
+                                    data-ng-init="addrCtrl.getRegions(addrCtrl.address_details.country_id)" required>
+                                    <option value="" disabled>Select Country</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 m-b-10 p-0">
+                            <span style="color:red" ng-show="addrCtrl.address_update_form.zipcode.$invalid">*</span>
+                            <span style="color:green" ng-show="addrCtrl.address_update_form.zipcode.$valid">*</span>
+                            <label>Zip code</label>
+                            <div class="input-group">
+                                <input type="text" class="form-input form-control input-sm" id="zipcode" name="zipcode"
+                                    ng-model="addrCtrl.address_details.zipcode"
+                                    data-ng-change="addrCtrl.setValues(addrCtrl.address_details.zipcode);" googleplace
+                                    style="height: 33px;" required>
+                            </div>
+                            <span ng-if="addrCtrl.address_update_form.zipcode.$error.pattern"
+                                class="text-danger f-12">*Zip code must be numbers and length must be 5</span>
+                        </div>
+                        <div class="col-xs-12 m-b-10 p-0"
+                            data-ng-if="addrCtrl.address_details.zipcode && addrCtrl.address_details.region_name"
+                            valdr-form-group>
+                            <span style="color:red" ng-show="addrCtrl.address_update_form.region.$invalid">*
+                            </span>
+                            <span style="color:green" ng-show="addrCtrl.address_update_form.region.$valid">*
+                            </span>
+                            <label>State</label>
+                            <input type="text" class="form-input form-control input-sm" id="region" name="region"
+                                ng-model="addrCtrl.address_details.region_name" readonly required>
+                        </div>
+                        <div ng-if = "addrCtrl.address_details.city_name">
+                        <div class="col-xs-12 m-b-10 p-0"
+                            data-ng-if="addrCtrl.address_details.zipcode && addrCtrl.address_details.city_name"
+                            valdr-form-group>
+                            <span style="color:red" ng-show="addrCtrl.address_update_form.city.$invalid">*
+                            </span>
+                            <span style="color:green" ng-show="addrCtrl.address_update_form.city.$valid">*
+                            </span>
+                            <label>City</label>
+                            <select id="city_d" name="city_id" 
+                            ng-options="city.id as city.city_name for city in addrCtrl.regional_citiesList" class="form-control select-component input-sm"
+                            ng-model="addrCtrl.address_details.city_id" required>
+                        </select>
+                        </div>
+                        </div>
+                        <div class="col-xs-12 m-b-10 p-0"
+                            ng-if="addrCtrl.address_details.zipcode">
+                            <span style="color:red" ng-show="addrCtrl.address_update_form.address.$invalid">*
+                            </span>
+                            <span style="color:green" ng-show="addrCtrl.address_update_form.address.$valid">*
+                            </span>
+                            <label class="p-r-5"> Street Address</label>
+                            <textarea id="address" name="address"
+                                class="form-control input-sm rc-text-area" ng-model="addrCtrl.address_details.address" ng-pattern="addrCtrl.as400FieldsRegularExpression"
+                                placeholder="Enter Street Address" ng-model-options="{ updateOn: 'change blur' }" required>
+                                    </textarea>
+                        </div>
+                        <div class="col-xs-12 p-0">
+                            <div class="col-xs-8 p-0">
+                                <div data-ng-if="addrCtrl.updateErrorMessage"
+                                    class="alert alert-danger alert-dismissable p-5">
+                                    <button type="button" class="close"
+                                        data-ng-click="addrCtrl.updateErrorMessage = null"
+                                        aria-hidden="true">&times;</button> {{addrCtrl.updateErrorMessage}}
+                                </div>
+                            </div>
+                            <div class="col-xs-4 p-0">
+                                <button class="btn-primal waves-block pull-right"
+                                    data-ng-click="addrCtrl.update(addrCtrl.address_details);"
+                                    data-ng-disabled="!addrCtrl.address_details.address || addrCtrl.address_update_form.$invalid || !addrCtrl.isLoaded || addrCtrl.address_details.isProcessing || addrCtrl.address_update_form.$invalid">{{addrCtrl.updateBtnText}}</button>
+                            </div>
+                        </div>
+                    </ng-form>
+                </div>
+            </div>
+            <div ng-if="addrCtrl.addressList.length === 0 && addrCtrl.isLoaded"
+                class="col-xs-12 text-center text-info f-14 f-300 m-t-10 p-t-10">No address exist for this
+                {{addrCtrl.entityName | lowercase}}</div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <rcp-success-form  success-tick="success_tick.svg" data-ng-click="addrCtrl.focusAddressTab();"
+        save-success="addrCtrl.isSaveSuccess" update-success="addrCtrl.isUpdateSuccess" delete-success="addrCtrl.isDeleteSuccess" close-fn="addrCtrl.closeForm();"></rcp-success-form>
+    </div>
+</div>

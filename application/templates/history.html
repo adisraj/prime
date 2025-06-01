@@ -1,0 +1,105 @@
+<div id="rcrightsidebar" class="changehistory" ng-class="{'toggled':showhistory}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" id="history_close" name="history_close" class="close-icon bg-none border-none btn-link p-0 zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x" data-ng-click="closeShowHistory();">
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel">Update <strong>History</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div ng-include="'template/app-specific/updatehistory_svg.html'"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 d-flex p-0 instanceName-section m-b-5 d-flex-h-center" ng-if="instanceName">
+        <label class="f-15 p-10 m-b-0"><span class="f-300">{{instanceName}}</span></label>
+    </div>
+    <div class="col-xs-12">
+        <div class="o-auto panel-viewhistory-height">
+            <div class="col-xs-12 p-0" ng-repeat="each in historyList" data-ng-if="historyList.length > 0">
+                <ul class="p-0 m-b-0">
+                    <li ng-show="each.kind === 'E' || each.kind === 'N' || each.kind === 'D'" style="list-style-type:none;font-size:12px;line-height:22.5px;">
+                        <div class="historyrow box" style="margin: 5px 0px;">
+                            <span style="color: #5d4565;font-size: 13px;font-weight: 800;"><i
+                                    class="zmdi zmdi-account-box zmdi-hc-fw"></i>{{each.updated_by | propercasing}}</span>
+                            <span style="color: #5d4565;font-size: 12px;">
+                                updated
+                            </span>
+                            <span style="font-size: 13px;padding: 2px 4px;">{{each.field }}</span>
+                            <div><span
+                                    style=" font-size: 13px;padding: 2px 4px;color: #D81B60;background-color: #f9f2f4;border-radius: 4px;" title = "{{each.old_value}}">
+                                    {{each.old_value || 'Not Configured' | truncate:50}}</span>
+                                <span style="font-size: 13px;color: #2196f3;border-radius: 4px;"> &#x21A6;</span>
+                                <span
+                                    style="font-size: 13px;color: #1e9840;background-color: #f2f9f7;border-radius: 4px;padding: 2px 4px " title = "{{each.new_value}}">{{each.new_value || 'Not Configured' | truncate :50}}</span>
+                            </div>
+                            <div><span style="color: #5d4565;font-size: 12px;"> <i
+                                        class="zmdi zmdi-time zmdi-hc-fw"></i>{{each.updated_dt | FormatDate}}
+                                    {{each.updated_dt | FormatTime}} </span></div>
+
+                        </div>
+                    </li>
+                    <li ng-show="each.kind === 'C'" style="list-style-type:none;font-size:12px;line-height:22.5px;">
+                        <div class="historyrow box" style="margin: 5px 0px;">
+                            <span style="color: #5d4565;font-size: 13px;font-weight: 800;"><i
+                                    class="zmdi zmdi-account-box zmdi-hc-fw"></i>{{each.updated_by | propercasing}}</span>
+                            <span style="color: #5d4565;font-size: 12px;">
+                                created
+                            </span>
+                            <span style="color: #5d4565;font-size: 12px;"> <i
+                                    class="zmdi zmdi-time zmdi-hc-fw"></i>{{each.updated_dt | FormatDate}}
+                                {{each.updated_dt | FormatTime}}</span>
+                        </div>
+                    </li>
+                    <li ng-show="each.kind === 'LI'" style="list-style-type:none;font-size:12px;line-height:22.5px;">
+                        <div class="historyrow box" style="margin: 5px 0px;">
+                            <span style="color: #5d4565;font-size: 13px;font-weight: 800;"><i
+                                    class="zmdi zmdi-account-box zmdi-hc-fw"></i>{{each.updated_by | propercasing}}</span>
+                            <span style="color: #5d4565;font-size: 12px;">
+                                linked
+                            </span>
+                            <div>
+                                <span
+                                    style=" font-size: 13px;padding: 2px 4px;color: #D81B60;background-color: #f9f2f4;border-radius: 4px; ">Collection
+                                    ({{each.field }})</span>
+                                <span style="font-size: 13px;color: #2196f3;border-radius: 4px;"> to</span>
+                                <span
+                                    style="font-size: 13px;color: #1e9840;background-color: #f2f9f7;border-radius: 4px; ">Vendor
+                                    ({{each.new_value}})</span>
+                            </div>
+                            <div><span style="color: #5d4565;font-size: 12px;"> <i
+                                        class="zmdi zmdi-time zmdi-hc-fw"></i>{{each.updated_dt | FormatDate}}
+                                    {{each.updated_dt | FormatTime}}</span></div>
+                        </div>
+                    </li>
+                    <li ng-show="each.kind === 'UL'" style="list-style-type:none;font-size:12px;line-height:22.5px;">
+                        <div class="historyrow box" style="margin: 5px 0px;">
+                            <span style="color: #5d4565;font-size: 13px;font-weight: 800;"><i
+                                    class="zmdi zmdi-account-box zmdi-hc-fw"></i>{{each.updated_by | propercasing}}</span>
+                            <span style="color: #5d4565;font-size: 12px;">
+                                un-linked
+                            </span>
+                            <div>
+                                <span
+                                    style=" font-size: 13px;padding: 2px 4px;color: #D81B60;background-color: #f9f2f4;border-radius: 4px; ">Collection
+                                    ({{each.field }})</span>
+                                <span style="font-size: 13px;color: #2196f3;border-radius: 4px;"> from </span>
+                                <span
+                                    style="font-size: 13px;color: #1e9840;background-color: #f2f9f7;border-radius: 4px; ">Vendor
+                                    ({{each.new_value}})</span>
+                            </div>
+                            <div><span style="color: #5d4565;font-size: 12px;"> <i
+                                        class="zmdi zmdi-time zmdi-hc-fw"></i>{{each.updated_dt | FormatDate}}
+                                    {{each.updated_dt | FormatTime}}</span></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-12 f-14 text-center" data-ng-if="historyList.length === 0">
+                <span>Change history not found!</span>
+            </div>
+        </div>
+    </div>
+</div>

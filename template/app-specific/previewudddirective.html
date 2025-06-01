@@ -1,0 +1,105 @@
+<!--Publish Preview Data-->
+<div class="col-xs-12 p-10" data-ng-if="!uddData || uddData.length ===0">
+    <span class="text-muted">No configuration details to show</span>
+</div>
+<div class="col-xs-12 p-0 table-responsive" ng-if="(!isSummary && uddData) && uddData.length !==0" style="border:none;">
+    <table class="table table-condensed bgm-white preview-n-publish-table table-bordered">
+        <tr data-ng-repeat="udd in uddData | orderBy : 'display_sequence'" ng-if1="$index % 2 == 0">
+            <td>
+                <label class="publish-preview">
+                    <span data-ng-if="uddData[$index].user_defined_data_type === 'Attribute'" title="User defined data for attribute" title-direction="bottom"
+                        fixed-position="true">
+                        <img src="./img/sidebar-icons/package.svg" style="height:15px;width:15px;" />
+                    </span>
+                    <span data-ng-if="uddData[$index].user_defined_data_type === 'Hierarchy'">
+                        <img src="./img/sidebar-icons/hierarchy-levels.svg" style="height:15px;width:15px;" />
+                    </span>
+                    <span class="m-l-5 c-gray">{{uddData[$index].user_defined_data_type}}</span>
+                </label>
+            </td>
+            <td>
+                <label class="publish-preview"> {{uddData[$index].maintenance_description | truncate: 35}}</label>
+            </td>
+            <td>
+                <label class="maintenance-field-label publishData m-0 p-0">
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && uddData[$index].format !== 'Multiselect' && uddData[$index].has_values">{{attributeValuesMap[uddData[$index].udd_value_id]['description']}}</span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && uddData[$index].format == 'Multiselect' && uddData[$index].has_values">
+                        <span data-ng-repeat="eachValue in uddData[$parent.$index]['selectedValueIds']">
+                            <span data-ng-if="$index !== 0 && eachValue == uddData[$parent.$index]['valuesMap'][eachValue]['id']">,
+                            </span>
+                            <span>{{uddData[$parent.$index]['valuesMap'][eachValue]['description']}}</span>
+                        </span>
+                    </span>
+                    <span style="color:darkgray;" data-ng-if="!(uddData[$index].value || uddData[$index].udd_value_id || selectedHierarchyProperty[uddData[$index].map_id]['path_name']) && (uddData[$index].format !== 'Yes/No' && uddData[$index].format !== 'Multiselect' && uddData[$index].format !== 'Date Range')">Not Configured
+                    </span>
+                    <span style="color:darkgray;" data-ng-show="(uddData[$index].format == 'Multiselect' && (!uddData[$index]['selectedValueIds'] || uddData[$index]['selectedValueIds'].length ===0) && uddData[$index].format !== 'Date Range')">Not Configured
+                    </span>
+                    <span style="color:darkgray;" data-ng-show="uddData[$index].format == 'Date Range' && !uddData[$index].from_date_value && !uddData[$index].to_date_value && uddData[$index].format !== 'Multiselect'">Not Configured
+                    </span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && uddData[$index].value && !uddData[$index].has_values && uddData[$index].format == 'Percentage'">{{uddData[$index].value}}%</span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && !uddData[$index].has_values && uddData[$index].format !== 'Percentage' && uddData[$index].format !== 'URL' && uddData[$index].format !== 'Yes/No' && uddData[$index].format !== 'Date' && uddData[$index].format !== 'Date Range'">{{uddData[$index].value}}</span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && uddData[$index].format === 'URL'">
+                        <span data-ng-if="uddData[$index].link_text_value">{{uddData[$index].link_text_value}}::</span>
+                        {{uddData[$index].url_path_value}}</span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && !uddData[$index].has_values && uddData[$index].format === 'Date'">{{uddData[$index].value }}</span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && !uddData[$index].has_values && uddData[$index].format === 'Date Range' && uddData[$index].from_date_value && uddData[$index].to_date_value">{{uddData[$index].from_date_value | FormatDate}} to {{uddData[$index].to_date_value | FormatDate}}</span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && !uddData[$index].has_values && uddData[$index].format === 'Yes/No' && (uddData[$index].value === '1' || uddData[$index].value === 1)">Yes</span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && !uddData[$index].has_values && uddData[$index].format === 'Yes/No' && (uddData[$index].value === '0' || uddData[$index].value === 0 || uddData[$index].value == undefined || uddData[$index].value == '')">No</span>
+                    <span ng-if="uddData[$index].user_defined_data_type === 'Hierarchy'" ng-bind-html="selectedHierarchyProperty[uddData[$index].map_id]['path_name']"></span>
+                    <span ng-if="uddData[$index].user_defined_data_type ==='OptionType'">{{mtoOptionsMap[uddData[$index].udd_value_id]['description']}}</span>
+                    <span ng-if="uddData[$index].user_defined_data_type ==='Option'">{{mtoOptionChoicesMap[uddData[$index].udd_value_id]['choice_description']}}</span>
+                </label>
+            </td>
+            <!-- <td><label class="publish-preview"> {{uddData[$index+1].maintenance_description | truncate: 30}}</label> </td>
+            <td><label class="publish-preview">{{uddData[$index+1].user_defined_data_type}}</label></td>
+            <td><label class="maintenance-field-label publishData m-0 p-0">
+                <span ng-if="uddData[$index+1].user_defined_data_type === 'Attribute' && uddData[$index+1].has_values">{{attributeValuesMap[uddData[$index+1].udd_value_id]['description']}}</span>
+                <span ng-if="uddData[$index].user_defined_data_type === 'Attribute' && uddData[$index+1].format == 'Multiselect' && uddData[$index+1].has_values" >
+                    <span data-ng-repeat="eachValue in uddData[$parent.$index+1]['selectedValueIds']">
+                            <span data-ng-if="$index !== 0 && eachValue == uddData[$parent.$index+1]['valuesMap'][eachValue]['id']">, </span>
+                            <span>{{uddData[$parent.$index+1]['valuesMap'][eachValue]['description'] | truncate:30 }}</span>
+                    </span>
+                </span>
+                <span ng-if="uddData[$index+1].user_defined_data_type === 'Attribute' && !uddData[$index+1].has_values && uddData[$index+1].format == 'Percentage'">{{uddData[$index+1].value}}%</span>
+                <span ng-if="uddData[$index+1].user_defined_data_type === 'Attribute' && !uddData[$index+1].has_values && uddData[$index+1].format !== 'Percentage' && uddData[$index+1].format !== 'Yes/No' && uddData[$index+1].format !== 'Date'">{{uddData[$index+1].value}}</span>
+                <span ng-if="uddData[$index+1].user_defined_data_type === 'Attribute' && !uddData[$index+1].has_values && uddData[$index+1].format === 'Date'">{{uddData[$index+1].value }}</span>
+                <span ng-if="uddData[$index+1].user_defined_data_type === 'Attribute' && !uddData[$index+1].has_values && uddData[$index+1].format === 'Yes/No' && (uddData[$index+1].value === '1' || uddData[$index+1].value === 1)">Yes</span>
+                <span ng-if="uddData[$index+1].user_defined_data_type === 'Attribute' && !uddData[$index+1].has_values && uddData[$index+1].format === 'Yes/No' && (uddData[$index+1].value === '0' || uddData[$index+1].value === 0 ||  uddData[$index+1].value == undefined)">No</span>
+                <span ng-if="uddData[$index+1].user_defined_data_type === 'Hierarchy'">{{selectedHierarchyProperty[uddData[$index+1].map_id]['path_name']}}</span>
+                <span ng-if="uddData[$index+1].user_defined_data_type ==='OptionType'">{{mtoOptionsMap[uddData[$index+1].udd_value_id]['description']}}</span>
+                <span ng-if="uddData[$index+1].user_defined_data_type ==='Option'">{{mtoOptionChoicesMap[uddData[$index+1].udd_value_id]['choice_description']}}</span>
+                </label>
+            </td> -->
+        </tr>
+    </table>
+</div>
+<!--Summary User Defined Data-->
+<div class="col-xs-12 p-0 table-responsive" data-ng-if="(isSummary && uddData) && uddData.length !==0">
+    <table class="table table-condensed table-striped">
+        <tr data-ng-repeat="udd in uddData | orderBy : 'display_sequence'">
+            <td class="configure-box-column">
+                <label class="rclabel configure-box-labels">{{udd.maintenance_description}}</label>
+            </td>
+            <td class="configure-box-data ">
+                <label class="rclabel configure-box-labels">
+                    <span ng-if="udd.user_defined_data_type === 'Attribute' && udd.has_values && udd.format !== 'Multiselect'">{{attributeValuesMap[udd.udd_value_id]['description'] | truncate:50 }}</span>
+                    <span ng-if="udd.user_defined_data_type === 'Attribute' && udd.has_values && udd.format === 'Multiselect'">
+                        <span data-ng-repeat="eachValue in udd.selectedValueIds">
+                            <span data-ng-if="$index !==0 && eachValue === udd.valuesMap[eachValue]['id']">, </span>
+                            <span>{{udd.valuesMap[eachValue]['description'] | truncate:50}}</span>
+                        </span>
+                    </span>
+                    <span ng-if="udd.user_defined_data_type === 'Attribute' && !udd.has_values && udd.format !== 'Percentage' && udd.format !== 'Yes/No' && udd.format !== 'Date' && udd.format !== 'Date Range'">{{udd.value | truncate:50 }}</span>
+                    <span ng-if="udd.user_defined_data_type === 'Attribute' && !udd.has_values && udd.format === 'Date'">{{udd.value}}</span>
+                    <span ng-if="udd.user_defined_data_type === 'Attribute' && !udd.has_values && udd.format === 'Date Range'">{{udd.from_date_value | FormatDate}} to {{udd.to_date_value | FormatDate}}</span>
+                    <span ng-if="udd.user_defined_data_type === 'Attribute' && !udd.has_values && udd.format === 'Percentage'">{{udd.value}}%</span>
+                    <span ng-if="udd.user_defined_data_type === 'Attribute' && !udd.has_values && udd.format === 'Yes/No' && (udd.value === '1' || udd.value === 1)">Yes</span>
+                    <span ng-if="udd.user_defined_data_type === 'Attribute' && !udd.has_values && udd.format === 'Yes/No' && (udd.value === '0' || udd.value === 0 || udd.value == undefined)">No</span>
+                    <span ng-if="udd.user_defined_data_type === 'Hierarchy'">{{selectedHierarchyProperty[udd.map_id]['path_name'] | truncate:50 }}</span>
+                    <span ng-if="udd.user_defined_data_type==='OptionType'">{{mtoOptionsMap[udd.udd_value_id]['description']}}</span>
+                    <span ng-if="udd.user_defined_data_type==='Option'">{{mtoOptionChoicesMap[udd.udd_value_id]['choice_description']}}</span>
+                </label>
+            </td>
+        </tr>
+    </table>
+</div>

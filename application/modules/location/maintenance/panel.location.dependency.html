@@ -1,0 +1,51 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':locationController.showDependencyDetails === true}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a data-ng-click="locationController.closeDependencyDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Location Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Name</td>
+                        <td class="highlight-text-success" title="{{head.name}}">{{head.name | truncate:50}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{head.status}}">{{head.status}}</td>
+                    </tr>
+                </table>
+                <h4>Location Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Delivery Date</td>
+                        <td class="highlight-text-success" title="{{locationController.errorDependentData.delivery_date}}">{{locationController.errorDependentData.delivery_date | FormatDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Fulfillment Location</td>
+                        <td title="{{head.name}}">{{head.name | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Booked Slots</td>
+                        <td>{{locationController.errorDependentData.booked_slots}}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Slots</td>
+                        <td>{{locationController.errorDependentData.total_slots}}</td>
+                    </tr>
+                </table>
+                </br>
+                <!--  <div class="dependency-notifyMessage"><span>{{locationController.errorDependentData.message}}</span></div> -->
+                <!-- <button type="button" class="btn btn-view-values m-5 pull-right m-t-10" ng-click=""><bold>Delete Location</bold></button>-->
+            </div>
+        </div>
+    </div>
+</div>

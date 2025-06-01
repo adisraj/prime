@@ -1,0 +1,65 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':mtoColCtrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" id="mto_coll_depend_close" name="mto_coll_depend_close" class="close-icon bg-none border-none btn-link p-0" data-ng-click="mtoColCtrl.closeDependencyDetails();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>MTO Collection Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success" title="{{mtoColCtrl.collection_details.short_description}}">{{mtoColCtrl.collection_details.short_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtoColCtrl.collection_details.status}}">{{mtoColCtrl.collection_details.status}}</td>
+                    </tr>
+                </table>
+                <h4>{{mtoColCtrl.errorDependentData.dependent_entity}} - Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Choice Description</td>
+                        <td class="highlight-text-success" title="{{mtoColCtrl.errorDependentData.choice_description}}">{{mtoColCtrl.errorDependentData.choice_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtoColCtrl.errorDependentData.status}}">{{mtoColCtrl.errorDependentData.status | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Collection</td>
+                        <td data-ng-show="mtoColCtrl.errorDependentData.collection" title="{{mtoColCtrl.errorDependentData.collection}}">{{mtoColCtrl.errorDependentData.collection}}</td>
+                        <td data-ng-show="!mtoColCtrl.errorDependentData.collection" title="{{mtoColCtrl.errorDependentData.collection}}">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>MTO Description</td>
+                        <td title="{{mtoColCtrl.errorDependentData.option}}">{{mtoColCtrl.errorDependentData.option}}</td>
+                    </tr>
+                    <tr>
+                        <td>Family</td>
+                        <td data-ng-show="mtoColCtrl.errorDependentData.family" title="{{mtoColCtrl.errorDependentData.family}}">{{mtoColCtrl.errorDependentData.family}}</td>
+                        <td data-ng-show="!mtoColCtrl.errorDependentData.family" title="{{mtoColCtrl.errorDependentData.family}}">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Price Group</td>
+                        <td data-ng-show="mtoColCtrl.errorDependentData.price_group" title="{{mtoColCtrl.errorDependentData.price_group}}">{{mtoColCtrl.errorDependentData.price_group}}</td>
+                        <td data-ng-show="!mtoColCtrl.errorDependentData.price_group" title="{{mtoColCtrl.errorDependentData.price_group}}">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Next Effective Date</td>
+                        <td ng-show="mtoColCtrl.errorDependentData.next_status_value !== 'None'" title="{{mtoColCtrl.errorDependentData.next_effective_date | FormatDate}}">{{mtoColCtrl.errorDependentData.next_effective_date | FormatDate}}</td>
+                        <td ng-show="mtoColCtrl.errorDependentData.next_status_value === 'None'" title="{{mtoColCtrl.errorDependentData.next_effective_date}}">N/A</td>
+                    </tr>
+                </table>
+                </br>
+                <div class="dependency-notifyMessage"><span>{{mtoColCtrl.errorDependentData.message}}</span></div>
+                <!-- <button type="button" class="btn btn-view-values m-5 pull-right m-t-10" ng-click=""><bold>Delete MTO Choice</bold></button>-->
+            </div>
+        </div>
+    </div>
+</div>

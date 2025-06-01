@@ -1,0 +1,747 @@
+<link rel="stylesheet" href="./application/modules/item/sku/retails/sku.retail.css">
+<div class="col-lg-12 p-0" data-ng-controller="SkuRetailController as skuRetailCtrl" scroll
+    data-ng-init="skuRetailCtrl.showRetailScreen(skuMaintCtrl)">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/entity-config-made-to-order.svg" />
+                    </div>
+                    <div class="label-module top-10 text-overflow-desc-auto"
+                        title="Retails for {{skuRetailCtrl.sku_detail.description}} - {{skuRetailCtrl.sku_detail.sku}}"
+                        title-direction="bottom">
+                        <a class="p-l-40" href="javascript:void(0)">Retails for {{skuRetailCtrl.sku_detail.description |
+                            truncate : 40}} - {{skuRetailCtrl.sku_detail.sku}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+            </div>
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li class="non-collapsed-link">
+                            <a data-ng-click="skuRetailCtrl.goBack()">
+                                <button type="button" id="go_back_sku" class="btn btn-cancel waves-effect f-700"
+                                    data-ng-disabled="!skuRetailCtrl.sku_detail">
+                                    Go Back
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success waves-effect f-700" id="set_retail"
+                                    name="set_retail" data-ng-init="skuRetailCtrl.focusSetRetail();"
+                                    data-ng-click="skuRetailCtrl.toggleRetailSidePanel(false, true)"
+                                    data-ng-disabled="!skuRetailCtrl.permissionsMap.create">
+                                    <span title="{{!skuRetailCtrl.permissionsMap.create ? 'Access denied' : ''}}">Set
+                                        Retail</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link"
+                            data-ng-if="skuRetailCtrl.sku_detail.sku_type && skuRetailCtrl.sku_detail.sku_type.toLowerCase() === 'stock'">
+                            <a>
+                                <button type="button" class="btn btn-success waves-effect f-700"
+                                    data-ng-click="skuRetailCtrl.toggleRetailSidePanel(true, true)"
+                                    data-ng-disabled="!skuRetailCtrl.permissionsMap.create || !skuRetailCtrl.isPackageRetails">
+                                    <span title="{{
+                                            !skuRetailCtrl.permissionsMap.create 
+                                                ? 'Access denied' 
+                                                : !skuRetailCtrl.isPackageRetails 
+                                                    ? 'No Sale Order Advisor' 
+                                                    : ''
+                                    }}">
+                                        Set Package Retail
+                                    </span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15"
+                                style="border-left:3px solid #e8e8e8" id="three_dot_menu" name="three_dot_menu" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button type="button"
+                                        data-ng-click="skuRetailCtrl.toggleRetailSidePanel(false, true)"
+                                        style="padding: 8px 20px" class="restricted-btn"
+                                        title="{{!skuRetailCtrl.permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!skuRetailCtrl.permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !skuRetailCtrl.permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Set Retail
+                                    </button>
+                                </li>
+                                <li class="cursor-pointer"
+                                    data-ng-if="skuRetailCtrl.sku_detail.sku_type && skuRetailCtrl.sku_detail.sku_type.toLowerCase() === 'stock'">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn"
+                                        data-ng-click="skuRetailCtrl.toggleRetailSidePanel(true, true)"
+                                        data-ng-disabled="!skuRetailCtrl.permissionsMap.create || skuRetailCtrl.sku_detail.sku_type.toLowerCase()==='mto' || !skuRetailCtrl.isPackageRetails">
+                                        <span title="{{
+                                            !skuRetailCtrl.permissionsMap.create 
+                                                ? 'Access denied' 
+                                                : skuRetailCtrl.sku_detail.sku_type.toLowerCase()==='mto' || !skuRetailCtrl.isPackageRetails 
+                                                    ? 'No Sale Order Advisor' 
+                                                    : ''
+                                            }}" data-ng-class="{'opacity50' : !skuRetailCtrl.permissionsMap.create}">
+                                            <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Set Package Retail
+                                    </button>
+                                </li>
+                                <li class="cursor-pointer">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn"
+                                        data-ng-click="skuRetailCtrl.goBack()">
+                                        <i class="zmdi zmdi-long-arrow-left f-17 m-r-15"></i>
+                                        Go Back
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 p-l-0 p-r-0 p-t-20" style="margin-top : 45px;" data-ng-if="skuRetailCtrl.permissionsMap.view">
+        <div class="col-lg-12 col-md-12 col-sm-12 p-0">
+            <div class="col-xs-12 m-b-10 maintenanceworkspace" style="box-shadow: none;">
+                <div class="f-16 panel-header d-flex"
+                    style="justify-content:space-between;background:#ffffff;border-bottom: 3px solid #eaeded;">
+                    <div class="d-flex d-flex-v-center">
+                        <span class="c-gray fa fa-calendar-alt f-20 m-r-10"></span>
+                        <div>
+                            <span class="f-700 main-header" style="color: #000000;">Retail Viewer</span>
+                            <div>
+                                <small style="color: #8a7921;">
+                                    Select the year, month and date to view the retail
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex d-flex-v-center" style="justify-content:flex-end;"
+                        data-ng-if="skuRetailCtrl.retail_dates.length>=1 && skuRetailCtrl.presentFuture">
+                        <select class="form-control select-component input-sm p-r-25"
+                            ng-model="skuRetailCtrl.selectedYear"
+                            data-ng-options="x as x for x in skuRetailCtrl.yearsList |orderBy:-'yearsList'"
+                            data-ng-change="skuRetailCtrl.generateMonths();skuRetailCtrl.deSelectAllDates();skuRetailCtrl.dates = [];skuRetailCtrl.disablePriceChange=true"
+                            name="selectedYear">
+                            <option value="" disabled>Select Year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0 bgm-white">
+                    <div class="effective-data-section" style="justify-content:space-between;">
+                        <div class="d-flex" style="flex-direction:column;flex: 1;padding-right: 10px;">
+                            <div class="d-flex">
+                                <button type="button" class="each-retail-month"
+                                    data-ng-class="{'selected':month.selected}"
+                                    data-ng-repeat="month in skuRetailCtrl.months" data-ng-click="skuRetailCtrl.deSelectAllMonths();skuRetailCtrl.deSelectAllDates();skuRetailCtrl.selectMonth(month.id);skuRetailCtrl.generateDateTimeline(month.id);skuRetailCtrl.populateRetailTimeLine();
+                                    skuRetailCtrl.highLightSelectedRetail(month.id);">
+                                    <span>{{month.name}}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="effective-data-section p-t-0" data-ng-if="skuRetailCtrl.dates">
+                        <button class="each-retail-date" data-ng-repeat="date in skuRetailCtrl.dates"
+                            data-ng-disabled="!skuRetailCtrl.retail_dates"
+                            data-ng-click="skuRetailCtrl.deSelectAllDates(); skuRetailCtrl.selectDate(date.id); skuRetailCtrl.populateRetailForSelectedDate(date);"
+                            data-ng-class="{'retail-exist':date.haveRetail,'retail-selected': date.selected,'retail-in-range11': date.isInRange,'retail-disabled':date.disableRetailDate,'retail-temporary' : date.isTemporary, 'cursor-not-allowed':!skuRetailCtrl.retail_dates}">
+                            <span>{{date.id}}</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-xs-12 d-flex d-flex-v-center"
+                    style="justify-content:space-between;padding:10px 5px;background: #f6fbff;border-bottom: 1px solid #e5e7e7;border-top: 1px solid #e5e7e7;">
+                    <div class="d-flex d-flex-v-center">
+                        <button class="btn btn-inverse btn-sm f-700 m-l-5"
+                            data-ng-disabled="skuRetailCtrl.disablePriceChange"
+                            data-ng-click="skuRetailCtrl.makePriceChange(true);">Make a price change
+                        </button>
+                        <a class="m-l-20 cursor-pointer"
+                            ng-if="skuRetailCtrl.currentRetailDate&&skuRetailCtrl.currentRetailDate!==skuRetailCtrl.currentDate"
+                            ng-click="skuRetailCtrl.activate(); skuRetailCtrl.getPricingGroups()">Go to Current Retail</a>
+                    </div>
+                    <div class="d-flex d-flex-v-center">
+                        <button class="m-r-5 cursor-pointer btn btn-link btn-sm"
+                            data-ng-class="{'c-gray cursor-not-allowed':skuRetailCtrl.disablePreviousButton}"
+                            data-ng-disabled="skuRetailCtrl.disablePreviousButton"
+                            data-ng-click="skuRetailCtrl.deSelectAllDates();skuRetailCtrl.selectCurrentOrNextRetail(false);">
+                            <span class="d-flex d-flex-v-center">
+                                <span class="far fa-arrow-alt-circle-left f-14 m-r-5"></span>
+                                Previous price change
+                            </span>
+                        </button>
+                        <a class="m-r-5"> | </a>
+                        <button class="cursor-pointer btn btn-link btn-sm"
+                            data-ng-class="{'c-gray cursor-not-allowed':skuRetailCtrl.disableNextButton}"
+                            data-ng-disabled="skuRetailCtrl.disableNextButton"
+                            data-ng-click="skuRetailCtrl.deSelectAllDates();skuRetailCtrl.selectCurrentOrNextRetail(true);">
+                            <span class="d-flex d-flex-v-center">
+                                Next price change
+                                <span class="far fa-arrow-alt-circle-right f-14 m-l-5"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="col-xs-12 d-flex align-items-center"
+                    data-ng-if="!skuRetailCtrl.selectedItem.vendor_id && !skuRetailCtrl.isRetailLoading">
+                    <i class="fa fa-spinner fa-spin m-15"></i>
+                    <span> Loading Vendor Details... </span>
+                </div>
+                <div class="col-xs-12 p-0 vendor-cost-card">
+                    <div class="col-xs-6 p-l-0 vendor-cost-card">
+                        <!-- Primary Vendor - START -->
+                        <div class="col-xs-12 p-0 card"
+                            data-ng-if="skuRetailCtrl.selectedItem.vendor_id && skuRetailCtrl.vendorIdsMap[skuRetailCtrl.selectedItem.vendor_id]">
+                            <div class="vendor-cost-header primary d-flex justify-content-between">
+                                <span>
+                                    <span class="fa fa-user-astronaut p-r-10"></span>Primary vendor</span>
+                                <button class="btn btn-sm btn-link f-700"
+                                    data-ng-click="skuRetailCtrl.showSecondaryVendors = true;"
+                                    data-ng-disabled="skuRetailCtrl.showSecondaryVendors">Secondary vendors
+                                </button>
+                            </div>
+                            <div class="col-xs-12 p-0" style="overflow:auto;">
+                                <table class="table-responsive table table-dark table-bordered-sm table-condensed">
+                                    <thead>
+                                        <th>Vendor</th>
+                                        <th>First Cost</th>
+                                        <th>Net Cost</th>
+                                        <th>Average Cost</th>
+                                        <th>Landed Cost</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td> {{skuRetailCtrl.selectedItem.vendor}}</td>
+                                            <td>
+                                                <span>{{skuRetailCtrl.vendorIdsMap[skuRetailCtrl.selectedItem.vendor_id].first_cost
+                                                    | ThousandSeparator:"$":3}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{skuRetailCtrl.vendorIdsMap[skuRetailCtrl.selectedItem.vendor_id].net_cost
+                                                    | ThousandSeparator:"$":3}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{skuRetailCtrl.vendorIdsMap[skuRetailCtrl.selectedItem.vendor_id].average_cost
+                                                    | ThousandSeparator:"$":3}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{skuRetailCtrl.vendorIdsMap[skuRetailCtrl.selectedItem.vendor_id].landed_cost
+                                                    | ThousandSeparator:"$":3}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-xs-12 p-10 m-t-5 d-flex justify-content-end">
+                            </div>
+                        </div>
+                        <!-- Primary Vendor - END -->
+                    </div>
+                    <div class="col-xs-6 p-0 vendor-cost-card secondary-vendors-container"
+                        data-ng-if="skuRetailCtrl.showSecondaryVendors">
+                        <!-- Secondary Vendors - START -->
+                        <div class="col-xs-12 card p-0">
+                            <div class="vendor-cost-header secondary d-flex justify-content-between d-flex-v-center">
+                                <span>Secondary vendor[s]</span>
+                                <button class="btn-sm btn-link f-700">
+                                    <a class="f-13 text-muted cursor-pointer zmdi zmdi-close"
+                                        data-ng-click="skuRetailCtrl.showSecondaryVendors = false;"></a>
+                                </button>
+                            </div>
+                            <div class="col-xs-12 p-0 vendor-cost-detail-section rc-scroll-bar">
+                                <div class="col-xs-12 p-10" data-ng-class="{'secondary-vendors-card':!$last}"
+                                    data-ng-repeat="vendor in skuRetailCtrl.secondaryVendors"
+                                    data-ng-if="skuRetailCtrl.secondaryVendors.length > 0">
+                                    <div class="f-14 f-500 m-b-10 text-info">
+                                        {{vendor.vendor}}
+                                    </div>
+                                    <div class="col-xs-8 p-0 d-flex justify-content-between">
+                                        <div>
+                                            <div class="text-muted">
+                                                <span>First cost</span>
+                                            </div>
+                                            <div class="f-14 f-500">
+                                                <span>{{skuRetailCtrl.vendorIdsMap[vendor.vendor_id].first_cost |
+                                                    ThousandSeparator:"$":3}}</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted">
+                                                <span>Net cost</span>
+                                            </div>
+                                            <div class="f-14 f-500">
+                                                <span>{{skuRetailCtrl.vendorIdsMap[vendor.vendor_id].net_cost |
+                                                    ThousandSeparator:"$":3}}</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted">
+                                                <span>Average cost</span>
+                                            </div>
+                                            <div class="f-14 f-500">
+                                                <span>{{skuRetailCtrl.vendorIdsMap[vendor.vendor_id].average_cost |
+                                                    ThousandSeparator:"$":3}}</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted">
+                                                <span>Landed cost</span>
+                                            </div>
+                                            <div class="f-14 f-500">
+                                                <span>{{skuRetailCtrl.vendorIdsMap[vendor.vendor_id].landed_cost |
+                                                    ThousandSeparator:"$":3}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 d-flex p-15 d-flex-h-center"
+                                    data-ng-if="skuRetailCtrl.secondaryVendors.length === 0">
+                                    <span class="f-14 text-muted">No secondary vendors exist.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Secondary Vendors - END -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6"
+                data-ng-if="(!skuRetailCtrl.retail && skuRetailCtrl.isLoaded && !skuRetailCtrl.isRetailLoading && (skuRetailCtrl.retail_dates&&skuRetailCtrl.retail_dates.length===0)) || skuRetailCtrl.showNoRetailMessage">
+                <div class="rc-alert rc-alert-type-info" aria-hidden="false" role="alert">
+                    <div class="col-xs-12 d-flex m-b-5 p-0">
+                        <div class="rc-alert-icon m-r-10">
+                            <span class="text-info zmdi zmdi-info-outline ng-isolate-scope" style="font-size:30px"
+                                title-direction="bottom" fixed-position="true">
+                            </span>
+                        </div>
+                        <div style="flex:1;" class="align-items-center d-flex">
+                            <div class="f-15 f-700 text-info m-r-10" rc-alert-region="header">
+                                Retail : </div>
+                            <div>
+                                <span class="c-black">No retails exists. Please add retails.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 p-20 d-flex"
+                data-ng-if="(!skuRetailCtrl.isLoaded || skuRetailCtrl.isRetailLoading) && !skuRetailCtrl.isPackageRetailLoading">
+                <div style="margin:auto;display: block;">
+                    <img style="width: 160px;height: 24px;" src="./img/loader_data.gif" />
+                </div>
+            </div>
+            <div class="col-xs-12 d-flex"
+                data-ng-if="(!skuRetailCtrl.isLoaded || skuRetailCtrl.isRetailLoading) && !skuRetailCtrl.isPackageRetailLoading">
+                <div style="margin:auto;">
+                    Loading Retails...
+                </div>
+            </div>
+            <div class="col-xs-12" data-ng-if="!skuRetailCtrl.isRetailLoading && !skuRetailCtrl.showNoRetailMessage">
+                <div class="card col-xs-12 p-0" data-ng-if="skuRetailCtrl.retail">
+                    <!--SHOW SKU RETAILS START---------------------------->
+                    <div>
+                        <div class="col-xs-12 p-0 align-items-center justify-content-between d-flex"
+                            style="border-bottom: 2px solid #dcdcdc;">
+                            <div class="col-sm-6 col-xs-12 p-10"
+                                style="display: flex;align-items: flex-start;flex-direction: column;">
+                                <div data-ng-if="!skuRetailCtrl.showingMultipleDatesRetails">
+                                    <span class="f-12" style="color: #6b6b6b;">Start Date</span>
+                                </div>
+                                <span data-ng-if="!skuRetailCtrl.showingMultipleDatesRetails" class="f-16 f-700"
+                                    style="color: #ef6f6f;">{{skuRetailCtrl.retail.effective_date | FormatDate}}</span>
+                                <div data-ng-if="skuRetailCtrl.showingMultipleDatesRetails">
+                                    <span class="f-16 f-700" style="color: #6b6b6b;">Current Retails</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-xs-6 p-10"
+                                style="display: flex;align-items: flex-start;flex-direction: column;">
+                                <div>
+                                    <span class="f-12" style="color: #6b6b6b;"
+                                        data-ng-if="skuRetailCtrl.retail && skuRetailCtrl.retail.end_date">End
+                                        Date</span>
+                                </div>
+                                <span class="f-16 f-700" style="color: #ef6f6f;">{{skuRetailCtrl.retail.end_date |
+                                    FormatDate}}</span>
+                            </div>
+                            <div class="pull-right p-10" data-ng-if="!skuRetailCtrl.confirmation">
+                                <span class="f-13 f-700 text-danger" data-ng-if="skuRetailCtrl.invalid_retail">* SKU Retail Exceeds 99999.99</span>
+                                <button class="bg-none border-none" id="refresh_retail_icon" name="refresh_retail_icon"
+                                    data-ng-click="skuRetailCtrl.getSKU()" title="Refresh For Retail Status">
+                                    <span class="zmdi zmdi-refresh zmdi-hc-fw f-23" style="color: #82848c;"></span>
+                                </button>
+                                <button class="bg-none border-none" id="copy_retail_icon" name="copy_retail_icon"
+                                    data-ng-click="skuRetailCtrl.toggleCopyRetailSidePanel(true,skuRetailCtrl.retail.effective_date)"
+                                    data-ng-disabled="!skuRetailCtrl.permissionsMap.create"
+                                    data-ng-class="{'opacity50' : !skuRetailCtrl.permissionsMap.create}"
+                                    title="{{!skuRetailCtrl.permissionsMap.create ? 'Access denied' : 'Copy retail'}}">
+                                    <span class="zmdi zmdi-copy zmdi-hc-fw f-23" style="color: #82848c;"></span>
+                                </button>
+                                <button class="restricted-btn"
+                                    data-ng-if="(skuRetailCtrl.isRetailDateGreaterThanToday===true&&skuRetailCtrl.hasRetails===true)"
+                                    data-ng-click="skuRetailCtrl.confirmation = true"
+                                    data-ng-disabled="!skuRetailCtrl.permissionsMap.delete"
+                                    data-ng-class="{'opacity50' : !skuRetailCtrl.permissionsMap.delete}">
+                                    <span class="zmdi zmdi-delete zmdi-hc-fw f-23"
+                                        data-ng-if="!skuRetailCtrl.permissionsMap.delete && skuRetailCtrl.disable_delete"
+                                        title="{{!skuRetailCtrl.permissionsMap.delete && skuRetailCtrl.disable_delete ? '' : 'Access denied'}}"
+                                        style="color: #82848c;"></span>
+                                    <span class="zmdi zmdi-delete zmdi-hc-fw f-23"
+                                        data-ng-if="skuRetailCtrl.permissionsMap.delete"
+                                        title="{{!skuRetailCtrl.permissionsMap.delete ? 'Access denied' : ''}}"
+                                        style="color: #82848c;"></span>
+                                </button>
+                            </div>
+                            <div class="col-xs-6 d-flex align-items-center justify-content-end"
+                                data-ng-if="skuRetailCtrl.confirmation">
+                                <span class="m-r-10">Are you sure, you want to delete retail?</span>
+                                <div class="p-0">
+                                    <button class="btn btn-primal btn-sm m-r-5" type="button"
+                                        data-ng-click="skuRetailCtrl.deleteRetailsForADate(skuRetailCtrl.retail.effective_date)"
+                                        aria-hidden="true">
+                                        Yes
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" type="button"
+                                        data-ng-click="skuRetailCtrl.confirmation = false" aria-hidden="true">
+                                        No
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-0">
+                            <div class="col-xs-4 p-0">
+                                <div data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()!=='mto'"
+                                    class="col-xs-12 p-0">
+                                    <div class="col-xs-12"
+                                        style="background: #fffbf1;padding: 5px;box-shadow: 0px 1px 1px 0px #efefef;height:30px;">
+                                    </div>
+                                    <div class="col-xs-12 p-5"
+                                        style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                        data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                                        <span class="" style="color: gray;">{{retail_pg.price_class}}</span>
+                                    </div>
+                                </div>
+                                <div data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()==='mto'"
+                                    class="col-xs-12 p-0">
+                                    <div class="col-xs-12"
+                                        style="background: #fffbf1;padding: 5px;box-shadow: 0px 1px 1px 0px #efefef;height:30px;">
+                                    </div>
+                                    <div class="col-xs-12 p-5"
+                                        style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;overflow:auto;height:35px;"
+                                        data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                                        <div class="d-flex">
+                                            <span class="" style="color: gray;">{{retail_pg.price_class}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-xs-12 p-0"
+                                        style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;"
+                                        data-ng-repeat="mto_type in skuRetailCtrl.option_types">
+                                        <div class="col-lg-12 p-0">
+                                            <div class="col-xs-12 p-5 p-l-10 f-15 bgm-darkblue" style="height:30px;">
+                                                <span class="c-white f-12 f-700">{{mto_type.type_desc}}</span>
+                                            </div>
+                                            <div class="col-xs-12 p-0"
+                                                data-ng-repeat="price_group in mto_type.subPriceGroups | orderBy: 'price_group_desc'">
+                                                <div class="package-sub-header">
+                                                    <span class="c-black">{{price_group.mto_description}}</span>
+                                                    <span class="c-firebrick">{{price_group.price_group_desc}}</span>
+                                                </div>
+                                                <div class="col-xs-12 p-0">
+                                                    <div class="col-lg-12 col-xs-12 p-5"
+                                                        style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                        data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                                                        <span class=""
+                                                            style="color: gray;">{{retail_pg.price_class}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-xs-12 p-0"
+                                                data-ng-repeat="choice in mto_type.subByChoices">
+                                                <div class="package-sub-header">
+                                                    <span class="c-black">{{choice.mto_description}}</span>
+                                                    <span class="c-firebrick">{{choice.choice_desc}}</span>
+                                                </div>
+                                                <div class="col-xs-12 p-0">
+                                                    <div class="col-lg-12 col-xs-12 p-5"
+                                                        style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                        data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                                                        <span class=""
+                                                            style="color: gray;">{{retail_pg.price_class}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Right section of the SKU retails-->
+                            <div class="col-xs-8 p-0 o-auto"
+                                data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()!=='mto'">
+                                <div class="d-flex">
+                                    <div class="col-xs-12 p-0"
+                                        data-ng-repeat="pricetype in skuRetailCtrl.retail.price_types|orderBy:['order','id']"
+                                        style="min-width:150px;">
+                                        <div class="col-xs-12"
+                                            style="background: #fffbf1;padding: 5px;box-shadow: 0px 1px 1px 0px #efefef;height:30px;white-space: nowrap;">
+                                            <span>{{pricetype.name}}</span>
+                                            <span title="Effective from"
+                                                data-ng-if="skuRetailCtrl.showingMultipleDatesRetails && pricetype.effective_date"
+                                                style="color:#ef6f6f">
+                                                <span>({{pricetype.effective_date| FormatDate}})</span>
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-12 p-5"
+                                            style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                            data-ng-repeat="retail_pg in pricetype.retails | orderBy:'price_class_udd_line_id'">
+                                            <div class="col-xs-12 p-0">
+                                                <span class="f-700" style="color: #5ac94d;"
+                                                    title="{{!skuRetailCtrl.permissionsMap.update ? 'Access denied' : ''}}">
+                                                    <input type="text" ng-readonly="{{!pricetype.isUpdate}}"
+                                                        currency="2" decimals="2" currency-point="." maxlength="8" value=0.00
+                                                        class="form-control retail-text" ng-model="retail_pg.retail"
+                                                        data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                        data-ng-blur="(skuRetailCtrl.upsertSKURetail(skuRetailCtrl.retail.effective_date, skuRetailCtrl.retail.end_date, retail_pg, pricetype.id, retail_pg.retail_reason_id))"
+                                                        data-ng-disabled="!skuRetailCtrl.permissionsMap.update"
+                                                        data-ng-class="{'cursor-not-allowed no-focus': !pricetype.isUpdate, 'focus-update':retail_pg.sent_to_as400 == 0}">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-8 p-0 o-auto"
+                                data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()==='mto'">
+                                <div class="d-flex">
+                                    <div class="col-xs-12 p-0"
+                                        data-ng-repeat="pricetype in skuRetailCtrl.retail.price_types|orderBy:['order','id']"
+                                        style="min-width:150px;">
+                                        <div class="col-xs-12"
+                                            style="background: #fffbf1;padding: 5px;box-shadow: 0px 1px 1px 0px #efefef;height:30px;white-space: nowrap;">
+                                            <span>{{pricetype.name}}</span>
+                                            <span title="Effective from"
+                                                data-ng-if="skuRetailCtrl.showingMultipleDatesRetails && pricetype.effective_date"
+                                                style="color:#ef6f6f">
+                                                <span>({{pricetype.effective_date| FormatDate}})</span>
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-12 p-5"
+                                            style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                            data-ng-repeat="retail_pg in pricetype.retails | orderBy:'price_class_udd_line_id'">
+                                            <div class="col-xs-12 p-0">
+                                                <span class="f-700" style="color: #5ac94d;"
+                                                    title="{{!skuRetailCtrl.permissionsMap.update ? 'Access denied' : ''}}">
+                                                    <input type="text" ng-readonly="{{!pricetype.isUpdate}}"
+                                                        currency="2" decimals="2" currency-point="." maxlength="8" value=0.00
+                                                        class="form-control retail-text" ng-model="retail_pg.retail"
+                                                        data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                        data-ng-blur="(pricetype.isUpdate &&skuRetailCtrl.upsertMTOSKURetail(skuRetailCtrl.retail.effective_date, skuRetailCtrl.retail.end_date, retail_pg, pricetype.id, null, 2, retail_pg.retail_reason_id))"
+                                                        data-ng-disabled="!skuRetailCtrl.permissionsMap.update">
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0"
+                                            style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;"
+                                            data-ng-repeat="mto_type in pricetype.types">
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-xs-12 p-5 p-l-10 f-15 bgm-darkblue text-center"
+                                                    style="height:30px;">
+                                                    <span class="c-white f-12 f-700"></span>
+                                                </div>
+                                                <div class="col-xs-12 p-0"
+                                                    data-ng-repeat="price_group in mto_type.subPriceGroups | orderBy: 'price_group_desc'">
+                                                    <div class="package-sub-header">
+                                                        <span class="c-black"></span>
+                                                        <span class="c-firebrick"></span>
+                                                    </div>
+                                                    <div class="col-xs-12 p-5"
+                                                        style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                        data-ng-repeat="retail_pg in price_group.retails | orderBy:'price_class_udd_line_id'">
+                                                        <div class="d-flex" style="flex-direction:column;">
+                                                            <span class="f-700 pull-right" style="color: #5ac94d;">
+                                                                <input type="text" ng-readonly="{{!pricetype.isUpdate}}"
+                                                                    currency="2" decimals="2" currency-point="." maxlength="8"
+                                                                    class="form-control retail-text"
+                                                                    ng-model="retail_pg.retail"
+                                                                    data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                                    data-ng-blur="(pricetype.isUpdate &&
+                                                                skuRetailCtrl.upsertMTOSKURetail(skuRetailCtrl.retail.effective_date, skuRetailCtrl.retail.end_date, retail_pg, pricetype.id, price_group, 1, retail_pg.retail_reason_id))">
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0"
+                                                    data-ng-repeat="choice in mto_type.subByChoices">
+                                                    <div class="package-sub-header">
+                                                        <span class="c-black"></span>
+                                                        <span class="c-firebrick"></span>
+                                                    </div>
+                                                    <div class="col-lg-12 p-5"
+                                                        style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                        data-ng-repeat="retail_pg in choice.retails | orderBy:'price_class_udd_line_id'">
+                                                        <div class="d-flex" style="flex-direction:column;">
+                                                            <span class="f-700 pull-right" style="color: #5ac94d;">
+                                                                <input type="text" ng-readonly="{{!pricetype.isUpdate}}"
+                                                                    currency="2" decimals="2" currency-point="." maxlength="8" value=0.00
+                                                                    class="form-control retail-text"
+                                                                    ng-model="retail_pg.retail"
+                                                                    data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                                    data-ng-blur="(pricetype.isUpdate && skuRetailCtrl.upsertMTOSKURetail(skuRetailCtrl.retail.effective_date, skuRetailCtrl.retail.end_date, retail_pg, pricetype.id, choice, 0, retail_pg.retail_reason_id)) ">
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--SHOW SKU RETAILS END---------------------------->
+                </div>
+            </div>
+            <div class="col-xs-12"
+                data-ng-if="!skuRetailCtrl.isRetailLoading && skuRetailCtrl.sku_detail.sku_type && skuRetailCtrl.sku_detail.sku_type.toLowerCase() === 'stock'">
+                <div class="card col-xs-12 p-0" data-ng-if="skuRetailCtrl.retail">
+                    <div class="pull-right p-10"
+                        data-ng-if="skuRetailCtrl.retail.OrderAdvisorRetails && skuRetailCtrl.retail.OrderAdvisorRetails.length > 0">
+                        <button class="bg-none border-none" id="copy_package_icon" name="copy_package_icon"
+                            data-ng-click="skuRetailCtrl.toggleCopyPackageRetailSidePanel(true,skuRetailCtrl.retail.OrderAdvisorRetails[0].effective_date);skuRetailCtrl.getSkuPackageRetailDates()"
+                            data-ng-disabled="!skuRetailCtrl.permissionsMap.create"
+                            data-ng-class="{'opacity50' : !skuRetailCtrl.permissionsMap.create}"
+                            title="{{!skuRetailCtrl.permissionsMap.create ? 'Access denied' : 'Copy retail'}}">
+                            <span class="zmdi zmdi-copy zmdi-hc-fw f-23" style="color: #82848c;"></span>
+                        </button>
+                    </div>
+                    <!--PACKAGE Retails START-->
+                    <div
+                        data-ng-if="!skuRetailCtrl.isPackageRetailLoading && skuRetailCtrl.retail.OrderAdvisorRetails && skuRetailCtrl.retail.OrderAdvisorRetails.length">
+                        <div class="col-sm-6 col-xs-12 p-10"
+                            style="display: flex;align-items: flex-start;flex-direction: column;">
+                            <div data-ng-if="skuRetailCtrl.retail.OrderAdvisorRetails[0].effective_date">
+                                <span class="f-12" style="color: #6b6b6b;">Start Date</span>
+                            </div>
+                            <span class="f-16 f-700"
+                                style="color: #ef6f6f;">{{skuRetailCtrl.retail.OrderAdvisorRetails[0].effective_date |
+                                FormatDate}}</span>
+                        </div>
+                        <div class="col-sm-3 col-xs-6 p-10"
+                            style="display: flex;align-items: flex-start;flex-direction: column;">
+                            <div>
+                                <span class="f-12" style="color: #6b6b6b;"
+                                    data-ng-if="skuRetailCtrl.retail.OrderAdvisorRetails[0].end_date">End
+                                    Date</span>
+                            </div>
+                            <span class="f-16 f-700"
+                                style="color: #ef6f6f;">{{skuRetailCtrl.retail.OrderAdvisorRetails[0].end_date |
+                                FormatDate}}</span>
+                        </div>
+                        <div class="col-xs-12 p-5 p-l-10 f-15 bgm-darkblue d-flex align-items-center m-t-10"
+                            style="height:30px;">
+                            <span class="c-white f-12 f-700 ng-binding">Package Retails</span>
+                        </div>
+                        <div class="col-xs-12 p-0"
+                            data-ng-repeat="orderadvisor in skuRetailCtrl.retail.OrderAdvisorRetails">
+                            <div class="col-xs-12 p-10" style="background: #f6fbff;
+                                border-bottom: 1px solid #e5e7e7;
+                                border-top: 1px solid #e5e7e7;">
+                                Order Advisor - <strong>{{orderadvisor.description}}</strong>
+                            </div>
+                            <div class="col-xs-12 p-0" data-ng-if="orderadvisor.Packages"
+                                data-ng-repeat="package in orderadvisor.Packages">
+                                <div class="col-xs-4 p-0">
+                                    <div data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()!=='mto'"
+                                        class="col-xs-12 p-0">
+                                        <div class="col-xs-12 package-sub-header">
+                                            <strong>{{package.description}}</strong>
+                                            <span data-ng-if="package.is_included===1">
+                                                <strong>(Included)</strong>
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-12 p-5"
+                                            style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                            data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                                            <span class="" style="color: gray;">{{retail_pg.price_class}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Right section of the SKU retails-->
+                                <div class="col-xs-8 p-0 o-auto"
+                                    data-ng-if="skuRetailCtrl.sku_detail.sku_type.toLowerCase()!=='mto'">
+                                    <div class="d-flex">
+                                        <div class="col-xs-12 p-0"
+                                            data-ng-repeat="pricetype in package.PriceTypes|orderBy:['order','id']"
+                                            style="min-width:150px;">
+                                            <div class="col-xs-12"
+                                                style="display:flex;align-items:center;justify-content:space-between;background: linear-gradient(#ffffff,#e8e8e8);border-bottom: 1px solid;padding:7px;height:33px;">
+                                                <span>{{pricetype.name}}</span>
+                                            </div>
+                                            <div class="col-xs-12 p-5"
+                                                style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                data-ng-repeat="retail_pg in pricetype.PriceGroups | orderBy:'price_class_udd_line_id'">
+                                                <div class="col-xs-12 p-0">
+                                                    <span class="f-700" style="color: #5ac94d;"
+                                                        title="{{!skuRetailCtrl.permissionsMap.update ? 'Access denied' : ''}}">
+                                                        <input type="text" currency="2" decimals="2" currency-point="." value=0.00
+                                                            class="form-control retail-text" ng-model="retail_pg.retail"
+                                                            data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                            data-ng-disabled="!skuRetailCtrl.permissionsMap.update"
+                                                            data-ng-blur="skuRetailCtrl.upsertPackageRetails(retail_pg,pricetype.id,package.id,orderadvisor.order_advisor_id, orderadvisor.effective_date,orderadvisor.end_date)">
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--PACKAGE Retails END-->
+                </div>
+                <div class="col-xs-6 p-l-0 m-t-10"
+                    data-ng-if="!skuRetailCtrl.isPackageRetailLoading && (skuRetailCtrl.nopackage_retails ||(skuRetailCtrl.retail.OrderAdvisorRetails && !skuRetailCtrl.retail.OrderAdvisorRetails.length))">
+                    <div class="rc-alert rc-alert-type-info" aria-hidden="false" role="alert">
+                        <div class="col-xs-12 d-flex m-b-5 p-0">
+                            <div class="rc-alert-icon m-r-10">
+                                <span class="text-info zmdi zmdi-info-outline ng-isolate-scope" style="font-size:30px"
+                                    title-direction="bottom" fixed-position="true">
+                                </span>
+                            </div>
+                            <div style="flex:1;" class="align-items-center d-flex">
+                                <div class="f-15 f-700 text-info m-r-10" rc-alert-region="header">
+                                    Package Retail : </div>
+                                <div>
+                                    <span class="c-black">Package retails are not set.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 p-20 d-flex"
+                data-ng-if="skuRetailCtrl.sku_detail.sku_type && skuRetailCtrl.sku_detail.sku_type.toLowerCase() === 'stock' && skuRetailCtrl.isPackageRetails && skuRetailCtrl.isPackageRetailLoading">
+                <div style="margin:auto;">
+                    <img src="./img/loader_data.gif" />
+                </div>
+            </div>
+            <div class="col-xs-12 d-flex"
+                data-ng-if="skuRetailCtrl.sku_detail.sku_type && skuRetailCtrl.sku_detail.sku_type.toLowerCase() === 'stock' && skuRetailCtrl.isPackageRetails && skuRetailCtrl.isPackageRetailLoading">
+                <div style="margin:auto;">
+                    Loading Package Retails...
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="skuRetailCtrl.permissionsMap && !skuRetailCtrl.permissionsMap.view"
+        data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-include="'./application/modules/item/sku/retails/panel.sku.retail.create.retail.html'"></div>
+    <div data-ng-include="'./application/modules/item/sku/retails/modal.sku.detail.view.html'"></div>
+    <div data-ng-include="'./application/modules/item/sku/retails/retail.create.set.form.html'"></div>
+    <div data-ng-include="'./application/modules/item/sku/retails/panel.sku.package.retail.copy.retail.html'"></div>
+</div>

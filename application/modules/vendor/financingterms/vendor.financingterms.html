@@ -1,0 +1,245 @@
+<div class="container col-lg-12 p-0" data-ng-controller="VendorfinancingtermsController as termCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <i class="fas fa-money-check-alt fa-3x"></i>
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Financing Terms</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" ng-if="permissionsMap && permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!termCtrl.search"> {{termCtrl.rowsInfo}} </span>
+                        <span data-ng-if="termCtrl.search"> Displaying
+                            {{(termCtrl.vendorTermsList|filterBy:['id','term']:termCtrl.search).length}}
+                            of {{termCtrl.vendorTermsList.length}}
+                            Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap && permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    ng-if="termCtrl.vendorTermsList.length > 0">
+                                    <input class="form-control input-sm" type="text" ng-model="termCtrl.search"
+                                        id="inlineSearch" name="inlineSearch"
+                                        data-ng-init="termCtrl.focusSearchField()" indicate-quick-search
+                                        placeholder="Quick Search" data-ng-disabled="!termCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="termCtrl.vendorTermsList.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="termCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block  waves-effect" data-ng-disabled="!termCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="termCtrl.vendorTermsList.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="termCtrl.reload(true);"
+                                    class="btn-primal btn-block  waves-effect" data-ng-disabled="!termCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="termCtrl.openForm();"
+                                data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Financing Term</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15"
+                                style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="termCtrl.openForm();" style="padding: 8px 18px"
+                                        class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Financing Term
+                                    </button>
+                                </li>
+                                <li ng-if="termCtrl.vendorTermsList.length > 0">
+                                    <a data-ng-click="termCtrl.isLoaded ? termCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': !termCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="termCtrl.vendorTermsList.length > 0">
+                                    <a data-ng-click="termCtrl.isLoaded ? termCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': !termCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration"
+        data-ng-if="!termCtrl.rowsCount && !termCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="termCtrl.rowsCount && termCtrl.rowsCount !== 0 && termCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="permissionsMap.view && termCtrl.isLoaded">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/vendor/financingterms/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="termCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="termCtrl.sortType = 'id'; sortReverse = !sortReverse" style="width: 20%;"
+                                        data-ng-hide="termCtrl.vendorTermGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="termCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="termCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <!-- <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="termCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="termCtrl.vendorTermGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="termCtrl.sortType == 'status' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="termCtrl.sortType == 'status' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th> -->
+                                    <th class="text-center" id="description_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="termCtrl.sortType = 'term'; sortReverse = !sortReverse"
+                                        data-ng-hide="termCtrl.vendorTermGrid.columns.description.visible == 0">
+                                        <span class="handle">Term(Months)</span>
+                                        <span ng-show="termCtrl.sortType == 'description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="termCtrl.sortType == 'term' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="term in termCtrl.vendorTermsList|filterBy:['id','term']:termCtrl.search|orderBy:termCtrl.sortType:sortReverse|itemsPerPage:termCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="termCtrl.setClickedRow($index);"
+                                    ios-dblclick="termCtrl.dblClickAction(term);" selectedrow="{{term}}">
+                                    <td class="id_col iconcolumnWidth"
+                                        data-ng-hide="termCtrl.vendorTermGrid.columns.id.visible == 0">{{term.id}}
+                                    </td>
+                                    <!-- <td class="status_col"
+                                        ng-class="{'text-success f-500': term.status==='Active' , 'text-warning f-300': term.status ==='Pending Active', 'text-primary f-300': term.status ==='Inactive','text-info f-300': term.status==='Pending Inactive'}"
+                                        data-ng-hide="termCtrl.vendorTermGrid.columns.status.visible == 0">
+                                        {{term.status}}</td> -->
+                                    <td class="description_col" style="text-align: center;"
+                                        data-ng-hide="termCtrl.vendorTermGrid.columns.description.visible == 0">
+                                        <span
+                                            data-ng-if="term.term || term.term == 0">{{term.term}}</span>
+                                        <span class="text-muted"
+                                            data-ng-if="!term.term && term.term != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-between align-items-center">
+                        <dir-pagination-controls template-url="rc-pagination.html" boundary-links="true"
+                            on-page-change="termCtrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group ng-table-counts">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="termCtrl.pageSize = 10"
+                                ng-class="{'active':termCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="termCtrl.pageSize = 25"
+                                ng-class="{'active':termCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="termCtrl.pageSize = 50"
+                                ng-class="{'active':termCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="termCtrl.pageSize = 100"
+                                ng-class="{'active':termCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Details section for each vendor purchase data -->
+    <div data-ng-include="'./application/modules/vendor/financingterms/panel.vendor.terms.dependency.html'"></div>
+    <meta-data-panel></meta-data-panel>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':termCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{termCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="termCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{termCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{termCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="termCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!permissionsMap.view && termCtrl.isLoaded && termCtrl.rowsCount"
+        data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="termCtrl.rowsCount === 0 && termCtrl.isLoaded && permissionsMap.view" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No Financing term exists. Please add Financing term.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/vendor/financingterms/panel.vendor.terms.form.html'"></div>
+</div>

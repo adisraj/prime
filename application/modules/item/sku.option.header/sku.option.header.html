@@ -1,0 +1,193 @@
+<div class="container col-lg-12 p-0" data-ng-controller="SkuOptionHeaderController as skuHeadCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/skuOption.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">SKU Options</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!skuHeadCtrl.search"> {{skuHeadCtrl.rowsInfo}} </span>
+                        <span data-ng-if="skuHeadCtrl.search"> Displaying {{(skuHeadCtrl.allSkus|filterBy:['id','status','name']:skuHeadCtrl.search).length}} of {{skuHeadCtrl.allSkus.length}} Records </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="skuHeadCtrl.allSkus.length > 0">
+                                    <input class="form-control input-sm " type="text " ng-model="skuHeadCtrl.search" indicate-quick-search placeholder="Quick Search " data-ng-disabled="!skuHeadCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="skuHeadCtrl.allSkus.length > 0">
+                            <a>
+                                <button type="button" ng-click="skuHeadCtrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect" data-ng-disabled="!skuHeadCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="skuHeadCtrl.allSkus.length > 0">
+                            <a>
+                                <button type="button" ng-click="skuHeadCtrl.reload(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="!skuHeadCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-disabled="!permissionsMap.create" data-ng-click="skuHeadCtrl.openForm();">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create SKU Option</span>
+                                </button>
+                            </a>
+                           
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="add-btn cursor-pointer">
+                                    <button data-ng-click="skuHeadCtrl.openForm();" style="padding: 8px 20px" class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}" data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create SKU Option
+                                    </button>
+                                </li>
+                                <li ng-if="skuHeadCtrl.allSkus.length > 0">
+                                    <a data-ng-click="skuHeadCtrl.isLoaded ? skuHeadCtrl.ShowHideColumnSettings() : '' " data-ng-class="{'cursor-not-allowed': !skuHeadCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="skuHeadCtrl.allSkus.length > 0">
+                                    <a data-ng-click="skuHeadCtrl.isLoaded ? skuHeadCtrl.reload(true) : '' " data-ng-class="{'cursor-not-allowed': !skuHeadCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!skuHeadCtrl.rowsCount && !skuHeadCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="skuHeadCtrl.rowsCount !== 0 && skuHeadCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="permissionsMap && skuHeadCtrl.isLoaded">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+
+                <div data-ng-include="'./application/modules/item/sku.option.header/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration" data-ng-init="skuHeadCtrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="skuHeadCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="skuHeadCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="skuHeadCtrl.skuOptionsGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="skuHeadCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="skuHeadCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" style="width:10%" drag-me drop-me data-handle=".handle" ng-click="skuHeadCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="skuHeadCtrl.skuOptionsGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="skuHeadCtrl.sortType == 'status' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="skuHeadCtrl.sortType == 'status' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="name_col_head" drag-me drop-me data-handle=".handle" ng-click="skuHeadCtrl.sortType = 'name'; sortReverse = !sortReverse"
+                                        data-ng-hide="skuHeadCtrl.skuOptionsGrid.columns.name.visible == 0">
+                                        <span class="handle">Name</span>
+                                        <span ng-show="skuHeadCtrl.sortType == 'name' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="skuHeadCtrl.sortType == 'name' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="skus in skuHeadCtrl.allSkus|filterBy:['id','status','name']:skuHeadCtrl.search|orderBy:skuHeadCtrl.sortType:sortReverse|itemsPerPage:skuHeadCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}" data-ng-click="skuHeadCtrl.setClickedRow($index);"
+                                    ios-dblclick="skuHeadCtrl.dblClickAction(skus);" selectedrow="{{skus}}">
+                                    <td class="id_col iconcolumnWidth" data-ng-hide="skuHeadCtrl.skuOptionsGrid.columns.id.visible == 0">{{skus.id}}</td>
+                                    <td class="status_col" ng-class="{'text-success f-500': skus.status==='Active' , 'text-warning f-300': skus.status ==='Pending Active', 'text-primary f-300': skus.status ==='Inactive','text-info f-300': skus.status==='Pending Inactive'}"
+                                        data-ng-hide="skuHeadCtrl.skuOptionsGrid.columns.status.visible == 0">{{skus.status}}</td>
+                                    <td class="name_col" data-ng-hide="skuHeadCtrl.skuOptionsGrid.columns.name.visible == 0">{{skus.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="align-items-center col-lg-12 d-flex justify-content-between p-15">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="skuHeadCtrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="skuHeadCtrl.pageSize = 10" ng-class="{'active':skuHeadCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="skuHeadCtrl.pageSize = 25" ng-class="{'active':skuHeadCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="skuHeadCtrl.pageSize = 50" ng-class="{'active':skuHeadCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="skuHeadCtrl.pageSize = 100" ng-class="{'active':skuHeadCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <meta-data-panel></meta-data-panel>
+        </div>
+        <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+            <div id="refresh-table" class="p-15" data-ng-class="{'toggled':skuHeadCtrl.isRefreshTable}">
+                <div class="col-xs-6 p-0">
+                    <span class="f-15 f-300 pull-left">{{skuHeadCtrl.refreshTableText}}</span>
+                </div>
+                <div class="col-xs-6 p-0" data-ng-if="skuHeadCtrl.totalTimeText">
+                    <span class="pull-right f-300">
+                        <strong>{{skuHeadCtrl.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{skuHeadCtrl.totalRecordsText}}</span>
+                        <span ng-bind-html="skuHeadCtrl.totalTimeText"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!permissionsMap.view && skuHeadCtrl.isLoaded" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="skuHeadCtrl.rowsCount === 0 && skuHeadCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No SKU option exists. Please add SKU option.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/item/sku.option.header/panel.sku.option.form.html'"></div>
+</div>

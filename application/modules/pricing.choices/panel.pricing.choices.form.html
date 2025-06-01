@@ -1,0 +1,175 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar" class="c-overflow"
+    data-ng-class="{'toggled':pricingChoicesCtrl.isShowDetails === true || pricingChoicesCtrl.isShowDetails === 1,'changeposition': pricingChoicesCtrl.showErrorDetailsData === true || showhistory === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="pricingChoicesCtrl.closeForm();closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!pricingChoicesCtrl.isDeleteSuccess && pricingChoicesCtrl.isShowAdd && !pricingChoicesCtrl.isConfirmDelete)"
+                title="{{pricingChoicesCtrl.entityInformation.name}}">Create
+                <strong>{{pricingChoicesCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(!pricingChoicesCtrl.isDeleteSuccess && !pricingChoicesCtrl.isShowAdd && !pricingChoicesCtrl.isConfirmDelete)"
+                title="{{pricingChoicesCtrl.entityInformation.name}}">Update
+                <strong>{{pricingChoicesCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(pricingChoicesCtrl.isDeleteSuccess || pricingChoicesCtrl.isConfirmDelete && !pricingChoicesCtrl.isShowAdd)"
+                title="{{pricingChoicesCtrl.entityInformation.name}}">Delete
+                <strong>{{pricingChoicesCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!pricingChoicesCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="pricingChoicesCtrl.showErrorDetails || !(pricingChoicesCtrl.isUpdateSuccess || pricingChoicesCtrl.isSaveSuccess || pricingChoicesCtrl.isConfirmDelete || pricingChoicesCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/retail_price_type.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-if="!pricingChoicesCtrl.showErrorDetails" valdr-form-group>
+            <div
+                ng-if="!(pricingChoicesCtrl.isUpdateSuccess || pricingChoicesCtrl.isSaveSuccess || pricingChoicesCtrl.isConfirmDelete || pricingChoicesCtrl.isDeleteSuccess)">
+                <ng-form name="pricingChoicesCtrl.pricing_choice_form" role="form" novalidate="novalidate" valdr-type="RULES-127">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="pricingChoicesCtrl.pricing_choice_form.description.$invalid">* </span>
+                        <span class="c-green" ng-show="pricingChoicesCtrl.pricing_choice_form.description.$valid">* </span>
+                        <label>Description</label>
+                        <input id="description" name="description" type="text"
+                            class="form-control input-sm" ng-model="pricingChoicesCtrl.pricing_choice_details.description"
+                            placeholder="Enter Description" errorvalue="pricingChoicesCtrl.pricing_choice_details.description_error"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group data-ng-if="pricingChoicesCtrl.isShowAdd===true">
+                        <span class="c-red" ng-show="pricingChoicesCtrl.pricing_choice_form.status.$invalid">*
+                        </span>
+                        <span class="c-green" ng-show="pricingChoicesCtrl.pricing_choice_form.status.$valid">*
+                        </span>
+                        <label>Status</label>
+                            <select id="status" name="status"
+                            class="rcinput form-control select-component input-sm tabfocus" ng-model="pricingChoicesCtrl.pricing_choice_details.status"
+                            ng-options="each.code as each.description for each in statuses"
+                            errorvaluechosen="pricingChoicesCtrl.pricing_choice_details.status_error" required=""
+                            ng-change="pricingChoicesCtrl.pricing_choice_details.status_description=(statuses|filter:{code:pricingChoicesCtrl.pricing_choice_details.status})[0].description">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div>
+                    <div class="form-group" valdr-form-group data-ng-if="pricingChoicesCtrl.isShowAdd===false">
+                        <span class="c-red" ng-show="pricingChoicesCtrl.pricing_choice_form.status.$invalid">*
+                        </span>
+                        <span class="c-green" ng-show="pricingChoicesCtrl.pricing_choice_form.status.$valid">*
+                        </span>
+                        <label>Status</label>
+                            <select id="status" name="status"
+                            class="rcinput form-control select-component input-sm tabfocus" ng-model="pricingChoicesCtrl.pricing_choice_details.status"
+                            ng-options="each.code as each.description disable when (each.code===pricingChoicesCtrl.statusCodes.Pending.ID&&pricingChoicesCtrl.oldPricingChoiceData.status_id!==pricingChoicesCtrl.statusCodes.Pending.ID) for each in statuses"
+                            errorvaluechosen="pricingChoicesCtrl.pricing_choice_details.status_error" required=""
+                            ng-change="pricingChoicesCtrl.pricing_choice_details.status_description=(statuses|filter:{code:pricingChoicesCtrl.pricing_choice_details.status})[0].description">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label> Is Eligible For Finance
+                                <input id="is_eligible_for_finance" name="is_eligible_for_finance"
+                                    type="checkbox" hidden="hidden"
+                                    ng-model="pricingChoicesCtrl.pricing_choice_details.is_eligible_for_finance" ng-true-value="1"
+                                    ng-false-value="0" ng-disabled="pricingChoicesCtrl.disableActions">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label> Can Adjust Price Flag
+                                <input id="can_adjust_price_flag" name="can_adjust_price_flag"
+                                    type="checkbox" hidden="hidden"
+                                    ng-model="pricingChoicesCtrl.pricing_choice_details.can_adjust_price_flag" ng-true-value="1"
+                                    ng-false-value="0" ng-disabled="pricingChoicesCtrl.disableActions">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                     <rcp-edit-form-btns new-form="pricingChoicesCtrl.isShowAdd"
+                        save-fn="pricingChoicesCtrl.save(pricingChoicesCtrl.pricing_choice_details);" save-btn-text="pricingChoicesCtrl.saveBtnText"
+                        save-btn-error="pricingChoicesCtrl.saveBtnError" update-fn="pricingChoicesCtrl.update(pricingChoicesCtrl.pricing_choice_details);"
+                        update-btn-text="pricingChoicesCtrl.updateBtnText" update-btn-error="pricingChoicesCtrl.updateBtnError"
+                        confirm-fn="pricingChoicesCtrl.showconfirm();closeShowHistory();"
+                        confirm-delete="pricingChoicesCtrl.isConfirmDelete" update-success="pricingChoicesCtrl.isUpdateSuccess"
+                        entity-id="pricingChoicesCtrl.pricing_choice_details.id" enable-button="pricingChoicesCtrl.pricing_choice_form.$invalid"
+                        access-permissions="permissionsMap">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="pricingChoicesCtrl.isConfirmDelete" image-name="retail_price_type.svg"
+                close-fn="pricingChoicesCtrl.closeForm();" delete-fn="pricingChoicesCtrl.delete(pricingChoicesCtrl.pricing_choice_details);"
+                confirm-delete="pricingChoicesCtrl.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="pricingChoicesCtrl.createAnotherForm();"
+                close-fn="pricingChoicesCtrl.closeForm();" update-success="pricingChoicesCtrl.isUpdateSuccess"
+                save-success="pricingChoicesCtrl.isSaveSuccess" delete-success="pricingChoicesCtrl.isDeleteSuccess">
+            </rcp-success-form>
+                <div
+                    ng-if="isMaintenance !== true && !pricingChoicesCtrl.isUpdateSuccess && !pricingChoicesCtrl.isSaveSuccess && !pricingChoicesCtrl.isDeleteSuccess && !pricingChoicesCtrl.isConfirmDelete && !pricingChoicesCtrl.isShowAdd">
+                    <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn"
+                        data-ng-click="loadHistory();" data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View
+                        History</button>
+                    <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading history...
+                    </div>
+                </div>
+        </div>
+        <div class="col-lg-12" ng-if="pricingChoicesCtrl.showErrorDetails">
+            <div>
+                <h4 class="aligncenter dependency-errorMessage">Cannot be deleted!</h4>
+            </div>
+            <div class="col-xs-12 p-0"
+                ng-repeat="($groupName,$dependencyMain) in ( pricingChoicesCtrl.dependencyList | groupBy : 'dependent_entity')">
+                <div class="rcpscrollbar dependency-entityBox">
+                    <h4> Dependent Entities - {{$groupName}} </h4>
+                    <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                        <div data-ng-if= "$groupName.toLowerCase() === 'financing price adjustments'" class="dependency-entityList"
+                            ng-click="pricingChoicesCtrl.showDependencyListDetails(dependency);">
+                            <span title="{{dependency.financing_choice_description}}">{{dependency.financing_choice_description | truncate:20}}</span> - 
+                            <span title="{{dependency.pricing_choice_description}}">{{dependency.pricing_choice_description | truncate:20}}</span>
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                        <div data-ng-if= "$groupName.toLowerCase() === 'item type'" class="dependency-entityList"
+                            ng-click="pricingChoicesCtrl.showDependencyListDetails(dependency);">
+                            <span title="{{dependency.item_type}}">{{dependency.item_type | truncate:20}}</span> 
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                        <div data-ng-if= "$groupName.toLowerCase() === 'sku'" class="dependency-entityList"
+                            ng-click="pricingChoicesCtrl.showDependencyListDetails(dependency);">
+                            <span title="{{dependency.sku}}">SKU - {{dependency.sku}}</span> 
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="pricingChoicesCtrl.closeDependencyList();">
+                    <span>
+                        <b>Cancel</b>
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-if="pricingChoicesCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="pricingChoicesCtrl.message = null"
+                    aria-hidden="true">&times;</button>
+                {{pricingChoicesCtrl.message}}
+            </div>
+        </div>
+    </div>
+    <div ng-if="pricingChoicesCtrl.isUnauthorized && (pricingChoicesCtrl.isShowAdd || !pricingChoicesCtrl.isShowAdd || pricingChoicesCtrl.isConfirmDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-xs-12" ng-if="!pricingChoicesCtrl.isShowAdd && pricingChoicesCtrl.isShowHistory"
+    data-ng-include="'./application/templates/history.html'">
+</div>

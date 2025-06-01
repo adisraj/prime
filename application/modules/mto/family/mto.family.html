@@ -1,0 +1,246 @@
+<div class="container col-lg-12 p-0" data-ng-controller="MTOFamilyController as mtofamctrl">
+    <!--list panel-->
+
+    <!-- <rcp-module-header module-name="MTO Families" button-name="MTO Family" svg-image="mto-family.svg" create-new-fn="mtofamctrl.openForm();"></rcp-module-header>-->
+    <!--  <nav class="navbar navbar-toolbar navbar-default fixed-top">
+        <div class="bgm-white header-module">
+            <div class="navbar-header p-relative" style="min-height: inherit;">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                <div class="image-module p-absolute">
+                    <img src="./img/sidebar-icons/mto-family.svg" />
+                </div>
+                <div class="label-module p-absolute">
+                    <a class="navbar-brand" href="javascript:void(0)">MTO Families</a>
+                </div>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse" ng-if="mtofamctrl.isViewAuthorized">
+                <ul class="nav navbar-nav navbar-right">
+                    <li> <a><button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="mtofamctrl.openForm();">Create MTO Family</button></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav> -->
+
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/mto-family.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">MTO Families</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="tableheader-btn">
+                        <span data-ng-if="!mtofamctrl.search"> {{mtofamctrl.rowsInfo}} </span>
+                        <span data-ng-if="mtofamctrl.search"> Displaying {{(mtofamctrl.allMtofamilies|filterBy:['id','status','short_description']:mtofamctrl.search).length}} of {{mtofamctrl.allMtofamilies.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="mtofamctrl.allMtofamilies.length > 0">
+                                    <input class="form-control input-sm " type="text" id="inlineSearch"  name="inlineSearch" data-ng-init="mtofamctrl.focusSearchField()" ng-model="mtofamctrl.search" indicate-quick-search placeholder="Quick Search " data-ng-disabled="!mtofamctrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="mtofamctrl.allMtofamilies.length > 0">
+                            <a>
+                                <button type="button" ng-click="mtofamctrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect" data-ng-disabled="!mtofamctrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="mtofamctrl.allMtofamilies.length > 0">
+                            <a>
+                                <button type="button" ng-click="mtofamctrl.reload(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="!mtofamctrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="mtofamctrl.openForm();"
+                                data-ng-disabled="!permissionsMap.create">
+                                <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create MTO Family</span>
+                                </button>
+                            </a>
+
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" href=""
+                            style="border-left:3px solid #e8e8e8">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="add-btn cursor-pointer">
+                                    <button type="button" data-ng-click="mtofamctrl.openForm();"
+                                    style="padding: 8px 20px" class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}" data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create MTO Family
+                                    </button>
+                                </li>
+                                <li ng-if="mtofamctrl.allMtofamilies.length > 0">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn" data-ng-click="mtofamctrl.isLoaded ? mtofamctrl.ShowHideColumnSettings() : '' " data-ng-class="{'cursor-not-allowed': !mtofamctrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info f-17 m-r-15"></i> Columns </a>
+                                </li>
+                                <li ng-if="mtofamctrl.allMtofamilies.length > 0">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn" data-ng-click="mtofamctrl.isLoaded ? mtofamctrl.reload(true) : '' " data-ng-class="{'cursor-not-allowed': !mtofamctrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning f-17 m-r-15"></i> Refresh</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!mtofamctrl.rowsCount && !mtofamctrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="mtofamctrl.rowsCount !== 0 && mtofamctrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="permissionsMap.view && mtofamctrl.isLoaded">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/mto/family/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration" data-ng-init="mtofamctrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="mtofamctrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="mtofamctrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="mtofamctrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtofamctrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle" ng-click="mtofamctrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="mtofamctrl.sortType == 'status' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtofamctrl.sortType == 'status' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="short_description_col_head" drag-me drop-me data-handle=".handle" ng-click="mtofamctrl.sortType = 'short_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.shortDescription.visible == 0">
+                                        <span class="handle">Short Description</span>
+                                        <span ng-show="mtofamctrl.sortType == 'short_description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtofamctrl.sortType == 'short_description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="link_description_col_head" drag-me drop-me data-handle=".handle" ng-click="mtofamctrl.sortType = 'link_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.link.visible == 0">
+                                        <span class="handle">Link</span>
+
+                                    </th>
+
+                                    <th class="text-center iconcolumnwidth" id="datalake_col_head" drag-me drop-me data-handle=".handle" data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.datalake.visible == 0">
+                                        <span class="handle">Documents</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="mtofamily in mtofamctrl.allMtofamilies|filterBy:['id','status','short_description']:mtofamctrl.search|orderBy:mtofamctrl.sortType:sortReverse|itemsPerPage:mtofamctrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}" data-ng-click="mtofamctrl.setClickedRow($index);"
+                                    ios-dblclick="mtofamctrl.dblClickAction(mtofamily);" selectedrow="{{mtofamily}}">
+                                    <td class="id_col iconcolumnWidth" data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.id.visible == 0">{{mtofamily.id}}</td>
+                                    <td class="status_col" ng-class="{'text-success f-500': mtofamily.status==='Active' , 'text-warning f-300': mtofamily.status ==='Pending Active', 'text-primary f-300': mtofamily.status ==='Inactive','text-info f-300': mtofamily.status==='Pending Inactive'}"
+                                        data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.status.visible == 0">{{mtofamily.status}}</td>
+                                    <td class="short_description_col" data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.shortDescription.visible == 0">{{mtofamily.short_description}}</td>
+                                    <td class="link_description_col iconcolumnwidth text-center p-l-5" data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.link.visible == 0">
+                                        <button type="button" id="mto_vendor" name="mto_vendor" class="text-center f-700 bg-none border-none btn-link" ng-click="mtofamctrl.openLinkVendor(mtofamily); mtofamctrl.loadVendorFamilyLinks(mtofamily.id)">Vendors</button>
+                                    </td>
+                                    <td class="datalake_col iconcolumnwidth text-center p-l-5" data-ng-hide="mtofamctrl.mtoFamiliesGrid.columns.datalake.visible == 0">
+                                        <button type="button" class="p-l-5 header-button datalake-button" ng-click="showMetaData(mtofamctrl.entityInformation,mtofamily,permissionsMap);" data-ng-disabled="!permissionsMap.drop">
+                                            <span class="zmdi zmdi-cloud zmdi-hc-fw" data-ng-if="permissionsMap.drop" title="Click here to manage documents" title-direction="right" fixed-position="true"></span>
+                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw" data-ng-if="!permissionsMap.drop" title="Access denied" title-direction="right" fixed-position="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="mtofamctrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtofamctrl.pageSize = 10" ng-class="{'active':mtofamctrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtofamctrl.pageSize = 25" ng-class="{'active':mtofamctrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtofamctrl.pageSize = 50" ng-class="{'active':mtofamctrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtofamctrl.pageSize = 100" ng-class="{'active':mtofamctrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--Details section for each mtoFamilies data -->
+        <div data-ng-if="mtofamctrl.showVendorLinkDetails" data-ng-include="'./application/modules/mto/family/panel.mto.family.vendor.link.html'"></div>
+        <div data-ng-include="'./application/modules/mto/family/panel.mto.family.dependency.html'"></div>
+        <div data-ng-include="'./application/modules/mto/family/panel.mto.family.vendor.dependency.html'"></div>
+        <meta-data-panel></meta-data-panel>
+        <div class="col-lg-12 p-0" data-ng-if = "permissionsMap && permissionsMap.view" >
+            <div id="refresh-table" class="p-15" data-ng-class="{'toggled':mtofamctrl.isRefreshTable}">
+                <div class="col-xs-6 p-0">
+                    <span class="f-15 f-300 pull-left">{{mtofamctrl.refreshTableText}}</span>
+                </div>
+                <div class="col-xs-6 p-0" data-ng-if="mtofamctrl.totalTimeText">
+                    <span class="pull-right f-300">
+                        <strong>{{mtofamctrl.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{mtofamctrl.totalRecordsText}}</span>
+                        <span ng-bind-html="mtofamctrl.totalTimeText"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    <div ng-if="!permissionsMap.view && mtofamctrl.isLoaded && !mtofamctrl.rowsCount" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="mtofamctrl.rowsCount === 0 && mtofamctrl.isLoaded && permissionsMap.view" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No MTO family exists. Please add MTO family.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/mto/family/panel.mto.family.form.html'"></div>
+</div>
+<!--Details section for each company mtofamilies data -->

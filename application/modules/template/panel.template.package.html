@@ -1,0 +1,61 @@
+<div data-ng-class="{'toggled':templateCtrl.isShowPackageDetails, 'changeposition': templateCtrl.showErrorDetailsData || templateCtrl.showhistory}"
+    id="rcrightsidebar" data-ng-show="templateCtrl.isShowPackageDetails">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="templateCtrl.closeForm();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" ng-if="(!templateCtrl.isDeleteSuccess && !templateCtrl.isConfirmDelete && templateCtrl.isShowAdd)"
+                title="Template Package">Create
+                <strong>Template Package</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(!templateCtrl.isDeleteSuccess && !templateCtrl.isConfirmDelete && !templateCtrl.isShowAdd)"
+                title="Template Package">Update
+                <strong>Template Package</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(templateCtrl.isDeleteSuccess || templateCtrl.isConfirmDelete && !templateCtrl.isShowAdd)"
+                title="Template Package">Delete
+                <strong>Template Package</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-if="!(templateCtrl.isUpdateSuccess || templateCtrl.isSaveSuccess || templateCtrl.isConfirmDelete || templateCtrl.isDeleteSuccess)"
+            class="d-flex m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/template.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div data-ng-if="!(templateCtrl.isUpdateSuccess || templateCtrl.isSaveSuccess || templateCtrl.isConfirmDelete || templateCtrl.isDeleteSuccess)">
+                <ng-form name="templateCtrl.packageForm" novalidate="novalidate" novalidate="novalidate">
+                    <div class="form-group" valdr-form-group>
+                        <span style="color:red;" data-ng-show="templateCtrl.packageForm.package_name.$invalid">* </span>
+                        <span style="color:green;" data-ng-show="templateCtrl.packageForm.package_name.$valid">* </span>
+                        <label>Package Name</label>
+                        <input type="text" id="package_name" name="package_name" data-ng-model="templateCtrl.packageDetails.package_name"
+                            data-ng-model-options="{ updateOn: 'blur' }" placeholder="Enter package name" class="form-control input-sm"
+                            required />
+                    </div>
+                    <rcp-edit-form-btns new-form="templateCtrl.isShowAdd" save-fn="templateCtrl.savePackage(templateCtrl.packageDetails);"
+                        save-btn-text="templateCtrl.saveBtnText" save-btn-error="templateCtrl.saveBtnError" update-fn="templateCtrl.updatePackage(templateCtrl.packageDetails);"
+                        update-btn-text="templateCtrl.updateBtnText" update-btn-error="templateCtrl.updateBtnError"
+                        confirm-fn="templateCtrl.showconfirm(); closeShowHistory();" confirm-delete="templateCtrl.isConfirmDelete"
+                        update-success="templateCtrl.isUpdateSuccess" entity-id="templateCtrl.packageDetails.id"
+                        enable-button="templateCtrl.packageForm.$invalid || templateCtrl.isProcessing">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+        </div>
+        <rcp-delete-form data-ng-if="templateCtrl.isConfirmDelete" image-name="template.svg" close-fn="templateCtrl.closeForm(); "
+            delete-fn="templateCtrl.removePackage(templateCtrl.packageDetails);" confirm-delete="templateCtrl.isConfirmDelete">
+        </rcp-delete-form>
+        <rcp-success-form success-tick="success_tick.svg" create-new-fn="templateCtrl.openCreateForm('Template Package');" close-fn="templateCtrl.closeForm();"
+            save-success="templateCtrl.isSaveSuccess" update-success="templateCtrl.isUpdateSuccess" delete-success="templateCtrl.isDeleteSuccess">
+        </rcp-success-form>
+        <div class="col-xs-12" ng-if="!templateCtrl.isShowAdd && templateCtrl.isShowHistory" data-ng-include="'./application/modules/template/history.html'">
+        </div>
+    </div>
+</div>

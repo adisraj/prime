@@ -1,0 +1,472 @@
+<div class="container col-lg-12 p-0" data-ng-controller="LocationTypeController as locTypeCtrl">
+    <!--list panel-->
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="locTypeCtrl.openForm()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="locTypeCtrl.closeForm();locTypeCtrl.isColumnSettingsVisible = false;" />
+        </li>
+        <li>
+            <keybinding on="ctrl+f" invoke="locTypeCtrl.focusSearchField()" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="locTypeCtrl.reload('refresh')" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="locTypeCtrl.isColumnSettingsVisible = true;" />
+        </li>
+    </ul>
+    <div>
+        <!-- <nav class="navbar navbar-toolbar navbar-default fixed-top">
+            <div class="bgm-white header-module">
+                <div class="navbar-header p-relative" style="min-height: inherit;">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                        aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="image-module p-absolute">
+                        <img src="./img/sidebar-icons/entity-config-location.svg" />
+                    </div>
+                    <div class="label-module p-absolute">
+                        <a class="navbar-brand" href="javascript:void(0)">Location Types</a>
+                    </div>
+                </div>
+
+                <div id="navbar" class="navbar-collapse collapse" ng-if="locTypeCtrl.isViewAuthorized && locTypeCtrl.isLoaded">
+                    <ul class="nav navbar-nav navbar-right d-flex" style="align-items: center;">
+                        <li>
+                            <div data-ng-include="'./application/modules/location/parameter/location.parameter.html'"></div>
+                        </li>
+                        <li>
+                            <a>
+                                <button type="button" class="btn btn-success waves-effect f-700" data-ng-click="locTypeCtrl.openForm();">Create Location Type</button>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav> -->
+        <div class="rc-module-header d-flex">
+            <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+                <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                    <div class="p-relative">
+                        <div class="image-module p-absolute top-10">
+                            <img src="./img/sidebar-icons/entity-config-location.svg" />
+                        </div>
+                        <div class="label-module top-10">
+                            <a class="p-l-40" href="javascript:void(0)">Location Types</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap.view">
+                    <div class="d-flex d-flex-v-center p-l-20">
+
+                        <div class="tableheader-btn">
+                            <span data-ng-if="!locTypeCtrl.search" class="f-12"> {{locTypeCtrl.rowsInfo}} </span>
+                            <span data-ng-if="locTypeCtrl.search" class="f-12"> Displaying
+                                {{(locTypeCtrl.locationType_Data|filterBy:['id','status','short_description','inventory_control_value']:locTypeCtrl.search).length}}
+                                of
+                                {{locTypeCtrl.locationType_Data.length}}
+                                Records </span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="d-flex nav navbar-nav navbar-right">
+                            <li data-ng-if="permissionsMap.view">
+                                <a>
+                                    <div class="search-section-location-type tableheader-btn pull-right"
+                                        ng-if="locTypeCtrl.locationType_Data.length > 0">
+                                        <input class="form-control input-sm " type="text " id="inlineSearch"
+                                            name="inlineSearch" data-ng-init="locTypeCtrl.focusSearchField()"
+                                            ng-model="locTypeCtrl.search" indicate-quick-search
+                                            placeholder="Quick Search "
+                                            data-ng-disabled="!locTypeCtrl.isLoaded" />
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="non-collapsed-link"
+                                ng-if="locTypeCtrl.locationType_Data.length > 0 && permissionsMap.view">
+                                <a>
+                                    <button type="button" ng-click="locTypeCtrl.isColumnSettingsVisible = true"
+                                        class="btn-primal btn-block waves-effect btn-brd-none"
+                                        data-ng-disabled="!locTypeCtrl.isLoaded">
+                                        <span class="f-700 ng-binding">Columns</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="non-collapsed-link"
+                                ng-if="locTypeCtrl.locationType_Data.length > 0 && permissionsMap.view">
+                                <a>
+                                    <button type="button" ng-click="locTypeCtrl.reload(true);"
+                                        class="btn-primal btn-block waves-effect btn-brd-none"
+                                        data-ng-disabled="!locTypeCtrl.isLoaded">
+                                        <span class="f-700 ng-binding">Refresh</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="non-collapsed-link"
+                                ng-if="locTypeCtrl.enableGoToAllTypeUDD && permissionsMap.view">
+                                <a>
+                                    <div class="tableheader-btn">
+                                        <button type="button" ng-click="locTypeCtrl.goToAllTypeUDD()"
+                                            class="btn-primal btn-block waves-effect btn-brd-none"
+                                            data-ng-disabled="!locTypeCtrl.isDisabled">
+                                            <span class="f-700 ng-binding">Maintain UDD</span>
+                                        </button>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="d-flex" style="align-items: center;" data-ng-if="permissionsMap.view">
+                                <div
+                                    data-ng-include="'./application/modules/location/parameter/location.parameter.html'">
+                                </div>
+                            </li>
+                            <li class="non-collapsed-link">
+                                <a>
+                                    <button type="button" class="btn btn-success waves-effect f-700"
+                                        data-ng-click="locTypeCtrl.openForm();"
+                                        data-ng-disabled="!permissionsMap.create">
+                                        <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Location
+                                            Type</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="dropdown collapsed-link" uib-dropdown>
+                                <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                    <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                </button> 
+                                <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                    <li class="cursor-pointer">
+                                        <button data-ng-click="locTypeCtrl.openForm();" style="padding: 8px 20px"
+                                            class="restricted-btn"
+                                            title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                            data-ng-disabled="!permissionsMap.create"
+                                            data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                            <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Location Type
+                                        </button>
+                                    </li>
+                                    <li ng-if="locTypeCtrl.locationType_Data.length > 0 && permissionsMap.view">
+                                        <a data-ng-click="locTypeCtrl.isLoaded ? locTypeCtrl.isColumnSettingsVisible = true : '' "
+                                            data-ng-class="{'cursor-not-allowed': !locTypeCtrl.isLoaded}" href="">
+                                            <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                    </li>
+                                    <li ng-if="locTypeCtrl.locationType_Data.length > 0 && permissionsMap.view">
+                                        <a data-ng-click="locTypeCtrl.isLoaded ? locTypeCtrl.reload(true) : '' "
+                                            data-ng-class="{'cursor-not-allowed': !locTypeCtrl.isLoaded}" href="">
+                                            <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                    </li>
+                                    <li ng-if="locTypeCtrl.enableGoToAllTypeUDD && permissionsMap.view">
+                                        <a ng-click="locTypeCtrl.isDisabled ? locTypeCtrl.goToAllTypeUDD() : '' "
+                                            data-ng-class="{'opacity50': !locTypeCtrl.isDisabled}" href="">
+                                            <i class="zmdi zmdi-wrench c-brown zmdi-hc-rotate-90"></i> Maintain UDD</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!locTypeCtrl.isLoaded">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div data-ng-if="locTypeCtrl.rowsCount > 0 && locTypeCtrl.isLoaded">
+            <div class="rcp-table-container" data-ng-if="permissionsMap.view && locTypeCtrl.isLoaded">
+                <div class="col-xs-12 p-0">
+                    <script type="text/javascript">
+
+                        $(function () {
+                            var pressed = false;
+                            var start = undefined;
+                            var startX, startWidth;
+
+                            $("table th").dblclick(function (e) {
+                                start = $(this);
+                                pressed = true;
+                                startX = e.pageX;
+                                startWidth = $(this).width();
+                                $(start).addClass("resizing");
+                            });
+
+                            $(document).mousemove(function (e) {
+                                if (pressed) {
+                                    $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                                }
+                            });
+
+                            $(document).mouseup(function () {
+                                if (pressed) {
+                                    $(start).removeClass("resizing");
+                                    pressed = false;
+                                }
+                            });
+                        });
+                    </script>
+                    <div data-ng-include="'./application/modules/location/type/hideShowColumns.html'"></div>
+                    <div class="table-responsive module-content-configuration" style="margin-top: 80px">
+                        <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                            <table
+                                class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table "
+                                style="margin-bottom:40px">
+                                <thead data-ng-show="locTypeCtrl.isLoaded">
+                                    <tr>
+                                        <th class="text-center iconcolumnwidth"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.select.visible == 0">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="locTypeCtrl.checkAll"
+                                                        ng-true-value="1" ng-false-value="0"
+                                                        ng-disabled="locTypeCtrl.disableCheckboxes"
+                                                        ng-click="locTypeCtrl.enableOrDisableCheckboxes(locTypeCtrl.checkAll)">
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th class="text-center" id="typeid_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="locTypeCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.type_id.visible == 0">
+                                            <span class="handle">Id</span>
+                                            <span ng-show="locTypeCtrl.sortType == 'id' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="locTypeCtrl.sortType == 'id' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="status_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="locTypeCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.status.visible == 0">
+                                            <span class="handle">Status</span>
+                                            <span ng-show="locTypeCtrl.sortType == 'status' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="locTypeCtrl.sortType == 'status' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="short_description_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="locTypeCtrl.sortType = 'short_description'; sortReverse = !sortReverse"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.locationType.visible == 0">
+                                            <span class="handle">Location Type</span>
+                                            <span ng-show="locTypeCtrl.sortType == 'short_description' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="locTypeCtrl.sortType == 'short_description' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="inventory_control_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="locTypeCtrl.sortType = 'inventory_control_value'; sortReverse = !sortReverse"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.inventoryControl.visible == 0">
+                                            <span class="handle">Inventory Control</span>
+                                            <span
+                                                ng-show="locTypeCtrl.sortType == 'inventory_control_value' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span
+                                                ng-show="locTypeCtrl.sortType == 'inventory_control_value' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="allow_sales_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="locTypeCtrl.sortType = 'sale_allowed'; sortReverse = !sortReverse"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.allowSales.visible == 0">
+                                            <span class="handle">Allow Sales</span>
+                                            <span ng-show="locTypeCtrl.sortType == 'sale_allowed' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="locTypeCtrl.sortType == 'sale_allowed' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="license_plating_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="locTypeCtrl.sortType = 'license_plating'; sortReverse = !sortReverse"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.licencePlating.visible == 0">
+                                            <span class="handle">License Plating</span>
+                                            <span ng-show="locTypeCtrl.sortType == 'license_plating' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="locTypeCtrl.sortType == 'license_plating' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="allow_purchasing_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="locTypeCtrl.sortType = 'allow_purchasing'; sortReverse = !sortReverse"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.allowPurchasing.visible == 0">
+                                            <span class="handle">Allow Purchasing</span>
+                                            <span ng-show="locTypeCtrl.sortType == 'allow_purchasing' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="locTypeCtrl.sortType == 'allow_purchasing' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center iconcolumnwidth" id="datalake_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.datalake.visible == 0">
+                                            <span class="handle">Actions</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="locationtype in locTypeCtrl.locationType_Data|filterBy:['id','status','short_description','inventory_control_value']:locTypeCtrl.search|orderBy:locTypeCtrl.sortType:sortReverse|itemsPerPage:locTypeCtrl.pageSize"
+                                        ng-class="{'background-hover':$index === selectedRow}"
+                                        data-ng-click="locTypeCtrl.setClickedRow($index);"
+                                        selectedrow="{{locationtype}}">
+                                        <td class="text-center"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.select.visible == 0">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="locationtype.check"
+                                                        ng-true-value="1" ng-false-value="0"
+                                                        ng-disabled="locTypeCtrl.disableCheckboxes"
+                                                        ng-click="locTypeCtrl.enableDisable();">
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td class="typeid_col text-center"
+                                            ios-dblclick="locTypeCtrl.dblClickAction(locationtype);"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.type_id.visible == 0">
+                                            {{locationtype.id}}</td>
+                                        <td class="status_col" ios-dblclick="locTypeCtrl.dblClickAction(locationtype);"
+                                            ng-class="{'text-success f-500':locationtype.status==='Active' , 'text-warning f-300': locationtype.status ==='Pending Active', 'text-primary f-300':locationtype.status ==='Inactive','text-info f-300': locationtype.status==='Pending Inactive'}"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.status.visible == 0">
+                                            {{locationtype.status}}</td>
+                                        <td class="short_description_col"
+                                            ios-dblclick="locTypeCtrl.dblClickAction(locationtype);"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.locationType.visible == 0">
+                                            {{locationtype.short_description}}</td>
+                                        <td class="inventory_control_col"
+                                            ios-dblclick="locTypeCtrl.dblClickAction(locationtype);"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.inventoryControl.visible == 0">
+                                            {{locationtype.inventory_control_value}}
+                                        </td>
+                                        <td class="allow_sales_col text-center"
+                                            ios-dblclick="locTypeCtrl.dblClickAction(locationtype);"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.allowSales.visible == 0">
+                                            <i ng-show="locationtype.sale_allowed_id === 1"
+                                                class="glyphicon glyphicon-ok c-green" title="Allowed"
+                                                title-direction="right" fixed-position="true"></i>
+                                            <i ng-show="locationtype.sale_allowed_id === 0 || locationtype.sale_allowed_id === null"
+                                                class="glyphicon glyphicon-remove c-red" title="Not allowed"
+                                                title-direction="right" fixed-position="true"></i>
+                                        </td>
+                                        <td class="license_plating_col text-center"
+                                            ios-dblclick="locTypeCtrl.dblClickAction(locationtype);"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.licencePlating.visible == 0">
+                                            <i ng-show="locationtype.license_plating_id === 1"
+                                                class="glyphicon glyphicon-ok c-green" title="Allowed"
+                                                title-direction="right" fixed-position="true"></i>
+                                            <i ng-show="locationtype.license_plating_id === 0 || locationtype.license_plating_id === null"
+                                                class="glyphicon glyphicon-remove c-red" title="Not allowed"
+                                                title-direction="right" fixed-position="true"></i>
+                                        </td>
+                                        <td class="allow_purchasing_col text-center"
+                                            ios-dblclick="locTypeCtrl.dblClickAction(locationtype);"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.allowPurchasing.visible == 0">
+                                            <i ng-show="locationtype.allow_purchasing_id === 1"
+                                                class="glyphicon glyphicon-ok c-green" title="Allowed"
+                                                title-direction="right" fixed-position="true"></i>
+                                            <i ng-show="locationtype.allow_purchasing_id === 0 || locationtype.allow_purchasing_id === null"
+                                                class="glyphicon glyphicon-remove c-red" title="Not allowed"
+                                                title-direction="right" fixed-position="true"></i>
+                                        </td>
+                                        <td class="datalake_col text-center three-dot-menu"
+                                            data-ng-hide="locTypeCtrl.locationTypesGrid.columns.datalake.visible == 0">
+                                            <li class="dropdown d-flex w-100" uib-dropdown>
+                                                <a uib-dropdown-toggle
+                                                    class="full-height d-flex w-100 justify-content-center" href="">
+                                                    <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                                </a>
+                                                <ul class="arrow_box_menu dropdown-menu dm-icon pull-right">
+                                                    <li class="cursor-pointer">
+                                                        <button class="DropButton btn-block"
+                                                            ng-click="showMetaData(locTypeCtrl.entityInformation,locationtype,permissionsMap);"
+                                                            data-ng-if="permissionsMap.drop">
+                                                            <div class="d-flex"><i
+                                                                    class="zmdi zmdi-cloud zmdi-hc-fw m-r-10 f-17"></i>Documents
+                                                            </div>
+                                                        </button>
+                                                        <button class="DropButton btn-block"
+                                                            ng-click="showMetaData(locTypeCtrl.entityInformation,locationtype,permissionsMap);"
+                                                            data-ng-if="!permissionsMap.drop"
+                                                            data-ng-disabled="!permissionsMap.drop"
+                                                            data-ng-class="{'opacity50' : !permissionsMap.drop}">
+                                                            <div class="d-flex" title="Access denied"
+                                                                title-direction="left" fixed-position="true"><i
+                                                                    class="zmdi zmdi-cloud-off zmdi-hc-fw m-r-10 f-17"></i>Documents
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                    <li ios-dblclick="locTypeCtrl.dblClickAction(locationtype);">
+                                                        <button class="DropButton btn-block"
+                                                            ng-click="locTypeCtrl.openClonePanel(locationtype);"
+                                                            data-ng-if="locTypeCtrl.isCloneAllowed">
+                                                            <div class="d-flex"><i
+                                                                    class="zmdi zmdi-copy zmdi-hc-fw m-r-10 f-17"></i> Clone
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="align-items-center col-lg-12 d-flex justify-content-between p-15">
+                            <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                                boundary-links="true" on-page-change="locTypeCtrl.pageChangeHandler(newPageNumber)">
+                            </dir-pagination-controls>
+                            <div class="btn-group pull-right ng-table-counts m-0">
+                                <button type="button" class="btn btn-default f-12 noboxshadow"
+                                    ng-click="locTypeCtrl.pageSize = 10"
+                                    ng-class="{'active':locTypeCtrl.pageSize === 10}">10</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow"
+                                    ng-click="locTypeCtrl.pageSize = 25"
+                                    ng-class="{'active':locTypeCtrl.pageSize === 25}">25</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow"
+                                    ng-click="locTypeCtrl.pageSize = 50"
+                                    ng-class="{'active':locTypeCtrl.pageSize === 50}">50</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow"
+                                    ng-click="locTypeCtrl.pageSize = 100"
+                                    ng-class="{'active':locTypeCtrl.pageSize === 100}">100</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div data-ng-if="locTypeCtrl.isViewAuthorized">
+                <div data-ng-include="'./application/modules/location/type/panel.location.type.dependency.html'"></div>
+                <div data-ng-if="locTypeCtrl.isShowClonePanel===true"
+                    data-ng-include="'./application/modules/location/type/panel.clone.location.type.html'"></div>
+                <meta-data-panel></meta-data-panel>
+            </div>
+        </div>
+        <div data-ng-if="locTypeCtrl.rowsCount === 0 && locTypeCtrl.isLoaded">
+            <div class="col-xs-12 text-center text-info module-content-configuration">
+                <span class="f-15 f-300">No location type exists. Please add location type.</span>
+            </div>
+        </div>
+        <div ng-if="!permissionsMap.view && locTypeCtrl.isLoaded && !locTypeCtrl.rowsCount"
+            data-ng-include="'./application/templates/restricted.access.html'"></div>
+        <div ui-view></div>
+    </div>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':locTypeCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{locTypeCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="locTypeCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{locTypeCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{locTypeCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="locTypeCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

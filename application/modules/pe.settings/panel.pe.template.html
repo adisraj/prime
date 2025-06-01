@@ -1,0 +1,137 @@
+\
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar"
+    data-ng-class="{'toggled':templateController.isShowTemplateForm === true || templateController.isShowTemplateForm === 1}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="templateController.closeTemplatePanel();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Quick Access Toolbar">{{templateController.function }}
+                <strong>Quick Access Toolbar</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex"
+            ng-if="!(templateController.isUpdateSuccess || templateController.isSaveSuccess || templateController.isConfirmDelete || templateController.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/toolbar-quick-access.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div
+                ng-if="!(templateController.isUpdateSuccess || templateController.isSaveSuccess || templateController.isConfirmDelete || templateController.isDeleteSuccess)">
+                <ng-form name="templateController.template_form" role="form" novalidate="novalidate"
+                    valdr-type="RULES-119">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="templateController.template_form.template_name.$invalid">* </span>
+                        <span class="c-green" ng-show="templateController.template_form.template_name.$valid">* </span>
+                        <label>Name</label>
+                        <input id="template_name" name="template_name" type="text"
+                            class="form-control input-sm" ng-model="templateController.template_details.template_name"
+                            placeholder="Enter Toolbar Name"
+                            errorvaluechosen="templateController.template_details.template_name_error"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="templateController.template_form.active_from.$invalid">* </span>
+                        <span class="c-green" ng-show="templateController.template_form.active_from.$valid">* </span>
+                        <label>Active From</label>
+                        <input type="text" id="active_from" name="active_from"
+                            required class="form-control input-sm rcp-mydatepicker"
+                            ng-model="templateController.template_details.active_from" ui-mask="{{ui_date_mask}}"
+                            ng-model-options="{ updateOn: 'blur' }" is-effective-date="false" mydatepicker
+                            model-view-value="true">
+                    </div>
+                    <div class="form-group">
+                        <span class="c-red" ng-show="!templateController.locationIds.length">* </span>
+                        <span class="c-green" ng-show="templateController.locationIds.length">* </span>
+                        <label>Select Locations</label>
+                        <div style="background:#f9f9f9;border: 1px solid #ececec" class="p-10">
+                            <div class="m-b-10">
+                                <input class="form-control input-sm" type="text"
+                                    ng-model="templateController.searchLocation" placeholder="Search Location"
+                                     />
+                            </div>
+                            <div class="table-responsive" style="height: calc(40% - 40px); overflow: auto;">
+                                <table class="table table-hover table-bordered">
+                                    <thead data-ng-show="templateController.isLoaded">
+                                        <tr>
+                                            <th class="text-center">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox"
+                                                            ng-checked="templateController.locations.length === templateController.locationIds.length"
+                                                            ng-click="templateController.toggleAddOrRemoveLocationFromMap('toggleAll')">
+                                                        <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                            </th>
+                                            <th class="text-center"
+                                                ng-click="templateController.sortType = 'name'; sortReverse = !sortReverse">
+                                                <span class="handle">Location</span>
+                                                <span ng-show="templateController.sortType == 'name' && !sortReverse"
+                                                    class="zmdi zmdi-caret-down pull-right"></span>
+                                                <span ng-show="templateController.sortType == 'name' && sortReverse"
+                                                    class="zmdi zmdi-caret-up pull-right"></span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="cursor: default"
+                                            data-ng-repeat="location in templateController.locations | filter : templateController.searchLocation | orderBy : templateController.sortType : sortReverse">
+                                            <td class="text-center" style="width: 30%;">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox"
+                                                            ng-checked="location.id === templateController.templateLocationIdsMap[location.id].id"
+                                                            ng-click="templateController.toggleAddOrRemoveLocationFromMap('location', location)">
+                                                        <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td> {{location.name}} </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <rcp-edit-form-btns new-form="templateController.isAddTemplate"
+                        save-fn="templateController.saveTemplate(templateController.template_details);"
+                        save-btn-text="templateController.saveBtnText" save-btn-error="templateController.saveBtnError"
+                        update-fn="templateController.updateTemplate(templateController.template_details);"
+                        update-btn-text="templateController.updateBtnText"
+                        update-btn-error="templateController.updateBtnError"
+                        confirm-fn="templateController.showconfirm();;"
+                        confirm-delete="templateController.isConfirmDelete"
+                        update-success="templateController.isUpdateSuccess"
+                        entity-id="templateController.template_details.id"
+                        enable-button="templateController.template_form.$invalid || templateController.isProcessing || !templateController.locationIds.length"
+                        access-permissions="permissionsMap">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="templateController.isConfirmDelete"
+                image-name="toolbar-quick-access.svg" close-fn="templateController.closeTemplatePanel(); "
+                delete-fn="templateController.deleteTemplate(templateController.template_details.id);"
+                confirm-delete="templateController.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg"
+                create-new-fn="templateController.createAnotherTemplate();"
+                close-fn="templateController.closeTemplatePanel();" update-success="templateController.isUpdateSuccess"
+                save-success="templateController.isSaveSuccess" delete-success="templateController.isDeleteSuccess">
+            </rcp-success-form>
+        </div>
+        <div class="col-xs-12 p-0">
+            <div data-ng-show="templateController.error" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="templateController.error = null"
+                    aria-hidden="true">&times;</button> {{templateController.error}}
+            </div>
+        </div>
+    </div>
+</div>

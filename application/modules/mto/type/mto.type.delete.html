@@ -1,0 +1,51 @@
+<div id="rcrightsidebar" class="toggled" data-ng-class="{'changehistorytoggle': mtoTypeCtrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a data-ng-click="mtoTypeCtrl.closeForm();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel" title="{{mtoTypeCtrl.entityInformation.name}}">Delete <strong>{{mtoTypeCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!mtoTypeCtrl.isUnauthorized">
+        <div class="form-group col-xs-12 p-0" ng-if="!mtoTypeCtrl.showDependencyDetails">
+            <rcp-delete-form data-ng-if="!mtoTypeCtrl.isDeleteSuccess" image-name="entity-config-made-to-order.svg" close-fn="mtoTypeCtrl.dblClickAction(mtoTypeCtrl.new_type);" delete-fn="mtoTypeCtrl.delete(mtoTypeCtrl.new_type);" confirm-delete="mtoTypeCtrl.isConfirmDelete"></rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" close-fn="mtoTypeCtrl.closeForm(); " delete-success="mtoTypeCtrl.isDeleteSuccess"></rcp-success-form>
+        </div>
+        <div class="col-lg-12" ng-if="mtoTypeCtrl.showDependencyDetails">
+            <div class="d-flex m-b-10 m-t-10" ng-if="!mtoTypeCtrl.isDeleteSuccess">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-made-to-order.svg'"></div>
+                </div>
+            </div>
+            <div>
+                <h4 class="aligncenter dependency-errorMessage">Cannot be deleted!</h4>
+            </div>
+            <div class="col-xs-12 p-0" ng-repeat="($groupName,$dependencyMain) in ( mtoTypeCtrl.dependencyList | groupBy : 'dependent_entity')">
+                <div class="rcpscrollbar dependency-entityBox">
+                    <h4> Dependent Entities - {{$groupName}} </h4>
+                    <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                        <div class="dependency-entityList" ng-click="mtoTypeCtrl.showDependencyListDetails(dependency);">
+                            <span title="{{dependency.description}}">{{dependency.description | truncate:40}}</span>
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="mtoTypeCtrl.closeDependencyList();">
+                    <span><b>Cancel</b></span>
+                </button>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="mtoTypeCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="mtoTypeCtrl.message = null" aria-hidden="true">&times;</button> {{mtoTypeCtrl.message}}
+            </div>
+        </div>
+    </div>
+    <div ng-if="mtoTypeCtrl.isUnauthorized" data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>

@@ -1,0 +1,150 @@
+<div class="col-xs-12 p-0" data-ng-if="itemTypeCtrl.isDefaultFieldUpdated">
+
+  <div class="col-xs-12 rc-alert rc-alert-info flex-column m-b-10">
+    <div class="col-xs-12 d-flex p-0">
+
+      <div class="rc-alert-icon">
+        <span class="zmdi zmdi-alert-polygon" style="font-size: 35px; color: #ff6c3c;">
+        </span>
+      </div>
+
+      <div style="flex:1;">
+        <div class="f-14 f-700 text-info m-l-25 m-b-5">Update Default Fields!</div>
+        <ul>
+          <li class="m-b-5" data-ng-if="itemTypeCtrl.isDefaultPricingChoiceUpdated">
+            The <strong>SKU Pricing Choice</strong> for all the SKUs could be changed to default pricing choice based on
+            the following options.
+          </li>
+          <li class="m-b-5" data-ng-if="itemTypeCtrl.isDefaultBuyerUpdated">
+            The <strong>Buyer</strong> for all the Items could be changed to default buyer based on the following
+            options.
+          </li>
+          <li class="m-b-5" data-ng-if="itemTypeCtrl.isDefaultInventoryMethodUpdated">
+            The <strong>Inventory Method</strong> for all the SKUs could be changed to default inventory method based on
+            the following options.
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-form role="form" novalidate="novalidate" name="itemTypeCtrl.defaultFieldForm">
+
+    <div class="col-xs-12 p-0">
+
+      <div class="form-group col-xs-12 p-0" data-ng-if="itemTypeCtrl.isDefaultPricingChoiceUpdated"
+        data-ng-init="itemTypeCtrl.defaultPricingChoiceChanged = 'all'">
+
+        <div class="form-group">
+
+          <span class="c-green">*</span>
+          <label>SKU Pricing Choice</label>
+
+          <!--<label class="align-items-center d-flex">
+            <input type="radio" name="change_matching_pricing_choice"
+              ng-model="itemTypeCtrl.defaultPricingChoiceChanged" value="'matching'" ng-value="'matching'">
+            <i class="input-helper"></i> Change All SKU Pricing Choice that match to default
+          </label>-->
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="do_not_change_pricing_choice" ng-model="itemTypeCtrl.defaultPricingChoiceChanged"
+              value="'none'" ng-value="'none'">
+            <i class="input-helper"></i> Don't change SKU Pricing Choice
+          </label>
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="change_null_pricing_choice" ng-model="itemTypeCtrl.defaultPricingChoiceChanged"
+              value="'null'" ng-value="'null'">
+            <i class="input-helper"></i> Change All SKU Pricing choice that are null to default
+          </label>
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="change_all_pricing_choice" ng-model="itemTypeCtrl.defaultPricingChoiceChanged"
+              value="'all'" ng-value="'all'">
+            <i class="input-helper"></i> Change All SKU Pricing Choice to default
+          </label>
+
+        </div>
+
+      </div>
+
+      <div class="form-group col-xs-12 p-0" data-ng-if="itemTypeCtrl.isDefaultBuyerUpdated"
+        data-ng-init="itemTypeCtrl.defaultBuyerChanged = 'none'">
+
+        <div class="form-group">
+
+          <span class="c-green">*</span>
+          <label>Buyer</label>
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="change_all_buyer" ng-model="itemTypeCtrl.defaultBuyerChanged" value="'all'"
+              ng-value="'all'">
+            <i class="input-helper"></i> Change All Buyer to default
+          </label>
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="change_matching_buyer" ng-model="itemTypeCtrl.defaultBuyerChanged"
+              value="'matching'" ng-value="'matching'">
+            <i class="input-helper"></i> Change All Buyer that match to default
+          </label>
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="do_not_change_buyer" ng-model="itemTypeCtrl.defaultBuyerChanged" value="'none'"
+              ng-value="'none'">
+            <i class="input-helper"></i> Don't change Buyer
+          </label>
+
+        </div>
+
+      </div>
+
+      <div class="form-group col-xs-12 p-0" data-ng-if="itemTypeCtrl.isDefaultInventoryMethodUpdated"
+        data-ng-init="itemTypeCtrl.defaultInventoryMethodChanged = 'none'">
+
+        <div class="form-group">
+
+          <span class="c-green">*</span>
+          <label>Inventory Methods</label>
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="change_all_inventory_method" ng-model="itemTypeCtrl.defaultInventoryMethodChanged"
+              value="'all'" ng-value="'all'">
+            <i class="input-helper"></i> Change All Inventory Methods to default
+          </label>
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="change_matching_inventory_method"
+              ng-model="itemTypeCtrl.defaultInventoryMethodChanged" value="'matching'" ng-value="'matching'">
+            <i class="input-helper"></i> Change All Inventory Methods that match to default
+          </label>
+
+          <label class="align-items-center d-flex">
+            <input type="radio" name="do_not_change_inventory_method"
+              ng-model="itemTypeCtrl.defaultInventoryMethodChanged" value="'none'" ng-value="'none'">
+            <i class="input-helper"></i> Don't change Inventory Methods
+          </label>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-xs-12 p-0 p-b-10 d-flex">
+
+      <button type="button" class="btn btn-success btn-block m-r-20" id="proceed_btn" name="proceed_btn"
+        data-ng-disabled="!itemTypeCtrl.isBtnEnable" data-ng-click="itemTypeCtrl.update(itemTypeCtrl.new_type, true)">
+        <strong>Proceed</strong>
+      </button>
+
+      <button type="button" class="btn btn-cancel btn-block m-t-0" id="cancel_btn" name="cancel_btn"
+        data-ng-disabled="!itemTypeCtrl.isBtnEnable" data-ng-click="itemTypeCtrl.isDefaultFieldUpdated = false">
+        <strong>Cancel</strong>
+      </button>
+
+    </div>
+
+  </ng-form>
+
+</div>

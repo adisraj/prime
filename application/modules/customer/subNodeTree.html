@@ -1,0 +1,31 @@
+<li>
+        <input type="checkbox" id="subType-{{subType.id}}-{{$index}}" checked data-ng-click="customerCtrl.getNodes(subType)">
+        <label class="d-flex justify-content-between" for="subType-{{subType.id}}-{{$index}}">
+            <div class="d-flex d-flex-v-center flex-fill justify-content-between">
+                <div class="d-flex d-flex-v-center" style="flex:3;">
+                    {{subType.description}}
+                </div>
+                <div class="d-flex d-flex-v-center">
+                    <div>
+                        <div class="tag">{{subType.discount_percentage}}%</div>
+                    </div>
+                    <div class="m-l-5">
+                        <button class="btn btn-primary btn-sm m-l-5 f-700" data-ng-disabled="customerCtrl.selectedCustomer.discount.discount_type_value_id === subType.id" data-ng-click="customerCtrl.saveOrUpdateDiscountType(subType);">Select</button>
+                    </div>
+                </div>
+            </div>
+        </label>
+        <ul>
+            <div data-ng-if="(!subType.nodes || subType.nodes.length === 0) && !subType.isLoaded">
+                <span>Loading...</span>
+            </div>
+            <div data-ng-if="subType.nodes.length === 0 && subType.isLoaded">
+                <span class="text-muted">No values exists!</span>
+            </div>
+        </ul>
+        <!-- Values for selected discount type - START -->
+        <ul class="list-lakes" data-ng-repeat="subType in subType.nodes|orderBy:'description' track by subType.id" data-ng-include="'./application/modules/customer/subNodeTree.html'">
+
+        </ul>
+        <!-- Values for selected discount type - END -->
+    </li>

@@ -1,0 +1,100 @@
+<div style='padding: 10px 0px 0px 10px; text-align: center;' ng-init="showhistory = false;">
+    <a data-ng-click='showHistory();' style='margin:2px 0px 2px 2px;color:inherit;cursor:pointer;'><span
+            ng-if="!showtext" style="font-family: lato;color: rgb(151, 154, 151);font-size: 14px;">View
+            History</span></a>
+</div>
+
+<div id="rcrightsidebar" class="c-overflow changehistory" ng-class="{'toggled':showhistory}">
+    <div class="col-xs-12 row" style="height: 30px;">
+        <div class="col-xs-2" style="height:inherit;">
+            <a data-ng-click="closeShowHistory();" style="height: inherit">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div style="height: inherit;">
+            <label class="rclabel editformlabel" ng-if="(!contCtrl.$showAdd && !contCtrl.$confirmdelete)"
+                title="{{contCtrl.moduleName}}">Update <strong>History</strong></label>
+        </div>
+    </div>
+    <div ng-include="'template/app-specific/updatehistory_svg.html'"></div>
+    <div ng-repeat="each in historyList" style="margin: 7px;">
+        <ul class="historyrow hometile">
+            <li ng-show="each.kind === 'E'" style="list-style-type:none;font-size:12px;line-height:22.5px;">
+                <div>
+                    <span
+                        style="color: #5d4565;font-size: 13px;font-weight: 800;">{{each.updated_by | propercasing}}</span>
+                    <span style="color: #5d4565;font-size: 12px;">
+                        updated
+                    </span>
+                    <span style="font-size: 13px;padding: 2px 4px;"> {{each.field }}</span>
+                    <div><span
+                            style=" font-size: 13px;padding: 2px 4px;color: #D81B60;background-color: #f9f2f4;border-radius: 4px; ">{{each.old_value}}</span>
+                        <span style="font-size: 13px;color: #2196f3;border-radius: 4px;"> &#x21A6;</span>
+                        <span
+                            style="font-size: 13px;color: #1e9840;background-color: #f2f9f7;border-radius: 4px; ">{{each.new_value}}</span>
+                    </div>
+                    <div><span style="color: #5d4565;font-size: 12px;"> <i
+                                class="fa fa-clock "></i>@{{each.updated_dt | FormatDate}}
+                            {{each.updated_dt | FormatTime}} </span></div>
+
+                </div>
+
+            </li>
+            <li ng-show="each.kind === 'C'" style="list-style-type:none;font-size:12px;line-height:22.5px;">
+                <div>
+                    <span
+                        style="color: #5d4565;font-size: 13px;font-weight: 800;">{{each.updated_by | propercasing}}</span>
+                    <span style="color: #5d4565;font-size: 12px;">
+                        created
+                    </span>
+                    <span style="color: #5d4565;font-size: 12px;"> <i
+                            class="fa fa-clock "></i>@{{each.updated_dt | FormatDate}}
+                        {{each.updated_dt | FormatTime}}</span>
+                </div>
+            </li>
+            <li ng-show="each.kind === 'LI'" style="list-style-type:none;font-size:12px;line-height:22.5px;">
+                <div>
+                    <span
+                        style="color: #5d4565;font-size: 13px;font-weight: 800;">{{each.updated_by | propercasing}}</span>
+                    <span style="color: #5d4565;font-size: 12px;">
+                        linked
+                    </span>
+                    <div>
+                        <span
+                            style=" font-size: 13px;padding: 2px 4px;color: #D81B60;background-color: #f9f2f4;border-radius: 4px; ">Collection
+                            ({{each.field }})</span>
+                        <span style="font-size: 13px;color: #2196f3;border-radius: 4px;"> to</span>
+                        <span
+                            style="font-size: 13px;color: #1e9840;background-color: #f2f9f7;border-radius: 4px; ">Vendor
+                            ({{each.new_value}})</span>
+                    </div>
+                    <div><span style="color: #5d4565;font-size: 12px;"> <i
+                                class="fa fa-clock "></i>@{{each.updated_dt | FormatDate}}
+                            {{each.updated_dt | FormatTime}}</span></div>
+                </div>
+            </li>
+            <li ng-show="each.kind === 'UL'" style="list-style-type:none;font-size:12px;line-height:22.5px;">
+                <div>
+                    <span
+                        style="color: #5d4565;font-size: 13px;font-weight: 800;">{{each.updated_by | propercasing}}</span>
+                    <span style="color: #5d4565;font-size: 12px;">
+                        un-linked
+                    </span>
+                    <div>
+                        <span
+                            style=" font-size: 13px;padding: 2px 4px;color: #D81B60;background-color: #f9f2f4;border-radius: 4px; ">Collection
+                            ({{each.field }})</span>
+                        <span style="font-size: 13px;color: #2196f3;border-radius: 4px;"> from </span>
+                        <span
+                            style="font-size: 13px;color: #1e9840;background-color: #f2f9f7;border-radius: 4px; ">Vendor
+                            ({{each.new_value}})</span>
+                    </div>
+                    <div><span style="color: #5d4565;font-size: 12px;"> <i
+                                class="fa fa-clock "></i>@{{each.updated_dt | FormatDate}}
+                            {{each.updated_dt | FormatTime}}</span></div>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</div>

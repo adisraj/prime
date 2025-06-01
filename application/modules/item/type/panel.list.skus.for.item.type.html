@@ -1,0 +1,129 @@
+<style>
+    .item-type-info-section {
+        border: 1px solid #e8e8e8;
+        line-height: 1.7;
+        padding: 7px 10px;
+        background: #232526;
+        background: -webkit-linear-gradient(to right, #414345, #232526);
+        background: linear-gradient(to right, #424242, #7b7b7b);
+    }
+
+    .associate-sku-list .sku-type-header {
+        background: #ffffff;
+        color: #000000;
+        border: 1px solid #a29c9c;
+        padding: 5px 5px;
+        border-bottom: 4px solid #046cec;
+    }
+
+    .associate-sku-list .sku-list-by-type-container {
+        border-bottom: 1px solid #ececec;
+    }
+
+    .text-success {
+        color: #67bd6a !important;
+    }
+
+    .text-warning {
+        color: #ffa829 !important;
+    }
+
+    .text-primary {
+        color: #2196f3 !important;
+    }
+
+    .text-info {
+        color: #31708f !important;
+    }
+</style>
+<div>
+    <div id="rcrightsidebar" class="associate-sku-list" data-ng-class="{'toggled':itemTypeCtrl.showSKUList}">
+        <!-- Section for Panel header and icon start -->
+        <div>
+            <div class="m-t-25" style="display:flex">
+                <div class="p-0 p-absolute cursor-pointer">
+                    <a class="cursor-pointer" data-ng-click="itemTypeCtrl.showSKUList=false;">
+                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                    </a>
+                </div>
+                <div class="p-0 m-auto">
+                    <label class="rclabel editformlabel" title="Item type insight">
+                        <strong>Item Type Insights</strong>
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="d-flex m-b-10 m-t-10">
+                    <div class="m-auto updatepanel">
+                        <div data-ng-include="'./application/modules/item/insights.svg'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Section for Panel header and icon end -->
+        <!-- Section for item type information start -->
+        <div class="p-5">
+            <div class="col-xs-12 m-t-20 item-type-info-section">
+                <span class="f-10 c-white">Products available for the item type</span>
+                <div class="">
+                    <span class="c-wheat text-center"
+                        ng-bind-html="itemTypeCtrl.selectedItemTypeData.itemTypePath"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section for item type information end -->
+        <div class="col-xs-12 m-t-10">
+            <div class="d-flex align-items-end" style="    align-items: baseline;">
+                <span style="font-size: 30px;font-weight: 100;color: blue;padding-right: 3px">Total
+                    <strong>{{itemTypeCtrl.selectedItemTypeData.totalSkuCount}}</strong> SKUs</span>
+            </div>
+        </div>
+        <!-- Section for listing SKUs start -->
+        <div class="col-xs-12 "
+            data-ng-if="!itemTypeCtrl.loadingInsights && itemTypeCtrl.selectedItemTypeData.insights.length">
+            <!-- Section for listing SKUs based on the type start -->
+            <div class="col-xs-12 p-0 sku-list-by-type-container"
+                data-ng-repeat="(groupName,groupData) in itemTypeCtrl.selectedItemTypeData.insights|groupBy:'sku_sub_type'">
+                <div class="col-xs-12 f-700 sku-type-header">
+                    {{groupName | uppercase}} <span class="small c-bluegray"
+                        data-ng-if="itemTypeCtrl.groupWiseSkuCount && itemTypeCtrl.groupWiseSkuCount[groupName] !== undefined">{{itemTypeCtrl.groupWiseSkuCount[groupName]}}</span>
+                </div>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <th class="f-500 bgm-ocean c-white" style="width:80px;">SKU Type</th>
+                        <th class="text-success f-500 bgm-black border-none">Active</th>
+                        <th class="text-warning f-500 bgm-black border-none">Pending Active</th>
+                        <th class="text-primary f-500 bgm-black border-none">Inactive</th>
+                        <th class="text-info f-500 bgm-black border-none">Pending Inactive</th>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="(subgroup,subgroupdata) in groupData|groupBy:'sku_type'">
+                            <td class="c-bluegray">
+                                <span data-ng-if="subgroup.toLowerCase() === 'mto'"> {{subgroup | uppercase}}</span>
+                                <span data-ng-if="subgroup.toLowerCase() !== 'mto'"> {{subgroup | titleCase}}</span>
+                            </td>
+                            <td class="text-center">{{(subgroupdata|filter:{status_id:200})[0].sku_count || 0}}</td>
+                            <td class="text-center">{{(subgroupdata|filter:{status_id:100})[0].sku_count || 0}}</td>
+                            <td class="text-center">{{(subgroupdata|filter:{status_id:300})[0].sku_count || 0}}</td>
+                            <td class="text-center">{{(subgroupdata|filter:{status_id:400})[0].sku_count || 0}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Section for listing SKUs based on the type end -->
+        </div>
+        <div class="text-center" data-ng-if="itemTypeCtrl.loadingInsights">
+            <span class="f-700" style="letter-spacing: 3px;">
+                <span class="cursor-not-allowed">
+                    <img src="./img/loading-circle.gif" style="height: 50px;width: 50px;" />
+                </span>
+            </span>
+        </div>
+        <div class="col-xs-12 m-t-20 text-center p-10"
+            data-ng-if="itemTypeCtrl.selectedItemTypeData.insights && itemTypeCtrl.selectedItemTypeData.insights.length === 0">
+            <span class="text-muted f-16 f-300">No products available for the selected item type.</span>
+        </div>
+        <!-- Section for listing SKUs end -->
+    </div>
+</div>

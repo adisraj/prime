@@ -1,0 +1,1098 @@
+<style>
+    .selfFulfilment::before {
+        top: 0px !important;
+        width: 17px;
+        height: 17px;
+        left: 10px;
+    }
+
+    .selfFulfilment::after {
+        top: 4px !important;
+    }
+
+    button:focus {
+        outline: 5px auto #6ecaf6!important
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    .select2-container-active,
+    trix-editor:focus {
+        border-left: 3px solid #f9c10c!important;
+    }
+
+    input[type="radio"]:focus,
+    input[type="radio"]:checked {
+        border: 2px solid #f9c10c!important;
+        border-radius: 50%;
+        background-color: #009688;
+        box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, .4), 0 1px 1px hsla(0, 0%, 100%, .8);
+        content: '';
+        height: 20px;
+        width: 20px;
+    }
+
+    input[type="radio"] {
+        border: 1px solid #5d4565;
+        border-radius: 50%;
+        cursor: pointer;
+        display: inline-block;
+        height: 20px;
+        margin-right: 5px;
+        position: relative;
+        width: 20px;
+        -webkit-appearance: none;
+    }
+
+    .maintenanceworkspace .selectize-input.focus {
+        border-left: 3px solid #f9c10c !important;
+    }
+</style>
+<div class="col-lg-12 col-sm-12 col-xs-12 p-0" data-ng-init="locationController.InitializeCreateUpdateForm()" ng-keyup="$event.keyCode == 27 && locationController.exit('create')">
+    <div class="form-page-size" data-ng-if="locationController.isPrimaryHierarchyLoaded">
+        <div class="maintainence-details-section p-t-10 p-l-10 p-b-10 p-r-0 location">
+            <div class="p-0 inheritheight col-lg-9 col-sm-8 col-xs-7">
+                <div class="col-lg-12 inheritheight">
+                    <div ng-if="locationController.createForm" ng-init="locationController.setStageIndication('createform');">
+                        <div class="col-lg-12 p-0" data-ng-class="{'disable-actions':locationController.disableActions}">
+                            <ng-form name="locationController.loc_maint_form" valdr-type="RULES-1" role="form" novalidate="novalidate">
+                                <div class="col-xs-12 p-0">
+                                    <div class="col-xs-10 col-lg-8 update-maintenance-screen-title">
+                                        <span class="f-16 c-white">
+                                            <i class="fa fa-edit"></i> Create Location </span>
+                                    </div>
+                                    <div class="col-xs-10 col-lg-8 p-0 box maintenanceworkspace">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Master Details</span>
+                                            <div>
+                                                <small>The primary details of the location</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-10">
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-lg-9 col-md-10 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="locationController.loc_maint_form.name.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="locationController.loc_maint_form.name.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Name</label>
+                                                        <input id="name" name="name" type="text" class="form-control input-sm" ng-model="head.name" errorvalue="head.name_error"
+                                                            placeholder="Enter Location Name" required auto-focus data-ng-blur="locationController.setDefaultShortName(head.name,head.short_name)"
+                                                            data-ng-class="{'error-field-validation': locationController.loc_maint_form.name.$invalid && locationController.isInvalidForm}"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-lg-6 col-md-10 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="locationController.loc_maint_form.short_name.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="locationController.loc_maint_form.short_name.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Short Name</label>
+                                                        <input id="short_name" name="short_name" type="text" class="form-control input-sm" ng-model="head.short_name" errorvalue="head.short_name_error"
+                                                            ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Short Name"
+                                                            required data-ng-class="{'error-field-validation': locationController.loc_maint_form.short_name.$invalid && locationController.isInvalidForm}"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-lg-6 col-md-10 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="!head.primary_location_hierarchy_value_id">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="head.primary_location_hierarchy_value_id">*
+                                                        </span>
+                                                        <label class="panel-body-label">
+                                                            {{locationConfig.primary_location_hierarchy_desc}} </label>
+                                                        <hierarchy-tree-view primary-hierarchy-id="locationConfig.primary_location_hierarchy_id" path="head.primary_location_hierarchy_value_name"
+                                                            primary-hierarchy-value-id="head.primary_location_hierarchy_value_id"
+                                                            directive-end-fn='end(directiveData)' form-header="{{locationConfig.primary_location_hierarchy_desc}}"
+                                                            clear-path="locationController.clearPath" data-ng-class="{'error-field-validation': !head.primary_location_hierarchy_value_id && locationController.isInvalidForm}">
+                                                        </hierarchy-tree-view>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-lg-6 col-md-10 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="!head.pricing_classification_group_value_id">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="head.pricing_classification_group_value_id">*
+                                                        </span>
+                                                        <label class="panel-body-label">{{locationConfig.pricing_classification_group_desc}}</label>
+                                                        <hierarchy-tree-view primary-hierarchy-id="locationConfig.pricing_classification_group" path="head.pricing_classification_group_value_name"
+                                                            primary-hierarchy-value-id="head.pricing_classification_group_value_id"
+                                                            directive-end-fn='sendPrimayClassificationGroup(directiveData)' form-header="{{locationConfig.pricing_classification_group_desc}}"
+                                                            clear-path="locationController.clearPath" data-ng-class="{'error-field-validation': !head.pricing_classification_group_value_id && locationController.isInvalidForm}">
+                                                        </hierarchy-tree-view>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="!head.assortment_classification_group_value_id">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="head.assortment_classification_group_value_id">*
+                                                        </span>
+                                                        <label class="panel-body-label">{{locationConfig.assortment_classification_group_desc}}</label>
+                                                        <hierarchy-tree-view primary-hierarchy-id="locationConfig.assortment_classification_group" path="head.assortment_classification_group_value_name"
+                                                            primary-hierarchy-value-id="head.assortment_classification_group_value_id"
+                                                            directive-end-fn='sendAssortmentClassificationGroup(directiveData)'
+                                                            form-header="{{locationConfig.assortment_classification_group_desc}}"
+                                                            clear-path="locationController.clearPath" data-ng-class="{'error-field-validation': !head.assortment_classification_group_value_id && locationController.isInvalidForm}">
+                                                        </hierarchy-tree-view>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-lg-6 col-md-10 col-sm-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="locationController.loc_maint_form.type_id.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="locationController.loc_maint_form.type_id.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Location Type</label>
+                                                        <select class="form-control select-component input-sm tabfocus" selectize="selectLocationType" name="type_id" id="type_id"
+                                                            items="head.type_id" class="form-control select-component input-sm"
+                                                            options="locationController.allLocationTypes" ng-model="head.type_id"
+                                                            ng-change="head.type=(locationController.allLocationTypes|filter:{id:head.type_id})[0].short_description;locationController.reloadUDDs();"
+                                                            required data-ng-class="{'error-field-validation': locationController.loc_maint_form.type_id.$invalid && locationController.isInvalidForm}">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 p-0">
+                                                <div class="col-lg-6 col-md-10 col-sm-12">
+                                                    <div class="col-lg-12 p-0 form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="locationController.loc_maint_form.fulfilment_center_id.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="locationController.loc_maint_form.fulfilment_center_id.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Fulfilment Center</label>
+                                                        <div class="col-lg-12 p-0 d-flex">
+                                                            <select selectize="selectLocation" name="fulfilment_center_id" id="fulfilment_center_id" items="head.fulfilment_center_id"
+                                                                class="form-control select-component input-sm tabfocus" options="locationController.allLocations"
+                                                                ng-model="head.fulfilment_center_id" ng-change="head.fulfilment_center = (locationController.allLocations | filter : {id: head.fulfilment_center_id, true})[0].name;"
+                                                                data-ng-class="{'error-field-validation': locationController.loc_maint_form.fulfilment_center_id.$invalid && locationController.isInvalidForm}">
+                                                            </select>
+                                                            <button type="button" class="col-lg-3 btn btn-sm btn-cancel f-700 m-l-5" data-ng-disabled="head.self_fulfilment_center" ng-click="head.fulfilment_center_id = null; head.fulfilment_center = ''">Reset
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-12">
+                                                    <div class="checkbox" style="margin-top:23px;">
+                                                        <label>Self Fulfilment Center
+                                                            <input hidden="hidden" type="checkbox" name="self_fulfilment_center" id="self_fulfilment_center" ng-model="head.self_fulfilment_center"
+                                                                data-ng-click="locationController.onSelfFulfilmentLocation()">
+                                                            <i class="input-helper selfFulfilment"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-10 col-lg-8 p-0 box m-t-10 maintenanceworkspace">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Status</span>
+                                            <div>
+                                                <small>Current and next status for the location</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-10">
+                                            <div class="col-xs-12 col-lg-12 p-0">
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="locationController.loc_maint_form.status_id.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="locationController.loc_maint_form.status_id.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Current Status</label>
+                                                        <select id="status_id" name="status_id" class="form-control select-component input-sm tabfocus" ng-change="head.status=(statuses|filter:{code:head.status_id})[0].description;locationController.reloadUDDs();"
+                                                            ng-options="each.code as each.description for each in statuses" ng-model="head.status_id"
+                                                            errorvaluechosen="head.status_id_error" required data-ng-class="{'error-field-validation': locationController.loc_maint_form.status_id.$invalid && locationController.isInvalidForm}">
+                                                            <option value="" disabled>Select Current Status</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="form-group" valdr-form-group ng-init="head.effective_date=getDateBasedOnFormat(head.effective_date)">
+                                                        <span class="c-red" ng-show="locationController.loc_maint_form.effective_date.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="locationController.loc_maint_form.effective_date.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Effective Date</label>
+                                                        <input type="text" id="effective_date" name="effective_date" required class="form-control input-sm rcp-mydatepicker" ng-model="head.effective_date"
+                                                            ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+                                                            model-view-value="true" is-effective-date="true" data-ng-class="{'error-field-validation': locationController.loc_maint_form.effective_date.$invalid && locationController.isInvalidForm}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-lg-12 p-0">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="locationController.loc_maint_form.next_status_id.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="locationController.loc_maint_form.next_status_id.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Next Status</label>
+                                                        <select name="next_status_id" id="next_statuses" class="form-control select-component input-sm tabfocus" ng-options="each.code as each.description disable when (each.code === locationController.statusCodes.Pending.ID && head.status_id !== locationController.statusCodes.Pending.ID) for each in next_statuses"
+                                                            ng-model="head.next_status_id" errorvaluechosen="head.next_status_id_error"
+                                                            ng-change="changeevent(head); head.next_status=(next_statuses|filter:{code:head.next_statuses})[0].description"
+                                                            data-ng-class="{'error-field-validation': locationController.loc_maint_form.next_status_id.$invalid && locationController.isInvalidForm}">
+                                                            <option value="" disabled>Select Next Status</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6" ng-if="effective_val">
+                                                    <div class="form-group" valdr-form-group ng-init="head.next_effective_date=getDateBasedOnFormat(head.next_effective_date)">
+                                                        <span class="c-red" ng-show="locationController.loc_maint_form.next_effective_date.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="locationController.loc_maint_form.next_effective_date.$valid">*
+                                                        </span>
+                                                        <label class="panel-body-label">Next Effective Date</label>
+                                                        <input type="text" id="next_effective_date" name="next_effective_date" required class="form-control input-sm rcp-mydatepicker"
+                                                            ng-model="head.next_effective_date" ui-mask="{{ui_date_mask}}" mydatepicker
+                                                            ng-model-options="{ updateOn: 'blur' }" model-view-value="true" is-effective-date="false"
+                                                            data-ng-class="{'error-field-validation': locationController.loc_maint_form.next_effective_date.$invalid && locationController.isInvalidForm}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <div class="rc-alert rc-alert-type-info" aria-hidden="false" role="alert">
+                                                    <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                        <div class="rc-alert-icon">
+                                                            <span class="text-info zmdi zmdi-info-outline" style="font-size:35px" title="Information message" title-direction="bottom"
+                                                                fixed-position="true">
+                                                            </span>
+                                                        </div>
+                                                        <div style="flex:1;">
+                                                            <div class="f-15 f-700 text-info" rc-alert-region="header">
+                                                                Automatic status adjustment</div>
+                                                            <div>
+                                                                <span class="c-black">
+                                                                    Based on the next effective date the current status will be automatically adjusted. If the current date is equal to the next
+                                                                    effective date then the current status will be changed
+                                                                    to the next status and the effective date will be updated
+                                                                    to the current date
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-10 col-lg-8 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="locationController.validationMessage ">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                                <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                    <div class="rc-alert-icon">
+                                                        <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px" title="Error message" title-direction="bottom" fixed-position="true">
+                                                        </span>
+                                                    </div>
+                                                    <div style="flex:1;">
+                                                        <div class="f-15 f-700 text-danger">Error!</div>
+                                                        <div>
+                                                            <span class="c-black">{{locationController.validationMessage}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-10 col-lg-8 m-t-10 p-0 m-b-10">
+                                        <div class="col-xs-6 p-0 pull-right d-flex">
+                                            <button type="button" class="btn btn-block btn-inverse f-700 waves-effect tabfocus-btn" data-ng-click="locationController.exit('create');">Cancel</button>
+                                            <button type="button" class="btn btn-block btn-success f-700 m-l-5 m-t-0 waves-effect tabfocus-btn" data-ng-click="locationController.continueFn('createForm')">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-form>
+                        </div>
+                    </div>
+                    <!--Div is for the configure location-->
+                    <div ng-show="locationController.configureScreen" ng-init="locationController.setStageIndication('configureform');">
+                        <div class="col-xs-10 col-lg-8 p-0">
+                            <div class="col-xs-12 p-0 box maintenanceworkspace">
+                                <div class="col-lg-12 update-maintenance-screen-title">
+                                    <span class="f-16 c-white">
+                                        <i class="fa fa-edit"></i> Create Location </span>
+                                </div>
+                                <div class="col-xs-12 p-0 rcpscrollbar">
+                                    <location-userdefined-data-directive ng-init="disableActions=locationController.disableActions">
+                                    </location-userdefined-data-directive>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-b-10 p-0 m-t-10" data-ng-if="uddValidationErrors.length>0">
+                                <div class="rc-alert p-10" aria-hidden="false" role="alert">
+                                    <div class="col-xs-12 d-flex p-0 box">
+                                        <div style="flex:1;">
+                                            <div class="d-flex d-flex-v-center p-10" style="background-color: #fffdf7;border-bottom: 1px solid #eaeded;">
+                                                <span class="c-firebrick zmdi zmdi-alert-octagon" style="font-size:28px"></span>
+                                                <span class="c-firebrick m-l-10">
+                                                    Please add values before proceeding in maintenance.
+                                                </span>
+                                            </div>
+                                            <div class="p-5">
+                                                <!-- <div class="c-gray p-5">Click on each link to add values</div> -->
+                                                <div class="p-5" data-ng-repeat="uddValidationError in uddValidationErrors">
+                                                    <span class="d-flex d-flex-v-center">
+                                                        <span data-ng-if="uddValidationError.user_defined_data_type.toLowerCase() === 'attribute'">
+                                                            <img src="./img/sidebar-icons/package.svg" style="height:13px;width:15px;" />
+                                                        </span>
+                                                        <span data-ng-if="uddValidationError.user_defined_data_type.toLowerCase() === 'hierarchy'">
+                                                            <img src="./img/sidebar-icons/hierarchy-levels.svg" style="height:13px;width:15px;" />
+                                                        </span>
+                                                        <span class="c-bluegray f-400 m-l-5 m-r-5">{{uddValidationError.user_defined_data_type}}
+                                                        </span> -
+                                                        <span class="m-l-5 text-info">{{uddValidationError.udd_description}}</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="locationController.validationMessage">
+                                <div class="col-xs-12 p-0">
+                                    <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                        <div class="col-xs-12 d-flex m-b-5 p-0">
+                                            <div class="rc-alert-icon">
+                                                <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                </span>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div class="f-15 f-700 text-danger">Error!</div>
+                                                <div>
+                                                    <span class="c-black">{{locationController.validationMessage}}
+                                                    </span>
+                                                </div>
+                                                <!-- <div data-ng-repeat="uddValidationError in uddValidationErrors">
+                                                    <span class="text-danger">There are no values present for {{uddValidationError.user_defined_data_type}} - {{uddValidationError.udd_description}}</span>
+                                                </div>
+                                                <div data-ng-if="uddValidationErrors.length>0">
+                                                    <div class="f-700 text-danger">You have to add values before proceeding maintenance.</div>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 p-t-10 m-b-10">
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="locationController.configureScreen">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect tabfocus-btn" data-ng-click="locationController.exit('create');">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect tabfocus-btn" data-ng-click="locationController.backFn('configureScreen');">Back</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 waves-effect tabfocus-btn" data-ng-click="locationController.continueFn('configureScreen');">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!------Manage Unstructured Data div start--------->
+                        <!-- <div class="col-xs-4">
+                            <div class="col-xs-12 p-10" style="background: #fafafa;border: 1px solid #dadada;">
+                                <div class="col-xs-12">
+                                    <h5 class="text-primary">User Defined Data types</h5>
+                                    <small>
+                                        User-defined data types use the built-in datatypes and other user-defined
+                                        datatypes as the building blocks for datatypes
+                                        that model the structure and behavior of data in applications.
+                                    </small>
+                                </div>
+                                <div class="col-xs-12 p-10">
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/package.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Attributes
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Attributes are a quality, character, characteristic or property.
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/hierarchy-levels.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Hierarchy
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Hierarchies are any system of persons or things ranked one above another in
+                                        hierarchical manner.
+
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/package.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Groups
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Groups are any assemblage of persons or things.
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!------Manage Unstructured Data div end--------->
+                    </div>
+                    <!--End of configure location div -->
+
+                    <!--Div is for the manage drops in location-->
+                    <div ng-if="locationController.manageDropScreen" ng-init="locationController.setStageIndication('dropScreen');locationController.initializeDropForm();">
+                        <ng-form name="locationController.drop_form" novalidate="novalidate">
+                            <div class="col-xs-10 col-lg-8 p-0">
+                                <div class="col-lg-12 update-maintenance-screen-title">
+                                    <span class="f-16 c-white">
+                                        <i class="fa fa-edit"></i> Create Location </span>
+                                </div>
+                                <div class="col-xs-12 p-0 box maintenanceworkspace">
+                                    <div class="col-xs-12 f-16 panel-header">
+                                        <span class="f-700 main-header">Unstructured Data</span>
+                                        <div>
+                                            <small>Add/Remove drops for the location</small>
+                                        </div>
+                                    </div>
+
+                                    <div data-ng-include="'./template/unstructured.data.info.section.html'"></div>
+                                    <div class="col-xs-12 p-10">
+                                        <div class="col-xs-6">
+                                            <div class="text-info text-center f-12 m-t-5" ng-if="loadingStreams">Loading streams...
+                                            </div>
+                                            <div class="text-info text-center f-12 m-t-5" ng-if="!streams.length && !loadingStreams">No streams exists for selected lake</div>
+                                            <div class="form-group" ng-if="drop.lake_id && !loadingStreams">
+                                                <span class="c-red" ng-show="locationController.drop_form.stream_id.$invalid">*
+                                                </span>
+                                                <span class="c-green" ng-show="locationController.drop_form.stream_id.$valid">*
+                                                </span>
+                                                <label>Stream</label>
+                                                <select id="stream_id" name="stream_id" ng-model="drop.stream_id" class="form-control select-component input-sm tabfocus"
+                                                    ng-options="item.stream_id as item.stream for item in streams" data-ng-change="locationController.getLakeStreamLinkByIds(drop.lake_id,drop.stream_id);resetAllconfigData()"
+                                                    required>
+                                                    <option value="" disabled>Select Stream</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 p-0">
+                                            <div class="col-xs-12">
+                                                <span class="c-green">*</span>
+                                                <label>Status</label>
+                                            </div>
+                                            <div class="col-xs-12 form-group d-flex m-t-5 p-0" data-ng-init="locationController.getDropStatus()">
+                                                <div ng-repeat="status in statusList">
+                                                    <div class="m-l-10 m-r-10" data-ng-init="status.isDefault ? drop.status_id = status.id : ''">
+                                                        <label class="d-flex align-items-center m-r-5">{{status.label}}
+                                                            <input hidden="hidden" type="radio" name="status" id="{{$index}}-status-local" ng-model="drop.status_id" value="{{status.id}}"
+                                                                required ng-checked="status.isDefault">
+                                                            <i class="input-helper"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-xs-12">
+                                                <span class="c-green">*</span>
+                                                <label>Source</label>
+                                            </div>
+                                            <div class="col-xs-12 form-group d-flex" data-ng-init="drop.source = 'Local'">
+                                                <div class="m-t-5">
+                                                    <label class="d-flex align-items-center">
+                                                        <input hidden="hidden" type="radio" name="match" id="match-local" data-ng-change="locationController.itemdataAddToQueueError = false;resetAllconfigData()" ng-model="drop.source" value="Local" required>
+                                                        <i class="input-helper"></i>Upload from Local Computer
+                                                    </label>
+                                                </div>
+                                                <div class="m-t-5 m-l-10">
+                                                    <label class="d-flex align-items-center">
+                                                        <input hidden="hidden" type="radio" name="match" id="match-url" ng-model="drop.source" value="URL" ng-click="drop.is_save_to_document_store=true;resetAllconfigData()"
+                                                            required>
+                                                        <i class="input-helper"></i>Upload from Internet
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="drop.source.toLowerCase() === 'local'" style="align-items:flex-end;">
+                                            <div class="col-xs-4 col-lg-7">
+                                                <div class="form-group" ng-repeat="f in files">
+                                                    <label>File Name</label>
+                                                    <label name="filename" class="form-control input-sm o-hidden text-overflow-desc-auto" title="{{f.name}}" disabled required>{{f.name}}</label>
+                                                </div>
+                                                <div class="text-danger p-t-10" data-ng-if="errFiles" data-ng-repeat="ef in errFiles">
+                                                    <span data-nf-if="ef.$errorMessages && ef.$errorMessages.maxSize">
+                                                        * {{ef.name}} exedes size limit {{ef.$errorParam}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8 col-lg-5 p-0" style="margin-top: 22px;">
+                                                <div class="col-xs-6 form-group pull-right" data-ng-if1="locationController.drop_form.$valid && (!isAllowMultipleDrops||(files||files.length>0))"
+                                                    data-ng-click="locationController.isAllowedMultipleDropsForSelectedStream(queuedDrops)">
+                                                    <button ng-disabled="(!isAllowMultipleDrops && queuedDrops.length>0) || locationController.drop_form.$invalid || locationController.isAddedToQueue || !files || !files.length||notImage"
+                                                        type="button" class="btn btn-success f-700 btn-block tabfocus-btn" name="update_title_btn"
+                                                        id="update_title_btn">Add to Queue
+                                                    </button>
+                                                </div>
+                                                <div class="col-xs-6 form-group pull-right">
+                                                    <button type="button" class="btn btn-info f-700 btn-block tabfocus-btn" ng-disabled="!isAllowMultipleDrops" name="update_title_btn"
+                                                        id="update_title_btn" ngf-select="locationController.selectFiles($files, $invalidFiles)"
+                                                        multiple accept="*" ngf-max-size="60MB">Select File</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-lg-12 p-0 checkbox m-b-10">
+                                                <label class=" d-flex" data-ng-if="drop.stream_id == '33' && files.length && !notImage" data-ng-init="locationController.is_thumbnail = 1;">
+                                                    <input type="checkbox" data-ng-model="locationController.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                                    <i class="input-helper"></i>
+                                                    <span class="m-t-5 m-l-10">Save as thumbnail</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="text-danger p-b-10 m-l-10" data-ng-if="notImage">* Selected File is
+                                            not an image</div>
+                                        <div class="col-xs-12 p-0 d-flex" data-ng-if="drop.source.toLowerCase() === 'url'" style="align-items:flex-end;">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <span class="c-red" ng-show="locationController.drop_form.url.$invalid|| notImageUrl || invalidUrl">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="locationController.drop_form.url.$valid && !notImageUrl && !invalidUrl">*
+                                                    </span>
+                                                    <label>URL</label>
+                                                    <input id="url" ng-bind="datas" name="url" ng-keyup="locationController.validateUrl(drop.url);"
+                                                        type="text" class="form-control input-sm" ng-model="drop.url" placeholder="Enter URL"
+                                                         data-ng-change="locationController.itemdataAddToQueueError = false;locationController.showCantGen = false"
+                                                         required>
+                                                       
+                                                    <span class="text-danger" ng-if="(locationController.drop_form.url.$error.pattern && !locationController.drop_form.url.$pristine)||invalidUrl">Invalid URL
+                                                    </span>
+                                                    <span class="text-danger" ng-if="locationController.showCantGen">Cannot convert the given url into file
+                                                    </span>
+                                                    <!-- <img data-ng-if="drop.source.toLowerCase()=='url' && locationController.drop_form.url.$valid && !locationController.showCantGen"
+                                                     ng-src="{{drop.url}}" style="height:125px;width:125px;" /> -->
+                                                    <div class="col-xs-12 p-0 form-group" data-ng-if="drop.source.toLowerCase()=='url' && isImage && files.length > 0" style="display: inline-flex;top: 5px;flex-direction: column;">
+                                                        <img data-ng-if="drop.source.toLowerCase()=='url' && locationController.drop_form.url.$valid && !locationController.showCantGen"
+                                                        ng-src="{{drop.url}}" style="height:125px;width:125px;" />
+                                                        <div class="d-flex" style="align-items: flex-end;" ng-repeat="f in files">
+                                                            <label class="c-gray f-300">{{f.type | truncate:40}}</label>
+                                                            <label class="c-gray f-300" style="margin-left: 15px">{{f.size}} kb</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div data-ng-if="drop.url&&drop.url.length>0&&locationController.drop_form.url.$valid  && !notImageUrl && !invalidUrl" class="checkbox m-b-10" style="margin-left: -9px;">
+                                                    <label class="d-flex">
+                                                        <input type="checkbox" data-ng-disabled="drop.source.toLowerCase()=='url'" data-ng-model="drop.is_save_to_document_store" ng-true-value=true ng-false-value=false>
+                                                        <i class="input-helper" data-ng-disabled="drop.source.toLowerCase()=='url'" ng-class="{'cursor-nt-al': drop.source.toLowerCase()=='url'}" title="{{drop.source.toLowerCase()=='url'? 'Saving to document store by default':''}}"></i>
+                                                        <span class="m-t-5 m-l-10">Save to document store</span>
+                                                    </label>
+                                                    <div class="checkbox m-b-10">
+                                                        <label class="d-flex m-t-5" data-ng-if="drop.stream_id == '33'" data-ng-init="locationController.is_thumbnail = 1;">
+                                                            <input type="checkbox" data-ng-model="locationController.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                                            <i class="input-helper"></i>
+                                                            <span class="m-t-5 m-l-10"> Save as thumbnail</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0" data-ng-if1="isAllowMultipleDrops && !(locationController.drop_form.$invalid)">
+                                                <div class="col-lg-6 col-xs-12 form-group pull-right" data-ng-click="locationController.isAllowedMultipleDropsForSelectedStream(queuedDrops)">
+                                                    <button type="button" ng-disabled="locationController.drop_form.$invalid || locationController.showCantGen || locationController.isAddedToQueue || (!isAllowMultipleDrops && queuedDrops.length>0)||notImageUrl||invalidUrl"
+                                                        class="btn btn-success f-700 btn-block" name="update_title_btn" id="update_title_btn">Add to Queue</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-danger p-b-10 m-l-10" data-ng-if="notImageUrl">* URL is
+                                            not an image</div>
+                                        <div class="col-xs-12 p-0" data-ng-if="!isAllowMultipleDrops && queuedDrops.length>0">
+                                            <span class="col-xs-12 text-danger">Multiple drop upload is not allow for selected stream. Delete the existing queue.
+                                            </span>
+                                        </div>
+                                        <div class="f-14 f-700 c-firebrick" data-ng-if="locationController.itemdataAddToQueueError">
+                                            {{locationController.itemdataAddToQueueError}}
+                                        </div>
+                                        <!-- End -->
+                                    </div>
+                                </div>
+                                <!-- Table to show the Queued cover images and the Thumbnails start -->
+                                <div class="col-xs-12 p-0 box maintenanceworkspace m-t-10">
+                                    <div class="col-xs-12 m-b-10 p-0">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Images added to the queue
+                                            </span>
+                                            <div>
+                                                <small>Images will be only be added to the queue, and will be linked once the data
+                                                    is published.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-t-10">
+                                            <div class="rc-alert rc-alert-type-info" aria-hidden="false" role="alert">
+                                                <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                    <div class="rc-alert-icon">
+                                                        <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                                                        </span>
+                                                    </div>
+                                                    <div style="flex:1;">
+                                                        <div class="f-14 f-700 text-info">Images in the Queue</div>
+                                                        <div>
+                                                            <span class="text-muted">
+                                                                Based on the next effective date the current status will be automatically adjusted. If the current date is equal to the next
+                                                                effective date then the current status will be changed to
+                                                                the next status and the effective date will be updated to
+                                                                the current date
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Section to show the message for the Image added to Queue start -->
+                                        <div class="col-xs-12 m-t-10" id="showQueueMessage">
+                                            <div class="col-xs-12 p-10" style="border: 1px solid #b4ceb4;border-radius: 3px;background: #f2fff2;">
+                                                <span class="d-flex f-14 f-700" style="color: #386d39;">
+                                                    <span class="f-21 f-700 m-r-5 text-success zmdi zmdi-check zmdi-hc-fw" style="color: #5ca05d;"></span>
+                                                    {{locationController.showSuccessQueueMessage}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- Section to show the message for the Image added to Queue end -->
+
+                                        <!-- Section to show the message on deleting cover image -->
+                                        <div class="col-xs-12 m-t-10" id="showConfirmationMessage" data-ng-if="locationController.DeletionConfirmation">
+                                            <div class="col-xs-12 p-10" style="border: 1px solid #b4ceb4;border-radius: 3px;background: #f2fff2;">
+                                                <span class="d-flex f-14 f-700">
+                                                    Removing cover image will remove the same from thumbnail. Do you want to delete ?
+                                                </span>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group pull-right">
+                                                        <button class="btn btn-block btn-success waves-effect f-700" ng-if="!updateFile" ng-click="locationController.deleteDropFromQueue()">
+                                                            Yes, Delete!
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-group pull-right m-r-5">
+                                                        <button class="btn btn-block btn-inverse waves-effect f-700" data-ng-click="locationController.initializeDropForm()">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Section to show the message on deleting cover image end -->
+
+                                        <div class="col-xs-12 o-auto p-t-10" data-ng-if="queuedDrops.length>0">
+                                            <table class="table table-condensed table-bordered-sm table-bordered table-vmiddle maintenance-drops-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Size</th>
+                                                        <th>Lake</th>
+                                                        <th>Stream</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <!-- <tbody>
+                                                    <tr>
+                                                        <td colspan="5" class="group-header-cover-img">Cover Image</td>
+                                                        <tr class="repeated-item" ng-repeat="drop in queuedDrops" ng-disabled="isDeleting" data-ng-if="drop.stream_code==='cover_image'">
+                                                            <td>{{drop.file_name || (drop.url | limitTo: 50)}}
+                                                                <span ng-if="drop.url">
+                                                                    ... </span>
+                                                            </td>
+                                                            <td>
+                                                                <span data-ng-if="drop.size">{{drop.size/1024 | DecimalPrecision:1 }} KB</span>
+                                                                <span data-ng-if="!drop.size"> - </span>
+                                                            </td>
+                                                            <td>{{drop.lake}}</td>
+                                                            <td>{{drop.stream}}</td>
+                                                            <td class="text-center d-flex" style="justify-content: space-evenly;">
+                                                                <a class="c-firebrick f-500 cursor-pointer f-17" ng-click="locationController.removeDropsFromQueue($index)" title="Delete Image">
+                                                                    <span class="zmdi zmdi-delete zmdi-hc-fw"></span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <td colspan="5" class="group-header-thumbnail">Thumbnails</td>
+                                                        <tr class="repeated-item" ng-repeat="drop in queuedDrops" ng-disabled="isDeleting" data-ng-if="drop.stream_code==='thumbnail'">
+                                                            <td>{{drop.file_name || (drop.url | limitTo: 50)}}
+                                                                <span ng-if="drop.url">
+                                                                    ... </span>
+                                                            </td>
+                                                            <td>
+                                                                <span data-ng-if="drop.size">{{drop.size/1024 | DecimalPrecision:1 }} KB</span>
+                                                                <span data-ng-if="!drop.size"> - </span>
+                                                            </td>
+                                                            <td>{{drop.lake}}</td>
+                                                            <td>{{drop.stream}}</td>
+                                                            <td class="text-center d-flex" style="justify-content: space-evenly;">
+                                                                <a class="c-firebrick f-500 cursor-pointer f-17" ng-click="locationController.removeDropsFromQueue($index)" title="Delete Image">
+                                                                    <span class="zmdi zmdi-delete zmdi-hc-fw"></span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tr>
+                                                </tbody> -->
+                                                <tbody data-ng-repeat="(groupName,dropValues) in queuedDrops|groupBy:'stream' track by $index">
+                                                    <tr>
+                                                        <td colspan="5" class="group-header-cover-img">{{groupName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="repeated-item" data-ng-repeat="drop in dropValues"  data-ng-init="drop.thumbnail=locationController.getDownloadUrl(drop.drop_id, drop.url)"
+                                                        ng-disabled="isDeleting">
+                                                        <td>{{drop.file_name || (drop.url | limitTo: 50)}}
+                                                            <span ng-if="drop.url">
+                                                                ... </span>
+                                                        </td>
+                                                        <td>
+                                                            <span data-ng-if="drop.size">{{drop.size/1024 | DecimalPrecision:1 }} KB</span>
+                                                            <span data-ng-if="!drop.size"> - </span>
+                                                        </td>
+                                                        <td>{{drop.lake}}</td>
+                                                        <td>{{drop.stream}}</td>
+                                                        <td class="text-center d-flex" style="justify-content: space-evenly;">
+                                                            <button type="button" class="c-firebrick f-500 cursor-pointer f-17 
+                                                            zmdi zmdi-delete zmdi-hc-fw bg-none border-none p-0" ng-click="locationController.deleteDropsFromQueue(drop)"
+                                                                title="Delete Image">
+                                                            </button>
+                                                        </td>
+                                                   
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-12 o-auto" data-ng-if="queuedDrops.length===0">
+                                            <div class="col-xs-12 p-10">
+                                                <span class="text-info">No queued drops to publish.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="locationController.validationMessage ">
+                                    <div class="col-xs-12 p-0">
+                                        <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                            <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                <div class="rc-alert-icon">
+                                                    <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                    </span>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div class="f-15 f-700 text-danger">Error!</div>
+                                                    <div>
+                                                        <span class="c-black">{{locationController.validationMessage}}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Table to show the cover images and the Thumbnails end -->
+                                <div class="col-xs-12 m-t-10 p-0 m-b-30">
+                                    <div class="col-xs-8 col-lg-6 p-0 pull-right d-flex">
+                                        <button type="button" class="btn btn-block btn-cancel f-700 waves-effect tabfocus-btn" data-ng-click="locationController.exit('create');">Cancel</button>
+                                        <button type="button" class="btn btn-block btn-inverse f-700 m-l-5 m-t-0 waves-effect tabfocus-btn" data-ng-click="locationController.backFn('dropScreen');">Back</button>
+                                        <button type="button" class="btn btn-block btn-success f-700 m-l-5 m-t-0 waves-effect tabfocus-btn" data-ng-click="locationController.continueFn('dropScreen')">Next</button>
+                                        <button data-ng-if="files.length > 0" type="button" class="btn btn-block btn-info f-700 m-l-5 m-t-0 waves-effect tabfocus-btn"
+                                            data-ng-click="locationController.continueFn('skip')">Skip</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                    <!--End of manage drops in location div -->
+                </div>
+
+                <!--Div for preview and publish item stage start-->
+                <div ng-if="locationController.previewAndPublish" ng-init="locationController.setStageIndication('previewandpublish');">
+                    <div class="col-lg-12 p-0 maintenanceworkspace noboxshadow">
+                        <div class="rcpscrollbar full-height">
+                            <div class="col-xs-12 m-b-10" data-ng-show1="!locationController.publishResponseMessage">
+                                <div class="col-lg-12 update-maintenance-screen-title" data-ng-class="{'d-none' : locationController.publishResponseMessage}">
+                                    <span class="f-16 c-white">
+                                        <i class="fa fa-edit"></i> Create Location </span>
+                                </div>
+                                <div class="col-xs-12 d-flex p-0" style="min-height:50px;flex-direction:column;align-items:flex-end;">
+                                    <div class="col-xs-12 align-items-center justify-content-between type-success" aria-hidden="false" role="alert" ng-class="{'preview-screen':!locationController.publishResponseMessage, 'publish-screen':locationController.publishResponseMessage}">
+                                        <div class="d-flex p-0 align-items-center" data-ng-show="!locationController.publishResponseMessage">
+                                            <div class="rc-alert-icon">
+                                                <span class=" zmdi zmdi-globe text-info" style="font-size:35px" title="Review" title-direction="bottom" fixed-position="true">
+                                                </span>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div class="f-14 f-700">Review and Publish</div>
+                                                <div>
+                                                    <span class="text-muted">
+                                                        <div class="list-style-none" style="line-height: 1.7;">
+                                                            <li>
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="">
+                                                                    <strong>Preview and Publish :</strong> Publish the entered/configured
+                                                                    details
+                                                                </span>
+                                                            </li>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex" style="justify-content:space-between" data-ng-show="!locationController.publishResponseMessage">
+                                            <button type="button" class="btn btn-lg btn-inverse f-700 waves-effect tabfocus-btn" data-ng-click="locationController.backFn('publishLocation');"
+                                                data-ng-if="locationController.previewAndPublish">Back</button>
+                                            <button type="button" class="btn btn-lg btn-success f-700 m-l-5 waves-effect tabfocus-btn" data-ng-click="locationController.publishLocationUdd(head);"
+                                                data-ng-if="locationController.previewAndPublish" data-ng-disabled="locationController.disableActions">Publish {{moduleName}}
+                                            </button>
+                                        </div>
+
+                                        <!-- Section to show the response of the published data start -->
+                                        <div class="col-xs-12 p-0" data-ng-show="locationController.publishResponseMessage">
+                                            <div class="col-xs-12 p-0 justify-content-between p-0">
+                                                <div class="col-xs-12 col-lg-9 p-0">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="rc-alert-icon">
+                                                                <span class=" zmdi zmdi-globe text-info" style="font-size:35px" title="Update information" title-direction="bottom" fixed-position="true">
+                                                                </span>
+                                                            </span>
+                                                            <div class="f-14 f-700 text-success" data-ng-if="locationSuccessMessage && !locationController.isProcessing">
+                                                                <span>Location</span> Created</div>
+                                                            <div data-ng-if="locationController.isProcessing && !locationSuccessMessage">
+                                                                <i class="zmdi zmdi-hourglass-alt"></i> ...
+                                                            </div>
+
+                                                            <span class="c-firebrick f-14 f-700" data-ng-if="locationErrorMessage && !locationController.isProcessing">Error while creating the Location</span>
+                                                        </div>
+                                                    </div>
+                                                    <div style="padding-left:40px;" data-ng-if="!locationController.isProcessing">
+                                                        <div class="message-section success d-flex-v-center" data-ng-if="locationSuccessMessage">
+                                                            <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                            <span class="message-info">{{locationSuccessMessage}}</span>
+                                                        </div>
+                                                        <div class="message-section success d-flex-v-center" data-ng-if="locationUDDSuccessMessage">
+                                                            <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                            <span class="message-info">{{locationUDDSuccessMessage}}</span>
+                                                        </div>
+                                                        <div class="message-section error d-flex-v-center" data-ng-if="locationErrorMessage && locationErrorMessage.length>0" data-ng-repeat="error in locationErrorMessage">
+                                                            <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                            <span class="message-info">{{error}}</span>
+                                                        </div>
+                                                        <div class="d-flex message-section">
+                                                            <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                            <span class="message-info" data-ng-if="locationController.opdone">
+                                                                Are you planing to create a new Location?
+                                                            </span>
+                                                            <span class="" data-ng-if="locationErrorMessage">
+                                                                Will you go back and review your setup?
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-xs-12 m-t-10" data-ng-if="!locationController.isProcessing">
+                                                    <div class="pull-right d-flex p-0 d-flex-h-center">
+                                                        <button type="button" class="btn btn-inverse f-300 waves-effect f-15 p-10" data-ng-click="locationController.closeForm();">Finish</button>
+                                                        <button type="button" class="btn btn-cancel f-300 waves-effect f-15 m-l-5 p-10" data-ng-if="locationErrorMessage" data-ng-click="locationController.backFn('configureScreen');locationController.publishResponseMessage=false;">Go Back
+                                                        </button>
+                                                        <button type="button" class="btn btn-info f-300 m-l-5 waves-effect f-16 tabfocus-btn" data-ng-if="locationController.opdone"
+                                                            data-ng-click="locationController.NewLocation();" data-ng-disabled="disableActions"
+                                                            style="padding:10px 15px;">Let's Create
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Section to show the response of the published data end -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Section to preview data start -->
+                            <div class="col-xs-12 p-0" data-ng-show1="!locationController.publishResponseMessage">
+                                <div class="col-xs-12 col-md-6">
+                                    <!--BASIC DETAILS PREVIEW -- START-->
+                                    <div class="col-lg-12 p-0">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700" style="color:darkgray;">
+                                                Location Details
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-12 p-t-10 card previewnpublish f-13">
+                                            <div class="col-xs-12 form-group">
+                                                <label class="panel-body-label">Short Name</label>
+                                                <div class="description-data">
+                                                    <label class="m-0 p-0">{{head.short_name}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 form-group">
+                                                <label class="panel-body-label">Location Type</label>
+                                                <div class="description-data p-0">
+                                                    <label class="m-0 p-0">
+                                                        <!-- <select class="dropdown-to-label" disabled ng-options="each.id as each.short_description for each in locationController.allLocationTypes"
+                                                            ng-model="head.type_id">
+                                                        </select> -->
+                                                        <select selectize="selectLocationType" name="type_id" id="preview_type_id" items="head.type_id" class="dropdown-to-label"
+                                                            options="locationController.allLocationTypes" ng-model="head.type_id"
+                                                            disabled>
+                                                        </select>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 form-group">
+                                                <label class="panel-body-label">Fulfilment Center</label>
+                                                <div class="description-data" data-ng-if="!head.self_fulfilment_center && head.fulfilment_center_id">
+                                                    <label class="m-0 p-0">{{head.fulfilment_center}}</label>
+                                                </div>
+                                                <div class="description-data" data-ng-if="head.self_fulfilment_center">
+                                                    <label class="m-0 p-0">{{head.short_name}}</label>
+                                                </div>
+                                                <div class="description-data" data-ng-if="!head.self_fulfilment_center && !head.fulfilment_center_id">
+                                                    <label class="m-0 p-0">N/A</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0 form-group">
+                                                <div class="col-xs-6">
+                                                    <label class="panel-body-label">Current Status</label>
+                                                    <div class="description-data">
+                                                        <label class="m-0 p-0">
+                                                            <select class="dropdown-to-label" ng-options="each.code as each.description for each in statuses" ng-model="head.status_id"
+                                                                disabled></select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <label class="panel-body-label">Effective Date</label>
+                                                    <div class="description-data">
+                                                        <label class="m-0 p-0">{{head.effective_date }}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0 form-group">
+                                                <div class="col-xs-6">
+                                                    <label class="panel-body-label">Next Status</label>
+                                                    <div class="description-data">
+                                                        <label class="m-0 p-0">
+                                                            <select class="dropdown-to-label" ng-options="each.code as each.description for each in next_statuses" ng-model="head.next_status_id"
+                                                                disabled></select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6" ng-if="effective_val">
+                                                    <label class="panel-body-label">Next Effective Date</label>
+                                                    <div class="description-data">
+                                                        <label class="m-0 p-0">{{head.next_effective_date }}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 form-group">
+                                                <label class="panel-body-label">{{locationConfig.primary_location_hierarchy_desc}}</label>
+                                                <div class="description-data">
+                                                    <label class="m-0 p-0" title="{{head.primary_location_hierarchy_value_name}}" ng-bind-html="head.primary_location_hierarchy_value_name"></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 form-group">
+                                                <label class="panel-body-label">{{locationConfig.pricing_classification_group_desc}}</label>
+                                                <div class="description-data">
+                                                    <label class="m-0 p-0" ng-bind-html="head.pricing_classification_group_value_name"></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 form-group">
+                                                <label class="panel-body-label">{{locationConfig.assortment_classification_group_desc}}</label>
+                                                <div class="description-data">
+                                                    <label class="m-0 p-0" ng-bind-html="head.assortment_classification_group_value_name"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--BASIC DETAILS PREVIEW -- END-->
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <!--UDD DETAILS PREVIEW -- START-->
+                                    <div class="col-lg-12 p-0 card m-b-0">
+                                        <div class="col-lg-12 f-16 panel-header c-white">
+                                            <span class="f-700" style="color:darkgray;">
+                                                User Defined Data
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <preview-udd-directive udd-data="uddData" selected-hierarchy-property="selectedHierarchyProperty" attribute-values-map="locationController.attributeValuesMap"
+                                        mto-options-map="" is-summary="false"></preview-udd-directive>
+                                    <!--UDD DETAILS PREVIEW -- END-->
+                                </div>
+                            </div>
+                            <!-- Section to preview data end -->
+
+                        </div>
+                    </div>
+                </div>
+                <!--Div for preview and publish item stage end-->
+            </div>
+        </div>
+    </div>
+    <!--show item dependent details-->
+    <div id="rcrightsidebar" data-ng-class="{'changehistorytoggle': locationController.showDependencyDetails === true || showHistory === true,'toggled':locationController.showDependencyDetailsData === true}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="locationController.closePanels();" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="{{locationController.moduleName}}">
+                    <strong>Location</strong> Dependency</label>
+            </div>
+        </div>
+        <div class="col-xs-12 row ">
+            <div class="d-flex">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-location.svg'"></div>
+                </div>
+            </div>
+            <div class="rightsidebarFieldsMargin">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div>
+                            <h4 class="aligncenter dependency-errorMessage">Cannot be deleted!</h4>
+                        </div>
+                        <div class="col-xs-12 p-0" ng-repeat="($groupName,$dependencyMain) in ( locationController.dependencyList | groupBy : 'dependent_entity')">
+                            <div class="rcpscrollbar dependency-entityBox">
+                                <h4> Dependent Entities - Hunt Path </h4>
+                                <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                                    <div class="dependency-entityList" ng-click="locationController.showDependencyListDetails(dependency);">
+                                        <span title="{{dependency.location}}">{{dependency.location | truncate:40}}</span>
+                                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pull-right m-r-5 m-t-15">
+                            <button class="btn-secondary waves-effect" ng-click="locationController.showDependencyDetailsData=false;locationController.showDependencyDetails = false;locationController.$confirmdelete = false;">
+                                <span>
+                                    <b>Cancel</b>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-include="'./application/modules/location/maintenance/panel.location.dependency.html'"></div>
+    </div>
+    <div ng-if="locationController.showAddrCnt" data-ng-include="'./application/templates/panel.address.contact.html'">
+    </div>
+    <meta-data-panel></meta-data-panel>
+    <div data-ng-include="'./application/modules/location/maintenance/location.maintenance.form.cancellation.popup.html'">
+    </div>
+</div>

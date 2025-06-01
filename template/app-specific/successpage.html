@@ -1,0 +1,39 @@
+<keybinding on="esc" invoke="closeFn()"/>
+<div ng-if="updateSuccess || saveSuccess || deleteSuccess || configureSuccess || cloneSuccess || uploadSuccess || transferSuccess" class="form-group col-xs-12 p-0"
+     valdr-form-group>
+    <img class="updatesuccessicon" src="./img/success_tick.svg"/>
+    <label class="editformlabel success-page-text text-center" ng-if="updateSuccess">You have updated <strong>Successfully!</strong></label>
+    <label class="editformlabel success-page-text text-center" ng-if="saveSuccess">You have created <strong>Successfully!</strong></label>
+    <label class="editformlabel success-page-text text-center" ng-if="deleteSuccess">You have deleted <strong>Successfully!</strong></label>
+    <label class="editformlabel success-page-text text-center" ng-if="configureSuccess">You have configured UDD <strong
+            style="font-size: 35px;">Successfully!</strong></label>
+    <label class="editformlabel success-page-text text-center" ng-if="cloneSuccess">You have cloned <strong
+        style="font-size: 35px;">Successfully!</strong></label>
+    <label class="editformlabel success-page-text text-center" ng-if="uploadSuccess">You have uploaded documents <strong
+        style="font-size: 35px;">Successfully!</strong></label>
+    <label class="editformlabel success-page-text text-center" ng-if="transferSuccess">SKU moved into Item
+        <strong style="font-size: 35px;">Successfully!</strong></label>
+    <button type="button" class="btn-block btn-primal btn-lg" id="done_btn" data-ng-click="closeFn();">
+        <strong>Done</strong>
+    </button>
+    <button class="btn-block btn-secondary btn-lg" type="button" id="create_new_btn" ng-if="saveSuccess"
+        data-ng-click="createNewFn();">
+        <strong>Create New</strong>
+    </button>
+    <div class="d-flex p-0 m-t-5">
+        <button class="btn-secondary btn-lg"
+            ng-class="{'btn-block': !(saveSuccess && configureUddFlag), 'btn-block-secondary': saveSuccess && configureUddFlag}"
+            type="button" id="view_values_btn" ng-if="viewValuesOption" data-ng-click="viewValuesFn();">
+            <strong>View Values</strong>
+        </button>
+        <button class="btn-secondary btn-lg btn-inverse"
+            ng-class="{'btn-block': !viewValuesOption && configureUddFlag, 'btn-block-secondary': viewValuesOption && configureUddFlag}"
+            type="button" id="configure_udd_btn" ng-if="configureUddFlag" data-ng-click="configureUddFn();">
+            <strong ng-if="!configureUddEntityId">Configure UDD</strong>
+            <strong ng-if="configureUddEntityId == 1">Configure Location Type UDD</strong>
+            <strong ng-if="configureUddEntityId == 7">Configure Item Type UDD</strong>
+            <strong ng-if="configureUddEntityId == 23">Configure Vendor Type UDD</strong>
+            <strong ng-if="configureUddEntityId == 314">Configure MTO Type UDD</strong>
+        </button>
+    </div>
+</div>

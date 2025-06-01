@@ -1,0 +1,63 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':cmpyCtrl.showErrorDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" id="com_depend_close" name="com_depend_close" class="close-icon bg-none border-none btn-link p-0" data-ng-click="cmpyCtrl.closeDependencyDetails();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Company Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Name</td>
+                        <td class="highlight-text-success" title="{{cmpyCtrl.company_details.name}}">{{cmpyCtrl.company_details.name | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{cmpyCtrl.company_details.status}}">{{cmpyCtrl.company_details.status}}</td>
+                    </tr>
+                </table>
+                <h4>{{cmpyCtrl.errorDependentData.dependent_entity}} - Dependent Details</h4>
+                <div ng-if="cmpyCtrl.errorDependentData.dependent_entity === 'Vendor'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Vendor Name</td>
+                            <td class="highlight-text-success" title="{{cmpyCtrl.errorDependentData.name}}">{{cmpyCtrl.errorDependentData.name | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{cmpyCtrl.errorDependentData.status}}">{{cmpyCtrl.errorDependentData.status}}</td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Type</td>
+                            <td title="{{cmpyCtrl.errorDependentData.VendorType}}">{{cmpyCtrl.errorDependentData.VendorType}}</td>
+                        </tr>
+                        <tr>
+                            <td>Next Effective Date</td>
+                            <td ng-show="cmpyCtrl.errorDependentData.next_status !== 'None'" title="{{cmpyCtrl.errorDependentData.next_effective_date | FormatDate}}">{{cmpyCtrl.errorDependentData.next_effective_date | FormatDate}}</td>
+                            <td ng-show="cmpyCtrl.errorDependentData.next_status === 'None'" title="{{cmpyCtrl.errorDependentData.next_effective_date}}"> N/A</td>
+                        </tr>
+                    </table>
+                </div>
+                <div ng-if="cmpyCtrl.errorDependentData.dependent_entity !== 'Vendor'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Name</td>
+                            <td class="highlight-text-success" title="{{cmpyCtrl.errorDependentData.name}}">{{cmpyCtrl.errorDependentData.name | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{cmpyCtrl.errorDependentData.status}}">{{cmpyCtrl.errorDependentData.status}}</td>
+                        </tr>
+                    </table>
+                </div>
+                </br>
+                <div class="dependency-notifyMessage"> <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i><span>{{cmpyCtrl.errorDependentData.message}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>

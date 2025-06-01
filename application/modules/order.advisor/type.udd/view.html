@@ -1,0 +1,345 @@
+<!--list panel-->
+<div class="col-lg-12 p-0" data-ng-controller="UDDController as UDDCtrl">
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="UDDCtrl.OpenPanelNewAdvisorTypeUDD()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="UDDCtrl.closeForm();UDDCtrl.isColumnSettingsVisible = false;" />
+        </li>
+        <li>
+            <keybinding on="ctrl+f" invoke="UDDCtrl.focusSearchField();" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="UDDCtrl.FetchOrderAdvisorTypesUDDs('refresh');" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="UDDCtrl.isColumnSettingsVisible = true;" />
+        </li>
+    </ul>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/order-advisor.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Sale Order Advisor Type User Defined Data</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" ng-if="permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="tableheader-btn">
+                        <span data-ng-if="!UDDCtrl.search"> {{UDDCtrl.rowsInfo}} </span>
+                        <span data-ng-if="UDDCtrl.search"> Displaying
+                            {{(UDDCtrl.UddData | filterBy:['id','status','maintenance_description','display_sequence','required']:UDDCtrl.search).length}}
+                            of {{UDDCtrl.UddData.length}}
+                            Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li ng-if="permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    ng-if="UDDCtrl.UddData.length > 0">
+                                    <input class="form-control input-sm " type="text " ng-model="UDDCtrl.search"
+                                        id="inlineUddSearch" indicate-quick-search placeholder="Quick Search "
+                                        data-ng-disabled="!UDDCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="UDDCtrl.UddData.length > 0">
+                            <a>
+                                <button type="button" ng-click="UDDCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block waves-effect btn-brd-none"
+                                    data-ng-disabled="!UDDCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="UDDCtrl.UddData.length > 0">
+                            <a>
+                                <button type="button" ng-click="UDDCtrl.FetchOrderAdvisorTypesUDDs(true);"
+                                    class="btn-primal btn-block waves-effect btn-brd-none"
+                                    data-ng-disabled="!UDDCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-cancel waves-effect f-700"
+                                    data-ui-sref="common.prime.orderadvisortype">Go Back</button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a ng-if="UDDCtrl.isViewAuthorized">
+                                <button type="button" class="btn btn-success f-700 waves-effect"
+                                    data-ng-click="UDDCtrl.OpenPanelNewAdvisorTypeUDD();"
+                                    data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Add User Defined
+                                        Data</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px">
+                                <li ng-if="UDDCtrl.isViewAuthorized">
+                                    <a data-ng-click="permissionsMap.create ? UDDCtrl.OpenPanelNewAdvisorTypeUDD() : '' "
+                                        data-ng-class="{'cursor-not-allowed': !permissionsMap.create}" href="">
+                                        <i class="zmdi zmdi-plus text-success"></i> Add User Defined Data</a>
+                                </li>
+                                <li ng-if="UDDCtrl.UddData.length > 0">
+                                    <a data-ng-click="UDDCtrl.isLoaded ? UDDCtrl.FetchOrderAdvisorTypesUDDs(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': !UDDCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                                <li>
+                                    <a data-ui-sref="common.prime.orderadvisortype">
+                                        <i class="zmdi zmdi-long-arrow-left"></i> Go Back</a>
+                                </li>
+                                <li>
+                                    <a data-ng-click="UDDCtrl.isLoaded ? UDDCtrl.ShowHideColumnSettings() : ''"
+                                        data-ng-class="{'cursor-not-allowed': !UDDCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 p-l-15 m-b-15 module-content-configuration"
+        data-ng-if="UDDCtrl.rowsCount > 0 && UDDCtrl.isLoaded && permissionsMap.view">
+        <div class="d-flex d-flex-v-center flex-wrap">
+            <span class="f-300 text-nowrap">Showing UDDs for : </span>
+            <div class="selected-description m-l-5 m-b-5" ng-repeat="advisorudd in UDDCtrl.UddData | unique : 'adviser_type_description'">
+                    <span>
+                        {{advisorudd.adviser_type_description}}
+                    </span>
+            </div>
+            <div class="cursor-pointer selected-description load-more m-l-5 m-b-5"
+                data-ng-if="UDDCtrl.selectedDescription.length > UDDCtrl.typeLimit"
+                data-ng-click="UDDCtrl.typeLimit = UDDCtrl.typeLimit+5">
+                <span> Load more </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!UDDCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="UDDCtrl.rowsCount > 0 && UDDCtrl.isLoaded">
+        <div class="rcp-table-container" ng-if="permissionsMap.view && UDDCtrl.isLoaded">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/order.advisor/type.udd/panel.hide.show.columns.html'"></div>
+                <div class="table-responsive">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="no-icon-table table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table table-without-documents-icon">
+                            <thead data-ng-show="UDDCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center cursor-pointer" id="id_col_head"
+                                        ng-click="UDDCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.id.visible == 0">
+                                        <span class="handle">ID</span>
+                                        <span ng-show="UDDCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="UDDCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>                                    
+                                    <th class="text-center cursor-pointer" id="type_col_head"
+                                        ng-click="UDDCtrl.sortType = 'type'; sortReverse = !sortReverse"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.type.visible == 0">
+                                        <span class="handle">Sale Order Advisor Type</span>
+                                        <span ng-show="UDDCtrl.sortType == 'type' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="UDDCtrl.sortType == 'type' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center cursor-pointer" id="description_col_head"
+                                        ng-click="UDDCtrl.sortType = 'description'; sortReverse = !sortReverse"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.description.visible == 0">
+                                        <span class="handle">Description</span>
+                                        <span ng-show="UDDCtrl.sortType == 'description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="UDDCtrl.sortType == 'description' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center cursor-pointer columnwidth-5" id="sequence_col_head"
+                                        ng-click="UDDCtrl.sortType = 'sequence'; sortReverse = !sortReverse"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.sequence.visible == 0">
+                                        <span class="handle">Sequence</span>
+                                        <span ng-show="UDDCtrl.sortType == 'sequence' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="UDDCtrl.sortType == 'sequence' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center cursor-pointer columnwidth-5" id="required_col_head"
+                                        ng-click="UDDCtrl.sortType = 'required'; sortReverse = !sortReverse"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.required.visible == 0">
+                                        <span class="handle">Required</span>
+                                        <span ng-show="UDDCtrl.sortType == 'required' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="UDDCtrl.sortType == 'required' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center cursor-pointer columnwidth-5" id="allow_multiple_choices_col_head"
+                                        ng-click="UDDCtrl.sortType = 'allow_multiple_choices'; sortReverse = !sortReverse"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.allow_multiple_choices.visible == 0">
+                                        <span class="handle">Allow Multiple Choices</span>
+                                        <span ng-show="UDDCtrl.sortType == 'allow_multiple_choices' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="UDDCtrl.sortType == 'allow_multiple_choices' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center cursor-pointer columnwidth-5" id="quantity_col_head"
+                                        colspan="3"
+                                        ng-click="UDDCtrl.sortType = 'quantity'; sortReverse = !sortReverse"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.quantity.visible == 0">
+                                        <span class="handle">Quantities</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="cursor-default" data-ng-if="UDDCtrl.uddGrid.columns.quantity.visible">
+                                    <td class="quantity_col bgm-floralwhite" colspan="{{UDDCtrl.visibleColumns-1}}"></td>
+                                    <td class="quantity_col bgm-floralwhite f-12 text-center" data-ng-hide="UDDCtrl.uddGrid.columns.quantity.visible == 0">Minimum</td>
+                                    <td class="quantity_col bgm-floralwhite f-12 text-center" data-ng-hide="UDDCtrl.uddGrid.columns.quantity.visible == 0">Maximum</td>
+                                </tr>
+                                <tr dir-paginate="udd in UDDCtrl.UddData | filterBy:['id','status','short_description','user_defined_data_type','attribute_or_hierarchy','maintenance_description','default_value_view || default_value','display_sequence','required']:UDDCtrl.search|orderBy:UDDCtrl.sortType:sortReverse|itemsPerPage:UDDCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="UDDCtrl.setClickedRow($index);"
+                                    ios-dblclick="UDDCtrl.OpenPanelUpdateAdvisorType(udd);" selectedrow="{{udd}}">
+                                    <td class="id_col"
+                                    data-ng-hide="UDDCtrl.uddGrid.columns.id.visible == 0">
+                                    {{udd.id}}</td>                                    
+                                    <td class="type_col"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.type.visible == 0">
+                                        {{udd.adviser_type.description}}</td>
+                                    <td class="description_col"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.description.visible == 0">
+                                        {{udd.maintenance_description}}</td>
+                                    <td class="sequence_col text-center"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.sequence.visible == 0">
+                                        {{udd.sequence}}</td>
+                                    <td class="required_col text-center"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.required.visible == 0">
+                                        <i ng-show="udd.required" class="glyphicon glyphicon-ok c-green" title="Allowed"
+                                            title-direction="right" fixed-position="true"></i>
+                                        <i ng-show="!udd.required || udd.required === null"
+                                            class="glyphicon glyphicon-remove c-red" title="Not allowed"
+                                            title-direction="right" fixed-position="true"></i>
+                                    </td>
+                                    <td class="allow_multiple_choices_col text-center"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.allow_multiple_choices.visible == 0">
+                                        <i ng-show="udd.allow_multiple_choices" class="glyphicon glyphicon-ok c-green"
+                                            title="Allowed" title-direction="right" fixed-position="true"></i>
+                                        <i ng-show="!udd.allow_multiple_choices || udd.allow_multiple_choices === null"
+                                            class="glyphicon glyphicon-remove c-red" title="Not allowed"
+                                            title-direction="right" fixed-position="true"></i>
+                                    </td>
+                                    <td class="quantity_col text-center"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.quantity.visible == 0">
+                                        {{udd.minimum_quantity}}</td>
+                                    <td class="quantity_col text-center"
+                                        data-ng-hide="UDDCtrl.uddGrid.columns.quantity.visible == 0">
+                                        {{udd.maximum_quantity}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                            boundary-links="true" on-page-change="UDDCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="UDDCtrl.pageSize = 10"
+                                ng-class="{'active':UDDCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="UDDCtrl.pageSize = 25"
+                                ng-class="{'active':UDDCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="UDDCtrl.pageSize = 50"
+                                ng-class="{'active':UDDCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="UDDCtrl.pageSize = 100"
+                                ng-class="{'active':UDDCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="permissionsMap && !permissionsMap.view" ng-include="'./application/templates/restricted.access.html'">
+    </div>
+    <!-- Modal to show dislpay sequence update notification - START-->
+    <div data-ng-include="'./template/view.update.display.sequence.html'"></div>
+    <!-- Modal to show dislpay sequence update notification - END-->
+    <div ui-view></div>
+    <div data-ng-if="UDDCtrl.rowsCount === 0 && UDDCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No user defined data exists for selected order advisor[s]. Please add user defined
+                data.</span>
+        </div>
+    </div>
+    <meta-data-panel></meta-data-panel>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':UDDCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{UDDCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="UDDCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{UDDCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{UDDCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="UDDCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,324 @@
+<!-- <link rel="stylesheet" href="./application/modules/template/templates.css"> -->
+<style>
+    .packages-card {
+        background: #e0f7fe;
+        border: 1px solid #c2e7f3;
+        padding: 1px 4px;
+        box-shadow: 0px 0px 3px #dddfe3;
+        font-size: 13px;
+        color: #28708e;
+    }
+
+    .choice-container {
+        padding: 10px;
+        margin-bottom: 5px;
+        border: 1px solid #ececec;
+        border-radius: 3px;
+        line-height: 1.5;
+        background: #ffffff;
+    }
+
+    .choice-sku-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .btn.disabled,
+    .btn[disabled],
+    fieldset[disabled] .btn {
+        opacity: 2;
+    }
+</style>
+<div class="container col-lg-12 p-0">
+    <div class="col-xs-12 f-16 panel-header d-flex align-items-center justify-content-between">
+        <div>
+            <span class="f-700 main-header">Order Advisor Options</span>
+            <div style="word-break: break-word;">
+                <small>SKU configuration for <b>{{advisorController.OrderAdvisor.adviser_type}}</b> UDDs</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-6 col-sm-6 m-b-10 m-t-10 align-items-center" data-ng-if="uddController.UDDs.length===0">
+        <span>No Options available for type: <b>{{advisorController.OrderAdvisor.adviser_type}}</b>.</span>
+    </div>
+    <div class="col-xs-6 col-sm-6 m-b-10 m-t-10 align-items-center"
+        data-ng-if="!uddController.UDDs.length>0&&uddController.isLoadingOptions">
+        <span>Loading...</span>
+    </div>
+    <!--Display available UDDs for type START-->
+    <div class="col-xs-6 col-sm-6 m-b-10 p-0" data-ng-if="uddController.UDDs.length>0">
+        <div class="col-xs-12 p-0">
+            <div class="col-xs-12 p-0 m-t-10">
+                <div class="col-xs-12 p-0 rcp-table-container">
+                    <div class="table-responsive">
+                        <table
+                            class="box-shadow-none table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" id="udd" style="background: navy;color: white;font-size: 15px;">
+                                        Order Advisor Options
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="rcpscrollbar" style="max-height: 262px;overflow-y: scroll;display:block">
+                                <tr ng-repeat="udd in uddController.UDDs | filter : uddController.seach | orderBy:['sequence']"
+                                    ng-class="{'background-hover':$index === selectedRow}" class="bgm-white f-14"
+                                    data-ng-click="uddController.highlightSelectedRow($index);"
+                                    data-ng-disabled="uddController.isLoadingDetails">
+                                    <td class="f-14" ios-dblclick="uddController.OpenUDDConfigurations(udd)">
+                                        {{udd.maintenance_description}}
+                                    </td>
+                                    <td class="text-center" style="width: 5%">
+                                        <button class="btn btn-sm "
+                                            style="color: forestgreen; font-weight: bold; background: white;"
+                                            ng-click="!advisorController.OrderAdvisor.description||advisorController.OrderAdvisor.description.length===0? advisorController.isNoDescription=true : uddController.OpenUDDDiscountConfigurations(udd); uddController.isShowudd_spiff = false; uddController.udd.isShowudd_maxdiscount = false;uddController.udd.max_discount = 0; uddController.udd.spiff = 0;">
+                                            <i class="fa fa-tag"></i>
+                                            Discount <strong>Configuration</strong>
+                                        </button>
+                                    </td>
+                                    <td class="text-center" style="width: 5%">
+                                        <button class="btn btn-sm btn-link "
+                                        data-ng-disabled="uddController.isLoadingDetails"
+                                            ng-click="!advisorController.OrderAdvisor.description||advisorController.OrderAdvisor.description.length===0? advisorController.isNoDescription=true : uddController.OpenUDDConfigurations(udd);uddController.isShowudd_spiff = false; uddController.udd.isShowudd_maxdiscount = false;uddController.udd.max_discount = 0; uddController.udd.spiff = 0;">
+                                            <i class="fa fa-cogs"></i>
+                                            Configure <strong>Choices</strong>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        data-ng-if="uddController.LoadingMessage && (!uddController.UDDs || !uddController.UDDs.length)">
+                        <span class="f-14">
+                            {{ uddController.LoadingMessage }}
+                        </span>
+                    </div>
+                    <div class="text-center"
+                        data-ng-if="!uddController.LoadingMessage && uddController.templateMessage && uddController.UDDs && !uddController.UDDs.length">
+                        <span class="f-14">
+                            {{ uddController.templateMessage }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Display available UDDs for type END-->
+    <!--Display available SKUs and configure SKUs section START-->
+    <div class="col-xs-6 col-sm-6 p-0 m-b-10 m-t-10 p-l-5 p-r-5">
+        <div data-ng-if="uddController.udd.skuUdddiscountConfiguration === true && uddController.udd">
+            <div class="align-items-center col-xs-12 d-flex justify-content-between p-t-5 p-b-5 p-l-5 p-r-10 c-white"
+                style="background: #070080;">
+                <div>
+                    <span class="f-16">Add Discounts for
+                        <span
+                            style="padding: 2px 5px;border-radius: 5px;font-size: 14px;font-weight: 300 !important;background: forestgreen;"><strong>{{uddController.udd.maintenance_description}}</strong></span>
+                    </span>
+                </div>
+                <div>
+                    <button class="btn btn-link btn-sm p-0 f-15 c-white"
+                        data-ng-click="uddController.udd.skuUdddiscountConfiguration=false;uddController.udd.isShowudd_maxdiscount = false;uddController.udd.isShowudd_spiff = false;uddController.udd.max_discount = 0; uddController.udd.spiff = 0;">Close</button>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0"
+                style="background-color: #f9f9f9;box-shadow: 0 1px 4px 0 rgba(0,0,0,.08);border: 1px solid #efefef;">
+                <div class="d-flex justify-content-between align-items-center p-r-10 p-t-5 p-l-10 p-b-5"
+                    style="background:white;border-bottom:1px solid #ececec;">
+                    <span>Add Discounts for the option</span>
+                    <!-- <button class="btn btn-primal btn-sm pull-right"
+                        data-ng-if="uddController.udd.skuUdddiscountConfiguration === true && uddController.udd">
+                        <i class="fa fa-pencil"></i>
+                        Edit
+                    </button> -->
+                </div>
+                <div class="col-xs-12 p-10 rcpscrollbar" style="max-height: 235;overflow-y: scroll;display:block">
+                    <div class="col-xs-12 p-0 d-flex justify-content-center align-items-center">
+                        <div>
+                            <span
+                                data-ng-if="uddController.udd&&(!uddController.udd.UddSKUs||uddController.udd.UddSKUs.length===0)">No
+                                SKUs configured for selected option.</span>
+                        </div>
+                    </div>
+                    <div data-ng-if="uddController.udd.UddSKUs.length > 0">
+                        <div>
+                            <label>Maximum Discount%(0 to 100%):</label>
+                            <div class="col-xs-12 p-5 d-flex align-items-center">
+                                <input type="number" id="max_discount" name="max_discount" currency="2" decimals="2"
+                                    currency-point="."
+                                    class="form-control input-sm ng-pristine ng-valid ng-valid-min ng-valid-max ng-valid-valdr ng-not-empty ng-touched"
+                                    ng-model="uddController.udd.max_discount" placeholder="Enter Maximum Discount"
+                                    data-ng-change="uddController.onChangemax_discount(uddController.udd)"
+                                    data-ng-disabled="!uddController.udd.isShowudd_maxdiscount" min="0" max="100"
+                                    style="width: 50%;" oninput="validity.valid||(value=value.replace(/-/g, ''))">
+                                <button class="btn btn-primal btn-md" title="Edit Maximum Discount"
+                                    data-ng-click="uddController.udd.isShowudd_maxdiscount = true"><i
+                                        class="fa fa-edit"></i></button>
+                                <span class="pull-right" style="padding-left: 10px;color: red;"
+                                    data-ng-if="!uddController.udd.max_discount && (uddController.udd.max_discount!=0 || uddController.udd.max_discount!= '')">*
+                                    Add Valid Maximum Discount (0 to 100%)</span>
+                                <!-- <div data-ng-init="udd.showEditDiscount = false" style="display: flex;">
+                                <label style="padding: 5px;font-weight: bolder;">Total Discount: <span
+                                        data-ng-if="!udd.showEditDiscount"
+                                        style="color: forestgreen;">{{udd.totalDiscount =
+                                        1000}}</span></label>
+                                <i class="zmdi zmdi-edit zmdi-hc-fw" title="Edit Total Discount" title-direction="top" style="padding-top: 6px;"
+                                    data-ng-click="udd.showEditDiscount = true;" data-ng-if="!udd.showEditDiscount"></i>
+                                <div class="edit-product-price" data-ng-if="udd.showEditDiscount"
+                                    data-ng-init="udd.new_totaldiscount = udd.totalDiscount">
+                                    <input type="text" class="form-control input-sm text-right" name="editProductPrice"
+                                        style="width: 80px;display: inline-block;padding: 10px;" id="editProductPrice" data-ng-model="udd.new_totaldiscount"
+                                        min="1" max="9999999" maxlength="12" currency-point="." valid-number
+                                        data-ng-change="uddController.disableinstallationfee(udd.new_totaldiscount)">
+                                    <button focus-on-next class="btn btn-sm btn-save" ng-click=""
+                                        data-ng-disabled="udd.new_totaldiscount === ''" style="display: inline-block;padding: 10px;">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                    </button>
+                                    <button focus-on-next class="btn btn-sm btn-cancel-product-price"
+                                        data-ng-click="udd.showEditDiscount = false;" style="display: inline-block;padding: 10px">
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </button>
+                                </div>
+                            </div> -->
+                            </div>
+                        </div>
+                        <div>
+                            <label>SPIFF$(0 to TBD) :</label>
+                            <div class="col-xs-12 p-5 d-flex align-items-center">
+                                <input type="number" id="spiff" name="spiff" currency="2" decimals="2"
+                                    currency-point="."
+                                    class="form-control input-sm ng-pristine ng-valid ng-valid-min ng-valid-max ng-valid-valdr ng-not-empty ng-touched"
+                                    ng-model="uddController.udd.spiff" placeholder="Enter SPIFF$"
+                                    data-ng-disabled="!uddController.udd.isShowudd_spiff || !uddController.udd.max_discount || (uddController.udd.disablespiff && (uddController.udd.max_discount == 0 || uddController.udd.max_discount == ''))"
+                                    min="0" style="width: 50%;"
+                                    oninput="validity.valid||(value=value.replace(/-/g, ''))">
+                                <button class="btn btn-primal btn-md"
+                                    title="{{uddController.udd.max_discount ? 'Edit SPIFF%' : ''}}"
+                                    data-ng-disabled="!uddController.udd.max_discount || uddController.udd.disablespiff && (uddController.udd.max_discount == 0 || uddController.udd.max_discount == '')"
+                                    data-ng-click="uddController.udd.isShowudd_spiff = true"><i class="fa fa-edit"></i>
+                                </button>
+                                <span class="pull-right" style="padding-left: 10px;color: red;"
+                                    data-ng-if="uddController.udd.disablespiff && (uddController.udd.max_discount == 0 || uddController.udd.max_discount == '')">*
+                                    Add Maximum Discount to Proceed</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-5 d-flex align-items-center">
+                            <button class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 waves-effect"
+                                style="width: 20%;"
+                                data-ng-disabled="uddController.isProcessing || (!uddController.udd.max_discount && (uddController.udd.max_discount!=0 || uddController.udd.max_discount!= ''))"
+                                data-ng-if="!uddController.isUpdateerror"
+                                data-ng-click="uddController.updateDiscount(uddController.udd);uddController.udd.isShowudd_spiff = false;uddController.udd.isShowudd_maxdiscount = false"><span
+                                    data-ng-if="uddController.isProcessing">
+                                    <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                </span><span>{{uddController.btntext}}</span>
+                            </button>
+                            <button class="btn btn-group-justified btn-sm btn-danger f-700 m-l-5 waves-effect"
+                                style="width: 20%;"
+                                data-ng-if="uddController.btntext == 'Nothing to Submit' && uddController.isUpdateerror"
+                                data-ng-disabled="uddController.isUpdateerror"
+                                data-ng-click="uddController.updateDiscount(uddController.udd)"><span
+                                    data-ng-if="uddController.isProcessing">
+                                    <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                </span><span>{{uddController.btntext}}</span>
+                            </button>
+                            <div class="col-xs-10 pull-right" data-ng-if="uddController.isUpdateSuccess">
+                                <span class="text-success">
+                                    Discount Submitted successfully.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Display available SKUs and configure SKUs section START-->
+    <div class="col-xs-6 col-sm-6 p-0 m-b-10 p-l-5 p-r-5" style="margin-top: -10px;">
+        <div data-ng-if="uddController.udd.skuUddConfiguration === true && uddController.udd">
+            <div class="align-items-center col-xs-12 d-flex justify-content-between p-t-5 p-b-5 p-l-5 p-r-10 c-white"
+                style="background: #070080;">
+                <div>
+                    <span class="f-16">Add choices for
+                        <span
+                            style="padding: 2px 5px;border-radius: 5px;font-size: 14px;font-weight: 300 !important;background: forestgreen;"><strong>{{uddController.udd.maintenance_description}}</strong></span>
+                    </span>
+                </div>
+                <div>
+                    <button class="btn btn-link btn-sm p-0 f-15 c-white"
+                        data-ng-click="uddController.udd.skuUddConfiguration=false;">Close</button>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0"
+                style="background-color: #f9f9f9;box-shadow: 0 1px 4px 0 rgba(0,0,0,.08);border: 1px solid #efefef;">
+                <div class="d-flex justify-content-between align-items-center p-r-10 p-t-5 p-l-10 p-b-5"
+                    style="background:white;border-bottom:1px solid #ececec;">
+                    <span>Add SKU and link packages for the option</span>
+                    <button class="btn btn-primal btn-sm pull-right"
+                        data-ng-click="uddController.toggleShowAddSKUPanel();uddController.isSellable=true"
+                        data-ng-if="uddController.udd.skuUddConfiguration === true && uddController.udd">
+                        Add SKU
+                    </button>
+                </div>
+                <div class="col-xs-12 p-10 rcpscrollbar" style="max-height: 235;overflow-y: scroll;display:block">
+                    <div class="col-xs-12 p-0 d-flex justify-content-center align-items-center">
+                        <div>
+                            <span
+                                data-ng-if="uddController.udd&&(!uddController.udd.UddSKUs||uddController.udd.UddSKUs.length===0)">No
+                                choices configured for selected option.</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-0" data-ng-if="uddController.udd&&uddController.udd.UddSKUs.length>0">
+                        <div class="choice-container"
+                            ng-repeat="udd in uddController.udd.UddSKUs | orderBy:['display_sequence']"
+                            ng-init="uddController.GetSKUData(udd)">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="f-500 choice-sku-description" title="{{udd.description}}"
+                                    data-ng-if="udd.isLoaded">{{udd.description}} </span>
+                                <span data-ng-if="!udd.isLoaded">
+                                    <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                </span>
+                                <span class="cloudcart-admin-sku-number text-nowrap">{{udd.sku}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center m-t-10">
+                                <div class="d-flex flex-wrap">
+                                    <div data-ng-repeat="choice_id in udd.choiceIds| limitTo:3 track by $index"
+                                        data-ng-if="uddController.PackagesMap[choice_id].description"
+                                        class="selected packages-card m-r-5">
+                                        <span
+                                            title="{{uddController.PackagesMap[choice_id].description}}">{{uddController.PackagesMap[choice_id].description
+                                            | truncate : 50}}</span>
+                                        <span class="cursor-pointer"
+                                            data-ng-click="uddController.RemovePackagesSelected(udd, uddController.PackagesMap[choice_id].id)">
+                                            <i class="p-r-5 zmdi zmdi-close"></i>
+                                        </span>
+                                    </div>
+                                    <div class="selected packages-card cursor-pointer"
+                                        style="background: #f5f5f5;border: 1px solid #cccccc;"
+                                        data-ng-click="uddController.ConfigureSKU(udd)"
+                                        data-ng-if="udd.choiceIds.length > 3">
+                                        <span title="View more"><span>&plus;</span>{{udd.choiceIds.length - 3}}
+                                            more</span>
+                                    </div>
+                                    <div data-ng-if="!udd.choiceIds || udd.choiceIds.length === 0">
+                                        No packages are linked
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-inverse" data-ng-disabled="uddController.isButtonDisabled"
+                                        data-ng-click="uddController.ConfigureSKU(udd)">Configure Choice</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/order.advisor/maintenance/panel.configure.sku.html'"></div>
+    <div data-ng-include="'./application/modules/order.advisor/maintenance/panel.order.advisor.add.sku.html'"></div>
+    <!--Display available SKUs and configure SKUs section END-->
+</div>

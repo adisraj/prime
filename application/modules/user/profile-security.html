@@ -1,0 +1,131 @@
+<div class="pmb-block" data-ng-controller="UserController">
+    <div class="card">
+        <div class="alert alert-success alert-dismissible" role="alert" data-ng-controller="RemindResetPassword" ng-show="userMessage">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="closeResetAlert()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+            <p data-ng-model="userMessage"><span></span></p>
+        </div>
+        <div class="card-header bgm-gray c-white">
+            <h2>Recent Login Attempts <small>Last 10 login attempts</small></h2>
+
+        </div>
+
+        <div class="card-body m-t-0">
+            <table class="table table-inner table-vmiddle">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">Date</th>
+                        <th style="width: 20%">Time</th>
+                        <th style="width: 20%">Browser</th>
+                        <th style="width: 20%">OS</th>
+                        <th style="width: 20%">Device</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="attempt in login_attempts">
+                        <td class="f-500 c-indigo">{{attempt.dat}}</td>
+                        <td class="f-500 c-indigo">{{attempt.time}}</td>
+                        <td class="f-500 c-indigo">{{attempt.browser_name}}</td>
+                        <td class="f-500 c-indigo">{{attempt.os_name}}</td>
+                        <td class="f-500 c-indigo">{{attempt.device_type}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <form class="form-horizontal" role="form" name="resetpassword_frm">
+            <div class="card-header bgm-gray m-b-20">
+                <h2>Reset Password <small>You should create a strong password that meets security regulations.</small></h2>
+            </div>
+
+            <div class="card-body ">
+                <div class="form-group" ng-class="{'has-error': !oldPasswordError}">
+                    <label for="old_password" class="col-sm-2 control-label">Old Password</label>
+                    <div class="col-sm-10">
+                        <div class="fg-line">
+                            <input type="{{input_type}}" class="form-control input-sm" id="old_password" ng-model="old_password" placeholder="Enter old password" required>
+                            <span ng-hide="oldPasswordError" class="help-block">Password entered not correct</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new_password" class="col-sm-2 control-label">New Password</label>
+                    <div class="col-sm-10">
+                        <div class="fg-line">
+                            <input type="{{input_type}}" class="form-control input-sm" id="new_password" ng-model="new_password" placeholder="Enter new password" required ng-blur="checkPassword()">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group" ng-class="{'has-error': !passwordsSame}">
+                    <label for="retype_password" class="col-sm-2 control-label">Retype new password</label>
+                    <div class="col-sm-10 ">
+                        <div class="fg-line">
+                            <input type="{{input_type}}" name="retype_password" id="retype_password" ng-model="retype_password" class="form-control input-sm" placeholder="Retype password" required ng-blur="checkPassword()" />
+                            <span ng-hide="passwordsSame" class="help-block">Password not same</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="" ng-click="hideShowPassword()">
+                                <i class="input-helper"></i>Show password
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-primary btn-icon-text waves-effect" ng-click="reset()" ng-disabled="!passwordsSame">Reset Password</button>
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </form>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <form class="form-horizontal" role="form" name="passwordrecovery_form">
+            <div class="card-header bgm-gray m-b-20">
+                <h2>Password Recovery Options </h2>
+            </div>
+
+            <div class="card-body card-padding">
+                <div class="form-group" ng-class="{'has-error': passwordrecovery_form.primaryemailId.$error.email && passwordrecovery_form.primaryemailId.$dirty}">
+                    <label for="inputEmail3" class="col-sm-3 control-label">Primary Email Address</label>
+                    <div class="col-sm-9">
+                        <div class="fg-line">
+                            <input type="email" class="form-control input-sm" id="primaryemailId" placeholder="Primary Email Address" ng-model="recovery.recovery_email" name="primaryemailId" required="required">
+                            <span class="help-block" ng-show="passwordrecovery_form.primaryemailId.$error.email && passwordrecovery_form.primaryemailId.$dirty">Enter correct email id</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error': passwordrecovery_form.phoneNumber.$invalid && passwordrecovery_form.phoneNumber.$dirty}">
+                    <label for="phoneNumber" class="col-sm-3 control-label">Phone Number</label>
+                    <div class="col-sm-9">
+                        <div class="fg-line">
+                            <input type="text" class="form-control input-sm" id="phoneNumber" placeholder="Phone Number" ng-model="recovery.phone_number" name="phoneNumber" required="required">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-primary btn-icon-text waves-effect" ng-click="passwordRecoveryOptionsSubmit()">Save Options</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>

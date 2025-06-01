@@ -1,0 +1,500 @@
+<style>
+    .customer-tab-details {
+        background: #125010;
+    }
+    .customer-tab-details .item {
+        font-size: 14px;
+        background: #ffffff00;
+        color: #e4e4e4;
+        padding: 10px 25px;
+    }
+
+    .customer-tab-details .item:hover {
+        color: #f0fae8;
+    }   
+    
+    .customer-tab-details .item span.active {
+        color: #ffffff;
+        font-weight: 500;
+        background: #ffffff00;
+        z-index: 5;
+        box-shadow: none;
+        border-bottom: 1px solid;
+        padding-bottom:5px;
+    }
+
+    .sidepanel-header {
+        background: #ffffff;
+        box-shadow: 0px 1px 4px 0px #dad7d7;
+        padding: 12px;
+        border-bottom: 1px solid #e7ebf1;
+    }
+ </style>
+<div id="rcrightsidebar-large" data-ng-class="{'toggled':customerCtrl.showCustomerDetailsPanel === true}" data-ng-init="customerCtrl.showPersonalInformation = true;">
+    <div class="col-xs-12 d-flex d-flex-v-center sidepanel-header">
+        <div class="close-icon">
+            <a data-ng-click="customerCtrl.showCustomerDetailsPanel = false;customerCtrl.selectedCustomer = undefined;" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="d-flex-h-center d-flex panel-name-section" style="flex:1;">
+            <label class="rclabel editformlabel" title="Customer Details">
+                <strong>Customer Details</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12 p-0">
+            <div class="d-flex p-b-20 p-t-20 updatepanel">
+                <div class="m-auto" data-ng-include="'./img/sidebar-icons/customers.svg'"></div>
+            </div>
+        <!-- Tab header start -->
+        <div class="col-xs-12 p-b-5 customer-tab-details d-flex">
+            <button class="btn btn-link item" ng-click="customerCtrl.resetCustomerDetailsTabs();customerCtrl.togglePersonalInformation()" data-ng-disabled="!customerCtrl.isLoaded">
+                <span ng-class="{'active':customerCtrl.showPersonalInformation}">Personal Information</span>
+            </button>
+            <button class="btn btn-link item" ng-click="customerCtrl.resetCustomerDetailsTabs();customerCtrl.toggleDiscountDetails()" data-ng-disabled="!customerCtrl.isLoaded">
+                <span ng-class="{'active':customerCtrl.showDiscountDetails}">Discount Details</span>
+            </button>
+            <button class="btn btn-link item" ng-click="customerCtrl.resetCustomerDetailsTabs();customerCtrl.toggleCartsList()" data-ng-disabled="!customerCtrl.isLoaded">
+                <span ng-class="{'active':customerCtrl.showCartsList}">Carts</span>
+            </button>
+        </div>
+        <!-- Tab header end -->
+        <!-- Tab content start -->
+        <div class="col-xs-12 p-0 m-t-10">
+            <!-- Section to show the Personal Information start -->
+            <div class="col-xs-12 p-0" data-ng-if="customerCtrl.showPersonalInformation">
+                <div class="col-xs-12 rowInfo">
+                    <div class="col-xs-4 label-section">Customer name[s]</div>
+                    <div class="col-xs-8 value-section">
+                        <div data-ng-repeat="individual in customerCtrl.selectedCustomer.individuals" data-ng-if="customerCtrl.selectedCustomer.individuals.length>0">
+                            <div>{{individual.first_name}} {{individual.last_name}}</div>
+                        </div>
+                        <div data-ng-if="customerCtrl.selectedCustomer.individuals.length === 0">
+                            <span class="text-muted f-300">N/A</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 rowInfo">
+                    <div class="col-xs-4 label-section">Business</div>
+                    <div class="col-xs-8 value-section">
+                        <div data-ng-if="customerCtrl.selectedCustomer.business_name">
+                            {{customerCtrl.selectedCustomer.business_name}}
+                        </div>
+                        <div data-ng-if="!customerCtrl.selectedCustomer.business_name">
+                            <span class="text-muted f-300">N/A</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 rowInfo">
+                    <div class="col-xs-4 label-section">Contact details</div>
+                    <div class="col-xs-8 value-section">
+                        <div data-ng-repeat="contact in customerCtrl.selectedCustomer.contacts" data-ng-if="customerCtrl.selectedCustomer.contacts.length>0">
+                            <div class="d-flex d-flex-v-center m-b-5">
+                                <span class="zmdi zmdi-phone m-r-5"
+                                        data-ng-if="contact.type.toLowerCase() === 'phone'"></span>
+                                <span class="zmdi zmdi-email m-r-5"
+                                        data-ng-if="contact.type.toLowerCase() === 'email'"></span>
+                                <div class="m-r-5">{{contact.sub_type}}:</div>
+                                <div>{{contact.information}}</div>
+                            </div>
+                        </div>
+                        <div data-ng-if="customerCtrl.selectedCustomer.contacts.length === 0">
+                            <span class="text-muted f-300">N/A</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 rowInfo">
+                    <div class="col-xs-4 label-section">Address</div>
+                    <div class="col-xs-8 value-section">
+                        <div data-ng-repeat="address in customerCtrl.selectedCustomer.addresses" data-ng-if="customerCtrl.selectedCustomer.addresses.length>0">
+                            <div data-ng-if="address.address_type === 'Billing Address'">
+                                <span class="fa fa-map-marker-alt m-r-5"></span>{{address.address}}
+                            </div>
+                        </div>
+                        <div data-ng-if="customerCtrl.selectedCustomer.addresses.length === 0">
+                            <span class="text-muted f-300">Not available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Section to show the Personal Information end -->
+            <!-- Section to show the Discount details start -->
+            <div class="col-xs-12 p-0" data-ng-if="customerCtrl.showDiscountDetails">
+                <div class="col-xs-12 d-flex d-flex-v-center justify-content-between p-l-20 p-10" style="border-bottom: 1px solid #b7b7b7">
+                    <!-- <div class="col-xs-7 label-section" style="flex:2">Discount type</div> -->
+                    <div class="value-section" style="flex:1">
+                        <span data-ng-class="text-muted" data-ng-if="!customerCtrl.selectedCustomer.discount">No discount selected</span>
+                        <div class="d-flex d-flex-v-center" data-ng-if="customerCtrl.selectedCustomer.discount">
+                            <span>{{customerCtrl.selectedCustomer.discount.description}}</span>
+                            <div class="m-l-5" style="width:60px;">
+                                <div class="tag">{{customerCtrl.selectedCustomer.discount.discount_percentage}}%</div>
+                            </div>
+                        </div>
+                        <!-- <button class="btn btn-link btn-sm f-14">Add discount type</button> -->
+                    </div>
+                    <div data-ng-if="customerCtrl.selectedCustomer.discount" data-ng-click="customerCtrl.deleteDiscountForCustomer();">
+                        <button class="btn btn-link">Remove</button>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0">
+                    <div class="col-xs-12 p-15 d-flex d-flex-h-center" ng-if="!customerCtrl.isLoaded">
+                        <span class="cursor-not-allowed" >
+                            <img src="./img/loading-circle.gif" style="height: 50px;width: 50px;"/>
+                        </span>
+                    </div>
+                    <div class="col-xs-12 p-0" data-ng-if="customerCtrl.discountTypes.length > 0 && customerCtrl.isLoaded">
+                        <!-- Section for the tree structure start -->
+                        <div class="col-xs-12 p-0">
+                            <div class="col-xs-12 p-0 treeview">
+                                <!-- Discount Types List - START -->
+                                <div class="col-xs-12 discount-type-header d-flex d-flex-v-center">
+                                    <span>Available discount types</span>
+                                </div>
+                                <div class="col-xs-12 p-10 p-l-15">
+                                    <div class="list-lake-type-container" data-ng-repeat="discountType in customerCtrl.discountTypes|orderBy:'description' track by $index">
+                                        <ul class="list-lake-types">
+                                            <li>
+                                                <input type="checkbox" id="discountType{{$index}}" data-ng-model="discountType.checked" data-ng-checked="true" data-ng-click="customerCtrl.getNodes(discountType,true)">
+                                                <label class="d-flex justify-content-between" for="discountType{{$index}}">
+                                                    <div>
+                                                        <span class="d-flex d-flex-v-center f-14">
+                                                            {{discountType.description}}
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                <ul>
+                                                    <div data-ng-if="(!discountType.nodes || discountType.nodes.length === 0) && !discountType.isLoaded">
+                                                        <span>Loading...</span>
+                                                    </div>
+                                                    <div data-ng-if="discountType.nodes.length === 0  && discountType.isLoaded">
+                                                        <span class="text-muted">No values exists!</span>
+                                                    </div>
+                                                </ul>
+                                                <!-- Values for selected discount type - START -->
+                                                <ul class="list-lakes" data-ng-repeat="subType in discountType.nodes | orderBy:'description' track by subType.id">
+                                                    <div data-ng-include="'./customer/subNodeTree.html'"></div>
+                                                </ul>
+                                                <!-- Values for selected discount type - END -->
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- Discount Types list - END -->
+                            </div>
+                            <!-- <div data-ng-include="'./application/modules/discount/discount.type.value.new.html'"></div> -->
+                            <div data-ng-include="'./application/modules/discount/panel.discount.type.dependency.html'"></div> 
+                        </div>
+                        <!-- Section for the tree structure end -->
+                    </div>
+                </div>
+            </div>
+            <!-- Section to show the Discount details end -->
+            <div class="col-xs-12 p-0" data-ng-if="customerCtrl.showCartsList">
+                <div class="col-xs-12 p-15 d-flex d-flex-h-center" ng-if="!customerCtrl.isLoaded">
+                    <span class="cursor-not-allowed" >
+                        <img src="./img/loading-circle.gif" style="height: 50px;width: 50px;"/>
+                    </span>
+                </div>
+                <!-- Code to show if there are no carts present for the customer start -->
+                <div class="col-xs-12 d-flex p-15 select_customer_carts_detail" data-ng-if="customerCtrl.isLoaded && customerCtrl.selectedCustomer.carts.length===0">
+                    <div class="col-xs-12 d-flex d-flex-v-center d-flex-h-center justify-content-center">
+                        <div class="p-15 text-center">
+                            <span class="f-18 m-b-10 c-bluegray">No carts exists</span>
+                        </div>
+                    </div>
+                </div> 
+                <!-- Code to show if there are no carts present for the customer end -->
+                <!-- Code to show the carts for the customer start -->
+                <div class="col-xs-12 p-5 select_customer_carts_detail" data-ng-if="customerCtrl.selectedCustomer.carts.length > 0">
+                    <div class="col-xs-12 p-0 customer-cart-section" data-ng-repeat="cart in customerCtrl.selectedCustomer.carts|orderBy: ['-dateToNumber']">
+                        <!-- Individual cart section - START -->
+                        <div class="col-xs-12 p-0">
+                            <div class="col-xs-12 p-5 d-flex customer-cart-section-header">
+                                <div class="col-xs-12 p-0 d-flex d-flex-v-center justify-content-between">
+                                    <span class="f-18 c-bluegray m-l-5" data-ng-if="cart.description">{{cart.description}}</span>
+                                    <span class="f-18 text-muted m-l-5" data-ng-if="!cart.description">Unknown</span>
+                                    <strong class="f-16 c-firebrick">{{cart.total_retail | ThousandSeparator:"$":2}}</strong>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-10 d-flex bgm-white">
+                                <div class="d-flex d-flex-h-center d-flex-v-center" ng-init="customerCtrl.fetchDropsForCart(cart)">
+                                    <div>
+                                        <img class="m-0" check-image ng-src="{{cart.imgUrl}}" data-ng-click="cart.imgUrl ? customerCtrl.previewDatalake(cart,'cover_image'):''" image-name="shopping-cart.svg" style="height:125px;width:125px;">
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-0 d-flex justify-content-between">
+                                    <div class="col-xs-12 p-0 d-flex m-l-10" style="flex-direction: column;justify-content:space-between;flex:2;">
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-muted p-l-10"> Primary associate: </span>
+                                            </div>
+                                            <div>
+                                                <span class="p-b-10 p-l-10"> {{cart.primary_associate}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-muted p-l-10"> Status: </span>
+                                            </div>
+                                            <div>
+                                                <span class="p-b-10 p-l-10"> {{cart.status}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-muted p-l-10"> Type: </span>
+                                            </div>
+                                            <div>
+                                                <span class="p-b-10 p-l-10"> {{cart.type}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 p-0 d-flex m-l-10" style="flex-direction:column;justify-content:space-between;flex:2;" data-ng-init="customerCtrl.convertDateToNumber(cart);">
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-muted"> Created at: </span>
+                                            </div>
+                                            <div>
+                                                <span class="p-b-10"> {{cart.location}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-muted">Created on: </span>
+                                            </div>
+                                            <div>
+                                                <span class="p-b-10"> {{cart.created_dt | FormatDate}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="">
+                                                <span class="text-muted"> Updated on: </span>
+                                            </div>
+                                            <div>
+                                                <span class="p-b-10">{{cart.dateToNumber = (cart.updated_dt | FormatDate)}}</span>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="m-b-10 d-flex d-flex-v-center">
+                                            <div class="m-r-10">
+                                                <span class="text-muted f-16"> Price: </span>
+                                            </div>
+                                            <div class="d-flex d-flex-v-center d-flex-h-center">
+                                                <strong class="p-t-10 p-b-10 f-16 c-firebrick">${{cart.total_retail | DecimalPrecision:2}}</strong>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <!-- <div class="col-xs-12 p-0 d-flex" style="flex-direction:column;justify-content: space-evenly;flex:1;">
+                                    <a class="d-flex d-flex-v-center cursor-pointer" data-ng-click="customerCtrl.getCartDetails(cart);" data-ng-disabled="customerCtrl.isProcessing" title="View Details">
+                                        <span class="fa fa-eye f-14 pull-left"></span> <span class="f-12">View Details</span>
+                                    </a>
+                                    <a class="d-flex d-flex-v-center cursor-pointer" ng-click="customerCtrl.toggleUploadImageSection(cart);" data-toggle="collapse" data-target="#document-{{$index}}">
+                                        <span class="fa fa-cloud"></span> Documents
+                                    </a>
+                                    <a class="d-flex d-flex-v-center cursor-pointer" data-ng-click="customerCtrl.toggleConfirmRemoveCart(cart)" title="Delete cart">
+                                        <span class="fa fa-trash c-firebrick f-14 pull-left"></span> <span class="f-12 c-firebrick">Delete</span>
+                                    </a>
+                                </div> -->
+                            </div>
+                        </div>
+                                
+                        <div class="col-xs-12 p-5 d-flex align-item-center" data-ng-if="cart.confirmDelete && !cart.deleteResponseMessage && !cart.deleteErrorMessage" style="justify-content: space-between">
+                            <div><span class="text-danger">Are you sure, you want to delete?</span></div>
+                            <div>
+                                <button class="btn btn-sm btn-success" data-ng-click="customerCtrl.removeCart(cart,customerCtrl.selectedCustomer)">Yes</button>
+                                <button class="btn btn-sm btn-default" data-ng-click="customerCtrl.toggleConfirmRemoveCart(cart)">Cancel</button>
+                            </div>
+                        </div>
+                        <!-- Section to show cart is already activated by another associate at same location - END-->
+                        <div class="col-xs-12 p-0" ng-if="cart.showDataLake===true">
+                            <div id="document-{{$index}}" class="col-xs-12 collapse p-t-10">
+                                <div class="col-xs-12 p-0 rc-scroll-bar o-auto m-b-10" style="max-height:200px;">
+                                    <div class="d-flex d-flex-v-center cart-document-section-header">
+                                        <h5 class="Product_detail_view_price_title">Cart Document[s]</h5>
+                                        <span class="close c-white" data-ng-click="cart.showDataLake = false;">&times;</span>
+                                    </div>
+                                    <table class="table table-condensed table-bordered datalake-table bg-white m-b-0">
+                                        <thead>
+                                            <th>Filename</th>
+                                            <th>Stream</th>
+                                            <th>Kind</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-ng-repeat="dropsData in cart.cartDropsList" data-ng-if="cart.cartDropsList.length>0">
+                                                <td data-ng-if="dropsData.drop_type.toLowerCase() !== 'url'" title="{{dropsData.file_name}}"><a href="javascript:void(0)" data-ng-click="customerCtrl.previewDatalake(dropsData, dropsData.stream_code);">{{dropsData.file_name | truncate:60}}</a></td>
+                                                <td data-ng-if="dropsData.drop_type.toLowerCase() === 'url'" title="{{dropsData.url}}">
+                                                    <a class="drop-name" target="_blank" ng-href="{{dropsData.url}}" download="file.jpg" title="Download - {{dropsData.url}}">
+                                                        <i class="zmdi zmdi-link zmdi-hc-lg p-r-5" style="color: #aa5cfe"></i>{{dropsData.url | truncate:50}}
+                                                    </a>
+                                                </td>
+                                                <td>{{dropsData.stream}}</td>
+                                                <td data-ng-if="dropsData.drop_type.toLowerCase() !== 'url'">{{dropsData.kind}}</td>
+                                                <td data-ng-if="dropsData.drop_type.toLowerCase() === 'url'">External link</td>
+                                            </tr>
+                                            <tr data-ng-if="!cart.cartDropsList.length || cart.cartDropsList.length==0">
+                                                <td colspan="3" class="text-center">
+                                                    <span class="text-muted">No related documents to show</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ng-form name="datalake_form" role="form" novalidate="novalidate">
+                                    <div class="col-xs-12 p-0">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="form-group" ng-init="customerCtrl.fetchlakesForUuid('95')">
+                                                <span style="color:red;" ng-show="datalake_form.lake_id.$invalid">*
+                                                </span>
+                                                <span style="color:green;" ng-show="datalake_form.lake_id.$valid">*
+                                                </span>
+                                                <label>Lake</label>
+                                                <select id="lake_id" name="lake_id" ng-model="cart.dropObject.lake_id" class="form-control cart-form-field" ng-options="lake.lake_id as lake.lake for lake in customerCtrl.lakes"
+                                                    ng-change="customerCtrl.fetchStreamsForLake(cart.dropObject.lake_id);" required>
+                                                    <option value="" disabled>Select Lake</option>
+                                                </select>
+                                                <div class="text-danger m-t-5 f-12" ng-if="noLakes">No lake[s] exists
+                                                </div>
+                                            </div>
+                                            <div class="text-info text-center f-12 m-t-10 m-b-10" ng-if="loadingStreams">Loading streams...
+                                            </div>
+                                            <div class="text-info text-center f-12 m-t-10 m-b-10" ng-if="customerCtrl.noStreams">No streams exists for selected lake</div>
+                                            <div class="form-group" ng-if="cart.dropObject.lake_id && !customerCtrl.loadingStreams">
+                                                <span style="color:red;" ng-show="datalake_form.stream_id.$invalid">*
+                                                </span>
+                                                <span style="color:green;" ng-show="datalake_form.stream_id.$valid">*
+                                                </span>
+                                                <label>Stream</label>
+                                                <select id="stream_id" name="stream_id" ng-model="cart.dropObject.stream_id" class="form-control cart-form-field" ng-options="stream.stream_id as stream.stream for stream in customerCtrl.streams"
+                                                    data-ng-change="getLakeStreamLinkByIds(cart.dropObject.lake_id,cart.dropObject.stream_id);"
+                                                    data-ng-disabled="showConfirm" required>
+                                                    <option value="" disabled>Select Stream</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-xs-12 p-0 d-flex" style="align-items:flex-end;">
+                                                <div class="col-xs-12 p-0">
+                                                    <div class="form-group">
+                                                        <div class="col-xs-12 p-0 form-group d-flex" data-ng-if="!updateFile">
+                                                            <span class="d-flex">
+                                                                <input type="radio" name="match" id="{{$index}}-match-local"
+                                                                    ng-model="cart.dropObject.type"
+                                                                    data-ng-change="resetForm();" value="local">
+                                                                <label for="{{$index}}-match-local">
+                                                                    <span class="f-14 f-500 c-black m-l-5 m-r-10">Upload from Local Computer</span>
+                                                            </label>
+                                                            </span>
+                                                            <span class="d-flex">
+                                                                <input type="radio" name="match" id="{{$index}}-match-url"
+                                                                    ng-model="cart.dropObject.type"
+                                                                    data-ng-change="resetForm();" value="url">
+                                                                <label for="{{$index}}-match-url">
+                                                                    <span class="f-14 f-500 c-black m-l-5">Import the image</span>
+                                                            </label>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0 form-group" data-ng-if="cart.dropObject.type=='local'" data-ng-init="customerCtrl.initializeDropdata(cart);">
+                                                            <button type="button" class="btn btn-success f-700" name="update_title_btn" id="update_title_btn" ngf-select="customerCtrl.selectFiles($files, $invalidFiles, cart)"
+                                                                multiple accept="*" ngf-max-size="60MB">Choose File(s)
+                                                            </button>
+                                                            <div class="col-xs-12 p-0 m-t-10" data-ng-if="cart.dropObject.type==='local'" ng-repeat="f in cart.files">
+                                                                <div class="form-group">
+                                                                    <label>File Name</label>
+                                                                    <label name="filename" class="form-control input-sm" title="{{f.name}}" disabled required>{{f.name
+                                                                        | truncate : 80}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0" data-ng-if="cart.dropObject.type=='url' && !updateFile" data-ng-init="customerCtrl.initializeDropdata(cart);">
+                                                            <div class="form-group">
+                                                                <label>URL</label>
+                                                                <input id="file" data-ng-if="!files" ng-bind="datas" name="file" ng-pattern="/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/"
+                                                                    type="text" class="form-control input-sm" ng-model="cart.dropObject.url"
+                                                                    placeholder="Enter URL" ng-model-options="{ updateOn: 'blur'}" required
+                                                                    ng-change="imagePath=getDownloadUrl(cart.dropObject.drop_id,details,cart.dropObject.url);">
+                                                            </div>
+                                                            <span class="text-danger" ng-if="datalake_form.file.$invalid && !datalake_form.file.$pristine">Invalid
+                                                                data
+                                                            </span>
+                                                        </div>
+                                                        <div class="p-0" data-ng-if="isImage && !updateFile" style="display: inline-flex;width: auto;flex-direction: column;">
+                                                            <div class="p-10" style="border: 1px solid #e8e8e8;">
+                                                                <img data-ng-if="cart.dropObject.type=='local'" ngf-src="files[0]" style="height:125px;width:125px;">
+                                                                <img data-ng-if="imagePath" ng-src="{{imagePath}}" style="height:125px;width:125px;" />
+                                                                <img data-ng-if="cart.dropObject.type=='url' && !(datalake_form.file.$invalid)" ng-src="{{cart.dropObject.url}}" style="height:125px;width:125px;"
+                                                                />
+                                                            </div>
+                                                            <div class="d-flex" style="justify-content: space-between; align-items: flex-end;" ng-repeat="f in files">
+                                                                <label class="c-gray f-300">{{f.type | truncate:40}}</label>
+                                                                <label class="c-gray f-300">{{f.size}} kb</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 p-0" data-ng-if="cart.files || cart.dropObject.url">
+                                        <div class="col-xs-6 p-0" ng-if="customerCtrl.message || customerCtrl.errorMessage">
+                                            <div data-ng-show="customerCtrl.message && !customerCtrl.errorMessage" class="alert alert-success alert-dismissable m-b-0" style="padding:7px 30px 7px 7px;">
+                                                <a class="close" data-ng-click="customerCtrl.message = null" aria-hidden="true">&times;</a>{{customerCtrl.message}}
+                                            </div>
+                                            <div data-ng-show="!customerCtrl.message && customerCtrl.errorMessage" class="alert alert-danger alert-dismissable m-b-0 p-5 p-r-30">
+                                                <a class="close" data-ng-click="customerCtrl.errorMessage = null" aria-hidden="true">&times;</a>{{customerCtrl.errorMessage}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group pull-right">
+                                            <button class="btn btn-success waves-effect f-700" data-ng-disabled="datalake_form.$invalid || cart.isFileUploading" ng-click="customerCtrl.uploadFiles(cart.files, cart.dropObject, cart.id, '95', cart)">
+                                                <span data-ng-if="!cart.isFileUploading">Upload</span>
+                                                <span data-ng-if="cart.isFileUploading">Uploading...</span>
+                                            </button>
+                                            <button class="btn btn-default waves-effect f-700" ng-click="customerCtrl.toggleUploadImageSection(cart);">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12" data-ng-if="showConfirm" style="border: 1px solid lightgrey;box-shadow: 1px 1px 4px lightgrey;">
+                                        <div class="col-lg-12 p-10">
+                                            <span class="f-14">{{selectedLakeStream.lake}} lake and
+                                                {{selectedLakeStream.stream}}
+                                                stream doesn't allow multiple drops. If you proceed current drop
+                                                will be
+                                                replaced.
+                                                Do you want to replace ?
+                                            </span>
+                                        </div>
+                                        <div class="form-group pull-right">
+                                            <button class="btn btn-block btn-success waves-effect f-700" ng-if="!updateFile" ng-click="removeFileAndUploadNew(details)"
+                                                ng-disabled="datalake_form.$invalid || !isBtnEnabled">
+                                                <span ng-if="!(datalake_form.$invalid || !isBtnEnabled)">Yes, Upload!</span>
+                                                <span ng-if="datalake_form.$invalid || !isBtnEnabled">Uploading...</span>
+                                            </button>
+                                            <button class="btn btn-block btn-success waves-effect f-700" ng-show="updateFile" ng-click="removeFileAndUploadNew(details)"
+                                                ng-disabled="datalake_form.$invalid || !isBtnEnabled">
+                                                Yes, Update!
+                                            </button>
+                                        </div>
+                                        <div class="form-group pull-right m-r-5">
+                                            <button class="btn btn-block btn-inverse waves-effect f-700" data-ng-click="gotoUploadForm();">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                </ng-form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Code to show the carts for the customer end -->
+            </div>
+        </div>
+    </div>
+        <!-- Tab content end -->
+    </div>
+    <div class="col-xs-12" data-ng-if="customerCtrl.message || customerCtrl.errorMessage">
+        <div data-ng-show="customerCtrl.message" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-ng-click="customerCtrl.message = null" aria-hidden="true">&times;</button> {{customerCtrl.message}}
+        </div>
+        <div data-ng-show="customerCtrl.errorMessage" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="customerCtrl.errorMessage = null" aria-hidden="true">&times;</button> {{customerCtrl.errorMessage}}
+        </div>
+    </div>
+</div>

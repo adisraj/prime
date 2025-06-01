@@ -1,0 +1,10 @@
+<div class="container-fluid" style="display: -webkit-box;">
+    <div class="inline-block" style="min-width:180px;">
+        <select class="form-control select-component" ng-model="returnData" ng-change="collapsesettings(returnData);" ng-options="each.prefix as each.name for each in dropdownList">
+        </select>
+    </div>
+    <div class="p-r-5 inline-block" style="display: table;">
+        <a ng-click="uncollapseAll();" ng-show="returnData">&nbsp <i class="zmdi zmdi-unfold-more zmdi-hc-2x"></i></a>
+        <a ng-click="collapseAll();" ng-show="returnData"> &nbsp <i class="zmdi zmdi-unfold-less zmdi-hc-2x"></i> &nbsp</a>
+    </div>
+</div>

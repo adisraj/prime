@@ -1,0 +1,415 @@
+<link rel="stylesheet" href="./application/modules/login/login.css">
+<div class="login-page" data-ng-controller="LoginController as loginController"
+    data-ng-init="loginController.autoLogin();loginController.focusLoginField();">
+
+    <div class="module-section" data-ng-if="!loginController.isNavigating">
+        <div class="workspace-area">
+            <div class="login-form-section">
+                <div class="col-xs-12 p-0 login-form">
+                    <div ng-hide1="loginController.isVisibleForgotPasswordPanel"
+                        class="d-flex justify-content-center  hidden-sm hidden-md logo">
+                        <img class="text-center" src="./img/logo-black.png" alt="RC Logo" style="height:40px;">
+                    </div>
+                    <div class="login-text">Login to Prime</div>
+                    <div ng-show="loginController.isVisibleSecondForgotPasswordPanel" class="text-muted"
+                        style="margin-bottom:8px;">
+                        <div class="f-18" style="line-height: 27px;">Password Recovery</div>
+                        <div class="f-13" style="line-height: 19.5px;"> Enter your username,confirm email and password
+                        </div>
+
+                    </div>
+                    <div ng-hide="loginController.isVisibleForgotPasswordPanel">
+                        <div data-ng-init="loginController.getFormData();">
+                            <div ng-if="loginController.isMfaVerified === false">
+                                <form class="col-xs-12 p-0 m-b-0" role="form" name="loginForm">
+                                    <div style="margin-bottom: 0.5rem;">
+
+                                        <label class="f-15 login-label">Username</label>
+                                        <input id="username" nextfocus enterindex="0" autocomplete="false"
+                                            name="username" data-ng-model="loginController.user.username" type="text"
+                                            class="login-inputbox" required ng-disabled="loginController.isNavigating">
+                                        <!-- <span class="c-red"
+                                            ng-show="loginForm.username.$invalid && loginForm.username.$touched"
+                                            style="margin-top: 4px;">
+                                            <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i>Please
+                                            enter username</span> -->
+
+                                    </div>
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <label class="f-15 login-label">Password</label>
+                                        <div class="password-input-container">
+                                            <input id="password" autocomplete="false" name="password"
+                                                data-ng-model="loginController.user.password" type="password"
+                                                class="login-inputbox" required
+                                                ng-disabled="loginController.isNavigating">
+                                            <!-- <span class="zmdi zmdi-eye-off p-absolute f-13 cursor-pointer"
+                                                data-ng-if="!loginController.hide_show_password" title="Show Password"
+                                                style="right: 10px;top: 10px;"
+                                                data-ng-click="loginController.toggleShowpassword();"></span>
+                                            <span class="zmdi zmdi-eye p-absolute f-13 cursor-pointer"
+                                                data-ng-if="loginController.hide_show_password" title="Hide Password"
+                                                style="right: 10px;top: 10px;"
+                                                data-ng-click="loginController.toggleShowpassword();"></span> -->
+
+                                        </div>
+                                        <!-- <span class="c-red" 
+                                        
+                                        ng-show="loginForm.password.$invalid && loginForm.password.$touched"
+                                            style="margin-top: 4px;">
+                                            <i class="fa fa-exclamation-triangle pr-2"  aria-hidden="true"></i>Please
+                                            enter password</span> -->
+                                    </div>
+
+
+                                    <div class="prime-login-btn">
+                                        <button id="loginButton" type="button" enterindex="2"
+                                            class="btn btn-lg f-400 f-16" style="margin-top:1rem"
+                                            ng-if="!loginController.isNavigating" ng-click="loginController.login()"
+                                            ng-disabled="loginForm.$invalid || loginController.isProcessing">
+                                            {{loginController.loginButtonText}}</button>
+                                        <button type="button" class="m-t-20 btn btn-lg f-500 f-15"
+                                            ng-if="loginController.isNavigating"
+                                            ng-disabled="loginController.isNavigating">Authenticating ...</button>
+                                    </div>
+
+                                    <div class="col-xs-12 p-0">
+                                        <button type="button" class="btn bg-none border-none p-0"
+                                            style="color:#9e9e9e;text-align:left;"
+                                            ng-click="loginController.isNavigating ? '' : loginController.showForgotPasswordPanel(loginForm);"
+                                            ng-class="{'cursor-not-allowed' : loginController.isNavigating}">Forgot
+                                            Password? <strong class="m-l-5">Reset</strong></button>
+
+                                        <!-- <button ng-click="loginController.resetForm(loginForm)">Reset</button> -->
+                                    </div>
+                                    <div class="alert-login col-xs-12" data-ng-if="loginController.login_error">
+                                        <span> {{loginController.login_message}}</span>
+                                    </div>
+                                </form>
+                            </div>
+                            <div ng-if="loginController.isMfaVerified === true">
+                                <div class="form-group m-t-10">
+                                    <div class="d-flex full-width p-20 sign-in-header"
+                                        ng-show="loginController.isVisibleForgotPasswordPanel">
+                                        <span class="p-10" style="color: #45bfff;">Multifactor authorization
+                                            code</span>
+                                    </div>
+                                    <div class="d-flex" style="justify-content:center;">
+                                        <div>
+                                            <input
+                                                class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0"
+                                                data-ng-model="loginController.mfa_code.a" type="text" size="1"
+                                                maxlength="1" required> <span>-</span>
+                                            <input
+                                                class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0"
+                                                data-ng-model="loginController.mfa_code.b" type="text" size="1"
+                                                maxlength="1" required> <span>-</span>
+                                            <input
+                                                class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0"
+                                                data-ng-model="loginController.mfa_code.c" type="text" size="1"
+                                                maxlength="1" required> <span>-</span>
+                                            <input
+                                                class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0"
+                                                data-ng-model="loginController.mfa_code.d" type="text" size="1"
+                                                maxlength="1" required> <span>-</span>
+                                            <input
+                                                class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0"
+                                                data-ng-model="loginController.mfa_code.e" type="text" size="1"
+                                                maxlength="1" required> <span>-</span>
+                                            <input
+                                                class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0"
+                                                data-ng-model="loginController.mfa_code.f" type="text" size="1"
+                                                maxlength="1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group m-t-20">
+                                    <button type="button" class="btn-lg btn-block btn-primal"
+                                        ng-click="loginController.verifyMfa(loginController.mfa_code)">Verify And
+                                        Login<i class="zmdi zmdi-arrow-right zmdi-hc-fw"></i></button>
+                                </div>
+                                <div class="form-group m-t-20">
+                                    <button class="btn-lg btn-block btn-secondary"
+                                        ng-click="loginController.isMfaVerified = false;loginController.login_error = false;">
+                                        <span class="zmdi zmdi-arrow-left zmdi-hc-fw"></span>Back to Login
+                                    </button>
+                                </div>
+                                <div class="alert-login" data-ng-if="loginController.login_error">
+                                    <span> {{::loginController.login_error}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="" ng-show="loginController.isVisibleSecondForgotPasswordPanel">
+                        <div class="alert-login" data-ng-if="loginController.reset_error">
+                            <span> {{::loginController.reset_message}}</span>
+                        </div>
+                        <div class="alert alert-success" data-ng-if="loginController.reset_success">
+                            <span> {{::loginController.reset_message}}</span>
+                        </div>
+
+                        <form class="col-xs-12 p-0" style="margin-bottom:16px;" role="form" name="resetForm"
+                            id="resetForm">
+                            <div style="margin-bottom: 8px;">
+                                <label class="f-15 login-label">Username</label>
+                                <input id="forgot_username" name="forgot_username"
+                                    data-ng-model="loginController.recovery.username" type="text" class="login-inputbox"
+                                    required>
+                                <p class="c-red"
+                                    ng-show="resetForm.forgot_username.$invalid && resetForm.forgot_username.$touched">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"
+                                        style="padding-right: 3px;"></i>Please enter
+                                    username
+
+                                </p>
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label class="f-15 login-label">Confirm profile email</label>
+                                <input id="recovery_email" name="recovery_email"
+                                    data-ng-model="loginController.recovery.recovery_email" type="text"
+                                    class="login-inputbox"
+                                    ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]*\.([a-z]{2,4})$/"
+                                    ng-model-options="{updateOn:'blur'}" required>
+                                <p class="c-red"
+                                    ng-show="resetForm.recovery_email.$touched && resetForm.recovery_email.$error.required">
+                                    <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i>
+                                    Please enter confirm profile email
+                                </p>
+                                <p class="c-red"
+                                    data-ng-if="resetForm.recovery_email.$touched && resetForm.recovery_email.$error.pattern">
+                                    <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i>Invalid confirm
+                                    profile email
+                                </p>
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label class="f-15 login-label">New Password</label>
+                                <div class="password-input-container">
+                                    <input id="newPassword" name="newPassword"
+                                        data-ng-model="loginController.recovery.newPassword"
+                                        type="{{loginController.password_input_type}}" class="login-inputbox"
+                                        ng-pattern="/^(?=.*[a-z]).+$/" ng-minlength="5"
+                                        ng-model-options="{updateOn:'default'}" required ng-focus="passwordFocus = true"
+                                        ng-blur="passwordFocus = false">
+                                    <span class="zmdi zmdi-eye-off p-absolute f-13 cursor-pointer"
+                                        data-ng-if="!loginController.hide_show_password" title="Show Password"
+                                        style="right: 10px;top: 10px;"
+                                        data-ng-click="loginController.toggleShowpassword();"></span>
+                                    <span class="zmdi zmdi-eye p-absolute f-13 cursor-pointer"
+                                        data-ng-if="loginController.hide_show_password" title="Hide Password"
+                                        style="right: 10px;top: 10px;"
+                                        data-ng-click="loginController.toggleShowpassword();"></span>
+
+                                </div>
+
+                                <p class="c-red"
+                                    ng-show="resetForm.newPassword.$error.required && resetForm.newPassword.$touched">
+                                    <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"
+                                        style="padding-right: 3px;"></i>Please enter
+                                    new password
+                                </p>
+
+
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label class="f-15 login-label">Confirm Password</label>
+                                <div class="password-input-container">
+                                    <input id="confirmPassword" name="confirmPassword"
+                                        data-ng-model="loginController.recovery.confirmPassword"
+                                        type="{{loginController.confirm_password_input_type}}" class="login-inputbox"
+                                        ng-pattern="/^(?=.*[a-z]).+$/" ng-minlength="5"
+                                        ng-model-options="{updateOn:'default'}" required>
+                                    <span class="zmdi zmdi-eye-off p-absolute f-13 cursor-pointer"
+                                        data-ng-if="!loginController.hide_confirm_pass" title="Show Password"
+                                        style="right: 10px;top: 10px;"
+                                        data-ng-click="loginController.toggleConfirmShowpassword();"></span>
+                                    <span class="zmdi zmdi-eye p-absolute f-13 cursor-pointer"
+                                        data-ng-if="loginController.hide_confirm_pass" title="Hide Password"
+                                        style="right: 10px;top: 10px;"
+                                        data-ng-click="loginController.toggleConfirmShowpassword();"></span>
+                                </div>
+                                <p class="c-red"
+                                    ng-show="resetForm.confirmPassword.$error.required && resetForm.confirmPassword.$touched">
+                                    <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"
+                                        style="padding-right: 3px;"></i>Please enter
+                                    confirm password
+                                </p>
+
+
+
+
+                            </div>
+
+                            <div class="d-flex p-0 recovery-button-section">
+                                <div class="m-r-10">
+                                    <button type="button" class="btn btn-lg btn-block f-16"
+                                        ng-click="loginController.showLoginPanel(resetForm);">Back to Sign In
+                                    </button>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-lg btn-block btn-primal f-16"
+                                        ng-click="loginController.resetPassword();"
+                                        ng-disabled="resetForm.$invalid || (resetForm.confirmPassword.$dirty && resetForm.confirmPassword.$dirty && loginController.recovery.newPassword !== loginController.recovery.confirmPassword)">Reset
+                                        Password</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div>
+                            <span class="c-red"
+                                data-ng-if="resetForm.newPassword.$dirty && (loginController.recovery.newPassword !== loginController.recovery.confirmPassword)">
+                                <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"
+                                    style="margin-right: 3px;"></i>Confirm password
+                                does not
+                                match with new password.<br>
+                            </span>
+                            <span class="c-red"
+                                data-ng-if="(resetForm.confirmPassword.$invalid && resetForm.newPassword.$dirty) && (resetForm.confirmPassword.$error.minlength ||resetForm.newPassword.$error.minlength)">
+                                <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i> Password must be
+                                minimum
+                                5 characters long.<br>
+                            </span>
+                            <span class="c-red"
+                                data-ng-if="(resetForm.confirmPassword.$invalid && resetForm.newPassword.$dirty) && (resetForm.confirmPassword.$error.pattern || resetForm.newPassword.$error.pattern)">
+                                <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"
+                                    style="margin-right: 3px;"></i>Password must contain at
+                                least 1 lowercase letter.
+                            </span>
+                        </div>
+
+
+                    </div>
+
+                    <div ng-if="loginController.username">
+                        <div class="alert-login" data-ng-if="loginController.reset_new_password_error">
+                            <span> {{::loginController.reset_new_password_message}}</span>
+                        </div>
+                        <div class="alert alert-success" data-ng-if="loginController.reset_new_password_success">
+                            <span> {{::loginController.reset_new_password_message}}</span>
+                        </div>
+                        <form class="col-xs-12 p-0" style="margin-bottom:16px;" role="form"
+                            name="resetnewFormPasswordFromMail">
+                            <div style="margin-bottom: 8px;">
+                                <label class="f-15 login-label">Username</label>
+                                <input id="newFormUsername" name="newFormUsername"
+                                    ng-init="loginController.resetnewFormPasswordRecovery.newFormUsername = loginController.username"
+                                    data-ng-model="loginController.resetnewFormPasswordRecovery.newFormUsername"
+                                    type="text" class="login-inputbox" required>
+
+
+                            </div>
+
+
+                            <div style="margin-bottom: 16px;">
+                                <label class="f-15 login-label">New Password</label>
+                                <div class="password-input-container">
+                                    <input id="new_password" name="new_password"
+                                        data-ng-model="loginController.resetnewFormPasswordRecovery.new_password"
+                                        type="{{loginController.password_input_type}}" class="login-inputbox"
+                                        ng-pattern="/^(?=.*[a-z]).+$/" ng-minlength="5"
+                                        ng-model-options="{updateOn:'default'}" required>
+                                    <span class="zmdi zmdi-eye-off p-absolute f-13 cursor-pointer"
+                                        data-ng-if="!loginController.hide_show_password" title="Show Password"
+                                        style="right: 10px;top: 10px;"
+                                        data-ng-click="loginController.toggleShowpassword();"></span>
+                                    <span class="zmdi zmdi-eye p-absolute f-13 cursor-pointer"
+                                        data-ng-if="loginController.hide_show_password" title="Hide Password"
+                                        style="right: 10px;top: 10px;"
+                                        data-ng-click="loginController.toggleShowpassword();"></span>
+
+                                </div>
+                                <p class="c-red"
+                                    ng-show="resetnewFormPasswordFromMail.new_password.$invalid && resetnewFormPasswordFromMail.new_password.$touched">
+                                    <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i>Please enter
+                                    new password
+                                </p>
+
+
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label class="f-15 login-label">Confirm Password</label>
+                                <div class="password-input-container">
+                                    <input id="confirmpassword" name="confirmpassword"
+                                        data-ng-model="loginController.resetnewFormPasswordRecovery.confirmpassword"
+                                        type="{{loginController.confirm_password_input_type}}" class="login-inputbox"
+                                        ng-pattern="/^(?=.*[a-z]).+$/" ng-minlength="5"
+                                        ng-model-options="{updateOn:'default'}" required>
+                                    <span class="zmdi zmdi-eye-off p-absolute f-13 cursor-pointer"
+                                        data-ng-if="!loginController.hide_confirm_pass" title="Show Password"
+                                        style="right: 10px;top: 10px;"
+                                        data-ng-click="loginController.toggleConfirmShowpassword();"></span>
+                                    <span class="zmdi zmdi-eye p-absolute f-13 cursor-pointer"
+                                        data-ng-if="loginController.hide_confirm_pass" title="Hide Password"
+                                        style="right: 10px;top: 10px;"
+                                        data-ng-click="loginController.toggleConfirmShowpassword();"></span>
+                                </div>
+                                <p class="c-red"
+                                    ng-show="resetnewFormPasswordFromMail.confirmpassword.$invalid && resetnewFormPasswordFromMail.confirmpassword.$touched">
+                                    <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i>Please enter
+                                    confirm password
+                                </p>
+
+
+
+                            </div>
+
+                            <div class="d-flex p-0 recovery-button-section">
+
+                                <div>
+                                    <button type="button" class="btn btn-lg btn-block btn-primal f-16"
+                                        ng-click="loginController.resetnewFormPassword();"
+                                        ng-disabled="resetnewFormPasswordFromMail.$invalid || (resetnewFormPasswordFromMail.confirmpassword.$dirty && resetnewFormPasswordFromMail.confirmpassword.$dirty && loginController.resetnewFormPasswordRecovery.new_password !== loginController.resetnewFormPasswordRecovery.confirmpassword)">Reset
+                                        Password</button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="c-red"
+                            ng-show="(resetnewFormPasswordFromMail.confirmpassword.$dirty && resetnewFormPasswordFromMail.confirmpassword.$dirty) && (loginController.resetnewFormPasswordRecovery.new_password!== loginController.resetnewFormPasswordRecovery.confirmpassword)">
+                            <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i>Confirm password does not
+                            match with new password.
+                        </p>
+
+                        <p class="c-red" data-ng-if="resetnewFormPasswordFromMail.new_password.$error.minlength
+                        ||resetnewFormPasswordFromMail.confirmpassword.$error.minlength">
+                            <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i>Password must be
+                            minimum 5 characters long.
+                        </p>
+                        <p class="c-red"
+                            data-ng-if="resetnewFormPasswordFromMail.confirmpassword.$error.pattern || resetnewFormPasswordFromMail.new_password.$error.pattern">
+                            <i class="fa fa-exclamation-triangle pr-2" aria-hidden="true"></i>Password must contain at
+                            least 1 lowercase letter.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detailspace-area">
+            <h1 class="c-white text-center m-0" style="font-size: 3rem;font-weight: 400;">Retail Calculus<strong> Prime
+                </strong></h1>
+        </div>
+    </div>
+
+    <div class="col-sm-12 p-0 d-flex justify-content-center align-items-center bg-light"
+        data-ng-if="loginController.isNavigating" style="height:100%">
+        <div class="authentication-page">
+            <div class="col-sm-12" alt="img"><img src="./img/loginpage/shield.svg" class="d-flex m-auto" height="100">
+            </div>
+            <div class="col-sm-12 f-24 p-t-25 text-center">Hang on! We are redirecting you to Prime...</div>
+        </div>
+    </div>
+
+    <!-- Section to add the footer in login page -->
+    <div id="console-nav-footer">
+        <div id="footer-content">
+            <a class="cursor-default" style="color: white;" data-ng-click="toggleVersionMenu();">
+                <span class="pull-right" style="padding: 0 1em">
+                    <span id="version"> Version {{copyrightDetails.app_version}} </span>
+                </span>
+            </a>
+            <a id="terms-of-use" target="_blank">Terms of Use</a>
+            <a id="privacy" target="_blank">Privacy Policy </a>
+            <span id="copyright-notice" style="display: inline;">© {{ ::copyrightDetails.from_year}} - {{
+                ::copyrightDetails.to_year}},
+                <span id="awsc-marketplace-name">Retail Calculus</span> or its affiliates. All rights reserved.
+            </span>
+        </div>
+    </div>
+</div>

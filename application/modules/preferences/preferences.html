@@ -1,0 +1,72 @@
+<div data-ng-controller="PreferenceController as prefCtrl">
+    <div class="p-5 m-b-5 stagesection" style="height:60px;">
+        <div class="col-lg-3 col-md-3 col-sm-6 setstagediv">
+            <div class="aligncenter">
+                <label class="rclabel p-t-10 setstagelabel  profile-stage-labels">
+                    <a data-ui-sref="pages.profile.profile-about" style="color:black;"><b>Profile Details</b></a>
+                </label>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 setstagediv">
+            <div class="aligncenter">
+                <label class="rclabel p-t-10 setstagelabel  profile-stage-labels">
+                    <a data-ui-sref="pages.profile.profile-access-control" class="c-black"><b>Access Control</b></a></label>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 setstagediv passed">
+            <div class="aligncenter">
+                <label class="rclabel p-t-10 setstagelabel profile-stage-labels passed">
+                    <a data-ui-sref="pages.profile.preferences" class="c-black"><b>Preferences</b></a></label>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 panel-body" style="border: 1px solid #f5f4f4">
+        <div class="col-lg-12">
+            <div class="panel-group">
+                <div class="panel panel-default" data-ng-repeat="eachPreference in prefCtrl.allPreferencesList">
+                    <div class="panel-heading p-10">
+                        <h4 class="panel-title">
+                            <span>
+                                <span style="font-size: 13px;font-weight: 400;font-family: 'Roboto';">{{eachPreference.preference | titleCase}}</span>
+                            </span>
+                        </h4>
+                    </div>
+                    <div class="panel-body" style="font-family: 'Roboto';font-weight: 400;font-size: 13px;color: #8e8282;border: 1px solid #f5f5f5;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-10 m-t-10 p-0">
+                            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6 p-0">
+                                <div class="col-lg-12">
+                                    <label>{{eachPreference.type |  titleCase}}</label>
+                                </div>
+                                <div class="col-lg-10">
+                                    <select data-ng-if="eachPreference.type ==='option'" class="form-control select-component" ng-model="prefCtrl.preference_details.option_id" ng-options="each.id as each.options for each in prefCtrl.optionsList[eachPreference.id]" style="height:30px" ng-change="prefCtrl.setIndexForCurrentElement($index);">
+                                            <option value="" disabled>Select Value</option>  
+                                        </select>
+                                    <input data-ng-if="eachPreference.type ==='value'" ng-model="prefCtrl.preference_details.value" ng-change="prefCtrl.setIndexForCurrentElement($index);" class="form-control input-sm" />
+                                </div>
+                                <div class="col-lg-1">
+                                    <button class="btn-primal pull-right cursor-pointer" ng-click="prefCtrl.updatePeferences(prefCtrl.preference_details,eachPreference,$index)" ng-disabled="prefCtrl.preference_form.$invalid">Save</button>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 m-t-15">
+                                <div class="col-lg-12 pull-right">
+                                    <div data-ng-show="prefCtrl.message && !prefCtrl.errorMessage && prefCtrl.index === $index" class="alert alert-success m-b-0" style="padding: 10px 15px;">
+                                        <button type="button" class="close" data-ng-click="prefCtrl.message = null" aria-hidden="true">&times;</button>
+                                        <strong> Success </strong> {{prefCtrl.message}}
+                                    </div>
+                                    <div data-ng-show="!prefCtrl.message && prefCtrl.errorMessage && prefCtrl.index === $index" class="alert alert-danger m-b-0" style="padding: 10px 15px;">
+                                        <a class="close" data-ng-click="prefCtrl.errorMessage = null" aria-hidden="true">&times;</a> {{prefCtrl.errorMessage}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <span class="help-block m-t-5">
+                                    The changes will be effected immedietly.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

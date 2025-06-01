@@ -1,0 +1,88 @@
+<div class="col-xs-12 bgm-white col-xs-12 p-15 m-b-10" style="box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.2);">
+    <ng-form name="taxCtrl.updateTaxForm" role="form">
+        <div class="col-xs-12 p-0">
+            <div class="form-group col-xs-4">
+                <label>Region</label>
+                <select id="region_id" name="region_id" class="form-control select-component input-sm" ng-model="taxCtrl.updateTax.region_id"
+                    ng-options="item.id as item.region_name for item in taxCtrl.allRegions|orderBy:'region_name'" ng-change="taxCtrl.updateTax.tax_method_id=(taxCtrl.allRegions|filter:{id:taxCtrl.updateTax.region_id})[0].tax_method_id;taxCtrl.updateTax.code = (taxCtrl.allRegions|filter:{id:taxCtrl.updateTax.region_id})[0].code"
+                    required disabled>
+                    <option value="" disabled>Select Region</option>
+                </select>
+            </div>
+            <div data-ng-if="taxCtrl.updateTax.region_id && (taxCtrl.updateTax.code === 'delivery_location' || taxCtrl.updateTax.code === 'selling_location')">
+                <div class="form-group col-xs-4" data-ng-if="taxCtrl.updateTax.region_id">
+                    <label>Tax Method</label>
+                    <select id="tax_method_id" name="tax_method_id" class="form-control select-component input-sm" ng-model="taxCtrl.updateTax.tax_method_id"
+                        ng-options="item.id as item.tax_method for item in taxCtrl.taxMethods|filter:{id:taxCtrl.updateTax.tax_method_id}"
+                        ng-disabled='disabled' required>
+                    </select>
+                </div>
+                <div data-ng-if="taxCtrl.updateTax.code === 'delivery_location'">
+                    <div class="form-group col-xs-4">
+                        <label>Zipcode</label>
+                        <input id="zipcode" name="zipcode" type="text" class="form-control input-sm" ng-model="taxCtrl.updateTax.zipcode"
+                            placeholder="Enter Zipcode" ng-model-options="{ updateOn: 'blur' }" ng-pattern="/^\d{5}$/" required
+                            disabled>
+                        <p data-ng-show="taxCtrl.updateTaxForm.zipcode.$error.pattern" class="f-12 text-danger">Zip code must be a number of 5 digits.</p>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label>Taxing Body</label>
+                        <input id="county" name="county" type="text" class="form-control input-sm" ng-model="taxCtrl.updateTax.county"
+                            placeholder="Enter Taxing body" ng-model-options="{ updateOn: 'blur' }" required>
+                    </div>
+                </div>
+                <div data-ng-if="taxCtrl.updateTax.code === 'selling_location'">
+                    <div class="form-group col-xs-4">
+                        <label>Location</label>
+                        <select name="location_id" id="location_id" class="form-control select-component input-sm" ng-disabled="taxCtrl.updateTax.location_id!==null"
+                            ng-options="each.id as each.name for each in taxCtrl.locations" ng-model="taxCtrl.updateTax.location_id"
+                            auto-focus>
+                        <option value="" disabled>Select Location</option>
+                    </select>
+                    </div>
+                </div>
+                <div class="form-group col-xs-4" data-ng-if="taxCtrl.updateTax.tax_method_id">
+                    <label>Tax Rate</label>
+                    <input id="tax" name="tax" type="text" class="form-control input-sm currency-field" ng-model="taxCtrl.updateTax.tax"
+                        ng-model-options="{ updateOn: 'blur' }" decimal-numbers currency="2" currency-point="." placeholder="Enter Tax"
+                        ng-pattern="taxCtrl.taxRegExp" required>
+                    <p data-ng-show="taxCtrl.updateTaxForm.tax.$error.pattern" class="f-12 text-danger">Please enter tax between 0 and 99.</p>
+                </div>
+                <div data-ng-if="taxCtrl.updateTax.code === 'delivery_location'">
+                    <div class="form-group col-xs-4 p-t-25">
+                        <div class="checkbox">
+                            <label> Primary Tax
+                                <input id="is_primary" name="is_primary" type="checkbox" hidden="hidden" ng-model="taxCtrl.updateTax.is_primary"
+                                    ng-true-value="1" ng-false-value="0">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12" data-ng-if="taxCtrl.updateTax.code === 'one_rate' || taxCtrl.updateTax.code === 'no_sales_tax'">
+                <span class="f-12 text-danger">Tax can not be added for selected region</span>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0">
+            <div class="col-xs-6 p-0">
+                <div data-ng-if="!taxCtrl.message && taxCtrl.errorMessage" class="alert alert-danger alert-dismissable m-b-0">
+                    <button type="button" class="close" data-ng-click="taxCtrl.errorMessage = null" aria-hidden="true">&times;</button>                    {{taxCtrl.errorMessage}}
+                </div>
+            </div>
+            <div class="col-xs-6 p-0">
+                <button class="btn btn-sm btn-success pull-right" data-ng-click="taxCtrl.update(taxCtrl.updateTax)" data-ng-disabled="taxCtrl.updateTaxForm.$invalid || taxCtrl.isProccessing || !permissionsMap.update">
+                    <span class="f-500" title="{{!permissionsMap.update ? 'Access denied' : ''}}">{{taxCtrl.updateBtnText}}</span>
+                </button>
+                <button class="btn btn-sm btn-danger pull-right m-r-5" data-ng-if="!taxCtrl.oldTax.is_primary" data-ng-click="taxCtrl.deleteTax(taxCtrl.updateTax.id, taxCtrl.updateTax.code)"
+                    data-ng-disabled="taxCtrl.isProccessing || !permissionsMap.delete">
+                    <span class="f-500" title="{{!permissionsMap.delete ? 'Access denied' : ''}}">Delete</span>
+                </button>
+                <button class="btn btn-sm btn-cancel pull-right m-r-5" data-ng-click="taxCtrl.closeForm('updateForm');"
+                    data-ng-disabled="taxCtrl.isProccessing">
+                    <span class="f-500">Cancel</span>
+                </button>
+            </div>
+        </div>
+    </ng-form>
+</div>

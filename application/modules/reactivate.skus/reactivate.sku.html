@@ -1,0 +1,300 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    .select2-container-active,
+    trix-editor:focus {
+        border-left: 3px solid #f9c10c !important;
+    }
+
+    input[type="radio"]:focus,
+    input[type="radio"]:checked {
+        border: 2px solid #f9c10c !important;
+        border-radius: 50%;
+        background-color: #009688;
+        box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, .4), 0 1px 1px hsla(0, 0%, 100%, .8);
+        content: '';
+        height: 20px;
+        width: 20px;
+    }
+
+    input[type="radio"] {
+        border: 1px solid #5d4565;
+        border-radius: 50%;
+        cursor: pointer;
+        display: inline-block;
+        height: 20px;
+        margin-right: 15px;
+        position: relative;
+        width: 20px;
+        -webkit-appearance: none;
+    }
+
+    .select2-container {
+        display: block;
+        border-left: 2px solid #d8d8d8;
+    }
+
+    .select2-container .select2-choice {
+        display: flex !important;
+        position: relative !important;
+        white-space: nowrap !important;
+        color: #444444 !important;
+        background-clip: padding-box !important;
+        background-image: none !important;
+        padding-left: 9px !important;
+        overflow: hidden !important;
+        border: 1px solid#e2e2e2 !important;
+        text-decoration: none !important;
+        border-radius: 0px !important;
+        align-items: center;
+        height: 30px !important;
+    }
+
+    .select2-arrow {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .select2-dropdown-open .select2-choice {
+        box-shadow: none !important;
+        background-color: white !important;
+    }
+
+    .select2-results {
+        padding: 0;
+        margin: 4px 0px;
+    }
+
+    .select2-results li {
+        border-top: 1px solid #dcdcdc;
+    }
+
+    .select2-results .select2-result-label {
+        padding: 6px;
+    }
+
+    .select2-search input {
+        padding: 5px;
+        margin: 0 auto;
+        background-image: url('./img/icons/search-2.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center right;
+    }
+
+    .select2-drop-active {
+        border: 1px solid #e2e2e2;
+    }
+
+    .select2-drop {
+        width: 100.2%;
+        left: -2px;
+        z-index: 1;
+    }
+
+    .select2-search {
+        margin-top: 5px;
+    }
+
+    .select2-search input:focus {
+        background-image: url('./img/icons/search-2.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center right;
+    }
+
+    .select2-results .select2-highlighted span {
+        color: #fff;
+    }
+
+    .select2-results .select2-disabled.select2-highlighted span {
+        color: #666;
+    }
+
+    .panel-body {
+        overflow-y: scroll;
+        max-height: 400px;
+    }
+</style>
+<div class="col-xs-12 m-t-5" data-ng-controller="ReactivateSkuController as interfaceResyncController">
+    <script type="text/javascript">
+        window.onbeforeunload = (evt) => {
+            if (window.localStorage.getItem('isExecuting') == 'true') {
+                let message = 'Are you sure you want to leave?';
+                evt.preventDefault();
+                return message;
+            }
+        }
+    </script>
+    <div class="col-xs-6 m-b-30">
+        <ng-form role="form" novalidate="novalidate" name="interfaceResyncController.mass_retail_maintenance_form">
+            <div class="col-xs-12 p-0 box maintenanceworkspace">
+                <div class="col-xs-12 f-16 panel-header">
+                    <span class="f-700 main-header">Reactivate SKU</span>
+                    <div>
+                        <small>Filter on the preferred SKU details</small>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-10">
+                    <div class="col-xs-12 p-0">
+                        <div class="col-lg-12 col-md-10 col-sm-12 p-0 maintenance-field-label">
+                        </div>
+                        <div class="col-lg-12 col-md-10 col-sm-12 p-0 maintenance-field-label">
+                            <label>SKU #</label>
+                            <div class="form-group">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0">
+                                    <div class="form-group">
+                                        <div class="form-group col-lg-6 col-md-6 col-xs-6 p-0" valdr-form-group>
+                                            <input type="text" id="sku_number_search" class="form-control input-sm"
+                                                ng-model="interfaceResyncController.sku_number" placeholder="SKU Number"
+                                                ng-keyup="$event.keyCode == 13 ? interfaceResyncController.FormatSkuNumber():null" />
+                                        </div>
+                                        <button class="btn btn-info m-l-20" data-ng-if="!interfaceResyncController.isSKUSearching"
+                                            data-ng-disabled="!interfaceResyncController.sku_number||interfaceResyncController.sku_number.length===0"
+                                            data-ng-click="interfaceResyncController.FormatSkuNumber()">Search</button>
+                                        <button class="btn btn-info m-l-20" data-ng-if="interfaceResyncController.isSKUSearching"
+                                            data-ng-disabled="interfaceResyncController.isSKUSearching">Searching ...</button>
+                                        <button class="btn btn-info m-l-5"
+                                            data-ng-disabled="!interfaceResyncController.sku_number||interfaceResyncController.sku_number.length===0"
+                                            data-ng-click="interfaceResyncController.sku_number=undefined;interfaceResyncController.noSkuFound = false;interfaceResyncController.skuDoesNotExist = false;">Clear</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 d-flex text-danger" data-ng-if="interfaceResyncController.SKUError">
+                            <span>{{interfaceResyncController.SKUError}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 p-0 m-t-5 box maintenanceworkspace maintenance-field-label">
+                <div class="col-xs-12 f-16 panel-header">
+                    <span class="f-700 main-header">SKU Details</span>
+                </div>
+                <div class="col-xs-12 p-10" data-ng-if="interfaceResyncController.searchedSKUList.length===0">
+                    <span>No SKUs added to the queue.</span>
+                </div>
+                <div class="col-xs-12 p-10 panel-body" data-ng-if="interfaceResyncController.searchedSKUList.length>0">
+                    <div class="col-xs-12 p-0 m-t-5" data-ng-repeat="sku in interfaceResyncController.searchedSKUList">
+                        <button type="button"
+                            class="m-t-5 pull-right c-firebrick f-500 cursor-pointer f-17 zmdi zmdi-delete zmdi-hc-fw bg-none border-none p-0 ng-isolate-scope"
+                            ng-click="interfaceResyncController.DeleteSKUFromQueue(sku.id)">
+                        </button>
+                        <div class="d-flex flex-fill">
+                            <div class="d-flex">
+                                <img check-image class="img-responsive m-auto cursor-pointer" image-name="sku.svg"
+                                    ng-src="{{sku.imgUrl}}" style="height:50px;width:50px;" />
+                            </div>
+                            <div class="m-l-5 p-l-5 p-r-5" style="flex:1;border-left: 1px solid #f5f5f5;line-height: 2">
+                                <div class="col-xs-12">
+                                    <div class="col-lg-8 p-l-0 cursor-pointer">
+                                        <span class="c-gray">Description: </span>
+                                        <span class="text-capitalize text-info f-700"
+                                            title="{{sku.description}}">{{sku.description | truncate : 25}}</span>
+                                    </div>
+                                    <div class="col-lg-4 p-l-0">
+                                        <span class="c-gray">Status: </span>
+                                        <span 
+                                        ng-class="{'text-success f-500':sku.status==='Active' , 'text-warning f-300':sku.status==='Pending', 'text-primary f-300':sku.status==='Inactive','text-info f-300':sku.status==='Pending Inactive'}">{{sku.status}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="col-lg-6 p-l-0">
+                                        <span class="c-gray">SKU #: </span>
+                                        <span title="SKU Number">{{sku.sku}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 m-t-10 m-b-30 p-0 maintenance-field-label">
+                <div class="col-xs-6 p-0 pull-right d-flex">
+                    <button id="executeButtonId" type="button"
+                        ng-disabled="!interfaceResyncController.searchedSKUList.length>0 || interfaceResyncController.isExecuting || interfaceResyncController.isExecuted"
+                        class="btn btn-block btn-success f-700 m-l-5 m-t-0 waves-effect tabfocus-btn"
+                        ng-click="interfaceResyncController.ReActivateSKUs()"
+                        data-ng-disabled="interfaceResyncController.isExecuting">
+                        <span data-ng-if="!interfaceResyncController.isExecuting">Reactivate</span>
+                        <span data-ng-if="interfaceResyncController.isExecuting">
+                            <span class="fa fa-spin fa-spinner f-15 m-r-5"></span> Executing...
+                        </span>
+                    </button>
+                </div>
+                <div class="col-xs-6 d-flex col-xs-6 d-flex retail-success-msg text-success"
+                    data-ng-if="interfaceResyncController.message">
+                    <span>{{interfaceResyncController.message}}</span>
+                </div>
+                <div class="col-xs-6 d-flex col-xs-6 d-flex retail-error-msg text-danger"
+                    data-ng-if="interfaceResyncController.error">
+                    <span>{{interfaceResyncController.error}}</span>
+                </div>
+            </div>
+        </ng-form>
+    </div>
+
+    <div class="col-xs-5 p-0">
+        <div class="col-xs-12 p-0 mass-maintenance-detail-section">
+            <div class="col-xs-12">
+                <div class="col-xs-12 f-16 p-10 header-section bgm-white">
+                    <h5 class="text-primary">Notes</h5>
+                </div>
+                <div class="col-xs-12 p-10 maintenance-field-label">
+                    <div class="col-xs-12 p-10" style="background: #fafafa;border: 1px solid #dadada;">
+                        <div class="col-xs-12">
+                            <div>
+                                Reactivate SKUs in Retail calculus is maintained to
+                                <span class="text-warning underline">activate</span> the deleted <b>SKU entity data.</b>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-5 m-t-10">
+                            <div class="p-l-10">
+                                <small>
+                                    Choose the entity SKU that should be reactivated.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-5">
+                            <div class="p-l-10">
+                                <small>
+                                    Search the SKU# (one or many) in the given search box.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-5">
+                            <div class="p-l-10">
+                                <small>
+                                    Each SKU# searched is added to the queue to reactivate.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-5">
+                            <div class="p-l-10">
+                                <small>
+                                    Execute the <b>Reactivate</b> button, which would activate the deleted <b>SKU data and its corresponding Item data</b>, its corresponding <b>UDDs</b>, <b>retails</b> and <b>image</b> of all the SKUs
+                                    selected.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 p-5 d-flex" data-ng-if="interfaceResyncController.searchedSKUList.length && interfaceResyncController.isExecuted===true">
+                <div class="status-container">
+                    <div class="status-count passed">
+                        {{interfaceResyncController.searchedSKUList.length}}
+                    </div>
+                    <div class="status-label">
+                        Reactivated
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

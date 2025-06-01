@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="./application/modules/item/maintenance/item.vendor.configuration.css">
+<link rel="stylesheet" href="./application/modules/item/maintenance/item.available.sku.css">
+<div class="col-lg-12 p-0" ng-init="vm.itemVendors()">
+    <div class="col-xs-12 f-16 panel-header">
+        <span class="f-700 main-header">Item Vendor Configuration</span>
+        <div>
+            <small>Configure vendor for the item</small>
+        </div>
+    </div>
+
+    <div class="col-xs-12 p-0" style="border: 1px solid #efefef;background: #ffffff;">
+        <div class="col-xs-12 p-0">
+            <div class="p-10" style="background:#f7f7f7">
+                <span class="p-0 m-0" style="color: #31394a">
+                    Primary Vendor
+                </span>
+            </div>
+
+            <div class="col-xs-12 p-10" style="color:#636363;display:flex">
+                <i class="c-alt f-18 zmdi zmdi-forward"></i>
+                <span class="p-l-10 c-purple">{{itemMaintCtrl.selectedVendor.name}} </span>
+                <span class="c-gray">
+                    <i> [ {{itemMaintCtrl.selectedVendor.VendorType}} ] </i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 p-0">
+        <div class="col-xs-12 maintenance-header-section p-0">
+            <div class="col-xs-12 p-0">
+                <div class="p-10" style="background:#f7f7f7">
+                    <span class="p-0 m-0" style="color: #31394a">
+                        Alternative Vendors
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-12 p-10">
+                <div class="col-xs-12 text-muted p-10">Select vendor and link vendors to item</div>
+                <div class="col-xs-10 form-group p-0 m-0" valdr-form-group>
+                    <!-- <select selectize="selectVendorConfiguration" items="head.Vendor" class="form-control select-component input-sm" options="allVendors"
+                        data-ng-model="head.Vendor.id" data-ng-change="itemMaintCtrl.changeVendor(head.Vendor.id)"></select> -->
+                        <ui-select items="head.vendor"
+                        ng-model="head.Vendor.id" theme="select2"
+                        on-select="itemMaintCtrl.changeVendor(head.Vendor.id)">
+                        <ui-select-match placeholder="Select vendor">
+                            <span class="m-r-10" ng-bind-html="$select.selected.name" 
+                            title="Vendor"></span>
+                            <span  class="m-r-10 f-12 text-muted" ng-bind-html="$select.selected.status" title="Vendor Status"></span>
+                            <span class="f-12 text-muted" ng-bind-html="$select.selected.VendorType" title="Vendor Type"></span>
+                        </ui-select-match>
+                        <ui-select-choices
+                            repeat="vendor in allVendors | filterBy:['name'] : $select.search |limitTo: $select.search.length ? 100 : 50"
+                            ui-disable-choice="vendor.status.toLowerCase() === 'inactive'"
+                            data-ng-class="{'opacity50' : vendor.status.toLowerCase() === 'inactive'}">
+                            <span class="m-r-10 text-overflow-desc-auto" ng-bind="vendor.name" title="{{vendor.name}}"></span>
+                            <span class="f-12 text-muted" ng-bind="vendor.status" title="Vendor Status"></span>
+                            <span class="pull-right f-12 text-muted" ng-bind="vendor.VendorType" title="Vendor Type"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <p class="text-muted text-right p-5 m-0" style="right:0" data-ng-if="itemMaintCtrl.duplicateVendorMessage">{{itemMaintCtrl.duplicateVendorMessage}}</p>
+                </div>
+                <div class="col-xs-2">
+                    <div class="col-lg-12">
+                        <button type="button" class="btn btn-success btn-block" ng-click="itemMaintCtrl.addVendorsToItem(head.vendor)" style="height: 32px; width: 60px"
+                            data-ng-disabled="itemMaintCtrl.duplicateVendorMessage||itemMaintCtrl.isPrimaryVendorLinked!==undefined">
+                            <strong>Add</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="text-muted text-center p-b-10" data-ng-if="itemMaintCtrl.isLoadingAlternativeVendor">
+                Loading...
+            </div>
+            <div class="col-xs-12 multiple-vendor-container d-flex p-10" data-ng-if="itemMaintCtrl.itemVendors.length > 0 && !itemMaintCtrl.isLoadingAlternativeVendor">
+                <div class="col-xs-12 linked-vendors" data-ng-repeat="itemVendor in itemMaintCtrl.itemVendorList = itemMaintCtrl.itemVendors|orderBy:'priority'">
+
+                    <div class="col-xs-1 priority-container">
+                        {{itemVendor.priority}}
+                    </div>
+                    <div class="col-xs-9 vendor-name-container">
+                        {{itemVendor.vendor}}
+                        <span class="c-gray">
+                            <i>&nbsp;[{{itemVendor.VendorType}}]</i>
+                        </span>
+                    </div>
+                    <div class="col-xs-1 move-vendors" data-ng-if="itemMaintCtrl.itemVendors.length > 1 && updateForm">
+                        <div class="d-flex d-flex-h-center d-flex-v-center">
+                            <button class="btn" style="background-color: #f7f9ff;" ng-if="itemVendor.priority!==itemMaintCtrl.itemVendorsLength&&itemVendor.isQueuedVendor!==true"
+                                data-ng-click="itemMaintCtrl.updateVendorItemPriority(itemVendor,'Down');" data-backdrop="static"
+                                data-keyboard="false" data-ng-disabled="itemMaintCtrl.isProcessingAlternativeVendor">
+                                <i class="zmdi zmdi-long-arrow-down zmdi-hc-fw f-700 f-14" style="color: firebrick;"></i>
+                            </button>
+                            <button class="btn" style="background-color: #f7f9ff;" ng-if="itemVendor.priority!==1&&itemVendor.isQueuedVendor!==true" data-ng-click="itemMaintCtrl.updateVendorItemPriority(itemVendor,'Up');"
+                                data-backdrop="static" data-keyboard="false" data-ng-disabled="itemMaintCtrl.isProcessingAlternativeVendor">
+                                <i class="zmdi zmdi-long-arrow-up zmdi-hc-fw c-green f-700 f-14"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 unlink-vendor">
+                        <button type="button" class="zmdi zmdi-delete c-red cursor-pointer bg-none border-none" ng-click="itemMaintCtrl.removeVendorFromItem(itemVendor,$index);"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Item Vendors section Start -->
+        <div class="col-lg-12 p-0 text-danger" ng-if="itemMaintCtrl.isPrimaryVendorLinked!==undefined">
+            <span>Vendor {{itemMaintCtrl.isPrimaryVendorLinked.vendor}} is linked as primary vendor. Remove it from linked vendors before proceeding.</span>
+        </div>
+        <!-- Item Vendors section End -->
+    </div>
+</div>

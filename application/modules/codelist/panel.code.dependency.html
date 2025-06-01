@@ -1,0 +1,55 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':codelistCtrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a class="cursor-pointer" data-ng-click="codelistCtrl.showDependencyDetailsData=false;">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Code Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Entity</td>
+                        <td class="highlight-text-success" title="{{codelistCtrl.code_details.entity}}">{{codelistCtrl.code_details.entity}}</td>
+                    </tr>
+                    <tr>
+                        <td>Field Name</td>
+                        <td class="highlight-text-success" title="{{codelistCtrl.code_details.field_name}}">{{codelistCtrl.code_details.field_name | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Code</td>
+                        <td class="highlight-text-success" title="{{codelistCtrl.code_details.code}}">{{codelistCtrl.code_details.code | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{codelistCtrl.code_details.status}}">{{codelistCtrl.code_details.status}}</td>
+                    </tr>
+                </table>
+                <h4>Item Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Item Type</td>
+                        <td class="highlight-text-success" title="{{codelistCtrl.errorDependentData.description}}">{{codelistCtrl.errorDependentData.item_type_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Item Type UDD</td>
+                        <td title="{{codelistCtrl.errorDependentData.item_sub_type}}">{{codelistCtrl.errorDependentData.maintenance_description}}</td>
+                    </tr>
+                    <tr>
+                        <td>Attribute Or Hierarchy UDD</td>
+                        <td title="{{codelistCtrl.errorDependentData.qualifier}}">{{codelistCtrl.errorDependentData.attribute_or_hierarchy}}</td>
+                    </tr>
+                </table>
+                </br>
+                <div class="dependency-notifyMessage"> <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i><span>{{codelistCtrl.errorDependentData.message}}</span></div>
+                <!--<button type="button" class="btn btn-view-values m-5 pull-right m-t-10" ng-click=""><bold>Delete Item</bold></button>-->
+            </div>
+        </div>
+    </div>
+</div>

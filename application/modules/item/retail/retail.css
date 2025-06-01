@@ -1,0 +1,146 @@
+    .top-header-container {
+        background: #393e52;
+    }
+    
+    .top-header-label {
+        font-size: 13px;
+        font-family: 'Roboto';
+        font-weight: 300;
+        color: #fff;
+    }
+    
+    .sku-type-header-container {
+        background: #1a203c;
+    }
+    
+    .sku-type-header-label {
+        font-size: 13px;
+        font-family: 'Roboto';
+        font-weight: 700;
+        color: tomato;
+    }
+    
+    .sku-description-container {
+        background: #f7f7f7;
+        border-top: 4px solid #efefef;
+        box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, .08);
+    }
+    .rc-table {
+        background: #ffffff;
+        padding: 0px 10px;
+        border: 1px solid lightgray;
+        border-radius: 3px;
+    }
+
+    .table-responsive {
+        min-height: .01%;
+        overflow-x: auto;
+    }
+    
+    .sku-description-label {
+        font-size: 13px;
+        color: #000000;
+        font-family: 'Roboto';
+        font-weight: 400;
+    }
+    
+    .pricing-class-container {
+        background: #fbfbfb;
+        border-left: 1px solid #e4e4e4;
+    }
+    
+    .pricing-class-text {
+        font-weight: 300;
+        color: #a51c1c;
+    }
+    
+    .effective-date-header-container {
+        background: #000000;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .effective-date-header-text {
+        font-size: 13px;
+        font-family: 'Roboto';
+        font-weight: 700;
+        color: #b16363;
+    }
+    
+    .retail-text {
+        text-align: right;
+        font-weight: 500;
+        color: #000;
+        padding: 10px;
+        background: rgb(251, 250, 246);
+    }
+    
+    .retail-section-container {
+        float: left;
+        min-width: 200px;
+        max-width: 200px;
+        background: white;
+        border: 1px solid #efefef;
+    }
+    
+    .retail-container {
+        border-top: 4px solid #efefef;
+        background: #fbfaf6;
+    }
+    
+    .mto-type-header-container {
+        background: cornsilk;
+        padding: 5px;
+    }
+    
+    .mto-type-header-text {
+        font-size: 12px;
+        font-family: 'Roboto';
+        font-weight: 300;
+        color: #000000;
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .mto-option-container {
+        background: #f9f4e1;
+        border-top: 4px solid #eae3c5;
+        box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, .08);
+    }
+    
+    .retails-reason-header-container {
+        background: #524f54;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .retails-reason-header-label {
+        font-size: 12px;
+        font-family: 'Roboto';
+        font-weight: 300;
+        color: #ffffff;
+    }
+    /* Code to show the steps information */
+    
+    .steps-info-section {
+        padding: 10px;
+        background: #ececec;
+        border: 1px solid #e4e4e4;
+        border-radius: 3px;
+    }
+    /* Code to show the sku type container */
+    
+    .sku-type-container {
+        border: 1px solid #ececec;
+        border-radius: 3px;
+        background: white;
+        padding: 5px;
+    }
+    /* Individual Retail SKU style */
+    
+    .retail-sku-container {
+        padding: 10px;
+        background: #fafbea;
+        margin: 5px 0px;
+        border: 1px solid #e0e0e0;
+    }

@@ -1,0 +1,183 @@
+<link rel="stylesheet" href="./application/modules/marketing.campaigns/marketing.campaign.css">
+<div class="container col-xs-12 p-0" data-ng-controller="MarketingCampaignsController as marketingCampaignsCtrl">
+
+    <div class="rc-module-header d-flex col-xs-12">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/marketing-campaigns-promotions.svg" />
+                    </div>
+                    <div class="label-module text-overflow-desc-auto top-10">
+                        <a class="p-l-50" href="javascript:void(0)" title="Marketing Campaigns and Promotions">
+                            Marketing Campaigns and Promotions
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap && permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span>
+                            Displaying
+                            {{ (marketingCampaignsCtrl.allMarketingCampaigns | filter : marketingCampaignsCtrl.search).length }}
+                            of {{ marketingCampaignsCtrl.allMarketingCampaigns.length }} Records
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap && permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    data-ng-if="marketingCampaignsCtrl.allMarketingCampaigns.length > 0">
+                                    <input class="form-control input-sm " type="text" id="inlineSearch"
+                                        name="inlineSearch" data-ng-init="marketingCampaignsCtrl.focusSearchField()"
+                                        data-ng-model="marketingCampaignsCtrl.search" indicate-quick-search
+                                        placeholder="Quick Search "
+                                        data-ng-disabled="!marketingCampaignsCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link"
+                            data-ng-if="marketingCampaignsCtrl.allMarketingCampaigns.length > 0 && permissionsMap && permissionsMap.view">
+                            <a>
+                                <button type="button" data-ng-click="marketingCampaignsCtrl.reload(true);"
+                                    class="btn-primal btn-block waves-effect"
+                                    data-ng-disabled="!marketingCampaignsCtrl.isLoaded">
+                                    <span class="f-700 data-ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect"
+                                    data-ng-click="marketingCampaignsCtrl.openForm('Campaign');"
+                                    data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">
+                                        Create Marketing Campaign
+                                    </span>
+                                </button>
+                            </a>
+
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" href=""
+                                style="border-left:3px solid #e8e8e8">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width: 235px;">
+                                <li class="add-btn cursor-pointer">
+                                    <button type="button" data-ng-click="marketingCampaignsCtrl.openForm('Campaign');"
+                                        style="padding: 8px 20px" class="restricted-btn"
+                                        title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i>
+                                        Create Marketing Campaign
+                                    </button>
+                                </li>
+                                <li
+                                    data-ng-if="marketingCampaignsCtrl.allMarketingCampaigns.length > 0 && permissionsMap && permissionsMap.view">
+                                    <button type="button"
+                                        data-ng-click="marketingCampaignsCtrl.isLoaded ? marketingCampaignsCtrl.reload(true) : '' "
+                                        style="padding: 8px 20px" class="restricted-btn"
+                                        data-ng-class="{'cursor-not-allowed': !marketingCampaignsCtrl.isLoaded}"
+                                        href="">
+                                        <i class="zmdi zmdi-refresh text-warning f-17 m-r-15"></i> Refresh
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 text-center module-content-configuration"
+        data-ng-if="!marketingCampaignsCtrl.rowsCount && !marketingCampaignsCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+
+    <div data-ng-if="marketingCampaignsCtrl.rowsCount !== 0 && marketingCampaignsCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="permissionsMap.view && marketingCampaignsCtrl.isLoaded">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+
+                <div class="module-content-configuration">
+                    <div class="col-xs-12 p-0 treeview"
+                        data-ng-include="'./application/modules/marketing.campaigns/marketing.campaigns.promotions.list.html'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div data-ng-include="'./application/modules/marketing.campaigns/panel.marketing.campaign.dependency.html'"></div>
+
+    <div class="col-xs-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':marketingCampaignsCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{ marketingCampaignsCtrl.refreshTableText }}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="marketingCampaignsCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{ marketingCampaignsCtrl.totalRecords }}</strong>
+                    <span class="f-14 c-gray">{{ marketingCampaignsCtrl.totalRecordsText }}</span>
+                    <span data-ng-bind-html="marketingCampaignsCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div data-ng-if="!permissionsMap.view && marketingCampaignsCtrl.isLoaded && marketingCampaignsCtrl.rowsCount"
+        data-ng-include="'./application/templates/restricted.access.html'"></div>
+
+    <div data-ng-if="marketingCampaignsCtrl.rowsCount === 0 && marketingCampaignsCtrl.isLoaded && permissionsMap.view"
+        class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No marketing campaign exists. Please add marketing campaign.</span>
+        </div>
+    </div>
+
+    <div data-ng-if="marketingCampaignsCtrl.isCampaignForm"
+        data-ng-include="'./application/modules/marketing.campaigns/panel.marketing.campaign.form.html'"></div>
+    <div data-ng-if="!marketingCampaignsCtrl.isCampaignForm"
+        data-ng-include="'./application/modules/marketing.campaigns/panel.promotion.form.html'"></div>
+</div>

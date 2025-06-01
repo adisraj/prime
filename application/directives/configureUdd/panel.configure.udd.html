@@ -1,0 +1,994 @@
+<style>
+    input[typeahead-on-select]+ul {
+        width: 100%;
+        overflow: auto;
+        height: auto;
+        max-height: 100px;
+    }
+
+    .add-header-container {
+        box-shadow: none;
+        border: 1px solid #ececec;
+        border-bottom: 1px solid #d6d6d6;
+    }
+
+    [uib-typeahead-popup].dropdown-menu {
+        display: block;
+        top: 66px !important;
+    }
+
+    multiselect div ul {
+        z-index: 99 !important;
+    }
+
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+</style>
+<div id="rcrightsidebar-large" class="toggled" ng-show="!vm.isConfigureSuccess">
+    <div class="col-xs-12 m-t-25">
+        <button type="button" class="col-xs-1 p-0 close-icon bg-none border-none btn-link" id="select_item_type"
+            name="select_item_type" data-ng-click="closeFn();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="col-xs-11 p-0 text-center">
+            <label class="rclabel editformlabel" title="Configure UDD"><strong>Configure UDD</strong></label>
+        </div>
+        <div class="text-center m-auto updatepanel p-b-10">
+            <div data-ng-if="configureImg" data-ng-include="configureImg"></div>
+            <div data-ng-include="!configureImg" data-ng-include="'./img/sidebar-icons/file_configuration.svg'"></div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <!-- UUID - 21 refers to 'Attribute' -->
+        <div class="col-xs-12 p-10 m-b-10" data-ng-if="uuid == 21"
+            style="border: 1px dotted #afa4a4;background: whitesmoke;">
+            <div class="col-xs-12 d-flex justify-content-between p-5">
+                <div class="d-flex">
+                    <span data-ng-if="uddObject.description">Description: </span>
+                    <span class="text-overflow-desc-auto m-l-5" title="{{uddObject.description}}">
+                        {{uddObject.description}}</span>
+                </div>
+                <div>
+                    <span data-ng-if="uddObject.status">Status: </span>
+                    <span>{{uddObject.status}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5">
+                <div>
+                    <span data-ng-if="uddObject.format">Format: </span>
+                    <span>{{uddObject.format}}</span>
+                </div>
+                <div>
+                    <span data-ng-if="uddObject.entity">Entity: </span>
+                    <span>{{uddObject.entity}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5" data-ng-if="uddObject.dimension_class">
+                <span>Dimension Class: {{uddObject.dimension_class}}</span>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5" data-ng-if="uddObject.dimension_unit">
+                <span>Dimension Unit: {{uddObject.dimension_unit}}</span>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5" data-ng-if="uddObject.attribute_from_value">
+                <span>From: {{uddObject.attribute_from_value}}</span>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5" data-ng-if="uddObject.attribute_to_value">
+                <span>To: {{uddObject.attribute_to_value}}</span>
+            </div>
+        </div>
+
+        <!-- UUID - 27 refers to 'Hierarchy' -->
+        <div class="col-xs-12 p-10 m-b-10" data-ng-if="uuid == 27"
+            style="border: 1px dotted #afa4a4;background: whitesmoke;">
+            <div class="col-xs-12 d-flex justify-content-between p-5">
+                <div>
+                    <span data-ng-if="uddObject.description">Description: </span>
+                    <span>{{uddObject.description}}</span>
+                </div>
+                <div>
+                    <span data-ng-if="uddObject.status">Status: </span>
+                    <span>{{uddObject.status}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5">
+                <div>
+                    <span data-ng-if="uddObject.group_or_hierarchy">H/G: </span>
+                    <span>{{uddObject.group_or_hierarchy}}</span>
+                </div>
+                <div>
+                    <span data-ng-if="uddObject.entity">Entity: </span>
+                    <span>{{uddObject.entity}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5" data-ng-if="uddObject.dimension_class">
+                <span>Dimension Class: {{uddObject.dimension_class}}</span>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5" data-ng-if="uddObject.dimension_unit">
+                <span>Dimension Unit: {{uddObject.dimension_unit}}</span>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5" data-ng-if="uddObject.attribute_from_value">
+                <span>From: {{uddObject.attribute_from_value}}</span>
+            </div>
+            <div class="col-xs-12 d-flex justify-content-between p-5" data-ng-if="uddObject.attribute_to_value">
+                <span>To: {{uddObject.attribute_to_value}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12" data-ng-init="showEntityTypeTab = true;">
+        <div class="col-xs-12 p-0 m-b-10">
+            <button class="btn btn-group bgm-gray noboxshadow" data-ng-class="{'bgm-ocean': showEntityTypeTab}"
+                data-ng-click="showEntityTypeTab = true; showConfigureDefaultTab = false;">
+                <span style="padding: 2px 6px;background: #07a207;margin-right: 10px">Step - 1</span>
+                Select {{ uddObject.entity }} Type</button>
+            <button class="btn btn-group bgm-gray noboxshadow" data-ng-class="{'bgm-ocean': showConfigureDefaultTab}"
+                data-ng-click="showConfigureDefaultTab = true; showEntityTypeTab = false;vm.ConfigureDefaultField();"
+                data-ng-disabled="!vm.entityTypeIds.length" title="{{vm.tooltipText}}">
+                <span style="padding: 2px 6px;background: #07a207;margin-right: 10px">Step - 2</span>
+                Configure Defaults</button>
+        </div>
+        <span class="text-danger f-12 f-400" ng-if="vm.errorMessage !== ''">{{vm.errorMessage}}</span>
+        <div class="text-center" data-ng-if="!vm.entityTypes.length || vm.isEntityLoading">Loading...</div>
+        <div class="col-xs-12 p-5 bgm-black m-b-25"
+            data-ng-if="showEntityTypeTab && vm.entityTypes.length && !vm.isEntityLoading">
+            <div class="search-section tableheader-btn pull-right m-b-5" style="width: 100%">
+                <input class="form-control input-sm" type="text" data-ng-model="vm.search"
+                    data-ng-change="vm.onSearchChange(uddObject.entity_id);"
+                    placeholder="Search {{ uddObject.entity }} Type" />
+            </div>
+            <table class="table table-hover table-vmiddle table-condensed table-bordered-sm table-responsive">
+                <thead>
+                    <tr role="row">
+                        <th class="text-center" style="width: 5%">
+                            <div class="checkbox">
+                                <label data-ng-if="vm.filteredEntityTypes.length === vm.entityTypes.length">Select
+                                    <input type="checkbox"
+                                        ng-checked="vm.entityTypes.length === vm.entityTypeIds.length"
+                                        ng-click="vm.toggleAddOrRemoveEntityType('toggleAll', {}, uddObject.entity_id)">
+                                    <i class="input-helper"></i>
+                                </label>
+                                <label data-ng-if="vm.filteredEntityTypes.length !== vm.entityTypes.length">Select
+                                    <input type="checkbox"
+                                        ng-checked="vm.filteredEntityTypes.length === vm.filteredEntityTypeIds.length && vm.filteredEntityTypes.length != 0"
+                                        ng-click="vm.toggleAddOrRemoveEntityType('toggleAll', {}, uddObject.entity_id)">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </th>
+                        <th class="text-center" id="short_description_col_head"
+                            data-ng-click="sortReverse = !sortReverse">
+                            <span class="handle">{{ uddObject.entity }} Type</span>
+                            <span data-ng-show="!sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                            <span data-ng-show="sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody
+                    data-ng-repeat="entityType in vm.filteredEntityTypes = (vm.entityTypes | filterBy : vm.filterByArray : vm.search | orderBy : vm.sortType : sortReverse)">
+                    <tr>
+                        <td class="text-center" style="width: 5%;">
+                            <div class="checkbox">
+                                <!-- uddObject.entity_id - 7 refers to Item -->
+                                <label data-ng-if="uddObject.entity_id == 1">
+                                    <input type="checkbox"
+                                        data-ng-checked="entityType.id === vm.entityTypeIdsMap[entityType.id].location_type_id"
+                                        data-ng-click="vm.toggleAddOrRemoveEntityType('entityType', entityType, uddObject.entity_id);">
+                                    <i class="input-helper"></i>
+                                </label>
+                                <!-- uddObject.entity_id - 1 refers to Location -->
+                                <label data-ng-if="uddObject.entity_id == 7">
+                                    <input type="checkbox"
+                                        data-ng-checked="entityType.id === vm.entityTypeIdsMap[entityType.id].type_id"
+                                        data-ng-click="vm.toggleAddOrRemoveEntityType('entityType', entityType, uddObject.entity_id);">
+                                    <i class="input-helper"></i>
+                                </label>
+                                <!-- uddObject.entity_id - 23 refers to Vendor -->
+                                <label data-ng-if="uddObject.entity_id == 23">
+                                    <input type="checkbox"
+                                        data-ng-checked="entityType.id === vm.entityTypeIdsMap[entityType.id].vendor_type_id"
+                                        data-ng-click="vm.toggleAddOrRemoveEntityType('entityType', entityType, uddObject.entity_id);">
+                                    <i class="input-helper"></i>
+                                </label>
+                                <!-- uddObject.entity_id - 314 refers to MTO -->
+                                <label data-ng-if="uddObject.entity_id == 314">
+                                    <input type="checkbox"
+                                        data-ng-checked="entityType.id === vm.entityTypeIdsMap[entityType.id].option_type_id"
+                                        data-ng-click="vm.toggleAddOrRemoveEntityType('entityType', entityType, uddObject.entity_id);">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </td>
+                        <!-- uddObject.entity_id - 7 refers to Item -->
+                        <td data-ng-bind-html="entityType.itemTypePath" data-ng-if="uddObject.entity_id == 7"></td>
+                        <td data-ng-if="uddObject.entity_id != 7">{{entityType.short_description}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-12 p-0" data-ng-if="showConfigureDefaultTab">
+
+            <!-- User Information -->
+            <div class="col-xs-12 p-0 rc-alert rc-alert-type-info m-b-10" aria-hidden="false" role="alert"
+                data-ng-if="uddObject.referer && uddObject.referer.toLowerCase() === 'update'">
+                <div class="col-xs-12 p-5 d-flex">
+                    <span class="text-danger zmdi zmdi-alert-polygon" style="font-size:35px"
+                        title="Mass changes will override the existing configurations!" title-direction="right"
+                        fixed-position="true">
+                    </span>
+                    <div style="line-height: 1.7; margin-left: -10px;">
+                        <ul>
+                            <div class="f-14 f-700 text-info">Mass changes will override the existing configurations!
+                            </div>
+                            <li ng-if="uddObject.entity_id == 7">
+                                <strong>Entry level and Entry type can not be updated</strong>
+                                if the attribute is configured for atleast one item type.
+                                Both entry level and entry type defaults to the first item type from the list.
+                            </li>
+                            <li>
+                                Any change to all other fields affects all the selected {{ uddObject.entity }} types.
+                            </li>
+                            <li>
+                                Removing an {{ uddObject.entity }} type removes all configured UDD values.
+                                <strong>This action is irreversible! </strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- uddObject.entity_id - 1 refers to Location -->
+            <ng-form name="type_udd_form" role="form" novalidate="novalidate" valdr-type="RULES-11"
+                data-ng-if="uddObject.entity_id == 1">
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.maintenance_description.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.maintenance_description.$valid">* </span>
+                    <label>Maintenance Description</label>
+                    <input id="maintenance_description" name="maintenance_description" class="form-control input-sm"
+                        ng-model="vm.uddTypeObject.maintenance_description"
+                        errorvalue="vm.uddTypeObject.maintenance_description_error" type="text"
+                        ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Maintenance Description">
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.status_id.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.status_id.$valid">* </span>
+                    <label>Status</label>
+                    <select id="status_id" name="status_id" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.status_id" errorvaluechosen="vm.uddTypeObject.status_id_error"
+                        ng-options="each.code as each.description disable when (each.code === vm.statusCodes.Pending.ID && uddObject.referer && uddObject.referer.toLowerCase() === 'update') for each in statuses">
+                        <option value="" disabled>Select Status</option>
+                    </select>
+                </div>
+                <div class="form-group"
+                    data-ng-init="vm.getUserDefinedDataValues(vm.uddTypeObject, vm.attributeHierarchyModel.id);"
+                    data-ng-if="vm.uddTypeObject.user_defined_data_id" valdr-form-group>
+                    <span class="c-red"
+                        data-ng-show="type_udd_form.default_value.$invalid || type_udd_form.url_default_value.$invalid || type_udd_form.text_default_value.$error.pattern">*
+                    </span>
+                    <span class="c-green"
+                        data-ng-show="type_udd_form.default_value.$valid || (type_udd_form.url_default_value.$valid && type_udd_form.text_default_value.$valid)">*
+                    </span>
+                    <label>Default Value</label>
+                    <div class="d-flex align-items-center">
+                        <select
+                            data-ng-if="!vm.isUrlField&&!vm.isTextField && vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.selectAttributeHierarchyValue && vm.uddTypeObject.user_defined_data_type.toLowerCase() !== 'hierarchy'"
+                            name="default_value" id="default_value" selectize="vm.selectAttributeHierarchyValue"
+                            items="vm.attributeHierarchyValueModel" class="form-control select-component input-sm"
+                            options="vm.attributeHierarchyOptionValuesArray"
+                            data-ng-model="vm.attributeHierarchyValueModel.value"
+                            data-ng-change="vm.uddTypeObject.default_value = vm.attributeHierarchyValueModel.value">
+                        </select>
+                        <input
+                            data-ng-if="!vm.isUrlField&&!vm.isTextField && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            id="default_value" name="default_value" class="form-control input-sm"
+                            data-ng-model="vm.uddTypeObject.default_value" type="text"
+                            data-ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value">
+                        <textarea
+                            data-ng-if="vm.isTextField && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            id="default_value" name="default_value" class="form-control input-sm"
+                            data-ng-model="vm.uddTypeObject.default_value" data-ng-model-options="{ updateOn: 'blur' }"
+                            placeholder="Enter default value" style="height: 30px;"></textarea>
+                        <input
+                            data-ng-if="!vm.isTextField && !vm.isValueList && !vm.isMultiselect && vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            type="text" id="default_value" name="default_value"
+                            class="form-control input-sm rcp-mydatepicker" ng-model="vm.uddTypeObject.default_value"
+                            ui-mask="{{ui_date_mask}}" mydatepicker placeholder="__/__/___"
+                            ng-model-options="{ updateOn: 'blur' }" model-view-value="true">
+                        <hierarchy-tree-view
+                            data-ng-if="!vm.isResetValue && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'hierarchy' && vm.primaryHierarchyId"
+                            primary-hierarchy-id="vm.primaryHierarchyId"
+                            primary-hierarchy-value-id="vm.primaryHierarchyValueId"
+                            directive-end-fn='vm.end(directiveData)' enable-valdr-validation enable-valdr-message
+                            form-data="head" form-header="Item Type UDD" tree-view-fn="vm.toggleTreeViewPanel(flagData)"
+                            clear-path="vm.clearPath" style="flex: 19"></hierarchy-tree-view>
+                        <multiselect data-ng-if="vm.isMultiselect && !vm.isValueList && !vm.isDateSelect"
+                            id="default_value" ng-model="vm.uddTypeObject.default_value_ids"
+                            options="option.id as option.short_description for option in vm.attributeHierarchyOptionValuesArray"
+                            select-limit="20" header="Select value" selected-header="Values selected" style="flex: 19"
+                            multiple="true" enable-filter="true" filter-placeholder="Quick Search"></multiselect>
+                        <div
+                            data-ng-if="vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' && uddObject.format.toLowerCase() === 'yes/no'">
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" data-ng-model="vm.uddTypeObject.default_value" value="1"
+                                    data-ng-click="vm.uddTypeObject.default_value_view = 'Yes'">
+                                <i class="input-helper"></i>Yes
+                            </label>
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" data-ng-model="vm.uddTypeObject.default_value" value="0"
+                                    data-ng-click="vm.uddTypeObject.default_value_view = 'No'">
+                                <i class="input-helper"></i>No
+                            </label>
+                        </div>
+                        <!--URL Attribute UDD Start-->
+                        <div class="col-lg-12 p-0" ng-if="vm.isUrlField">
+                            <div>
+                                <div class="d-flex flex-1 input-group">
+                                    <span
+                                        class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0"
+                                        style="border-left: 1px solid #ececec;">
+                                        <span class="f-13 c-bluegray">Text</span>
+                                    </span>
+                                    <div class="col-lg-12 p-0">
+                                        <input class="form-control input-sm" name="text_default_value"
+                                            id="text_default_value" ng-pattern="vm.globalRegularExpression"
+                                            ng-model-options="{ updateOn: 'blur' }"
+                                            ng-model="vm.uddTypeObject.text_default_value"
+                                            data-ng-change="vm.uddTypeObject.default_value=vm.uddTypeObject.text_default_value+'::'+vm.uddTypeObject.url_default_value"
+                                            type="text" />
+                                    </div>
+                                </div>
+                                <div class="form-group m-t-5">
+                                    <div class="d-flex flex-1 input-group">
+                                        <span
+                                            class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0">
+                                            <span class="f-13 c-bluegray">URL</span>
+                                        </span>
+                                        <input class="form-control input-sm" name="url_default_value" id="default_value"
+                                            ng-model="vm.uddTypeObject.url_default_value"
+                                            ng-required="vm.uddTypeObject.text_default_value.length>0"
+                                            ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value"
+                                            data-ng-change="vm.uddTypeObject.default_value=vm.uddTypeObject.text_default_value+'::'+vm.uddTypeObject.url_default_value"
+                                            type="text" style="height: 30px" />
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="m-t-10"
+                                style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                data-ng-if="type_udd_form.url_default_value.$error.required">URL is mandatory with link
+                                text.</span>
+                            <span class="m-t-10"
+                                style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                data-ng-if="type_udd_form.text_default_value.$error.pattern">Link text should contain
+                                only alphanumeric characters.</span>
+                        </div>
+                        <!--URL Attribute UDD End-->
+                        <div data-ng-click="vm.resetDefaultValue(vm.uddTypeObject);">
+                            <span class="resetbtn fa fa-times-circle f-16"></span></div>
+                    </div>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.required.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.required.$valid">* </span>
+                    <label>Required</label>
+                    <select id="required" name="required" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.required" ng-options="each.code as each.code for each in allRequired"
+                        errorvaluechosen="vm.uddTypeObject.required_error"
+                        ng-change="vm.checkForAttributeHierarchyValues(vm.uddTypeObject.required)">
+                        <option value="" disabled>Select Required</option>
+                    </select>
+                </div>
+                <div class="m-b-20">
+                    <button type="button" class="btn btn-primal btn-block f-14 p-10 waves-effect f-700"
+                        aria-hidden="true" data-ng-click="vm.configureUdd()"
+                        data-ng-disabled="type_udd_form.$invalid || vm.isBtnDissable || vm.isProcessing">
+                        Configure
+                    </button>
+                </div>
+            </ng-form>
+
+            <!-- uddObject.entity_id - 7 refers to Item -->
+            <ng-form name="type_udd_form" role="form" novalidate="novalidate" valdr-type="RULES-32"
+                data-ng-if="uddObject.entity_id == 7">
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.maintenance_description.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.maintenance_description.$valid">* </span>
+                    <label>Maintenance Description</label>
+                    <input id="maintenance_description" name="maintenance_description" class="form-control input-sm"
+                        ng-model="vm.uddTypeObject.maintenance_description"
+                        errorvalue="vm.uddTypeObject.maintenance_description_error" type="text"
+                        ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Maintenance Description">
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.status_id.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.status_id.$valid">* </span>
+                    <label>Status</label>
+                    <select id="status_id" name="status_id" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.status_id" errorvaluechosen="vm.uddTypeObject.status_id_error"
+                        ng-options="each.code as each.description disable when (each.code === vm.statusCodes.Pending.ID && uddObject.referer && uddObject.referer.toLowerCase() === 'update') for each in statuses">
+                        <option value="" disabled>Select Status</option>
+                    </select>
+                </div>
+                <div class="form-group"
+                    data-ng-init="vm.getUserDefinedDataValues(vm.uddTypeObject, vm.attributeHierarchyModel.id);"
+                    data-ng-if="vm.uddTypeObject.user_defined_data_id" valdr-form-group>
+                    <span class="c-red" data-ng-show="
+                        type_udd_form.default_value.$invalid ||
+                        type_udd_form.url_default_value.$invalid ||
+                        type_udd_form.text_default_value.$error.pattern ||
+                        type_udd_form.default_value_from.$invalid ||
+                        type_udd_form.default_value_to.$invalid
+                    ">*
+                    </span>
+                    <span class="c-green" data-ng-show="
+                        type_udd_form.default_value.$valid ||
+                        (type_udd_form.url_default_value.$valid && type_udd_form.text_default_value.$valid) ||
+                        (type_udd_form.default_value_from.$valid && type_udd_form.default_value_to.$valid)
+                    ">*
+                    </span>
+                    <label>Default Value</label>
+                    <div class="d-flex align-items-center">
+                        <select
+                            data-ng-if="!vm.isUrlField && !vm.isTextField && vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && !vm.isDateRangeSelect && vm.selectAttributeHierarchyValue && vm.uddTypeObject.user_defined_data_type.toLowerCase() !== 'hierarchy'"
+                            name="default_value" id="default_value" selectize="vm.selectAttributeHierarchyValue"
+                            items="vm.attributeHierarchyValueModel" class="form-control select-component input-sm"
+                            options="vm.attributeHierarchyOptionValuesArray"
+                            data-ng-model="vm.attributeHierarchyValueModel.value"
+                            data-ng-change="vm.uddTypeObject.default_value = vm.attributeHierarchyValueModel.value">
+                        </select>
+                        <input
+                            data-ng-if="!vm.isUrlField && !vm.isTextField && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && !vm.isDateRangeSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            id="default_value" name="default_value" class="form-control input-sm"
+                            data-ng-model="vm.uddTypeObject.default_value" type="text"
+                            data-ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value">
+                        <textarea
+                            data-ng-if="vm.isTextField && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && !vm.isDateRangeSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            id="default_value" name="default_value" class="form-control input-sm"
+                            data-ng-model="vm.uddTypeObject.default_value" data-ng-model-options="{ updateOn: 'blur' }"
+                            placeholder="Enter default value" style="height: 30px;"></textarea>
+                        <input
+                            data-ng-if="!vm.isUrlField && !vm.isTextField && !vm.isValueList && !vm.isMultiselect && vm.isDateSelect && !vm.isDateRangeSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            type="text" id="default_value" name="default_value"
+                            class="form-control input-sm rcp-mydatepicker" ng-model="vm.uddTypeObject.default_value"
+                            ui-mask="{{ui_date_mask}}" mydatepicker placeholder="__/__/___"
+                            ng-model-options="{ updateOn: 'blur' }" model-view-value="true">
+                        <hierarchy-tree-view
+                            data-ng-if="!vm.isResetValue && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && !vm.isDateRangeSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'hierarchy' && vm.primaryHierarchyId"
+                            primary-hierarchy-id="vm.primaryHierarchyId"
+                            primary-hierarchy-value-id="vm.primaryHierarchyValueId"
+                            directive-end-fn='vm.end(directiveData)' enable-valdr-validation enable-valdr-message
+                            form-data="head" form-header="Item Type UDD" tree-view-fn="vm.toggleTreeViewPanel(flagData)"
+                            clear-path="vm.clearPath" style="flex: 19"></hierarchy-tree-view>
+                        <!--URL Attribute UDD Start-->
+                        <div class="col-lg-12 p-0" ng-if="vm.isUrlField && !vm.isDateRangeSelect">
+                            <div>
+                                <div class="d-flex flex-1 input-group">
+                                    <span
+                                        class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0"
+                                        style="border-left: 1px solid #ececec;">
+                                        <span class="f-13 c-bluegray">Text</span>
+                                    </span>
+                                    <div class="col-lg-12 p-0">
+                                        <input class="form-control input-sm" name="text_default_value"
+                                            id="text_default_value" ng-pattern="vm.globalRegularExpression"
+                                            ng-model-options="{ updateOn: 'blur' }"
+                                            ng-model="vm.uddTypeObject.text_default_value"
+                                            data-ng-change="vm.uddTypeObject.default_value=vm.uddTypeObject.text_default_value+'::'+vm.uddTypeObject.url_default_value"
+                                            type="text" />
+                                    </div>
+                                </div>
+                                <div class="form-group m-b-0 m-t-5">
+                                    <div class="d-flex flex-1 input-group">
+                                        <span
+                                            class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0">
+                                            <span class="f-13 c-bluegray">URL</span>
+                                        </span>
+                                        <input class="form-control input-sm" name="url_default_value" id="default_value"
+                                            ng-model="vm.uddTypeObject.url_default_value"
+                                            ng-required="vm.uddTypeObject.text_default_value.length>0"
+                                            ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value"
+                                            data-ng-change="vm.uddTypeObject.default_value=vm.uddTypeObject.text_default_value+'::'+vm.uddTypeObject.url_default_value"
+                                            type="text" style="height: 30px" />
+                                    </div>
+                                    <span class="m-t-10"
+                                        style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                        data-ng-if="type_udd_form.url_default_value.$error.required">URL is
+                                        mandatory with link text.</span>
+                                    <span class="m-t-10"
+                                        style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                        data-ng-if="type_udd_form.text_default_value.$error.pattern">Link
+                                        text
+                                        should contain only alphanumeric characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--URL Attribute UDD End-->
+                        <multiselect
+                            data-ng-if="vm.isMultiselect && !vm.isValueList && !vm.isDateSelect && !vm.isDateRangeSelect"
+                            id="default_value" ng-model="vm.uddTypeObject.default_value_ids"
+                            options="option.id as option.short_description for option in vm.attributeHierarchyOptionValuesArray"
+                            select-limit="20" header="Select value" selected-header="Values selected" style="flex: 19"
+                            multiple="true" enable-filter="true" filter-placeholder="Quick Search"></multiselect>
+                        <div
+                            data-ng-if="vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' && uddObject.format.toLowerCase() === 'yes/no' && !vm.isDateRangeSelect">
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" data-ng-model="vm.uddTypeObject.default_value" value="1"
+                                    data-ng-click="vm.uddTypeObject.default_value_view = 'Yes'">
+                                <i class="input-helper"></i>Yes
+                            </label>
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" data-ng-model="vm.uddTypeObject.default_value" value="0"
+                                    data-ng-click="vm.uddTypeObject.default_value_view = 'No'">
+                                <i class="input-helper"></i>No
+                            </label>
+                        </div>
+                        <div class="col-lg-12 p-0"
+                            data-ng-if="vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' && vm.isDateRangeSelect">
+                            <div class="form-group col-lg-6 p-0 p-r-10">
+                                <label>From</label>
+                                <div class="d-flex align-items-center">
+                                    <select id="default_value_from" name="default_value_from"
+                                        ng-model="vm.uddTypeObject.default_value_from"
+                                        class="form-control select-component input-sm"
+                                        ng-options="f.value as f.field for f in vm.fromValues"
+                                        data-ng-change="vm.uddTypeObject.default_value_from === 'none' ? vm.uddTypeObject.default_value_to = '' : ''"
+                                        required>
+                                        <option value="" disabled>Select From Value</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 p-0 p-r-10">
+                                <label>To</label>
+                                <div class="d-flex align-items-center">
+                                    <input name="default_value_to" id="default_value_to" type="number"
+                                        class="form-control input-sm m-r-5" ng-model="vm.uddTypeObject.default_value_to"
+                                        placeholder="No. of days" ng-model-options="{ updateOn: 'blur' }"
+                                        min="{{uddObject.min_to_value}}" max="{{uddObject.max_to_value}}"
+                                        data-ng-disabled="vm.uddTypeObject.default_value_from === 'none'">
+                                </div>
+                            </div>
+                            <span class="m-t-10"
+                                style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                data-ng-if="type_udd_form.default_value_to.$dirty && (type_udd_form.default_value_to.$error.min || type_udd_form.default_value_to.$error.max)">
+                                To value must be between {{uddObject.min_to_value}} and {{uddObject.max_to_value}}
+                            </span>
+                        </div>
+                        <div data-ng-click="vm.resetDefaultValue(vm.uddTypeObject);">
+                            <span class="resetbtn fa fa-times-circle f-16"></span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="vm.uddTypeObject.user_defined_data_type === 'Attribute'" class="form-group">
+                    <div class="checkbox">
+                        <label> Significant
+                            <input id="is_important" type="checkbox" hidden="hidden"
+                                ng-model="vm.uddTypeObject.is_important" ng-true-value="1" ng-false-value="0">
+                            <i class="input-helper"></i>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.entry_level.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.entry_level.$valid">* </span>
+                    <label>Entry level</label>
+                    <select id="entry_level" name="entry_level" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.entry_level"
+                        ng-options="each.code as each.code for each in vm.allEntryLevelUdd"
+                        ng-disabled="uddObject.referer && uddObject.referer.toLowerCase() === 'update' && vm.disableEntryLevelAndType"
+                        required>
+                        <option value="" disabled>Select Entry Level</option>
+                    </select>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.entry_type.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.entry_type.$valid">* </span>
+                    <label>Entry Type</label>
+                    <multiselect id="entry_type" name="entry_type" ng-model="vm.uddTypeObject.entryTypes"
+                        options="each.code as each.code for each in vm.allEntryTypes" select-limit="20"
+                        header="Select Entry Type" selected-header="Values selected" multiple="true" enable-filter="true"
+                        data-ng-change="vm.uddTypeObject.entry_type = vm.uddTypeObject.entryTypes.join(',')"
+                        ng-disabled="uddObject.referer && uddObject.referer.toLowerCase() === 'update' && vm.disableEntryLevelAndType"
+                        filter-placeholder="Quick Search" required>
+                    </multiselect>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.required.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.required.$valid">* </span>
+                    <label>Required</label>
+                    <select id="required" name="required" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.required" ng-options="each.code as each.code for each in allRequired"
+                        required errorvaluechosen="vm.uddTypeObject.required_error"
+                        ng-change="vm.checkForAttributeHierarchyValues(vm.uddTypeObject.required)">
+                        <option value="" disabled>Select Required</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <span class="c-red" ng-show="type_udd_form.visibility_id.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.visibility_id.$valid">* </span>
+                    <label>Visibility</label>
+                    <multiselect id="visibility_id" name="visibility_id" ng-model="vm.uddTypeObject.visibilityIds"
+                        options="each.id as each.visibility for each in vm.uddVisibilities|orderBy:'visibility'"
+                        select-limit="20" header="Select visibility" selected-header="Values selected" multiple="true"
+                        enable-filter="true"
+                        data-ng-change="vm.addVisibilityDescriptionOnMultiselect(vm.uddTypeObject); vm.uddTypeObject.visibility_id = vm.uddTypeObject.visibilityIds.join(',')"
+                        filter-placeholder="Quick Search" required></multiselect>
+                </div>
+                <div class="form-group auto-complete-container">
+                    <span class="c-red" ng-show="type_udd_form.group_header_id.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.group_header_id.$valid">* </span>
+                    <label>Group Header</label>
+                    <div class="p-relative">
+                        <input id="group_header_id" name="group_header_id" type="text" class="form-control input-sm"
+                            ng-model="vm.uddTypeObject.group_header" placeholder="Group Header"
+                            uib-typeahead="group.group_header as group.group_header for group in vm.allGroupHeaders | filter:$viewValue | limitTo:10"
+                            typeahead-on-select="vm.discoverGroupHeader(vm.uddTypeObject)"
+                            typeahead-no-results="vm.isNoResult" ng-change="vm.toggleSuggestionList(true);"
+                            data-ng-blur="vm.refineGroupHeader();" />
+                        <div class="col-xs-12 d-flex justify-content-between add-header-container align-items-center dropdown-menu p-5"
+                            ng-show="vm.uddTypeObject.group_header && vm.uddTypeObject.group_header.length > 0 && !vm.uddTypeObject.group_header_id">
+                            <span class="text-muted f-13" data-ng-show="vm.isNoResult">
+                                No results found
+                            </span>
+                            <span class="text-muted f-13" data-ng-show="!vm.isNoResult">
+                                Add New header
+                            </span>
+                            <button class="btn btn-sm btn-primal" data-ng-disabled="vm.isProcessing"
+                                data-ng-click="vm.discoverGroupHeader(vm.uddTypeObject)">
+                                <span data-ng-if="vm.isProcessing">
+                                    <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                </span>
+                                Add Header
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <span class="c-red" ng-show="type_udd_form.pe_filter_priority.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.pe_filter_priority.$valid">* </span>
+                    <label>Product Explorer Sequence</label>
+                    <input id="pe_filter_priority" name="pe_filter_priority" class="form-control input-sm"
+                        ng-model="vm.uddTypeObject.pe_filter_priority"
+                        errorvalue="vm.uddTypeObject.pe_filter_priority_error" type="number" min="1" max="1000"
+                        placeholder="Enter Product Explorer Sequence" required>
+                    <span class="text-danger"
+                        ng-if="type_udd_form.pe_filter_priority.$invalid && type_udd_form.pe_filter_priority.$dirty">Product
+                        Explorer Sequence
+                        should be between 1 and 1000.</span>
+                </div>
+                <div class="m-b-20">
+                    <button type="button" class="btn btn-primal btn-block f-14 p-10 waves-effect f-700"
+                        aria-hidden="true" data-ng-click="vm.configureUdd()"
+                        data-ng-disabled="type_udd_form.$invalid || vm.isBtnDissable || vm.isProcessing">
+                        Configure
+                    </button>
+                </div>
+            </ng-form>
+
+            <!-- uddObject.entity_id - 23 refers to Vendor -->
+            <ng-form name="type_udd_form" role="form" novalidate="novalidate" valdr-type="RULES-22"
+                data-ng-if="uddObject.entity_id == 23">
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.maintenance_description.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.maintenance_description.$valid">* </span>
+                    <label>Maintenance Description</label>
+                    <input id="maintenance_description" name="maintenance_description" class="form-control input-sm"
+                        ng-model="vm.uddTypeObject.maintenance_description"
+                        errorvalue="vm.uddTypeObject.maintenance_description_error" type="text"
+                        ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Maintenance Description">
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.status_id.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.status_id.$valid">* </span>
+                    <label>Status</label>
+                    <select id="status_id" name="status_id" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.status_id" errorvaluechosen="vm.uddTypeObject.status_id_error"
+                        ng-options="each.code as each.description disable when (each.code === vm.statusCodes.Pending.ID && uddObject.referer && uddObject.referer.toLowerCase() === 'update') for each in statuses">
+                        <option value="" disabled>Select Status</option>
+                    </select>
+                </div>
+                <div class="form-group"
+                    data-ng-init="vm.getUserDefinedDataValues(vm.uddTypeObject, vm.attributeHierarchyModel.id);"
+                    data-ng-if="vm.uddTypeObject.user_defined_data_id" valdr-form-group>
+                    <span class="c-red"
+                        data-ng-show="type_udd_form.default_value.$invalid || type_udd_form.url_default_value.$invalid || type_udd_form.text_default_value.$error.pattern">*
+                    </span>
+                    <span class="c-green"
+                        data-ng-show="type_udd_form.default_value.$valid || (type_udd_form.url_default_value.$valid && type_udd_form.text_default_value.$valid)">*
+                    </span>
+                    <label>Default Value</label>
+                    <div class="d-flex align-items-center">
+                        <select
+                            data-ng-if="!vm.isUrlField&&!vm.isTextField && vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.selectAttributeHierarchyValue && vm.uddTypeObject.user_defined_data_type.toLowerCase() !== 'hierarchy'"
+                            name="default_value" id="default_value" selectize="vm.selectAttributeHierarchyValue"
+                            items="vm.attributeHierarchyValueModel" class="form-control select-component input-sm"
+                            options="vm.attributeHierarchyOptionValuesArray"
+                            data-ng-model="vm.attributeHierarchyValueModel.value"
+                            data-ng-change="vm.uddTypeObject.default_value = vm.attributeHierarchyValueModel.value">
+                        </select>
+                        <input
+                            data-ng-if="!vm.isUrlField&&!vm.isTextField && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            id="default_value" name="default_value" class="form-control input-sm"
+                            data-ng-model="vm.uddTypeObject.default_value" type="text"
+                            data-ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value">
+                        <textarea
+                            data-ng-if="vm.isTextField && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            id="default_value" name="default_value" class="form-control input-sm"
+                            data-ng-model="vm.uddTypeObject.default_value" data-ng-model-options="{ updateOn: 'blur' }"
+                            placeholder="Enter default value" style="height: 30px;"></textarea>
+                        <input
+                            data-ng-if="!vm.isTextField && !vm.isValueList && !vm.isMultiselect && vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            type="text" id="default_value" name="default_value"
+                            class="form-control input-sm rcp-mydatepicker" ng-model="vm.uddTypeObject.default_value"
+                            ui-mask="{{ui_date_mask}}" mydatepicker placeholder="__/__/___"
+                            ng-model-options="{ updateOn: 'blur' }" model-view-value="true">
+                        <hierarchy-tree-view
+                            data-ng-if="!vm.isResetValue && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'hierarchy' && vm.primaryHierarchyId"
+                            primary-hierarchy-id="vm.primaryHierarchyId"
+                            primary-hierarchy-value-id="vm.primaryHierarchyValueId"
+                            directive-end-fn='vm.end(directiveData)' enable-valdr-validation enable-valdr-message
+                            form-data="head" form-header="Item Type UDD" tree-view-fn="vm.toggleTreeViewPanel(flagData)"
+                            clear-path="vm.clearPath" style="flex: 19"></hierarchy-tree-view>
+                        <!--URL Attribute UDD Start-->
+                        <div class="col-lg-12 p-0" ng-if="vm.isUrlField">
+                            <div>
+                                <div class="d-flex flex-1 input-group">
+                                    <span
+                                        class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0"
+                                        style="border-left: 1px solid #ececec;">
+                                        <span class="f-13 c-bluegray">Text</span>
+                                    </span>
+                                    <div class="col-lg-12 p-0">
+                                        <input class="form-control input-sm" name="text_default_value"
+                                            id="text_default_value" ng-pattern="vm.globalRegularExpression"
+                                            ng-model-options="{ updateOn: 'blur' }"
+                                            ng-model="vm.uddTypeObject.text_default_value"
+                                            data-ng-change="vm.uddTypeObject.default_value=vm.uddTypeObject.text_default_value+'::'+vm.uddTypeObject.url_default_value"
+                                            type="text" />
+                                    </div>
+                                </div>
+                                <div class="form-group m-t-5">
+                                    <div class="d-flex flex-1 input-group">
+                                        <span
+                                            class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0">
+                                            <span class="f-13 c-bluegray">URL</span>
+                                        </span>
+                                        <input class="form-control input-sm" name="url_default_value" id="default_value"
+                                            ng-model="vm.uddTypeObject.url_default_value"
+                                            ng-required="vm.uddTypeObject.text_default_value.length>0"
+                                            ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value"
+                                            data-ng-change="vm.uddTypeObject.default_value=vm.uddTypeObject.text_default_value+'::'+vm.uddTypeObject.url_default_value"
+                                            type="text" style="height: 30px" />
+                                    </div>
+                                    <span class="m-t-10"
+                                        style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                        data-ng-if="type_udd_form.url_default_value.$error.required">URL is
+                                        mandatory with link text.</span>
+                                    <span class="m-t-10"
+                                        style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                        data-ng-if="type_udd_form.text_default_value.$error.pattern">Link
+                                        text
+                                        should contain only alphanumeric characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--URL Attribute UDD End-->
+                        <multiselect data-ng-if="vm.isMultiselect && !vm.isValueList && !vm.isDateSelect"
+                            id="default_value" ng-model="vm.uddTypeObject.default_value_ids"
+                            options="option.id as option.short_description for option in vm.attributeHierarchyOptionValuesArray"
+                            select-limit="20" header="Select value" selected-header="Values selected" style="flex: 19"
+                            multiple="true" enable-filter="true" filter-placeholder="Quick Search"></multiselect>
+                        <div
+                            data-ng-if="vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' && uddObject.format.toLowerCase() === 'yes/no'">
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" data-ng-model="vm.uddTypeObject.default_value" value="1"
+                                    data-ng-click="vm.uddTypeObject.default_value_view = 'Yes'">
+                                <i class="input-helper"></i>Yes
+                            </label>
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" data-ng-model="vm.uddTypeObject.default_value" value="0"
+                                    data-ng-click="vm.uddTypeObject.default_value_view = 'No'">
+                                <i class="input-helper"></i>No
+                            </label>
+                        </div>
+                        <div data-ng-click="vm.resetDefaultValue(vm.uddTypeObject);">
+                            <span class="resetbtn fa fa-times-circle f-16"></span></div>
+                    </div>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.required.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.required.$valid">* </span>
+                    <label>Required</label>
+                    <select id="required" name="required" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.required" ng-options="each.code as each.code for each in allRequired"
+                        errorvaluechosen="vm.uddTypeObject.required_error"
+                        ng-change="vm.checkForAttributeHierarchyValues(vm.uddTypeObject.required)">
+                        <option value="" disabled>Select Required</option>
+                    </select>
+                </div>
+                <div class="m-b-20">
+                    <button type="button" class="btn btn-primal btn-block f-14 p-10 waves-effect f-700"
+                        aria-hidden="true" data-ng-click="vm.configureUdd()"
+                        data-ng-disabled="type_udd_form.$invalid || vm.isBtnDissable || vm.isProcessing">
+                        Configure
+                    </button>
+                </div>
+            </ng-form>
+
+            <!-- uddObject.entity_id - 314 refers to MTO -->
+            <ng-form name="type_udd_form" role="form" novalidate="novalidate" valdr-type="RULES-41"
+                data-ng-if="uddObject.entity_id == 314">
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.maintenance_description.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.maintenance_description.$valid">* </span>
+                    <label>Maintenance Description</label>
+                    <input id="maintenance_description" name="maintenance_description" class="form-control input-sm"
+                        ng-model="vm.uddTypeObject.maintenance_description"
+                        errorvalue="vm.uddTypeObject.maintenance_description_error" type="text"
+                        ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Maintenance Description">
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.status_id.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.status_id.$valid">* </span>
+                    <label>Status</label>
+                    <select id="status_id" name="status_id" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.status_id" errorvaluechosen="vm.uddTypeObject.status_id_error"
+                        ng-options="each.code as each.description disable when (each.code === vm.statusCodes.Pending.ID && uddObject.referer && uddObject.referer.toLowerCase() === 'update') for each in statuses">
+                        <option value="" disabled>Select Status</option>
+                    </select>
+                </div>
+                <div class="form-group"
+                    data-ng-init="vm.getUserDefinedDataValues(vm.uddTypeObject, vm.attributeHierarchyModel.id);"
+                    data-ng-if="vm.uddTypeObject.user_defined_data_id" valdr-form-group>
+                    <span class="c-red"
+                        data-ng-show="type_udd_form.default_value.$invalid || type_udd_form.url_default_value.$invalid || type_udd_form.text_default_value.$error.pattern">*
+                    </span>
+                    <span class="c-green"
+                        data-ng-show="type_udd_form.default_value.$valid || (type_udd_form.url_default_value.$valid && type_udd_form.text_default_value.$valid)">*
+                    </span>
+                    <label>Default Value</label>
+                    <div class="d-flex align-items-center">
+                        <select
+                            data-ng-if="vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.selectAttributeHierarchyValue && vm.uddTypeObject.user_defined_data_type.toLowerCase() !== 'hierarchy'"
+                            name="default_value" id="default_value" selectize="vm.selectAttributeHierarchyValue"
+                            items="vm.attributeHierarchyValueModel" class="form-control select-component input-sm"
+                            options="vm.attributeHierarchyOptionValuesArray"
+                            data-ng-model="vm.attributeHierarchyValueModel.value"
+                            data-ng-change="vm.uddTypeObject.default_value = vm.attributeHierarchyValueModel.value">
+                        </select>
+                        <input
+                            data-ng-if="!vm.isUrlField&&!vm.isTextField && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            id="default_value" name="default_value" class="form-control input-sm"
+                            data-ng-model="vm.uddTypeObject.default_value" type="text"
+                            data-ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value">
+                        <textarea
+                            data-ng-if="vm.isTextField && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            id="default_value" name="default_value" class="form-control input-sm"
+                            data-ng-model="vm.uddTypeObject.default_value" data-ng-model-options="{ updateOn: 'blur' }"
+                            placeholder="Enter default value" style="height: 30px;"></textarea>
+                        <input
+                            data-ng-if="!vm.isTextField && !vm.isValueList && !vm.isMultiselect && vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' &&  uddObject.format.toLowerCase() !== 'yes/no'"
+                            type="text" id="default_value" name="default_value"
+                            class="form-control input-sm rcp-mydatepicker" ng-model="vm.uddTypeObject.default_value"
+                            ui-mask="{{ui_date_mask}}" mydatepicker placeholder="__/__/___"
+                            ng-model-options="{ updateOn: 'blur' }" model-view-value="true">
+                        <hierarchy-tree-view
+                            data-ng-if="!vm.isResetValue && !vm.isValueList && !vm.isMultiselect && !vm.isDateSelect && vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'hierarchy' && vm.primaryHierarchyId"
+                            primary-hierarchy-id="vm.primaryHierarchyId"
+                            primary-hierarchy-value-id="vm.primaryHierarchyValueId"
+                            directive-end-fn='vm.end(directiveData)' enable-valdr-validation enable-valdr-message
+                            form-data="head" form-header="Item Type UDD" tree-view-fn="vm.toggleTreeViewPanel(flagData)"
+                            clear-path="vm.clearPath" style="flex: 19"></hierarchy-tree-view>
+                        <!--URL Attribute UDD Start-->
+                        <div class="col-lg-12 p-0" ng-if="vm.isUrlField">
+                            <div>
+                                <div class="d-flex flex-1 input-group">
+                                    <span
+                                        class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0"
+                                        style="border-left: 1px solid #ececec;">
+                                        <span class="f-13 c-bluegray">Text</span>
+                                    </span>
+                                    <div class="col-lg-12 p-0">
+                                        <input class="form-control input-sm" name="text_default_value"
+                                            id="text_default_value" ng-pattern="vm.globalRegularExpression"
+                                            ng-model-options="{ updateOn: 'blur' }"
+                                            ng-model="vm.uddTypeObject.text_default_value"
+                                            data-ng-change="vm.uddTypeObject.default_value=vm.uddTypeObject.text_default_value+'::'+vm.uddTypeObject.url_default_value"
+                                            type="text" />
+                                    </div>
+                                </div>
+                                <div class="form-group m-t-5">
+                                    <div class="d-flex flex-1 input-group">
+                                        <span
+                                            class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0">
+                                            <span class="f-13 c-bluegray">URL</span>
+                                        </span>
+                                        <input class="form-control input-sm" name="url_default_value" id="default_value"
+                                            ng-model="vm.uddTypeObject.url_default_value"
+                                            ng-required="vm.uddTypeObject.text_default_value.length>0"
+                                            ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value"
+                                            data-ng-change="vm.uddTypeObject.default_value=vm.uddTypeObject.text_default_value+'::'+vm.uddTypeObject.url_default_value"
+                                            type="text" style="height: 30px" />
+                                    </div>
+                                    <span class="m-t-10"
+                                        style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                        data-ng-if="type_udd_form.url_default_value.$error.required">URL is
+                                        mandatory with link text.</span>
+                                    <span class="m-t-10"
+                                        style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                        data-ng-if="type_udd_form.text_default_value.$error.pattern">Link
+                                        text
+                                        should contain only alphanumeric characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--URL Attribute UDD End-->
+                        <multiselect data-ng-if="vm.isMultiselect && !vm.isValueList && !vm.isDateSelect"
+                            id="default_value" ng-model="vm.uddTypeObject.default_value_ids"
+                            options="option.id as option.short_description for option in vm.attributeHierarchyOptionValuesArray"
+                            select-limit="20" header="Select value" selected-header="Values selected" style="flex: 19"
+                            multiple="true" enable-filter="true" filter-placeholder="Quick Search"></multiselect>
+                        <div
+                            data-ng-if="vm.uddTypeObject.user_defined_data_type.toLowerCase() === 'attribute' && uddObject.format.toLowerCase() === 'yes/no'">
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" data-ng-model="vm.uddTypeObject.default_value" value="1"
+                                    data-ng-click="vm.uddTypeObject.default_value_view = 'Yes'">
+                                <i class="input-helper"></i>Yes
+                            </label>
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" data-ng-model="vm.uddTypeObject.default_value" value="0"
+                                    data-ng-click="vm.uddTypeObject.default_value_view = 'No'">
+                                <i class="input-helper"></i>No
+                            </label>
+                        </div>
+                        <div data-ng-click="vm.resetDefaultValue(vm.uddTypeObject);">
+                            <span class="resetbtn fa fa-times-circle f-16"></span></div>
+                    </div>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.entrylevel.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.entrylevel.$valid">* </span>
+                    <label>Entry level</label>
+                    <select id="entrylevel" name="entrylevel" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.entrylevel"
+                        ng-options="each.code as each.code for each in allfieldnames">
+                        <option value="" disabled>Select Entry Level</option>
+                    </select>
+                </div>
+                <div class="form-group" valdr-form-group>
+                    <span class="c-red" ng-show="type_udd_form.required.$invalid">* </span>
+                    <span class="c-green" ng-show="type_udd_form.required.$valid">* </span>
+                    <label>Required</label>
+                    <select id="required" name="required" class="form-control select-component input-sm"
+                        ng-model="vm.uddTypeObject.required" ng-options="each.code as each.code for each in allRequired"
+                        errorvaluechosen="vm.uddTypeObject.required_error"
+                        ng-change="vm.checkForAttributeHierarchyValues(vm.uddTypeObject.required)">
+                        <option value="" disabled>Select Required</option>
+                    </select>
+                </div>
+                <div class="m-b-20">
+                    <button type="button" class="btn btn-primal btn-block f-14 p-10 waves-effect f-700"
+                        aria-hidden="true" data-ng-click="vm.configureUdd()"
+                        data-ng-disabled="type_udd_form.$invalid || vm.isBtnDissable || vm.isProcessing">
+                        Configure
+                    </button>
+                </div>
+            </ng-form>
+        </div>
+    </div>
+</div>
+
+<div id="rcrightsidebar" class="toggled" ng-show="vm.isConfigureSuccess">
+    <div class="col-xs-12 m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="closeFn();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Configure UDD"><strong>Configure UDD</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <rcp-success-form success-tick="success_tick.svg" close-fn="closeFn();"
+            configure-success="vm.isConfigureSuccess"></rcp-success-form>
+    </div>
+</div>

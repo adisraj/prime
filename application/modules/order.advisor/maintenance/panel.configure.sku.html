@@ -1,0 +1,440 @@
+<ul style="display:none">
+    <li>
+        <keybinding on="esc" invoke="uddController.closeConfigureSKUPanel()" />
+    </li>
+</ul>
+<div id="rcrightsidebar" data-ng-class="{'toggled':uddController.isConfigureSku === true}"
+    ng-keydown="$event.keyCode == uddController.common.ShortCuts.global.close.key && uddController.closeConfigureSKUPanel()">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a ng-disabled1="uddController.isDeletingSKU" data-ng-click="uddController.closeConfigureSKUPanel()"
+                class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel">Configure <strong>SKU Choices</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10" ng-if="!uddController.isSaveSuccess">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/order-advisor.svg'"></div>
+            </div>
+        </div>
+        <div class="col-xs-12 rc-alert rc-alert-type-info flex-column m-b-10">
+            <div class="col-xs-12 d-flex p-0">
+                <div class="rc-alert-icon m-r-10">
+                    <span class="text-danger zmdi zmdi-alert-polygon" style="font-size:35px"
+                        title="Configure Choices for Order Advisor Options" title-direction="right"
+                        fixed-position="true">
+                    </span>
+                </div>
+                <!-- <div style="flex:1;"> -->
+                <div class="col-xs-12 p-0">
+                    <div class="f-15 f-700 text-info">Configuring Choices for Order Advisor Options</div>
+                    <div style="line-height: 1.7; margin-left: -10px;">
+                        <span class="c-black f-14" data-ng-if="!uddController.switchscreen">
+                            <ul>
+                                <li>
+                                    On configuring <strong>NEW</strong> SKUs as choices,
+                                    the
+                                    changes are
+                                    reflected
+                                    only after publishing the changes.
+                                </li>
+                                <li>
+                                    Any changes to <strong>EXISTING</strong>
+                                    SKUs(link/unlink
+                                    packages or delete
+                                    SKU),
+                                    are reflected immediately.
+                                </li>
+                                <li>
+                                    Please click on <strong>Finish</strong> once you add/update <strong>Display
+                                        Sequence</strong> for the changes to get reflected.
+                                </li>
+                            </ul>
+                        </span>
+
+                        <span class="c-black f-14" data-ng-if="uddController.switchscreen">
+                            <ul>
+                                <li>
+                                    On Replacing <strong>NEW</strong> SKU in Options, the changes are reflected in every
+                                    <strong>SOA</strong> with Selected Option.
+                                </li>
+                                <li>
+                                    On Deleting <strong>SKU</strong> in Options, the changes are reflected in every
+                                    <strong>SOA</strong> with Selected Option.
+                                </li>
+                                <li>
+                                    All the Changes are reflected immediatly.
+                                </li>
+
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- </div> -->
+            </div>
+        </div>
+
+        <!--View Selected Item START-->
+        <div class="col-xs-12 p-0 bgm-white" style="border: 1px solid #ddd">
+            <div class="f-15 f-700 p-5 text-info m-b-5" style="border-top: none;
+                    border-bottom: 1px solid #ddd;
+                    background: navy;
+                    color: white;"><i class="fa fa-arrow-alt-circle-right p-r-5"></i>SKU Details</div>
+            <div class="item-component-section-header d-flex align-items-center justify-content-between p-5" style="max-width: 550px; word-break: break-word;">
+                <div><strong>{{uddController.SelectedSKU.description | truncate: 70}}</strong></div>
+            </div>
+            <div class="p-0 col-xs-12" style="line-height:1.7">
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">SKU Number :</div>
+                    <div class="p-l-10 p-r-0">{{uddController.SelectedSKU.sku}}</div>
+                </div>
+            </div>
+        </div>
+        <!--Link available packages form start-->
+        <div class="col-xs-12 p-0 m-t-15" data-ng-if="!uddController.switchscreen">
+            <div class="d-flex">
+                <div class="col-lg-12 p-0 f-16 panel-header">
+                    <span class="f-700 main-header">Link Packages</span>
+                    <div>
+                        <small>Section to link from existing list of packages.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0">
+                <ng-form name="uddController.itemcol_form" role="form" novalidate="novalidate"
+                    data-ng-init="uddController.InitialFocus()">
+                    <div class="col-xs-12 text-center m-t-10"
+                        data-ng-if="uddController.isReset || (uddController.loadingLinks && !uddController.collectionVendors.length > 0)">
+                        Loading packages...</div>
+                    <div class="col-xs-12 list-group panel m-b-0 p-0 m-t-10" valdr-form-group>
+                        <div class="m-t-15 align-center" data-ng-if="uddController.AvailableTypePackages.length === 0">
+                            <span>No Packages available.</span>
+                        </div>
+                        <div class="m-t-15 align-center"
+                            data-ng-if="uddController.Packages.length === uddController.PackageIds.length">
+                            <span>All packages for the selected type are linked.</span>
+                        </div>
+                        <ng-form name="uddController.configure_sku">
+                            <div class="form-group" valdr-form-group>
+                                <span class="c-red"
+                                    ng-show="uddController.configure_sku.default_quantity_value.$invalid">*
+                                </span>
+                                <span class="c-green"
+                                    ng-show="uddController.configure_sku.default_quantity_value.$valid">*
+                                </span>
+                                <label>Default Quantity</label>
+                                <input id="default_quantity_value" name="default_quantity_value"
+                                    class="form-control input-sm"
+                                    ng-change="uddController.Sku.default_quantity_value=uddController.SelectedSKU.default_quantity_value;"
+                                    ng-model="uddController.SelectedSKU.default_quantity_value" type="number"
+                                    min="{{uddController.udd.minimum_quantity}}"
+                                    max="{{uddController.udd.maximum_quantity}}" ng-model-options="{ updateOn: 'blur' }"
+                                    placeholder="Enter Default Quantity">
+                                <span class="text-danger"
+                                    data-ng-if="uddController.configure_sku.default_quantity_value.$error.min || uddController.configure_sku.default_quantity_value.$error.max">
+                                    Default quantity value should be between {{uddController.udd.minimum_quantity}} and
+                                    {{uddController.udd.maximum_quantity}}
+                                </span>
+                            </div>
+                            <div class="form-group" valdr-form-group>
+                                <span class="c-green">*
+                                </span>
+                                <label>Display Sequence</label>
+                                <input id="display_sequence" name="display_sequence" type="number"
+                                     class="form-control input-sm" ng-minlength="1" ng-maxlength="9" only-integer 
+                                     onkeypress="RestrictFirstZero(event)"
+                                     ng-model="uddController.SelectedSKU.display_sequence"
+                                    placeholder="Enter Display Sequence">
+                                <span class="text-danger"
+                                    data-ng-if="uddController.configure_sku.display_sequence.$invalid">Display sequence
+                                    accepts upto 9 digits only</span>
+                                <span class="text-danger"
+                                    data-ng-if="uddController.SelectedSKU.display_sequence==0">Enter values between
+                                    1-9</span>
+                            </div>
+                            <script type="number/javascript" id="display_sequence">
+                                function RestrictFirstZero(e) {
+                                    if (e.srcElement.value.length == 0 && e.which == 48) {
+                                        e.preventDefault();
+                                        return false;
+                                    }
+                                };
+                            </script>
+                            <div class="checkbox m-5" data-ng-if="(uddController.udd.allow_multiple_choices || uddController.udd.maximum_quantity>1)">
+                                <label> Allow Quantity Change
+                                    <input id="view" type="checkbox" hidden="hidden"
+                                        ng-disabled="uddController.isDeletingSKU"
+                                        ng-model="uddController.SelectedSKU.allow_quantity_change" ng-true-value="1"
+                                        ng-change="uddController.Sku.allow_quantity_change=uddController.SelectedSKU.allow_quantity_change"
+                                        ng-false-value="0" class="ng-pristine ng-untouched ng-valid ng-empty">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                            <div class="col-xs-12 p-0 p-b-10" data-ng-if="uddController.AvailablePackages.length > 0 && !uddController.udd.allow_multiple_choices && uddController.udd.maximum_quantity<=1">
+                                <label class="maintenance-field-label">Configure&nbsp;Packages&nbsp;</label>
+                                <div class="p-l-15 p-r-15 rcpscrollbar o-auto dependencyListHeight">
+                                    <div
+                                        data-ng-repeat="package in uddController.AvailablePackages | orderBy:['name']  track by $index ">
+                                        <div class="checkbox m-5" data-ng-init="count=count+1">
+                                            <label>
+                                                <input id="view" type="checkbox"
+                                                    ng-disabled="uddController.isDeletingSKU"
+                                                    ng-click="uddController.AddPackagesSelected(uddController.SelectedSKU,package);"
+                                                    ng-model="package.isSelected" ng-true-value=true
+                                                    class="ng-pristine ng-untouched ng-valid ng-empty"
+                                                    ng-false-value=false>
+                                                <i class="input-helper"></i>
+                                                <span class="filter-label">
+                                                    <span>{{package.description}}</span>
+                                                    <span ng-if="uddController.selectedVendorId==package.id"
+                                                        ng-bind="uddController.message"
+                                                        class="dependency-linkSuccess"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 text-center"
+                                        data-ng-if="(uddController.collectionVendors | filter: {name: uddController.searchCollection}).length === 0">
+                                        <span class="text-muted f-14">No search results found!</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <button class="btn btn-primal btn-block"
+                                    ng-disabled="uddController.isDeletingSKU || uddController.configure_sku.$invalid || uddController.SelectedSKU.display_sequence==0"
+                                    tabindex1="{{uddController.AvailablePackages.length}}+1" style="cursor: pointer;"
+                                    data-ng-if="uddController.Packages.length !== uddController.PackageIds.length || uddController.AvailablePackages.length > 0"
+                                    data-ng-click="uddController.UpdateSkuConfiguration(uddController.SelectedSKU)">
+                                    <span class="f-700">Finish</span>
+                                </button>
+                            </div>
+                            <div class="col-xs-12 m-t-10 m-b-15">
+                                <button class="btn btn-secondary btn-block"
+                                    title="{{!uddController.SelectedSKU.order_advisor_id ? 'Cannot be replace a sku until publish. Please click on publish.' : ''}}"
+                                    ng-disabled="uddController.isDeletingSKU || !uddController.SelectedSKU.order_advisor_id"
+                                    style="cursor: pointer;"
+                                    data-ng-click="uddController.switchscreen = true;uddController.successMessage='';"> 
+                                    <span class="f-700">Replace Configured SKU</span>
+                                </button>
+                            </div>
+
+
+                        </ng-form>
+                    </div>
+                    <div class="col-lg-12" data-ng-if="uddController.isDeleteSkuSuccess">
+                        <div class="col-xs-12 alert alert-success">Unlinked SKU from selected option succesfully.</div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div data-ng-show="uddController.successMessage" class="alert alert-success p-10">
+                            <button type="button" class="close" data-ng-click="uddController.successMessage = null"
+                                aria-hidden="true">&times;</button> {{uddController.successMessage}}
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div data-ng-show="uddController.errorMessage" class="alert alert-danger alert-dismissable">
+                            {{uddController.errorMessage}}
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </div>
+        <!--Link available packages form end-->
+        <!-- Replace SKU Configuration Screen -->
+        <div data-ng-if="uddController.switchscreen">
+            <div class="col-xs-12 p-0">
+
+                <br />
+
+                <div id="radio-container">
+                    <input type="radio" id="deleteSkuFromUdd" name="radioGroup"
+                        data-ng-model="uddController.udd.selectedOption" value="deleteSkuFromUdd"
+                        style="cursor: pointer;" ng-click="uddController.radioClickHandler('deleteSkuFromUdd')" /><label
+                        for="deleteSkuFromUdd">Delete in this
+                        SOA with selected Option Only</label><br>
+
+                    <input type="radio" id="deleteSkuAllSOA" name="radioGroup"
+                        data-ng-model="uddController.udd.selectedOption" value="deleteSkuAllSOA"
+                        style="cursor: pointer;" ng-click="uddController.radioClickHandler('deleteSkuAllSOA')" /><label
+                        for="radio1">Delete in
+                        all SOA's with selected Option in Type <b> {{advisorController.OrderAdvisor.adviser_type}}</b></label><br>
+
+                    <input type="radio" id="deleteSkuAllSOASameOpton" name="radioGroup"
+                        data-ng-model="uddController.udd.selectedOption" value="deleteSkuAllSOASameOption"
+                        style="cursor: pointer;"
+                        ng-click="uddController.radioClickHandler('deleteSkuAllSOASameOption')" /><label
+                        for="radio2">Delete in all SOA's with selected Option
+                    </label><br>
+                    <input type="radio" id="replace_existing_sku" name="radioGroup" style="cursor: pointer;"
+                        data-ng-model="uddController.udd.selectedOption" value="replace_existing_sku"
+                        ng-click="uddController.radioClickHandler('replace_existing_sku')" /><label
+                        for="replace_existing_sku">Replace in this
+                        SOA with selected Option Only</label><br>
+
+                    <input type="radio" id="replace_all_soa" name="radioGroup"
+                        data-ng-model="uddController.udd.selectedOption" value="replace_all_soa"
+                        style="cursor: pointer;" ng-click="uddController.radioClickHandler('replace_all_soa')" /><label
+                        for="replace_all_soa">Replace in all SOA's with selected Option in Type
+                        <b>{{advisorController.OrderAdvisor.adviser_type}}</b></label><br>
+
+
+                    <input type="radio" id="replace_all_soachoice" name="radioGroup" style="cursor: pointer;"
+                        data-ng-model="uddController.udd.selectedOption" value="replace_all_soa_choice"
+                        ng-click="uddController.radioClickHandler('replace_all_soa_choice')" /><label
+                        for="replace_all_soachoice">Replace in all SOA's with selected Option</label><br>
+
+
+                </div>
+
+                <div data-ng-if="uddController.showSearchPanel" class="col-xs-12 p-0 m-t-15">
+                    <label style="color: green; font-weight: bold; background: white;">Search for Replace SKU#</label>
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0">
+                            <div class="form-group">
+                                <div class="form-group col-lg-6 col-md-6 col-xs-6 p-0" valdr-form-group>
+                                    <input type="text" id="sku_number_search" class="form-control input-sm"
+                                        allow-only-numbers ng-change="onSkuNumberChange()"
+                                        ng-keyup="$event.keyCode == 13 ? uddController.FormatSkuNumber(uddController.udd):null"
+                                        ng-model="uddController.searched_sku_number" placeholder="SKU Number" />
+                                </div>
+                                <button class="btn btn-info m-l-20" data-ng-if="!uddController.isSearchingSku"
+                                    data-ng-disabled="!uddController.searched_sku_number||uddController.searched_sku_number.length===0"
+                                    style="cursor: pointer;"
+                                    data-ng-click="uddController.FormatSkuNumber(uddController.udd);">Search</button>
+                                <button class="btn btn-info m-l-20" data-ng-if="uddController.isSearchingSku"
+                                    data-ng-disabled="uddController.isSearchingSku">Searching...</button>
+                                <button class="btn btn-info m-l-5" style="cursor: pointer;"
+                                    data-ng-disabled="!uddController.searched_sku_number||uddController.searched_sku_number.length===0 || uddController.isSearchingSku"
+                                    data-ng-click="uddController.resetSkuProperties();uddController.searched_isSellable=true;uddController.clearTheArray()">Clear</button>
+                            </div>
+                            <div data-ng-if="!uddController.searched_isSellable" style="border: 1px solid #d8d8d8;padding: 5px;">
+                                <div style="color: rgb(228, 23, 8);font-size: 14px;font-weight: 700;margin-bottom: 10px;"><span class="text-firebrick zmdi zmdi-alert-polygon" style="font-size:17px;margin-right: 4px;">
+                                </span>This SKU is not Sellable, Do you want to Proceed?</div>
+                                <div style="text-align: end;">
+                                    <button class="btn btn-success" data-ng-click="uddController.searched_isSellable=true;uddController.searched_sku_number=null;uddController.sortOut()"><span class="f-700">Proceed</span></button>
+                                    <button class="btn btn-cancel" data-ng-click="uddController.resetSkuProperties();uddController.searched_isSellable=true;uddController.clearTheArray()"> <span class="f-700">Cancel</span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-t-10 m-b-10"
+                            data-ng-if="uddController.searched_sku_number && uddController.skuNotFound">
+                            <span class="text-danger">No matching SKUs found</span>
+                        </div>
+                        <div class="m-t-10 m-b-10"
+                            data-ng-if="uddController.searched_sku_number && uddController.isAvailableinotherOptions">
+                            <span class="text-danger">This SKU already exists in current SOA</span>
+                        </div>
+                        <div class="m-t-10 m-b-10"
+                            data-ng-if="uddController.searched_sku_number && uddController.invalidSKuStatus">
+                            <span class="text-danger">SKU cannot be replaced as it is InActive</span>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 p-0 m-t-5 box maintenanceworkspace maintenance-field-label"
+                        data-ng-if="uddController.searchedSKUList.length>0 && uddController.searched_isSellable && !uddController.isSearchingSku">
+                        <div class="col-xs-12 f-16 panel-header">
+                            <span class="f-700 main-header">SKU Details ({{uddController.SelectedSKU.sku}} <i
+                                    class="fa fa-arrow-alt-circle-right p-5" title="Replacing SKU"></i>
+                                {{uddController.searchedSKUList[0].sku}})</span>
+                        </div>
+
+
+                        <div class="col-xs-12 p-10 panel-body" data-ng-if="uddController.searchedSKUList.length>0">
+                            <div class="col-xs-12 p-0 m-t-5" data-ng-repeat="sku in uddController.searchedSKUList">
+                                <button type="button"
+                                    class="m-t-5 pull-right c-firebrick f-500 cursor-pointer f-17 zmdi zmdi-delete zmdi-hc-fw bg-none border-none p-0 ng-isolate-scope"
+                                    ng-click="uddController.DeleteSKUFromQueue(sku.id)">
+                                </button>
+                                <div class="d-flex flex-fill">
+                                    <div class="d-flex">
+                                        <img check-image class="img-responsive m-auto cursor-pointer"
+                                            image-name="sku.svg" ng-src="{{sku.imgUrl}}"
+                                            style="height:50px;width:50px;" />
+                                    </div>
+                                    <div class="m-l-5 p-l-5 p-r-5"
+                                        style="flex:1;border-left: 1px solid #f5f5f5;line-height: 2">
+                                        <div class="col-xs-12">
+                                            <div class="col-lg-8 p-l-0 cursor-pointer">
+                                                <span class="c-gray">Description: </span>
+                                                <span class="text-capitalize text-info f-700"
+                                                    title="{{sku.description}}">{{sku.description | truncate :
+                                                    25}}</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div>
+                                                <span class="c-gray" title="Status">Status: </span>
+                                                <span style="white-space: nowrap;" title="{{sku.status}}"
+                                                    ng-class="{'text-success f-500':sku.status==='Active' , 'text-warning f-300':sku.status==='Pending', 'text-primary f-300':sku.status==='Inactive','text-info f-300':sku.status==='Pending Inactive'}">{{sku.status}}</span>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="col-lg-6 p-l-0">
+                                                <span class="c-gray">SKU #: </span>
+                                                <span title="SKU Number">{{sku.sku}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <br />
+
+
+                <div class="col-xs-12 m-t-10 m-b-15">
+                    <button class="btn-block btn btn-primal" data-ng-if="uddController.showSearchPanel"
+                        data-ng-disabled="uddController.searchedSKUList.length === 0 || !uddController.udd.selectedOption.startsWith('replace') || !uddController.searched_isSellable || uddController.isSearchingSku"
+                        data-ng-click="uddController.replaceConfiguredSKU(uddController.udd, uddController.SelectedSKU)">
+                        <span class="f-700">Replace Configured SKU</span>
+                    </button>
+                </div>
+
+                <div class="col-xs-12 m-t-10 m-b-15" data-ng-if="!uddController.showSearchPanel">
+                    <button class="btn-block btn btn-primal" data-ng-disabled="uddController.udd.selectedOption==null"
+                        data-ng-if="(uddController.udd.deleteSkuFromUdd || uddController.udd.deleteSkuAllSOA || uddController.udd.deleteSkuAllSOASameOption) || uddController.switchscreen"
+                        data-ng-click="uddController.replaceConfiguredSKU(uddController.udd, uddController.SelectedSKU)">
+                        <span class="f-700">Delete Configured SKU</span>
+                    </button>
+                </div>
+
+
+                <div class="col-xs-12">
+                    <button class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect btn-block"
+                        data-ng-click="uddController.switchtheScreen()">Back</button>
+                </div>
+            </div>
+
+
+            <div class="col-xs-12 m-t-5">
+                <div data-ng-show="uddController.successMessageforReplace" class="alert alert-success p-10">
+                    <button type="button" class="close" data-ng-click="uddController.successMessageforReplace = null"
+                        aria-hidden="true">&times;</button> {{uddController.successMessageforReplace}}
+                </div>
+            </div>
+
+
+            <div class="col-xs-12">
+                <div data-ng-show="uddController.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="uddController.message = null"
+                        aria-hidden="true">&times;</button> {{uddController.message}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

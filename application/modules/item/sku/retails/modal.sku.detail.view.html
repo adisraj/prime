@@ -1,0 +1,152 @@
+<div id="detailpricemodal" class="modal fade" role="dialog" modal-dir>
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="col-xs-12 p-0 modal-content">
+            <div class="col-xs-12 modal-header" style="padding: 10px 20px;">
+                <h3>Detailed price types retails</h3>
+            </div>
+            <div class="col-xs-12 modal-body p-10">
+                <div class="col-xs-12 p-0" style="border-bottom: 2px solid #dcdcdc;background-color: #ffffff;">
+                    <div class="col-sm-6 col-xs-12 p-10" style="display: flex;align-items: flex-start;flex-direction: column;">
+                        <div>
+                            <span class="f-11" style="color: #6b6b6b;">Effective Date </span>
+                        </div>
+                        <span class="f-14 f-700" style="color: #ef6f6f;"> {{skuRetailCtrl.retailDetails.effective_date}}</span>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="col-xs-6 p-0">
+                        <div data-ng-if="skuRetailCtrl.sku_detail.sku_type!=='MTO'" class="col-xs-12 p-5" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;"
+                            data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                            <span class="" style="color: gray;">{{retail_pg.price_class}}</span>
+                        </div>
+                        <div data-ng-if="skuRetailCtrl.sku_detail.sku_type ==='MTO'" class="col-xs-12 p-0">
+                            <div class="col-xs-12" style="background: #fffbf1;padding: 5px;box-shadow: 0px 1px 1px 0px #efefef;height:30px;">
+
+                            </div>
+                            <div class="col-xs-12 p-5" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;overflow:auto;height:35px;"
+                                data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                                <div class="d-flex">
+                                    <span class="" style="color: gray;">{{retail_pg.price_class}}</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 p-0" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;" data-ng-repeat="mto_type in skuRetailCtrl.option_types">
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-xs-12 p-5 p-l-10 f-15 bgm-darkblue" style="height:30px;">
+                                        <span class="c-white f-12 f-700">{{mto_type.type_desc}}</span>
+                                    </div>
+                                    <div class="col-xs-12 p-0" data-ng-repeat="price_group in mto_type.subPriceGroups">
+                                        <div style="display:flex;align-items:center;justify-content:space-between;background: linear-gradient(#ffffff,#e8e8e8);border-bottom: 1px solid;padding:7px;height:33px;">
+                                            <span class="c-black">{{price_group.mto_description}}</span>
+                                            <span class="c-firebrick">{{price_group.price_group_desc}}</span>
+                                        </div>
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-lg-12 p-5" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                                                <span class="" style="color: gray;">{{retail_pg.price_class}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 p-0" data-ng-repeat="choice in mto_type.subByChoices">
+                                        <div style="display:flex;align-items:center;justify-content:space-between;background: linear-gradient(#ffffff,#e8e8e8);border-bottom: 1px solid;padding:7px;height:33px;">
+                                            <span class="c-black">{{choice.mto_description}}</span>
+                                            <span class="c-firebrick">{{choice.choice_desc}}</span>
+                                        </div>
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-lg-12 p-5" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                data-ng-repeat="retail_pg in skuRetailCtrl.price_groups | orderBy:'price_class_udd_line_id'">
+                                                <span class="" style="color: gray;">{{retail_pg.price_class}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 p-0 o-auto" data-ng-if="skuRetailCtrl.sku_detail.sku_type !=='MTO'">
+                        <div class="d-flex">
+                            <div class="col-xs-12 p-0" data-ng-repeat="pricetype in skuRetailCtrl.retailDetails.price_types" style="min-width:150px;">
+                                <div class="col-xs-12" style="background: #fffbf1;padding: 5px;box-shadow: 0px 1px 1px 0px #efefef;height:30px;">
+                                    <span>{{pricetype.name}}</span>
+                                </div>
+                                <div class="col-xs-12 p-5" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                    data-ng-repeat="retail_pg in pricetype.retails | orderBy:'price_class_udd_line_id'">
+                                    <div class="d-flex">
+                                        <span class="f-700 pull-right" style="color: #5ac94d;">
+                                            <input type="text" ng-readonly="{{!skuRetailCtrl.retailDetails.isUpdate}}" currency="2" currency-point="." class="form-control retail-text"
+                                                ng-model="retail_pg.retail" data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                data-ng-blur="(skuRetailCtrl.retailDetails.isUpdate &&skuRetailCtrl.upsertSKURetail(skuRetailCtrl.retailDetails.effective_date,skuRetailCtrl.retailDetails.end_date,retail_pg,pricetype.id,null,2))">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 p-0 o-auto" data-ng-if="skuRetailCtrl.sku_detail.sku_type ==='MTO'">
+                        <div class="d-flex">
+                            <div class="col-xs-12 p-0" data-ng-repeat="pricetype in skuRetailCtrl.retailDetails.price_types" style="min-width:150px;">
+                                <div class="col-xs-12" style="background: #fffbf1;padding: 5px;box-shadow: 0px 1px 1px 0px #efefef;height:30px;">
+                                    <span>{{pricetype.name}}</span>
+                                </div>
+                                <div class="col-xs-12 p-5" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                    data-ng-repeat="retail_pg in pricetype.retails | orderBy:'price_class_udd_line_id'">
+                                    <div class="d-flex">
+                                        <span class="f-700 pull-right" style="color: #5ac94d;">
+                                            <input type="text" ng-readonly="{{!skuRetailCtrl.retailDetails.isUpdate}}" currency="2" currency-point="." class="form-control retail-text"
+                                                ng-model="retail_pg.retail" data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                data-ng-blur="(skuRetailCtrl.retailDetails.isUpdate &&skuRetailCtrl.upsertMTOSKURetail(skuRetailCtrl.retailDetails.effective_date, skuRetailCtrl.retailDetails.end_date, retail_pg, pricetype.id, null, 2))">
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-0" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;" data-ng-repeat="mto_type in pricetype.types">
+                                    <div class="col-lg-12 p-0">
+                                        <div class="col-xs-12 p-5 p-l-10 f-15 bgm-darkblue text-center" style="height:30px;">
+                                            <span class="c-white f-12 f-700"></span>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-repeat="price_group in mto_type.subPriceGroups">
+                                            <div style="display:flex;align-items:center;justify-content:space-between;background: linear-gradient(#ffffff,#e8e8e8);border-bottom: 1px solid;padding:7px;height:33px;">
+                                                <span class="c-black"></span>
+                                                <span class="c-firebrick"></span>
+                                            </div>
+                                            <div class="col-lg-12 p-5" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                data-ng-repeat="retail_pg in price_group.retails | orderBy:'price_class_udd_line_id'">
+                                                <div class="d-flex" style="flex-direction:column;">
+                                                    <span class="f-700 pull-right" style="color: #5ac94d;">
+                                                        <input type="text" ng-readonly="{{!skuRetailCtrl.retailDetails.isUpdate}}"
+                                                            currency="2" currency-point="." class="form-control retail-text"
+                                                            ng-model="retail_pg.retail" data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                            data-ng-blur="(skuRetailCtrl.retailDetails.isUpdate && 
+                                                        skuRetailCtrl.upsertMTOSKURetail(skuRetailCtrl.retailDetails.effective_date, skuRetailCtrl.retailDetails.end_date, retail_pg, pricetype.id, price_group, 1))">
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 p-0" data-ng-repeat="choice in mto_type.subByChoices">
+                                            <div style="display:flex;align-items:center;justify-content:space-between;background: linear-gradient(#ffffff,#e8e8e8);border-bottom: 1px solid;padding:7px;height:33px;">
+                                                <span class="c-black"></span>
+                                                <span class="c-firebrick"></span>
+                                            </div>
+                                            <div class="col-lg-12 p-5" style="border-bottom: 1px solid #ededed;display: flex;justify-content: space-between;height:35px;"
+                                                data-ng-repeat="retail_pg in choice.retails | orderBy:'price_class_udd_line_id'">
+                                                <div class="d-flex" style="flex-direction:column;">
+                                                    <span class="f-700 pull-right" style="color: #5ac94d;">
+                                                        <input type="text" ng-readonly="{{!skuRetailCtrl.retailDetails.isUpdate}}"
+                                                            currency="2" currency-point="." class="form-control retail-text"
+                                                            ng-model="retail_pg.retail" data-ng-init="retail_pg.old_retail=retail_pg.retail"
+                                                            data-ng-blur="(skuRetailCtrl.retailDetails.isUpdate && skuRetailCtrl.upsertMTOSKURetail(skuRetailCtrl.retailDetails.effective_date, skuRetailCtrl.retailDetails.end_date, retail_pg, pricetype.id, choice, 0)) ">
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

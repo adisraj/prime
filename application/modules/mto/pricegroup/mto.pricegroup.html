@@ -1,0 +1,253 @@
+<style>
+.c-gray{
+    color: #9e9e9e!important;
+}
+</style>
+<div class="container col-lg-12 p-0" data-ng-controller="MTOPriceGroupController as mtopricectrl">
+    <!--list panel-->
+
+    <!-- <rcp-module-header module-name="MTO Price Groups" button-name="MTO Price Group" svg-image="mto-price-group.svg" create-new-fn="mtopricectrl.openForm();"></rcp-module-header>-->
+    <!--  <nav class="navbar navbar-toolbar navbar-default fixed-top">
+        <div class="bgm-white header-module">
+            <div class="navbar-header p-relative" style="min-height: inherit;">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                <div class="image-module p-absolute">
+                    <img src="./img/sidebar-icons/mto-price-group.svg" />
+                </div>
+                <div class="label-module p-absolute">
+                    <a class="navbar-brand" href="javascript:void(0)">MTO Price Groups</a>
+                </div>
+            </div>
+
+            <div id="navbar" class="navbar-collapse collapse" ng-if="mtopricectrl.isViewAuthorized && mtopricectrl.isLoaded">
+                <ul class="nav navbar-nav navbar-right">
+                    <li> <a><button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="mtopricectrl.openForm();">Create MTO Price Group</button></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav> -->
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/mto-price-group.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">MTO Price Groups</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="tableheader-btn">
+                        <span data-ng-if="!mtopricectrl.search"> {{mtopricectrl.rowsInfo}} </span>
+                        <span data-ng-if="mtopricectrl.search"> Displaying {{(mtopricectrl.allPriceGroups|filterBy:['id','status','short_description']:mtopricectrl.search).length}} of {{mtopricectrl.allPriceGroups.length}} Records
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="mtopricectrl.allPriceGroups.length > 0">
+                                    <input class="form-control input-sm " type="text " ng-model="mtopricectrl.search" indicate-quick-search placeholder="Quick Search " data-ng-disabled="!mtopricectrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="mtopricectrl.allPriceGroups.length > 0">
+                            <a>
+                                <button type="button" ng-click="mtopricectrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect" data-ng-disabled="!mtopricectrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="mtopricectrl.allPriceGroups.length > 0">
+                            <a>
+                                <button type="button" ng-click="mtopricectrl.reload(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="!mtopricectrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="mtopricectrl.openForm();"
+                                data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create MTO Price Group</span>
+                                </button>
+                            </a>
+
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:210px;">
+                                <li class="add-btn cursor-pointer">
+                                    <button data-ng-click="mtopricectrl.openForm();"
+                                    style="padding: 8px 20px" class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}" data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create MTO Price Group
+                                    </button>
+                                </li>
+                                <li ng-if="mtopricectrl.allPriceGroups.length > 0">
+                                    <a data-ng-click="mtopricectrl.isLoaded ? mtopricectrl.ShowHideColumnSettings() : '' " data-ng-class="{'cursor-not-allowed': !mtopricectrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="mtopricectrl.allPriceGroups.length > 0">
+                                    <a data-ng-click="mtopricectrl.isLoaded ? mtopricectrl.reload(true) : '' " data-ng-class="{'cursor-not-allowed': !mtopricectrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!mtopricectrl.rowsCount && !mtopricectrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="mtopricectrl.rowsCount !== 0 && mtopricectrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="permissionsMap.view && mtopricectrl.isLoaded">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/mto/pricegroup/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration" data-ng-init="mtopricectrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="mtopricectrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="mtopricectrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="mtopricectrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtopricectrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle" ng-click="mtopricectrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="mtopricectrl.sortType == 'status' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtopricectrl.sortType == 'status' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="short_description_col_head" drag-me drop-me data-handle=".handle" ng-click="mtopricectrl.sortType = 'short_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.shortDescription.visible == 0">
+                                        <span class="handle">Short Description</span>
+                                        <span ng-show="mtopricectrl.sortType == 'short_description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtopricectrl.sortType == 'short_description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="link_description_col_head" drag-me drop-me data-handle=".handle" ng-click="mtopricectrl.sortType = 'link_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.link.visible == 0">
+                                        <span class="handle">Link</span>
+
+                                    </th>
+
+                                    <th class="text-center iconcolumnwidth" id="datalake_col_head" drag-me drop-me data-handle=".handle" data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.datalake.visible == 0">
+                                        <span class="handle">Documents</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="mtopricegroups in mtopricectrl.allPriceGroups|filterBy:['id','status','short_description']:mtopricectrl.search|orderBy:mtopricectrl.sortType:sortReverse|itemsPerPage:mtopricectrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}" data-ng-click="mtopricectrl.setClickedRow($index);"
+                                    ios-dblclick="mtopricectrl.dblClickAction(mtopricegroups);" selectedrow="{{mtopricegroups}}">
+                                    <td class="id_col iconcolumnWidth" data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.id.visible == 0">{{mtopricegroups.id}}</td>
+                                    <td class="status_col" ng-class="{'text-success f-500': mtopricegroups.status==='Active' , 'text-warning f-300': mtopricegroups.status ==='Pending Active', 'text-primary f-300': mtopricegroups.status ==='Inactive','text-info f-300': mtopricegroups.status==='Pending Inactive'}"
+                                        data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.status.visible == 0">{{mtopricegroups.status}}</td>
+                                    <td class="short_description_col" data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.shortDescription.visible == 0">{{mtopricegroups.short_description}}</td>
+                                    <td class="link_description_col iconcolumnwidth text-center p-l-5" data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.link.visible == 0">
+                                        <a class="text-center f-700" ng-click="mtopricectrl.openLinkVendor(mtopricegroups); mtopricectrl.loadVendorPricegroupLinks(mtopricegroups.id)">Vendors</a>
+                                    </td>
+                                    <td class="datalake_col iconcolumnwidth text-center p-l-5" data-ng-hide="mtopricectrl.mtoPriceGroupGrid.columns.datalake.visible == 0">
+                                        <button type="button" class="p-l-5 header-button datalake-button c-gray" ng-click="showMetaData(mtopricectrl.entityInformation,mtopricegroups,permissionsMap);" data-ng-disabled="!permissionsMap.drop">
+                                            <span class="zmdi zmdi-cloud zmdi-hc-fw" data-ng-if="permissionsMap.drop" title="Click here to manage documents" title-direction="right" fixed-position="true"></span>
+                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw" data-ng-if="!permissionsMap.drop" title="Access denied" title-direction="right" fixed-position="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 d-flex justify-content-between align-items-center">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="mtopricectrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtopricectrl.pageSize = 10" ng-class="{'active':mtopricectrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtopricectrl.pageSize = 25" ng-class="{'active':mtopricectrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtopricectrl.pageSize = 50" ng-class="{'active':mtopricectrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtopricectrl.pageSize = 100" ng-class="{'active':mtopricectrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--Details section for each mtoprices data -->
+        <div data-ng-if="mtopricectrl.showVendorLinkDetails" data-ng-include="'./application/modules/mto/pricegroup/panel.mto.pricegroup.vendor.link.html'"></div>
+        <div data-ng-include="'./application/modules/mto/pricegroup/panel.mto.pricegroup.dependency.html'"></div>
+        <div data-ng-include="'./application/modules/mto/pricegroup/panel.mto.pricegroup.vendor.dependency.html'"></div>
+        <meta-data-panel></meta-data-panel>
+        <div class="col-lg-12 p-0" ng-if = "permissionsMap && permissionsMap.view">
+            <div id="refresh-table" class="p-15" data-ng-class="{'toggled':mtopricectrl.isRefreshTable}">
+                <div class="col-xs-6 p-0">
+                    <span class="f-15 f-300 pull-left">{{mtopricectrl.refreshTableText}}</span>
+                </div>
+                <div class="col-xs-6 p-0" data-ng-if="mtopricectrl.totalTimeText">
+                    <span class="pull-right f-300">
+                        <strong>{{mtopricectrl.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{mtopricectrl.totalRecordsText}}</span>
+                        <span ng-bind-html="mtopricectrl.totalTimeText"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    <div ng-if="permissionsMap && !permissionsMap.view && mtopricectrl.isLoaded && !mtopricectrl.rowsCount" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="mtopricectrl.rowsCount === 0 && mtopricectrl.isLoaded && permissionsMap.view" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No MTO price group exists. Please add MTO price group.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/mto/pricegroup/panel.mto.pricegroup.form.html'"></div>
+</div>
+
+
+<!--Details section for each company mtoprices data -->

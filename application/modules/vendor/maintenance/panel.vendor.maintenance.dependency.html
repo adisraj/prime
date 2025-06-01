@@ -1,0 +1,55 @@
+<div id="rcrightsidebar" data-ng-class="{'changeposition': venMaintCtrl.$showErrorDetails === true || showHistory === true,'toggled':venMaintCtrl.$showErrorDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a class="cursor-pointer" data-ng-click="venMaintCtrl.$showErrorDetailsData=false;venMaintCtrl.$showErrorDetails = false;venMaintCtrl.isConfirmDelete = false;">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel">
+                <strong>Vendor</strong> Dependency</label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/entity-config-vendor.svg'"></div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="rc-alert rc-alert-error" aria-hidden="false" role="alert">
+                <div class="rc-alert-icon-section">
+                    <span class="zmdi zmdi-alert-polygon">
+                    </span>
+                </div>
+                <div class="rc-alert-content-section">
+                    <div class="rc-alert-header">Dependency Check - Action can not be completed</div>
+                    <div class="rc-alert-body">
+                        <span>
+                            Before deleting we checked and found some entities are still linked to vendor.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-repeat="($groupName,$dependencyMain) in ( venMaintCtrl.dependencyList | groupBy : 'dependent_entity')">
+            <h4> Dependent Entities - {{$groupName}} </h4>
+            <div class="rcpscrollbar dependency-entityBox">
+                <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                    <div class="dependency-entityList" ng-click="venMaintCtrl.showDependencyListDetails(dependency);">
+                        <span title="{{dependency.description}}">{{dependency.description | truncate:50}}</span>
+                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group pull-right p-10">
+            <button class="btn btn-secondary" ng-click="venMaintCtrl.$showErrorDetailsData=false;venMaintCtrl.$showErrorDetails = false;venMaintCtrl.isConfirmDelete = false;">
+                <span>
+                    <b>Cancel</b>
+                </span>
+            </button>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.dependency.details.html'"></div>
+</div>

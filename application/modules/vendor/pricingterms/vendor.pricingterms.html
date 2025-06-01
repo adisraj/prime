@@ -1,0 +1,380 @@
+<div class="container col-lg-12 p-0" data-ng-controller="VendorpricingtermsController as pricingfactorCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <i class="fas fa-donate fa-3x"></i>
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Financing Payment Factor</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" ng-if="permissionsMap && permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!pricingfactorCtrl.search"> {{pricingfactorCtrl.rowsInfo}} </span>
+                        <span data-ng-if="pricingfactorCtrl.search"> Displaying
+                            {{(pricingfactorCtrl.vendorTermsList|filterBy:['id','description','term_month','loan_type','annual_interest','minimum_monthly','payment_factor','balloon_payment']:pricingfactorCtrl.search).length}}
+                            of {{pricingfactorCtrl.vendorTermsList.length}}
+                            Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap && permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    ng-if="pricingfactorCtrl.vendorTermsList.length > 0">
+                                    <input class="form-control input-sm" type="text" ng-model="pricingfactorCtrl.search"
+                                        id="inlineSearch" name="inlineSearch"
+                                        data-ng-init="pricingfactorCtrl.focusSearchField()" indicate-quick-search
+                                        placeholder="Quick Search" data-ng-disabled="!pricingfactorCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link"
+                            ng-if="pricingfactorCtrl.vendorTermsList.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="pricingfactorCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block  waves-effect"
+                                    data-ng-disabled="!pricingfactorCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link"
+                            ng-if="pricingfactorCtrl.vendorTermsList.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="pricingfactorCtrl.reload(true);"
+                                    class="btn-primal btn-block  waves-effect"
+                                    data-ng-disabled="!pricingfactorCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect"
+                                    data-ng-click="pricingfactorCtrl.openForm(); pricingfactorCtrl.clearData()"
+                                    data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Financing Payment Factor</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15"
+                                style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="pricingfactorCtrl.openForm();" style="padding: 8px 18px"
+                                        class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Payment Factor
+                                    </button>
+                                </li>
+                                <li ng-if="pricingfactorCtrl.vendorTermsList.length > 0">
+                                    <a data-ng-click="pricingfactorCtrl.isLoaded ? pricingfactorCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': !pricingfactorCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="pricingfactorCtrl.vendorTermsList.length > 0">
+                                    <a data-ng-click="pricingfactorCtrl.isLoaded ? pricingfactorCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': !pricingfactorCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration"
+        data-ng-if="!pricingfactorCtrl.rowsCount && !pricingfactorCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="pricingfactorCtrl.rowsCount && pricingfactorCtrl.rowsCount !== 0 && pricingfactorCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="permissionsMap.view && pricingfactorCtrl.isLoaded">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/vendor/pricingterms/hideShowColumns.html'"></div>
+
+                <!-- <div class="table-responsive module-content-configuration" data-ng-if="permissionsMap.view">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="pricingfactorCtrl.isLoaded"> -->
+                <div class="table-responsive module-content-configuration"
+                    data-ng-init="pricingfactorCtrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="!pricingfactorCtrl.isLoading">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        style="width: 8%;"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <!-- <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'status' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'status' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th> -->
+                                    <th class="text-center" id="description_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'description'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.description.visible == 0">
+                                        <span class="handle">Description</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'description' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="term_id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'term_month'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.term_id.visible == 0">
+                                        <span class="handle">Term(Months)</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'term_month' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'term_month' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <th class="text-center" id="loan_id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'loan_type'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.loan_id.visible == 0"  style="text-transform: none;">
+                                        <span class="handle">Type of Loan</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'loan_type' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'loan_type' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <th class="text-center" id="annualinterest_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'annual_interest'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.annualinterest.visible == 0">
+                                        <span class="handle">Annual Interest Rate</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'annual_interest' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'annual_interest' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <th class="text-center" id="min_monthly_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'minimum_monthly'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.min_monthly.visible == 0">
+                                        <span class="handle">Minimum Monthly Payment Percentage</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'minimum_monthly' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'minimum_monthly' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <th class="text-center" id="paymentfactor_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'payment_factor'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.paymentfactor.visible == 0">
+                                        <span class="handle">Payment Factor</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'payment_factor' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'payment_factor' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <th class="text-center" id="balloon_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="pricingfactorCtrl.sortType = 'balloon_payment'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.balloon.visible == 0">
+                                        <span class="handle"> Balloon Payment Percentage</span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'balloon_payment' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'balloon_payment' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <!-- <th class="text-center" id="termdescription_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.termdescription.visible == 0">
+                                        <span class="handle">Description</span> -->
+                                    <!-- <span ng-show="pricingfactorCtrl.sortType == 'description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingfactorCtrl.sortType == 'description' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span> -->
+                                    <!-- </th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="term in pricingfactorCtrl.vendorTermsList|filterBy:['id','description','term_month','annual_interest','payment_factor']:pricingfactorCtrl.search|orderBy:pricingfactorCtrl.sortType:sortReverse|itemsPerPage:pricingfactorCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="pricingfactorCtrl.setClickedRow($index);"
+                                    ios-dblclick="pricingfactorCtrl.dblClickAction(term);" selectedrow="{{term}}">
+                                    <td class="id_col" style="text-align: left;"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.id.visible == 0">
+                                        {{term.id}}
+                                    </td>
+                                    <td class="description_col" style="text-align: left;"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.description.visible == 0">
+                                        <span
+                                            data-ng-if="term.description">{{term.description}}</span>
+                                        <span class="text-muted"
+                                            data-ng-if="!term.description">
+                                        </span>
+                                    </td>
+                                    <td class="term_id_col"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.term_id.visible == 0">
+                                        {{term.term_month}}
+
+                                    </td>
+
+                                    <td class="loan_id_col"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.loan_id.visible == 0">
+                                        {{term.loan_type}}
+
+                                    </td>
+
+                                    <td class="annualinterest_col"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.annualinterest.visible == 0">
+                                        {{term.annual_interest || 0 | DecimalPrecision:3}}
+
+                                    </td>
+
+                                    <td class="min_monthly_col"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.min_monthly.visible == 0">
+                                        {{term.minimum_monthly || 0 | DecimalPrecision:3}}
+
+                                    </td>
+
+                                    <td class="paymentfactor_col"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.paymentfactor.visible == 0">
+                                        {{term.payment_factor}}
+
+                                    </td>
+
+                                    <td class="balloon_col"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.balloon.visible == 0">
+                                        {{term.balloon_payment || 0}}
+
+                                    </td>
+
+                                    <!-- <td class="status_col"
+                                        ng-class="{'text-success f-500': term.status==='Active' , 'text-warning f-300': term.status ==='Pending Active', 'text-primary f-300': term.status ==='Inactive','text-info f-300': term.status==='Pending Inactive'}"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.status.visible == 0">
+                                        {{term.status}}</td> -->
+                                    <!-- <td class="description_col" style="text-align: center;"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.description.visible == 0">
+                                        <span
+                                            data-ng-if="term.pricing_factor || term.pricing_factor == 0">{{term.pricing_factor.toFixed(2)}}</span>
+                                        <span class="text-muted"
+                                            data-ng-if="!term.pricing_factor && term.pricing_factor != 0">
+                                            Null
+                                        </span>
+                                    </td> -->
+                                    <!-- <td class="termdescription_col"
+                                        data-ng-hide="pricingfactorCtrl.vendorTermGrid.columns.termdescription.visible == 0">
+                                    </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-between align-items-center">
+                        <dir-pagination-controls template-url="rc-pagination.html" boundary-links="true"
+                            on-page-change="pricingfactorCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group ng-table-counts">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="pricingfactorCtrl.pageSize = 10"
+                                ng-class="{'active':pricingfactorCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="pricingfactorCtrl.pageSize = 25"
+                                ng-class="{'active':pricingfactorCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="pricingfactorCtrl.pageSize = 50"
+                                ng-class="{'active':pricingfactorCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="pricingfactorCtrl.pageSize = 100"
+                                ng-class="{'active':pricingfactorCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Details section for each vendor purchase data -->
+    <div data-ng-include="'./application/modules/vendor/pricingterms/panel.vendor.pricingterms.dependency.html'"></div>
+    <meta-data-panel></meta-data-panel>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':pricingfactorCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{pricingfactorCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="pricingfactorCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{pricingfactorCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{pricingfactorCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="pricingfactorCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!permissionsMap.view && pricingfactorCtrl.isLoaded && pricingfactorCtrl.rowsCount"
+        data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="pricingfactorCtrl.rowsCount === 0 && pricingfactorCtrl.isLoaded && permissionsMap.view"
+        class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No Financing Payment Factor exists. Please add Payment Factor.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/vendor/pricingterms/panel.vendor.pricingterms.form.html'"></div>
+</div>

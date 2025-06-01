@@ -1,0 +1,76 @@
+<div>
+    <div class="rcp-table-container">
+        <div class="card col-sm-12 m-b-10 p-20" style="border-radius: 5px;">
+            <ng-form name="saCtrl.sku_setting_form" role="form" novalidate="novalidate">
+                <div class="col-xs-12 p-0 form-horizontal">
+                    <div class="col-xs-4 m-b-10">
+                        <label>SKU Type</label>
+                        <select class="form-control select-component input-sm" name="sku_type" ng-model="saCtrl.skuParams.data.type" ng-model="saCtrl.skuParams.data.type" errorvaluechosen="saCtrl.skuParams.data.sku_type_error" class="form-control" required="">
+                        <option value="" disabled> Select Type</option>
+                        <option value="automatic">Automatic</option>
+                        <option value="manual">Manual</option>
+                    </select>
+                    </div>
+                    <div class="col-xs-4 m-b-10">
+                        <label>Algorithm</label>
+                        <select name="algorithm" class="form-control select-component input-sm" ng-model="saCtrl.skuParams.data.algorithm" errorvaluechosen="saCtrl.skuParams.data.algorithm_error" class="form-control" required="">
+                        <option value="" disabled>Select Algorithm</option>
+                        <option value="ean-13" >EAN-13</option>
+                        <!-- ng-options="each.algorithm as each.algorithm for each in saCtrl.skuFormats | unique: 'algorithm'" -->
+                    </select>
+                    </div>
+                    <div class="col-xs-4 m-b-10">
+                        <label>SKU Length </label>
+                        <input name="sku_length" class="form-control input-sm" type="text" ng-model="saCtrl.skuParams.data.sku_length" ng-pattern="/^[0-9 \\s]+$/" errorvalue="eachItemMaster.data.sku_length_error" required="" ng-model-options="{updateOn: 'blur'}" />
+                        <p ng-if="saCtrl.sku_setting_form.sku_length.$error.pattern" class="m-b-0 c-red">Sku length should be integer</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0">
+                    <div class="col-xs-4 m-b-10">
+                        <label>Start</label><br/>
+                        <input name="start" class="form-control input-sm" type="text" ng-model="saCtrl.skuParams.data.start" errorvalue="eachItemMaster.data.start_error" ng-blur="saCtrl.checkStartEnd(saCtrl.skuParams.data)" ng-pattern="/^[0-9\\s]+$/" required="" />
+                        <p ng-if="saCtrl.sku_setting_form.start.$error.pattern" class="m-b-0 c-red">Start should be integer</p>
+                    </div>
+                    <div class="col-xs-4 m-b-10">
+                        <label>End</label><br/>
+                        <input name="end" class="form-control input-sm" type="text" ng-model="saCtrl.skuParams.data.end" errorvalue="eachItemMaster.end_error" ng-blur="saCtrl.checkStartEnd(saCtrl.skuParams.data)" ng-pattern="/^[0-9 \\s]+$/" />
+                        <p ng-if="saCtrl.start_end_error" class="m-b-0 c-red">Start value should be less than end</p>
+                        <p ng-if="saCtrl.sku_setting_form.end.$error.pattern" class="m-b-0 c-red">End should be integer</p>
+                    </div>
+                    <div class="col-xs-4 m-b-10">
+                        <label>Current</label><br/>
+                        <input name="current" class="form-control input-sm" type="text" ng-model="saCtrl.skuParams.data.current" ng-blur="saCtrl.current_check(saCtrl.skuParams.data)" ng-pattern="/^[0-9 \\s]+$/" />
+                        <p ng-if="saCtrl.current_error" class="m-b-0 c-red">Current value should lie between start and end</p>
+                        <p ng-if="saCtrl.sku_setting_form.current.$error.pattern" class="m-b-0 c-red">Current should be integer</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0">
+                    <div class="col-xs-4 m-b-10">
+                        <label>Check Digit</label>
+                        <div class="checkbox">
+                            <label>
+                                <input hidden="hidden" id="check_digit" ng-model="saCtrl.skuParams.data.check_digit" ng-true-value="1"  ng-false-value="0"  type="checkbox"><i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-8 m-b-10">
+                        <div class="col-xs-2 p-0">
+                        </div>
+                        <div class="col-xs-6 p-0">
+                            <div data-ng-show="saCtrl.message" class="alert alert-success">
+                                <button type="button" class="close" data-ng-click="saCtrl.message=null" aria-hidden="true">&times;</button> {{saCtrl.message}}
+                            </div>
+                            <div data-ng-show="saCtrl.errorMessage" class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-ng-click="saCtrl.errorMessage=null" aria-hidden="true">&times;</button> {{saCtrl.errorMessage}}
+                            </div>
+                        </div>
+                        <div class="col-xs-4 p-0">
+                            <button class="pull-right btn btn-primal m-l-5" data-ng-click="saCtrl.saveSkuAssignment(saCtrl.skuParams.data);" data-ng-disabled="!saCtrl.isLoaded || saCtrl.sku_setting_form.$invalid">Update</button>
+                            <button class="pull-right btn btn-secondary" data-ui-sref="common.prime.skuformat">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </ng-form>
+        </div>
+    </div>
+</div>

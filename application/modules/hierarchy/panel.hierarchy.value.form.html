@@ -1,0 +1,160 @@
+<!--Details section for each Hierarchy Properties data -->
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar"
+    data-ng-class="{'toggled':valueCtrl.showValueDetails === true || valueCtrl.showValueDetails === 1,'changeposition':showhistory === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button class="close-icon bg-none border-none btn-link p-0" id="hierarchy_value_done" name="hierarchy_value_done" data-ng-click="valueCtrl.closeForm();closeShowHistory();valueCtrl.focusGoback();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div ng-if="!valueCtrl.showHierarchyValueParent" class="panel-name-section">
+            <label class="rclabel editformlabel  p-l-15"
+                ng-if="(!valueCtrl.isConfirmValueDelete && valueCtrl.showHierarchyValueAdd)" entity-id=""
+                title="{{parent_value_description}}">Child for<strong>
+                    {{parent_value_description | truncate: 30}}</strong></label>
+        </div>
+        <div ng-if="valueCtrl.showHierarchyValueParent" class="panel-name-section">
+            <label class=" rclabel editformlabel"
+                ng-if="(!valueCtrl.isDeleteSuccess && !valueCtrl.isConfirmValueDelete && valueCtrl.showHierarchyValueAdd)"
+                title="{{valueCtrl.entityInformation.name}}">Create
+                <strong>{{valueCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel p-l-15"
+                ng-if="(!valueCtrl.isDeleteSuccess && !valueCtrl.isConfirmValueDelete && !valueCtrl.showHierarchyValueAdd)"
+                title="{{valueCtrl.entityInformation.name}}">Update
+                <strong>{{valueCtrl.entityInformation.name | truncate :16}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(valueCtrl.isDeleteSuccess || valueCtrl.isConfirmValueDelete && !valueCtrl.showHierarchyValueAdd)"
+                title="{{valueCtrl.entityInformation.name}}">Delete
+                <strong>{{valueCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!valueCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="!(valueCtrl.isUpdateValueSuccess || valueCtrl.isSaveValueSuccess || valueCtrl.isConfirmValueDelete || valueCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/hierarchy-levels.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div class="col-xs-12 p-0"
+                ng-if="!(valueCtrl.isUpdateValueSuccess || valueCtrl.isSaveValueSuccess || valueCtrl.isConfirmValueDelete || valueCtrl.isDeleteSuccess)">
+                <ng-form name="valueCtrl.hierarchyPropDetails_form" role="form" novalidate="novalidate"
+                    valdr-type="RULES-26">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="valueCtrl.hierarchyPropDetails_form.short_description.$invalid">*
+                        </span>
+                        <span class="c-green" ng-show="valueCtrl.hierarchyPropDetails_form.short_description.$valid">*
+                        </span>
+                        <label>Short Description</label>
+                        <input name="short_description" id="short_description" type="text"
+                            class="form-control input-sm" ng-model="hierr_details.short_description_ops"
+                            errorvalue="hierr_details.short_description_error" placeholder="Enter Short Description"
+                            required="" ng-model-options="{ updateOn: 'blur' }" auto-focus>
+                    </div>
+                    <div class="form-group" valdr-form-group data-ng-if="valueCtrl.showHierarchyValueAdd===true">
+                        <span class="c-red" ng-show="valueCtrl.hierarchyPropDetails_form.status_active.$invalid">*
+                        </span>
+                        <span class="c-green" ng-show="valueCtrl.hierarchyPropDetails_form.status_active.$valid">*
+                        </span>
+                        <label>Status</label>
+                        <select id="status_active" name="status_active"
+                            ng-init="setpropstatusactive(showHierarchyValueAdd);" dropdata="statuses"
+                            ng-options="item.code as item.description for item in statuses"
+                            ng-model="hierr_details.status_id"  errorvaluechosen="hierr_details.status_id_error"
+                            data-ng-change="hierr_details.status=(statuses|filter:{code:hierr_details.status_id})[0].description"
+                            class="form-control select-component input-sm" required="">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div>
+                    <div class="form-group" valdr-form-group data-ng-if="valueCtrl.showHierarchyValueAdd===false">
+                        <span class="c-red" ng-show="valueCtrl.hierarchyPropDetails_form.status_active.$invalid">*
+                        </span>
+                        <span class="c-green" ng-show="valueCtrl.hierarchyPropDetails_form.status_active.$valid">*
+                        </span>
+                        <label>Status</label>
+                        <select id="on_update_status_active" name="status_active"
+                            ng-init="setpropstatusactive(showHierarchyValueAdd);" dropdata="statuses"
+                            ng-options="item.code as item.description disable when (item.code === valueCtrl.statusCodes.Pending.ID && valueCtrl.oldHierPropDetails.status_id !== valueCtrl.statusCodes.Pending.ID) for item in statuses"
+                            ng-model="hierr_details.status_id" errorvaluechosen="hierr_details.status_id_error"
+                            class="form-control select-component input-sm" required="">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" valdr-form-group data-ng-if="!selectedHierarchy.is_group">
+                        <span class="c-red" ng-show="valueCtrl.hierarchyPropDetails_form.sequence.$invalid">*
+                        </span>
+                        <span class="c-green" ng-show="valueCtrl.hierarchyPropDetails_form.sequence.$valid">*
+                        </span>
+                        <label>Display Sequence</label>
+                        <input name="sequence" id="sequence" type="text"
+                            class="form-control input-sm" ng-model="hierr_details.display_sequence"
+                            errorvalue="hierr_details.display_sequence_error" placeholder="Enter Display Sequence"
+                            required="" ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" ng-if="selectedHierarchy && selectedHierarchy.is_primary_item_hierarchy_id">
+                        <span class="c-red" ng-show="valueCtrl.hierarchyPropDetails_form.node_visibility.$invalid">*
+                        </span>
+                        <span class="c-green" ng-show="valueCtrl.hierarchyPropDetails_form.node_visibility.$valid">*
+                        </span>
+                        <label>Display in PE</label>
+                        <div class="align-items-center d-flex">
+                            <label class="m-r-20 align-items-center d-flex">
+                                <input type="radio" name="node_visibility" ng-model="hierr_details.node_visibility" class="m-t-0"
+                                    data-ng-click="valueCtrl.checkParentsVisibility(selectedNode);" value="1">
+                                <i class="input-helper"></i>Yes
+                            </label>
+                            <label class="m-r-20 align-items-center d-flex">
+                                <input type="radio" name="node_visibility" ng-model="hierr_details.node_visibility" class="m-t-0"
+                                    data-ng-click="valueCtrl.validationError = null" value="0">
+                                <i class="input-helper"></i>No
+                            </label>
+                        </div>
+                        <span class="text-danger" data-ng-if="valueCtrl.validationError"
+                            style="display: block;font-size: 11px;color: #e41708;font-family: 'lato','Roboto'; margin: 3px 1px 1px 1px;">
+                            {{valueCtrl.validationError}}
+                        </span>
+                    </div>
+                    <rcp-edit-form-btns new-form="valueCtrl.showHierarchyValueAdd"
+                        save-fn="valueCtrl.save(hierr_details);" save-btn-text="valueCtrl.saveValueBtnText"
+                        save-btn-error="valueCtrl.saveValueBtnError" update-fn="valueCtrl.update(hierr_details);"
+                        update-btn-text="valueCtrl.updateValueBtnText" update-btn-error="valueCtrl.updateValueBtnError"
+                        confirm-fn="valueCtrl.showconfirm();closeShowHistory();"
+                        confirm-delete="valueCtrl.isConfirmValueDelete" update-success="valueCtrl.isUpdateValueSuccess"
+                        entity-id="hierr_details.editId"
+                        enable-button="valueCtrl.hierarchyPropDetails_form.$invalid || nodeVisibilityForm.$invalid"
+                        access-permissions="permissionsMap"></rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="valueCtrl.isConfirmValueDelete" image-name="hierarchy-levels.svg"
+                close-fn="valueCtrl.closeForm();valueCtrl.focusGoback();" delete-fn="valueCtrl.delete(hierr_details);"
+                confirm-delete="valueCtrl.isConfirmValueDelete"></rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" close-fn="valueCtrl.closeForm();valueCtrl.focusGoback();"
+                update-success="valueCtrl.isUpdateValueSuccess" save-success="valueCtrl.isSaveValueSuccess"
+                delete-success="valueCtrl.isDeleteSuccess" create-new-fn="valueCtrl.createAnotherForm();">
+            </rcp-success-form>
+            <div
+                ng-if="isMaintenance !== true&&!valueCtrl.showHierarchyValueAdd&&hierr_details.id&&!valueCtrl.isUpdateValueSuccess && !valueCtrl.isConfirmValueDelete && !valueCtrl.isDeleteSuccess">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn"
+                    data-ng-click="loadHistory();" data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View
+                    History</button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading history...
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-show="valueCtrl.message" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="valueCtrl.message = null"
+                aria-hidden="true">&times;</button> {{valueCtrl.message}}
+        </div>
+    </div>
+    <div ng-if="valueCtrl.isUnauthorized && (valueCtrl.showHierarchyValueAdd || !valueCtrl.showHierarchyValueAdd || valueCtrl.isConfirmValueDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-xs-12" ng-if="!valueCtrl.showHierarchyValueAdd && valueCtrl.isShowHistory"
+    data-ng-include="'./application/templates/history.html'"></div>

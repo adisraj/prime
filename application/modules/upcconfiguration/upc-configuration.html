@@ -1,0 +1,290 @@
+<style>
+    .arrow-style {
+        color: brown;
+    }
+
+    .short_description_col {
+        background: #fafdfb;
+    }
+
+    .arrow_box_menu:after {
+        top: 25%
+    }
+</style>
+<div class="container col-lg-12 p-0" data-ng-controller="UpcConfigurationController as itemTypeCtrl">
+    <!--list panel-->
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="itemTypeCtrl.openForm()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="itemTypeCtrl.closeForm();itemTypeCtrl.isColumnSettingsVisible = false" />
+        </li>
+        <li>
+            <keybinding on="ctrl+f" invoke="itemTypeCtrl.focusSearchField()" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="itemTypeCtrl.reload('refresh')" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="itemTypeCtrl.isColumnSettingsVisible = true" />
+        </li>
+    </ul>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/entity-config-item.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">UPC Configuration</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="tableheader-btn">
+                        <span data-ng-if="!itemTypeCtrl.search"> {{itemTypeCtrl.rowsInfo}} </span>
+                        <span data-ng-if="itemTypeCtrl.search"> Displaying
+                            {{(itemTypeCtrl.itemTypes|filterBy:['sku_id','searchItemTypePath']:itemTypeCtrl.search).length}}
+                            of {{itemTypeCtrl.itemTypes.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap.view">
+                            <a>
+                                <div class="search-section-item-type tableheader-btn pull-right"
+                                    ng-if="itemTypeCtrl.itemTypes.length > 0">
+                                    <input class="form-control input-sm" type="text" ng-model="itemTypeCtrl.search"
+                                        id="inlineSearch" name="inlineSearch"
+                                        data-ng-init="itemTypeCtrl.focusSearchField()" indicate-quick-search
+                                        placeholder="Quick Search" data-ng-disabled="!itemTypeCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="itemTypeCtrl.itemTypes.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="itemTypeCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block waves-effect" data-ng-disabled="!itemTypeCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="itemTypeCtrl.itemTypes.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="itemTypeCtrl.reload(true);"
+                                    class="btn-primal btn-block waves-effect" data-ng-disabled="!itemTypeCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!itemTypeCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="itemTypeCtrl.rowsCount > 0 && itemTypeCtrl.isLoaded && itemTypeCtrl.isHierarchyValueMap">
+        <div class="rcp-table-container" ng-if="permissionsMap.view">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/upcconfiguration/hideShowColumns.html'"></div>
+                <div class="table-responsive module-content-configuration">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="box-shadow-none table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table"
+                            style="margin-bottom:110px">
+                            <thead data-ng-show="itemTypeCtrl.isLoaded">
+                                <tr>
+                                    <!-- <th class="text-center iconcolumnwidth" data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.select.visible == 0">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input class="cbs" type="checkbox" ng-model="itemTypeCtrl.checkAll" ng-true-value="1" ng-false-value="0" ng-disabled="itemTypeCtrl.disableCheckboxes"
+                                                    ng-click="itemTypeCtrl.enableOrDisableCheckboxes(itemTypeCtrl.checkAll)">
+                                                <i class="input-helper"></i>
+                                            </label>
+                                        </div>
+                                    </th> -->
+                                    <!-- <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="itemTypeCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down"></span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up"></span>
+                                    </th> -->
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="itemTypeCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.sku_id.visible == 0">
+                                        <span class="handle">SKUID</span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'status' && !sortReverse"
+                                            class="zmdi zmdi-caret-down"></span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'status' && sortReverse"
+                                            class="zmdi zmdi-caret-up"></span>
+                                    </th>
+                                    <th class="text-center" id="sku_number_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="itemTypeCtrl.sortType = 'sku_number'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.sku_number.visible == 0">
+                                        <span class="handle">SKU_Number</span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'sku_number' && !sortReverse"
+                                            class="zmdi zmdi-caret-down"></span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'sku_number' && sortReverse"
+                                            class="zmdi zmdi-caret-up"></span>
+                                    </th>
+                                    <th class="text-center" id="vendor_id_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="itemTypeCtrl.sortType = 'vendor_id'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.vendor_id.visible == 0">
+                                        <span class="handle">vendor ID</span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'vendor_id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down"></span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'vendor_id' && sortReverse"
+                                            class="zmdi zmdi-caret-up"></span>
+                                    </th>
+                                    <th class="text-center" id="vendor_item_description_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="itemTypeCtrl.sortType = 'vendor_item_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.vendor_item_description.visible == 0">
+                                        <span class="handle">vendor Description</span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'vendor_item_description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down"></span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'vendor_item_description' && sortReverse"
+                                            class="zmdi zmdi-caret-up"></span>
+                                    </th>
+                                    <th class="text-center" id="choice_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="itemTypeCtrl.sortType = 'default_pricing_choice'; sortReverse = !sortReverse"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.upc_number.visible == 0">
+                                        <span class="handle">UPC Number</span>
+                                        <span
+                                            ng-show="itemTypeCtrl.sortType == 'default_pricing_choice' && !sortReverse"
+                                            class="zmdi zmdi-caret-down"></span>
+                                        <span ng-show="itemTypeCtrl.sortType == 'default_pricing_choice' && sortReverse"
+                                            class="zmdi zmdi-caret-up"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="itemtype in itemTypeCtrl.itemTypes|filterBy:['sku_id','searchItemTypePath']:itemTypeCtrl.search|orderBy:itemTypeCtrl.sortType:sortReverse|itemsPerPage:itemTypeCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}">
+                                    <!-- <td class="text-center" data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.select.visible == 0">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" ng-model="itemtype.check" ng-true-value="1" ng-false-value="0" ng-disabled="itemTypeCtrl.disableCheckboxes"
+                                                    ng-click="itemTypeCtrl.enableDisable()">
+                                                <i class="input-helper"></i>
+                                            </label>
+                                        </div>
+                                    </td> -->
+                                    <!-- <td class="id_col text-center" 
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.id.visible == 0">{{itemtype.id}}
+                                    </td> -->
+                                    <td class="status_col"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.sku_id.visible == 0">
+                                        {{itemtype.sku_id}}</td>
+                                    <td class="sku_number_col"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.sku_number.visible == 0">
+                                        {{itemtype.sku_number}}</td>
+                                    <td class="vendor_id_col"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.vendor_id.visible == 0">
+                                        {{itemtype.vendor_id}}</td>
+                                    <td class="vendor_item_description_col"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.vendor_item_description.visible == 0">
+                                        {{itemtype.vendor_item_description}}</td>
+                                    <td class="choice_col"
+                                        data-ng-hide="itemTypeCtrl.itemTypeGrid.columns.upc_number.visible == 0">
+                                        {{itemtype.upc_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                            boundary-links="true" on-page-change="itemTypeCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="itemTypeCtrl.pageSize = 10"
+                                ng-class="{'active':itemTypeCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="itemTypeCtrl.pageSize = 25"
+                                ng-class="{'active':itemTypeCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="itemTypeCtrl.pageSize = 50"
+                                ng-class="{'active':itemTypeCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="itemTypeCtrl.pageSize = 100"
+                                ng-class="{'active':itemTypeCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="!permissionsMap.view && itemTypeCtrl.isLoaded"
+            data-ng-include="'./application/templates/restricted.access.html'"></div>
+        <div data-ng-include="'./application/modules/item/type/panel.item.type.dependency.html'"></div>
+        <div data-ng-if="itemTypeCtrl.isShowClonePanel===true"
+            data-ng-include="'./application/modules/item/type/panel.clone.item.type.html'"></div>
+        <div data-ng-show="itemTypeCtrl.showSKUList"
+            data-ng-include="'./application/modules/upcconfiguration/panel.upcconfiguration.form.html'"></div>
+        <meta-data-panel></meta-data-panel>
+    </div>
+    <div data-ng-if="itemTypeCtrl.rowsCount === 0 && itemTypeCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No item type exists. Please add item type.</span>
+        </div>
+    </div>
+    <ui-view></ui-view>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':itemTypeCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{itemTypeCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="itemTypeCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{itemTypeCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{itemTypeCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="itemTypeCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

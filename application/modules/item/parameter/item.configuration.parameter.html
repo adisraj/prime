@@ -1,0 +1,36 @@
+<div class="col-lg-12 p-l-5 p-r-5" style="width:180px;">
+    <div data-ng-controller="ItemParameterController as itemParamCtrl">
+        <div class="col-xs-12 p-0 d-flex parametersection">
+            <div class="col-xs-12 p-0 configuration-status justify-content-end">
+                <div class="col-xs-12 pull-right p-0">
+                    <div class="status-value cursor-not-allowed " disabled
+                        ng-class="{'f-500 highlight-text-success':itemParamCtrl.itemParams.status === 'Active',' f-500 highlight-text-warning':itemParamCtrl.itemParams.status === 'Pending','f-500 highlight-text-danger':itemParamCtrl.itemParams.status === 'Inactive','f-500 highlight-text-info':itemParamCtrl.itemParams.status === 'Discontinued','disable-pointer': !itemTypeCtrl.isLoaded}">
+                        <span>{{itemParamCtrl.itemParams.status}}</span>
+                        <span class="zmdi zmdi-edit zmdi-hc-fw pull-right"
+                            data-ng-class="{'disable-pointer': true}"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="editparameter" class="col-xs-12 p-0 status-value"
+                style="height:30px;background: rgb(245, 245, 245);"
+                data-ng-class="{'toggled':itemParamCtrl.isShowDetails === true}">
+                <div class="col-xs-9 p-0">
+                    <select id="status_id" name="itemParamCtrl.parameterForm.status_id"
+                        ng-model="itemParamCtrl.itemParams.status_id"
+                        errorvaluechosen="itemParamCtrl.itemParams.status_id_error"
+                        ng-options="each.code as each.description for each in statuses"
+                        class="form-control select-component input-sm">
+                        <option value="" disabled>Select an option</option>
+                    </select>
+                </div>
+                <div class="col-xs-3 f-17 d-flex p-0"
+                    style="align-items: center;height: 100%;justify-content: space-around;">
+                    <span class="zmdi zmdi-check zmdi-hc-fw c-green cursor-pointer"
+                        data-ng-click="itemParamCtrl.saveItemParameter(itemParamCtrl.itemParams);"></span>
+                    <span class="zmdi zmdi-close zmdi-hc-fw c-red cursor-pointer"
+                        data-ng-click="itemParamCtrl.isShowDetails = false;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

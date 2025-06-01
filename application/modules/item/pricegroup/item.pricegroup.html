@@ -1,0 +1,83 @@
+<div class="container col-lg-12 p-0" data-ng-controller="ItemPriceGroupController as priceGroupCtrl">
+    <div>
+        <div class="rc-module-header d-flex">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                        aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/entity-config-item.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">{{priceGroupCtrl.selectedItemType.desc}} - Price Classification
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex" style="flex: 5;"></div>
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right m-r-5">
+                        <li>
+                            <a>
+                                <button type="button" class="btn btn-cancel waves-effect f-700" data-ui-sref="common.prime.itemtype">Go Back</button>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!priceGroupCtrl.rowsCount && !priceGroupCtrl.isLoaded && priceGroupCtrl.isViewAuthorized">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div data-ng-if="priceGroupCtrl.rowsCount > 0">
+            <div class="rcp-table-container">
+                <div class="col-xs-12 p-0">
+                    <div class="table-responsive module-content-configuration">
+                        <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                            <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" id="value_short_description_col_head" ng-click="priceGroupCtrl.sortType = 'value_short_description'; sortReverse = !sortReverse">
+                                            <span class="handle">Pricing Classification</span>
+                                            <span ng-show="priceGroupCtrl.sortType == 'value_short_description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="priceGroupCtrl.sortType == 'value_short_description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" style="width:15%" id="price_percentage_col_head" ng-click="priceGroupCtrl.sortType = 'price_percentage'; sortReverse = !sortReverse">
+                                            <span class="handle">Price Percentage</span>
+                                            <span ng-show="priceGroupCtrl.sortType == 'price_percentage' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="priceGroupCtrl.sortType == 'price_percentage' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="group in priceGroupCtrl.groups = priceGroupCtrl.pricegroupsList|filter:search|orderBy:priceGroupCtrl.sortType:sortReverse"
+                                        ng-class="{'background-hover':$index === selectedRow}" data-ng-click="priceGroupCtrl.setClickedRow($index);"
+                                        ios-dblclick="priceGroupCtrl.dblClickAction(group);" selectedrow="{{group}}">
+                                        <td class="value_short_description_col">{{group.value_short_description}}</td>
+                                        <td class="price_percentage_col text-center">{{group.price_percentage | DecimalPrecision:2}}%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ui-view></ui-view>
+        <div data-ng-if="priceGroupCtrl.rowsCount === 0">
+            <div class="col-xs-12 m-10">
+                <span class="f-15 f-300 pull-left">No pricing class exists for selected item type[s].</span>
+            </div>
+        </div>
+        <div ng-if="!priceGroupCtrl.isViewAuthorized" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    </div>
+</div>

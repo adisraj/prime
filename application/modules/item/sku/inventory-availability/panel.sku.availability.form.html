@@ -1,0 +1,201 @@
+<div data-ng-controller="InventoryAvailabilty as availabilityController">
+    <div id="rcrightsidebar"
+        data-ng-class="{'toggled':true, 'changeposition':availabilityController.isShowInventoryUpdate === true}">
+        <style>
+            .panel-heading .accordion-toggle:after {
+                font-family: 'Glyphicons Halflings';
+                content: "\e114";
+                float: right;
+                color: grey;
+            }
+
+            .panel-heading .accordion-toggle.collapsed:after {
+                content: "\e080";
+            }
+
+            .panel-body {
+                border: 1px solid #eaeaea;
+            }
+
+            .bgm-aliceblue {
+                background: #e5ffe5 !important;
+            }
+
+            .sku-availability-section {
+                margin-bottom: 12px;
+                box-shadow: 0px 0px 3px 1px #cacaca;
+            }
+
+            .sku-availability-section .section-header {
+                border-bottom: 2px dotted #d6d6d6;
+                color: #2774a5;
+                font-weight: 500;
+                background: #f7f7f7;
+            }
+
+            .sku-availability-section .section-body {
+                padding: 10px;
+            }
+
+            .sku-availability-section .section-body.parent-sku {
+                background: #f6faff;
+                color: #ff0143;
+                border-bottom: 2px dotted#d6d6d6;
+            }
+        </style>
+        <div class="m-t-25 d-flex">
+            <button type="button" id="check_avail_close" class="cursor-pointer p-0 p-absolute bg-none border-none btn-link" data-ng-click="availabilityController.goBack()">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </button>
+            <div class="p-0 m-auto">
+                <label class="rclabel editformlabel" title="Availability">SKU
+                    <strong>Availability</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-lg-12 m-t-20 m-b-20" ng-if="availabilityController.isLoaded">
+            <div class="d-flex m-b-10 m-t-10">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/sku-availability.svg'"></div>
+                </div>
+            </div>
+            <table class="table-bordered-sm table-condensed m-t-20">
+                <tbody>
+                    <!-- <tr>
+                    <span class="text-success">
+                            <b> {{availabilityController.skuAvailability}}</b>
+                    </span>
+                </tr> -->
+                    <tr>
+                        <td>Status</td>
+                        <td>{{availabilityController.sku_details.status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Type</td>
+                        <td style="text-transform: capitalize;">{{availabilityController.sku_details.sku_type}}</td>
+                    </tr>
+                    <tr>
+                        <td>Item </td>
+                        <td>{{availabilityController.sku_details.item_description}}</td>
+                    </tr>
+                    <tr>
+                        <td>SKU # </td>
+                        <td>
+                            <a class="cloudcart-admin-sku-number">{{availabilityController.sku_details.sku }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <td>
+                            <strong>{{availabilityController.sku_details.description}}</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-12" ng-if="availabilityController.sku_details.sku_sub_type.toLowerCase()!=='set'">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default" ng-repeat="availability in availabilityController.availability">
+                    <div class="panel-heading col-xs-12 m-b-10"
+                        data-ng-class="{'bgm-aliceblue':availability.selected && availabilityController.isShowInventoryUpdate}">
+                        <h4 class="panel-title" style="height : 15px;">
+                            <button type="button" class="p-10 accordion-toggle cursor-pointer col-xs-12 p-0 bg-none border-none text-left" id="check_availability_toggle" name="check_availability_toggle" data-toggle1="collapse"
+                                data-ng-class="{'collapsed':!availability.isExpanded}" data-parent="#accordion"
+                                data-target="{{ '#' + availability.id }} "
+                                ng-click="availabilityController.loadAvailability(availability,availabilityController.sku_details.id);">
+                                <span class="f-13">
+                                    <a>{{ availability.name }}</a>
+                                </span>
+                            </button>
+                        </h4>
+                    </div>
+                    <div id="{{availability.id}}" data-ng-class="{'in':availability.isExpanded === true}"
+                        class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="col-lg-12 text-info d-flex d-flex-v-center"
+                                ng-if="availability.isSkuAvailable === false" style="justify-content: space-between;">
+                                <span class="f-12 f-300">SKU not available at this location
+                                </span>
+                                <button ng-if="availabilityController.isCreateupdateAvailability==1"
+                                    class="btn btn-success btn-sm f-700 pull-right"
+                                    data-ng-click="availabilityController.openUpdateInventoryPanel(availability,availabilityController.sku_details.id);">
+                                    Add Inventory</button>
+                            </div>
+                            <div class="col-lg-12 " ng-if="availability.isSkuAvailable === true">
+                                <button class="btn btn-success btn-sm f-700 pull-right m-b-10"
+                                    data-ng-if="availabilityController.isCreateupdateAvailability==1"
+                                    data-ng-click="availabilityController.openUpdateInventoryPanel(availability, availabilityController.sku_details.id);">Update
+                                    Inventory
+                                </button>
+                                <table class="table table-condensed table-bordered table-bordered-sm table-vmiddle">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Type</th>
+                                            <th>Quality</th>
+                                            <th style="width:10% ">Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="details in availability.skuavailabilityList ">
+                                            <td class="f-14">{{ details.inventory_type}}</td>
+                                            <td class="f-14">{{ details.inventory_quality}}</td>
+                                            <td class="f-14 text-center f-700 c-firebrick">
+                                                {{ details.inventory_quantity}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sku Availability For SET SKU Start -->
+        <div class="col-lg-12" ng-if="availabilityController.sku_details.sku_sub_type.toLowerCase()==='set'">
+            <div class="col-xs-12 p-0">
+                <div class="rc-alert rc-alert-info m-t-10 col-xs-12 m-b-10" aria-hidden="false" role="alert">
+                    <div class="col-xs-12 d-flex m-b-5 p-0">
+                        <div class="rc-alert-icon-section">
+                            <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                            </span>
+                        </div>
+                        <div>
+                            <!-- <div class="f-16 f-700 text-info m-b-5">This UDD is being used in {{venTypeUDDCtrl.vendorUddError.data.ids.length}} vendor[s].</div> -->
+                            <div>
+                                <div class="m-b-5">
+                                    <span class="f-15">
+                                        Availability of a Set SKU is calculated based on the availability status of its
+                                        components.
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="f-15">** Set SKU availability would be <strong>worst</strong> component
+                                        Inventory Availability status of its components.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-repeat="(key, value) in availabilityController.setSkuAvailability | groupBy:'location'">
+                <div class="col-xs-12 p-0 sku-availability-section">
+                    <div class="section-header p-5">
+                        <div><span class="glyphicon glyphicon-map-marker f-11"></span>{{key}}</div>
+                    </div>
+                    <div class="d-flex section-body" data-ng-repeat="setSkuavailability in value"
+                        style="justify-content:space-between"
+                        ng-class="{'parent-sku':setSkuavailability.sku_id===availabilityController.sku_details.id}">
+                        <div>{{setSkuavailability.sku_name}}</div>
+                        <div class="f-14 text-success f-700">{{setSkuavailability.status}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Sku Availability For SET SKU End -->
+    </div>
+    <div
+        data-ng-include="'./application/modules/item/sku/inventory-availability/panel.update.inventory.availability.form.html' ">
+    </div>
+</div>

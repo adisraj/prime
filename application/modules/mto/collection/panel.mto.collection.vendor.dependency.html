@@ -1,0 +1,101 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':mtoColCtrl.isShowLinkedDetails === true || mtoColCtrl.isShowLinkedDetails === 1}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="mtoColCtrl.closeVendorLinkDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>MTO Choice</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Choice Description</td>
+                        <td title="{{mtoColCtrl.choiceLinkDetails.choice_description}}">{{mtoColCtrl.choiceLinkDetails.choice_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Collection</td>
+                        <td class="highlight-text-success" title="{{mtoColCtrl.choiceLinkDetails.collection}}">{{mtoColCtrl.choiceLinkDetails.collection}}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Status</td>
+                        <td title="{{mtoColCtrl.choiceLinkDetails.status}}">{{mtoColCtrl.choiceLinkDetails.status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Next Status</td>
+                        <td title="{{mtoColCtrl.choiceLinkDetails.next_status_value}}">{{mtoColCtrl.choiceLinkDetails.next_status_value}}</td>
+                    </tr>
+                    <tr>
+                        <td>Next Effective Date</td>
+                        <td ng-show="mtoColCtrl.choiceLinkDetails.next_status_value !== 'None'" title="{{mtoColCtrl.choiceLinkDetails.next_effective_date | FormatDate}}">{{mtoColCtrl.choiceLinkDetails.next_effective_date | FormatDate}}</td>
+                        <td ng-show="mtoColCtrl.choiceLinkDetails.next_status_value === 'None'">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Family</td>
+                        <td data-ng-show="mtoColCtrl.choiceLinkDetails.family" title="{{mtoColCtrl.choiceLinkDetails.family}}">{{mtoColCtrl.choiceLinkDetails.family}}</td>
+                        <td data-ng-show="!mtoColCtrl.choiceLinkDetails.family">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Price Group</td>
+                        <td data-ng-show="mtoColCtrl.choiceLinkDetails.price_group" title="{{mtoColCtrl.choiceLinkDetails.price_group}}">{{mtoColCtrl.choiceLinkDetails.price_group}}</td>
+                        <td data-ng-show="!mtoColCtrl.choiceLinkDetails.price_group">N/A</td>
+                    </tr>
+                </table>
+                <h4>MTO Option</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td title="{{mtoColCtrl.linkedOptionDetails.description}}">{{mtoColCtrl.linkedOptionDetails.description | truncate:15}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtoColCtrl.linkedOptionDetails.status}}">{{mtoColCtrl.linkedOptionDetails.status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Pricing Method</td>
+                        <td title="{{mtoColCtrl.linkedOptionDetails.pricing_method}}">{{mtoColCtrl.linkedOptionDetails.pricing_method}}</td>
+                    </tr>
+                    <tr>
+                        <td>Individual/Company</td>
+                        <td title="{{mtoColCtrl.linkedOptionDetails.individual_or_company}}">{{mtoColCtrl.linkedOptionDetails.individual_or_company}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vendor</td>
+                        <td class="highlight-text-success" title="{{mtoColCtrl.linkedOptionDetails.vendor}}">{{mtoColCtrl.linkedOptionDetails.vendor}}</td>
+                    </tr>
+                </table>
+                <div class="m-t-10 dependency-link-info">
+                    <div>
+                        <div>&#8594;
+                            <span>Collection </span>
+                            <span class="dependency-link-info-background">{{mtoColCtrl.choiceLinkDetails.collection}}</span>
+                            <span>is linked to Choice </span>
+                            <span class="dependency-link-info-background">{{mtoColCtrl.choiceLinkDetails.choice_description}}</span>
+                        </div>
+                        <div class="m-t-5 m-b-5 m-0">&#8594;
+                            <span>MTO Choice </span>
+                            <span class="dependency-link-info-background">{{mtoColCtrl.choiceLinkDetails.choice_description}}</span>
+                            <span>is linked to Option </span>
+                            <span class="dependency-link-info-background">{{mtoColCtrl.linkedOptionDetails.description}}</span>
+                        </div>
+                        <div>&#8594;
+                            <span>MTO Option </span>
+                            <span class="dependency-link-info-background">{{mtoColCtrl.linkedOptionDetails.description}}</span>
+                            <span> is linked to Vendor :</span>
+                            <span class="dependency-link-info-background">{{mtoColCtrl.linkedOptionDetails.vendor}}</span>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="dependency-notifyMessage"> <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i>To Unlink Vendor({{mtoColCtrl.linkedOptionDetails.vendor}}) from Collection({{mtoColCtrl.choiceLinkDetails.collection}}) , you need to change Vendor for
+                    MTO Option ({{mtoColCtrl.linkedOptionDetails.description}})</div>
+                <button type="button" class="btn-secondary waves-effect pull-right m-t-10" ng-click=""><span><b>Unlink Vendor</b></span></button>
+            </div>
+        </div>
+    </div>
+</div>

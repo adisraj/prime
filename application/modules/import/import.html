@@ -1,0 +1,169 @@
+<div data-ng-controller="ImportController as importCtrl">
+    <!--<div id="leftslidebar" ng-class="{'toggled':importCtrl.$showStages === true}" style="width: 300px;">
+        <div>
+            <ul class="importstage">
+                <li>
+                    <div class="clearfix" style="padding: 5px 10px 5px 18px;font-family: roboto condensed;font-size: 15px;background: linear-gradient(90deg, #81638d 3%, #5d4566 1%);color: #ffffff;-webkit-border-radius: 1px 99px 99px 0px;-moz-border-radius: 1px 99px 99px 0px;border-radius: 1px 99px 99px 0px;">Data Import</div>
+                </li>
+                <li>
+                    <div class="clearfix" style="padding: 5px 10px 5px 18px;font-family: roboto condensed;font-size: 15px;background: linear-gradient(90deg, #81638d 3%, #5d4566 1%);color: #ffffff;-webkit-border-radius: 1px 99px 99px 0px;-moz-border-radius: 1px 99px 99px 0px;border-radius: 1px 99px 99px 0px;">Data Export</div>
+                </li>
+                <li>
+                    <div class="clearfix" style="padding: 5px 10px 5px 18px;font-family: roboto condensed;font-size: 15px;background: linear-gradient(90deg, #81638d 3%, #5d4566 1%);color: #ffffff;-webkit-border-radius: 1px 99px 99px 0px;-moz-border-radius: 1px 99px 99px 0px;border-radius: 1px 99px 99px 0px;">Data Reterival</div>
+                </li>
+            </ul>
+        </div>
+    </div>-->
+    <div class="row">
+        <div class="col-lg-12 col-md-10 col-sm-10 pull-right">
+            <div class="import-card" style="min-height: 240px;">
+                <div class="import-card-header">
+                    Step 1 : Select file to be uploaded
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="import-class-header">
+                        Data file
+                    </div>
+                    <div class="form-group">
+                        <div ngf-drop class="drop-box" ngf-drag-over-class="'dragover'" ngf-allow-dir="true" ngf-pattern="'.xlsx'" accept=".xlsx" type="file" ngf-select ng-model="importFile" name="file" ngf-max-size="2MB" required ngf-model-invalid="errorFile" file-reader="fileContent"
+                            ng-click="b64it()" selected-template-file="importCtrl.selectedTemplateFile" ngf-change="fileChangeEvent($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)" placeholder="Drop file here">
+                            <span ng-if="!importFile.name"> Drop XLSX File here </span>
+                            <img ng-if="importFile.name" src="./img/XLS.png" style="width:30px;height:30px;"> {{importFile.name}}</div>
+                        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                        <!--<div class="input-group col-xs-10">
+                            <input type="text" class="form-control input-lg clearfix" disabled placeholder="choose your file" ngf-select ng-model="importFile.name" disabled>
+                        </div>-->
+
+                        <div class="col-xs-2" style="margin-top: 10px;">
+                            <span class="input-group-btn">
+                        <button class="browse btn import-card-button" style="box-shadow: 0px 2px 0px 0px #807286;background: #d0c7d4;margin: 6px" type="file" ngf-select ng-model="importFile" name="file" ngf-pattern="'.xlsx'" accept=".xlsx" ngf-max-size="2MB" required ngf-model-invalid="errorFile" file-reader="fileContent" ng-click="b64it()" selected-template-file="importCtrl.selectedTemplateFile" 
+                        ngf-change="fileChangeEvent($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                         <button class="browse btn import-card-button" type="button"  ng-click="showData()" style="box-shadow: 0px 2px 0px 0px #807286;background: #d0c7d4;margin: 6px">Preview Data</button>
+                                
+                            </span>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+                <div class="col-lg-8 col-md-8 col-sm-8 row previewdata">
+
+                    <div class="import-class-header">
+                        Preview Data
+                    </div>
+
+                    <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="col in cols">{{col.title}}</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in preview_data">
+                                <td ng-repeat="col in cols">{{row[col.field]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-10 col-sm-10 pull-right">
+            <div class="import-card" style="min-height: 340px;">
+                <div class="import-card-header">
+                    Step 2 - Data mapping and validation
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="import-class-header">
+                        Entity
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group col-xs-10">
+                            <select class="form-control select-component clearfix" ng-options="each as each.entity for each in entities" ng-model="entity">
+                                <option value="" disabled>Select Entity</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-2" style="margin-top: 10px;">
+                            <span class="input-group-btn">
+                                <button class="browse btn import-card-button" type="button" ng-click="importCtrl.getMappingInfoEntity(entity)" style="box-shadow: 0px 2px 0px 0px #807286;background: #d0c7d4;margin: 6px">Map & Validate</button>
+                                <button class="browse btn import-card-button" type="button"  ng-click="importCtrl.downloadTemplate(entity)" style="box-shadow: 0px 2px 0px 0px #807286;background: #d0c7d4;margin: 6px">Download Template</button>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8 row previewdata">
+                    <div class="import-class-header">
+                        Mapping Grid
+                    </div>
+                    <div class="rcpscrollbar" style="height:160px;overflow:auto;">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered table-fixed">
+                            <thead>
+                                <tr>
+                                    <th ng-repeat="col in mappingCols">{{col.title}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in importCtrl.mappingFileData" ng-class="'errorrow:row.isError'">
+                                    <td ng-repeat="col in mappingCols">
+
+                                        <div ng-if="col.field !== 'mapping'">
+                                            {{row[col.field]}}
+
+                                        </div>
+                                        <div ng-if="col.field == 'mapping'">
+                                            <i ng-show="row[col.field] == true" class="glyphicon glyphicon-ok" style="color: green;"></i>
+                                            <i ng-show="row[col.field] == false" class="glyphicon glyphicon-remove" style="color: red;"></i>
+
+                                        </div>
+
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-10 col-sm-10 pull-right">
+            <div class="import-card" style="min-height: 180px;">
+                <div class="import-card-header">
+                    Step 3 : Import data
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+
+                    <div class="import-class-header">
+                        Data - Upload
+                    </div>
+                    <div class="col-xs-2" style="margin-top: 10px;">
+                        <span class="input-group-btn">
+                            <button ng-disabled="!importCtrl.isValidData" class="browse btn import-card-button" type="button"  ng-click="importCtrl.uploadFile(importFile)" style="box-shadow: 0px 2px 0px 0px #807286;background: #d0c7d4;margin: 6px">Upload File</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8 row previewdata">
+                    <div ng-if="importCtrl.errors.length>0">
+                        <form class="row ng-pristine ng-valid well result_error" role="form">
+                            <span style="color:red;">File contains error, please check mapping data ! </span>
+                        </form>
+                    </div>
+                    <div ng-if="importCtrl.errors.length==0 && importCtrl.isValidData">
+                        <form class="row ng-pristine ng-valid well result_error" role="form">
+                            <span>No errors, Data validated successfully, You can upload file !</span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

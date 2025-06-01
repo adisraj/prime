@@ -1,0 +1,238 @@
+<!--SIDE PANEL START-->
+<div id="rcrightsidebar-large" data-ng-class="{'toggled':skuRetailCtrl.showCopyPackageRetailForm === true}">
+        <div class="col-xs-12 d-flex m-t-25">
+            <button type="button" class="close-icon bg-none border-none btn-link" data-ng-click="skuRetailCtrl.showCopyPackageRetailForm = false;skuRetailCtrl.focusCopyPackageIcon()">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </button>
+            <div class="d-flex-h-center d-flex panel-name-section" style="flex:1;">
+                <label class="rclabel editformlabel" title="Dependency Details">
+                    <strong>Package Retail Maintenance</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-12 m-t-25 p-0">
+        <div class="col-xs-12 p-0">
+        <div class="m-t-10 m-b-10 p-0 d-flex d-flex-h-center d-flex-v-center full-width">
+                    <ol class="breadcrumb m-b-0 p-l-0 rcbreadcrumb">
+                        <li>
+                            <a data-ng-class="{'active':true}">
+                                <label class="rclabel m-0 d-flex d-flex-v-center">
+                                    <span class="f-15 step-count"> 1. </span>
+                                    <span class="f-15 step-description m-l-5">Copy Package Retails</span>
+                                </label>
+                            </a>
+                        </li>
+                    </ol>
+            </div>
+        </div>
+    <!-- Clone Retails Start -->
+    <div>
+        <div class="col-lg-12 m-t-20">
+            <div class="rcpscrollbar o-auto" ng-if="!retailCtrl.retailPublish">
+                <ng-form name="skuRetailCtrl.copy_package_retail_form" role="form" novalidate="novalidate"
+                    valdr-type='RULES-SKU-RETAIL'>
+                    <div class="col-lg-12 p-0" data-ng-init="skuRetailCtrl.fetchRetailRuleGroups()">
+                        <div class="col-lg-12 p-10 form-group bgm-white">
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.existing_retail.$invalid">* </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.existing_retail.$valid">* </span>
+                                <label>Select Existing Package Retail Date</label>
+                                <select name="existing_retail" class="form-control select-component input-sm"
+                                    ng-model="skuRetailCtrl.packageRetailHead.exisiting_retail"
+                                    ng-options="retail_date.effective_date as (retail_date.effective_date| FormatDate) for retail_date in skuRetailCtrl.package_retail_dates | unique :'effective_date'"
+                                    required
+                                    data-ng-change="skuRetailCtrl.disableRetailProceed();skuRetailCtrl.priceTypesForPackageRetail(skuRetailCtrl.packageRetailHead.exisiting_retail);">
+                                    <option value="" disabled>Select Existing Package Retail</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 p-10 form-group bgm-white">
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.price_type.$invalid">* </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.price_type.$valid">* </span>
+                                <label>Price Types</label>
+                                <multiselect class="" name="price_type" id="price_type"
+                                    ng-model="skuRetailCtrl.packageRetailHead.price_type_ids"
+                                    options="p.id as p.name for p in skuRetailCtrl.package_retail_price_type"
+                                    header="Select Price Type" selected-header="options selected"
+                                    multiple="true" required ng-click="skuRetailCtrl.copyPackageRetailToPriceTypes()">
+                            </div>
+                        </div>
+                        <div class="col-lg-12 p-10">
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.retail_change_reason_type.$invalid">*
+                                </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.retail_change_reason_type.$valid">*
+                                </span>
+                                <label>Price Change Type</label>
+                                <select name="retail_change_reason_type"
+                                    class="form-control select-component input-sm"
+                                    ng-model="skuRetailCtrl.packageRetailHead.reason_type_id"
+                                    ng-options="p.id as p.reason_type for p in skuRetailCtrl.retail_reason_types"
+                                    data-ng-click="skuRetailCtrl.filterPackageRetailReason();" required>
+                                    <option value="" disabled>Select Price Change Type</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 p-10" ng-if="skuRetailCtrl.packageRetailHead.reason_type_id">
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.retail_change_reason.$invalid">*
+                                </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.retail_change_reason.$valid">*
+                                </span>
+                                <label>Price Change Reason</label>
+                                <select name="retail_change_reason"
+                                    class="form-control select-component input-sm"
+                                    ng-model="skuRetailCtrl.packageRetailHead.reason_id"
+                                    ng-options="p.id as p.name for p in skuRetailCtrl.retail_filtered_reasons"
+                                    required>
+                                    <option value="" disabled>Select Price Change Reason</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 p-10">
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.effective_date.$invalid">* </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.effective_date.$valid">* </span>
+                                <label>Start Date</label>
+                                <input type="text" name="effective_date"
+                                    id="effective_date" class="form-control input-sm rcp-mydatepicker"
+                                    ng-model="skuRetailCtrl.packageRetailHead.effective_date"
+                                    ui-mask="{{ui_date_mask}}" mydatepicker model-view-value="true"
+                                    data-ng-change="skuRetailCtrl.disableRetailProceed();skuRetailCtrl.ValidationFromTo();"
+                                    is-effective-date="false" required>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-10" ng-if="skuRetailCtrl.packageRetailHead.reason_type_id == 2">
+                            <div class="form-group" valdr-form-group>
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.end_date.$invalid">* </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.end_date.$valid">* </span>
+                                <label>End Date</label>
+                                <input type="text" id="end_date" name="end_date"
+                                    class="form-control input-sm rcp-mydatepicker"
+                                    ng-model="skuRetailCtrl.packageRetailHead.end_date" ui-mask="{{ui_date_mask}}"
+                                    mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                    is-effective-date="false"
+                                    start-date="skuRetailCtrl.packageRetailHead.effective_date"
+                                    data-ng-change="skuRetailCtrl.ValidationFromTo();">
+                                <span class="validation-error-message"
+                                    data-ng-if="skuRetailCtrl.ValidationError">
+                                    {{skuRetailCtrl.ValidationError}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 p-10 form-group bgm-white">
+                            <div class="col-lg-12 p-0 m-b-30 form-group">
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.price_class.$invalid">* </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.price_class.$valid">* </span>
+                                <label>Apply to</label>
+                                <select class="form-control select-component input-sm" name="price_class"
+                                    ng-model="skuRetailCtrl.packageRetailHead.applyTo"
+                                    ng-options="each as each.price_class for each in skuRetailCtrl.price_groups"
+                                    data-ng-change="skuRetailCtrl.disableRetailProceed();">
+                                    <option value="">All Pricing Class</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-12 p-0 m-b-30 form-group" valdr-form-group>
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.method.$invalid">* </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.method.$valid">* </span>
+                                <label>Entry Method</label>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset Entry Method"
+                                    style="width:3%; float:right;"
+                                    data-ng-click="skuRetailCtrl.packageRetailHead.method = null; skuRetailCtrl.packageRetailHead.percentNumber = null">
+                                </div>
+                                <div class="col-lg-12 p-0 form-group m-b-0">
+                                    <!-- <label class="radio radio-inline">
+                                        <input type="radio" name="method" ng-model="skuRetailCtrl.packageRetailHead.method" value="manual" checked="">
+                                        <i class="input-helper"></i> Manual
+                                    </label> -->
+                                    <label class="radio radio-inline">
+                                        <input type="radio" name="method"
+                                            ng-model="skuRetailCtrl.packageRetailHead.method" value="off">
+                                        <i class="input-helper"></i> Decrease Percentage
+                                    </label>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" name="method"
+                                            ng-model="skuRetailCtrl.packageRetailHead.method" value="inc">
+                                        <i class="input-helper"></i> Increase Percentage
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 p-0 form-group" valdr-form-group
+                                data-ng-if="skuRetailCtrl.packageRetailHead.method.length">
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.percentage.$invalid">* </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.percentage.$valid">* </span>
+                                <label>Percent </label>
+                                <input type="number" name="percentage" min="1" max="100" id="percentage"
+                                    class="form-control input-sm" required
+                                    ng-model="skuRetailCtrl.packageRetailHead.percentNumber" />
+                                <span class="text-danger"
+                                    ng-if="skuRetailCtrl.copy_package_retail_form.percentage.$error.min||skuRetailCtrl.copy_package_retail_form.percentage.$error.max">Percentage
+                                    value can be between 1 to 100.</span>
+                            </div>
+                            <div class="col-lg-12 p-0 form-group">
+                                <span style="color:red;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.rule_group_id.$invalid">* </span>
+                                <span style="color:green;"
+                                    ng-show="skuRetailCtrl.copy_package_retail_form.rule_group_id.$valid">* </span>
+                                <label>Rounding Rule</label>
+                                <div class="d-flex">
+                                    <select name="rule_group_id"
+                                        id="rule_group_id"
+                                        class="form-control select-component input-sm tabfocus"
+                                        ng-options="each.id as each.rule_group for each in skuRetailCtrl.roundingRuleGroups"
+                                        ng-model="skuRetailCtrl.packageRetailHead.rule_group_id">
+                                        <option value="">None</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12"
+                            data-ng-show="skuRetailCtrl.message && skuRetailCtrl.showCopyPackageRetailForm">
+                            <div class="alert alert-success alert-dismissible">
+                                {{skuRetailCtrl.message}}
+                            </div>
+                        </div>
+                        <div class="col-xs-6 p-0 form-group pull-right">
+                            <button type="button"
+                                class="btn btn-success pull-right" id="delete_btn"
+                                ng-click="skuRetailCtrl.copyPackageRetail()"
+                                data-ng-disabled="skuRetailCtrl.copy_package_retail_form.$invalid">
+                                <strong>Save Retails</strong>
+                            </button>
+                        </div>
+                        <div class="col-xs-12 p-0">
+                            <div data-ng-show="skuRetailCtrl.retail_error_message"
+                                class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close"
+                                    data-ng-click="skuRetailCtrl.retail_error_message = null"
+                                    aria-hidden="true">&times;</button>{{skuRetailCtrl.retail_error_message}}
+                            </div>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </div>
+    </div>
+    <!-- Clone Retails End -->
+    <!--SIDE PANEL END-->
+</div>
+</div>

@@ -1,0 +1,106 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory"
+    data-ng-class="{'toggled':pricingChoicesCtrl.showErrorDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="pricingChoicesCtrl.closeDependencyDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Pricing Choice Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success"
+                            title="{{pricingChoicesCtrl.pricing_choice_details.description}}">
+                            {{pricingChoicesCtrl.pricing_choice_details.description | truncate:20}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{pricingChoicesCtrl.pricing_choice_details.display_status}}">
+                            {{pricingChoicesCtrl.pricing_choice_details.status_description}}
+                        </td>
+                    </tr>
+                </table>
+                <h4>{{pricingChoicesCtrl.errorDependentData.dependent_entity}} - Dependent Details</h4>
+
+                <div ng-if ="pricingChoicesCtrl.errorDependentData.dependent_entity == 'Financing Price Adjustments'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Financing Choice</td>
+                            <td class="highlight-text-success"
+                                title="{{pricingChoicesCtrl.errorDependentData.pricing_choice_description}}">
+                                {{pricingChoicesCtrl.errorDependentData.financing_choice_description | truncate:20}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Financing Choice - Is Eligible For Finance</td>
+                            <td
+                                title="{{pricingChoicesCtrl.errorDependentData.display_pricing_choice_is_eligible_for_finance}}">
+                                {{pricingChoicesCtrl.errorDependentData.display_financing_choice_is_eligible_for_finance}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Price Adjustment %</td>
+                            <td title="{{pricingChoicesCtrl.errorDependentData.price_adjustment_percentage}}">
+                                {{pricingChoicesCtrl.errorDependentData.price_adjustment_percentage}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{pricingChoicesCtrl.errorDependentData.display_status}}">
+                                {{pricingChoicesCtrl.errorDependentData.display_status}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div ng-if ="pricingChoicesCtrl.errorDependentData.dependent_entity == 'Item Type'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Item Type Description</td>
+                            <td class="highlight-text-success" title="{{pricingChoicesCtrl.errorDependentData.short_description}}">{{pricingChoicesCtrl.errorDependentData.short_description | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{pricingChoicesCtrl.errorDependentData.status}}">{{pricingChoicesCtrl.errorDependentData.status}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div ng-if ="pricingChoicesCtrl.errorDependentData.dependent_entity == 'SKU'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>SKU Description</td>
+                            <td class="highlight-text-success" title="{{pricingChoicesCtrl.errorDependentData.description}}">{{pricingChoicesCtrl.errorDependentData.description | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{pricingChoicesCtrl.errorDependentData.status}}">{{pricingChoicesCtrl.errorDependentData.status}}</td>
+                        </tr>
+                        <tr>
+                            <td>SKU Type</td>
+                            <td title="{{pricingChoicesCtrl.errorDependentData.sku_type}}">{{pricingChoicesCtrl.errorDependentData.sku_type}}</td>
+                        </tr>
+                        <tr>
+                            <td>Item Description</td>
+                            <td title="{{pricingChoicesCtrl.errorDependentData.item_description}}">{{pricingChoicesCtrl.errorDependentData.item_description | truncate :20}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+
+
+                </br>
+                <div class="dependency-notifyMessage"> <i
+                        class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i><span>{{pricingChoicesCtrl.errorDependentData.message}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

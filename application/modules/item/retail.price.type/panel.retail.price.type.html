@@ -1,0 +1,105 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar" class="c-overflow"
+    data-ng-class="{'toggled':rptypeCtrl.isShowDetails === true || rptypeCtrl.isShowDetails === 1,'changeposition': rptypeCtrl.showErrorDetailsData === true || showhistory === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="rptypeCtrl.closeForm(); closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!rptypeCtrl.isDeleteSuccess && !rptypeCtrl.isConfirmDelete && rptypeCtrl.isShowAdd)"
+                title="{{rptypeCtrl.entityInformation.name}}">Create
+                <strong>{{rptypeCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(!rptypeCtrl.isDeleteSuccess && !rptypeCtrl.isConfirmDelete && !rptypeCtrl.isShowAdd)"
+                title="{{rptypeCtrl.entityInformation.name}}">Update
+                <strong>{{rptypeCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(rptypeCtrl.isDeleteSuccess || rptypeCtrl.isConfirmDelete && !rptypeCtrl.isShowAdd)"
+                title="{{rptypeCtrl.entityInformation.name}}">Delete
+                <strong>{{rptypeCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!rptypeCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="!(rptypeCtrl.isUpdateSuccess || rptypeCtrl.isSaveSuccess || rptypeCtrl.isConfirmDelete || rptypeCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/retail_price_type.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div
+                ng-if="!(rptypeCtrl.isUpdateSuccess || rptypeCtrl.isSaveSuccess || rptypeCtrl.isConfirmDelete || rptypeCtrl.isDeleteSuccess)">
+                <ng-form name="rptypeCtrl.price_type_form" role="form" novalidate="novalidate" valdr-type="RULES-101">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="rptypeCtrl.price_type_form.name.$invalid">* </span>
+                        <span class="c-green" ng-show="rptypeCtrl.price_type_form.name.$valid">* </span>
+                        <label>Name</label>
+                        <input id="name" name="name" type="text"
+                            class="form-control input-sm" ng-model="rptypeCtrl.price_type_details.name"
+                            placeholder="Enter Name" errorvalue="rptypeCtrl.price_type_details.name_error"
+                            ng-minlength="3" ng-maxlength="40" ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>Is Default
+                                <input hidden="hidden" id="is_default" ng-false-value="0"
+                                    ng-model="rptypeCtrl.price_type_details.is_default" ng-true-value="1"
+                                    type="checkbox">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <rcp-edit-form-btns new-form="rptypeCtrl.isShowAdd"
+                        save-fn="rptypeCtrl.save(rptypeCtrl.price_type_details);" save-btn-text="rptypeCtrl.saveBtnText"
+                        save-btn-error="rptypeCtrl.saveBtnError"
+                        update-fn="rptypeCtrl.update(rptypeCtrl.price_type_details);"
+                        update-btn-text="rptypeCtrl.updateBtnText" update-btn-error="rptypeCtrl.updateBtnError"
+                        confirm-fn="rptypeCtrl.showconfirm(); closeShowHistory();"
+                        confirm-delete="rptypeCtrl.isConfirmDelete" update-success="rptypeCtrl.isUpdateSuccess"
+                        entity-id="rptypeCtrl.price_type_details.id"
+                        enable-button="rptypeCtrl.price_type_form.$invalid || !rptypeCtrl.isLoaded"
+                        access-permissions="permissionsMap">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="rptypeCtrl.isConfirmDelete"
+                image-name="retail_price_type.svg" close-fn="rptypeCtrl.closeForm(); "
+                delete-fn="rptypeCtrl.delete(rptypeCtrl.price_type_details);"
+                confirm-delete="rptypeCtrl.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg"
+                create-new-fn="rptypeCtrl.createAnotherForm();" close-fn="rptypeCtrl.closeForm();"
+                update-success="rptypeCtrl.isUpdateSuccess" save-success="rptypeCtrl.isSaveSuccess"
+                delete-success="rptypeCtrl.isDeleteSuccess">
+            </rcp-success-form>
+            <div
+                ng-if="isMaintenance !== true && !rptypeCtrl.isUpdateSuccess && !rptypeCtrl.isSaveSuccess && !rptypeCtrl.isDeleteSuccess && !rptypeCtrl.isConfirmDelete && !rptypeCtrl.isShowAdd">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn"
+                    data-ng-click="loadHistory();" data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View
+                    History
+                </button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading history...
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0">
+            <div data-ng-show="rptypeCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="rptypeCtrl.message = null"
+                    aria-hidden="true">&times;</button> {{rptypeCtrl.message}}
+            </div>
+        </div>
+    </div>
+    <div ng-if="rptypeCtrl.isUnauthorized && (rptypeCtrl.isShowAdd || !rptypeCtrl.isShowAdd || rptypeCtrl.isConfirmDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-xs-12" ng-if="!rptypeCtrl.isShowAdd && rptypeCtrl.isShowHistory"
+    data-ng-include="'./application/templates/history.html'"></div>

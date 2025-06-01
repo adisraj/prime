@@ -1,0 +1,32 @@
+<div id="roundingrules" class="modal fade" role="dialog" data-ng-init="retailCtrl.fetchRetailRuleGroups()">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header m-t-20" style="background: #000000; border-bottom: 3px solid #72ce9d; color: white;">
+                <button type="button" class="btn-link close" data-dismiss="modal" ng-click="cartCtrl.resetForm();" style=" color: white; opacity: .5;">&times;</button>
+                <h4 class="modal-title" style=" color: white;">Rounding Rule Groups</h4>
+            </div>
+            <ng-form role="form" name="cart_form" novalidate="novalidate">
+                <div class="modal-body col-xs-12">
+                    <div class="col-xs-12 p-0">
+                        <div class="form-group radio">
+                            <label class="col-xs-12 m-t-10" data-ng-repeat="ruleGroup in retailCtrl.roundingRuleGroups">
+                                <input type="radio" ng-model="retailCtrl.ruleGroupId" name="Id" value="{{ruleGroup.id}}">
+                                    <i class="input-helper"></i>
+                                        {{ruleGroup.rule_group}}
+                            </label>
+                        </div>
+                        <div class="col-lg-4 pull-right">
+                            <div class="col-lg-12">
+                                <button class="btn btn-primal pull-right f-700" ng-disabled="!retailCtrl.ruleGroupId" data-dismiss="modal" ng-click="retailCtrl.applyRetailRules(retailCtrl.ruleGroupId);"> Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" ng-click="cartCtrl.resetForm();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

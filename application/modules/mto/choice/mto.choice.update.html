@@ -1,0 +1,1403 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6!important
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+        border-left: 3px solid #f9c10c!important;
+    }
+
+    input[type="radio"]:focus,
+    input[type="radio"]:checked {
+        border: 2px solid #f9c10c!important;
+        border-radius: 50%;
+        background-color: #009688;
+        box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, .4), 0 1px 1px hsla(0, 0%, 100%, .8);
+        content: '';
+        height: 20px;
+        width: 20px;
+    }
+
+    input[type="radio"] {
+        border: 1px solid #5d4565;
+        border-radius: 50%;
+        cursor: pointer;
+        display: inline-block;
+        height: 20px;
+        margin-right: 5px;
+        position: relative;
+        width: 20px;
+        -webkit-appearance: none;
+    }
+</style>
+<div id="mtoChDetails" ng-init="choiceCtrl.InitializeCreateUpdateForm();choiceCtrl.ChoicesMap?choiceCtrl.gotoUpdateState():''"
+    ng-keyup="choiceCtrl.showDependencyDetailsData=false;choiceCtrl.showDependencyDetails=false;">
+    <div class="form-page-size">
+        <div class="maintainence-details-section p-t-10 p-l-10 p-b-10 p-r-0">
+            <div class="col-lg-9 col-sm-8 col-xs-7 p-0 inheritheight">
+                <div class="col-lg-12 inheritheight">
+                    <div ng-show="choiceCtrl.createForm" ng-init="choiceCtrl.setStageIndication('createform');">
+                        <div class="col-xs-12 p-0" data-ng-class="{'disable-actions':choiceCtrl.disableActions}">
+                            <ng-form name="choiceCtrl.mto_choice_form" role="form" novalidate="novalidate" valdr-type="RULES-34">
+                                <!--UPDATE FORM START-->
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-xs-10 col-lg-8 p-0 box maintenanceworkspace">
+                                        <div class="col-lg-12 d-flex update-maintenance-screen-title">
+                                            <span class="f-16 c-white m-r-10 text-nowrap">
+                                                <i class="fa fa-edit"></i>
+                                                Update MTO Choice - </span>
+                                            <span class="f-16 c-white text-overflow-desc-auto" title="{{choiceHead.choice_description}}" title-direction="bottom">{{choiceHead.choice_description}}</span>
+                                        </div>
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Master Details</span>
+                                            <div>
+                                                <small>The primary details of the MTO choice option</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-10">
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-lg-9 col-md-10 col-xs-12">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="choiceCtrl.mto_choice_form.choice_description.$invalid">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="choiceCtrl.mto_choice_form.choice_description.$valid">*
+                                                        </span>
+                                                        <label class="maintenance-field-label">Description</label>
+                                                        <input id="choice_description" name="choice_description" type="text" class="form-control input-sm" ng-model="choiceHead.choice_description"
+                                                            name="choice_description" errorvaluechosen="choiceHead.choice_description_error"
+                                                            ng-model-options="{ updateOn: 'blur' }" required="" placeholder="Enter Description"
+                                                            auto-focus data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.choice_description.$invalid && choiceCtrl.isInvalidForm}"
+                                                        />
+                                                        <span class="text-info f-12 f-300" ng-if="choiceCtrl.isCloned">* This MTO Choice is cloned from the existing MTO Choice
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0" ng-if="is_collection === true">
+                                                <div class="col-xs-9">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="!choiceHead.collection_id">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="choiceHead.collection_id">*
+                                                        </span>
+                                                        <label class="maintenance-field-label">Collection</label>
+                                                        <select selectize="selectCollection" items="choiceHead" name="collections" class="form-control select-component input-sm tabfocus"
+                                                            options="choiceCtrl.allCollections" ng-model="choiceHead.collection_id"
+                                                            required data-ng-if="choiceCtrl.allCollections && choiceCtrl.allCollections.length>0 && !choiceCtrl.showLoadingCollections"
+                                                            data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.collections.$invalid && choiceCtrl.isInvalidForm}">
+                                                        </select>
+                                                        <div class="text-info f-13 m-t-5" ng-if="choiceCtrl.showLoadingCollections">Loading collections...
+                                                        </div>
+                                                        <div class="text-info f-12 m-t-5" ng-if="!choiceCtrl.showLoadingCollections && choiceCtrl.allCollections.length === 0">
+                                                            No collections are present.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2 p-0" ng-if="!(choiceCtrl.isShowFamilyDetails ||choiceCtrl.isShowPriceGroupDetails)">
+                                                    <div class="form-group">
+                                                        <button type="button" class="aligncenter add-new-btn btn-primal btn-block f-700 tabfocus-btn" ng-click="choiceCtrl.openForm('MTOCollection')">Add</button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0" ng-if="is_family === true">
+                                                <div class="col-xs-9">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="!choiceHead.family_id">* </span>
+                                                        <span class="c-green" ng-show="choiceHead.family_id">* </span>
+                                                        <label class="maintenance-field-label">Family</label>
+                                                        <select selectize="selectFamily" items="choiceHead" name="families" class="form-control select-component input-sm" options="choiceCtrl.allFamilies"
+                                                            ng-model="choiceHead.family_id" required data-ng-if="choiceCtrl.allFamilies && choiceCtrl.allFamilies.length>0 && !choiceCtrl.showLoadingshowLoadingFamily"
+                                                            data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.families.$invalid && choiceCtrl.isInvalidForm}">
+                                                        </select>
+                                                        <div class="text-info f-13 m-t-5" ng-if="choiceCtrl.showLoadingFamily">Loading family...</div>
+                                                        <div class="text-info f-12 m-t-5" ng-if="!choiceCtrl.showLoadingFamily && choiceCtrl.allFamilies.length === 0">
+                                                            No families are present.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2 p-0" ng-if="!(choiceCtrl.isShowCollectionDetails || choiceCtrl.isShowPriceGroupDetails)">
+                                                    <div class="form-group">
+                                                        <div class="aligncenter add-new-btn btn-primal btn-block f-700 tabfocus-btn" ng-click="choiceCtrl.openForm('MTOFamily')">Add</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 p-0" ng-if="is_price === true">
+                                                <div class="col-xs-9">
+                                                    <div class="form-group" valdr-form-group>
+                                                        <span class="c-red" ng-show="!choiceHead.price_group_id">*
+                                                        </span>
+                                                        <span class="c-green" ng-show="choiceHead.price_group_id">*
+                                                        </span>
+                                                        <label class="maintenance-field-label">Price Group</label>
+                                                        <select selectize="selectPriceGroup" items="choiceHead" name="price_groups" class="form-control select-component input-sm tabfocus"
+                                                            options="choiceCtrl.allPriceGroups" ng-model="choiceHead.price_group_id"
+                                                            required data-ng-if="choiceCtrl.allPriceGroups && choiceCtrl.allPriceGroups.length>0 && !choiceCtrl.showLoadingPriceGroup"
+                                                            data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.price_groups.$invalid && choiceCtrl.isInvalidForm}">
+                                                        </select>
+                                                        <div class="text-info f-13 m-t-5" ng-if="choiceCtrl.showLoadingPriceGroup">Loading price group...
+                                                        </div>
+                                                        <div class="text-info f-12 m-t-5" ng-if="!choiceCtrl.showLoadingPriceGroup && choiceCtrl.allPriceGroups.length === 0">
+                                                            No price group are present.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2 p-0" ng-if="!(choiceCtrl.isShowCollectionDetails || choiceCtrl.isShowFamilyDetails)">
+                                                    <div class="form-group">
+                                                        <button type="button" class="aligncenter add-new-btn btn-primal btn-block f-700 tabfocus-btn" ng-click="choiceCtrl.openForm('MTOPriceGroup')">Add</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-xs-6">
+                                                <div class="form-group" valdr-form-group>
+                                                    <span class="c-red" ng-show="choiceCtrl.mto_choice_form.vendor_po_description.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="choiceCtrl.mto_choice_form.vendor_po_description.$valid">*
+                                                    </span>
+                                                    <label class="maintenance-field-label">Vendor PO Description</label>
+                                                    <input id="vendor_po_description" name="vendor_po_description" type="text" class="form-control input-sm" ng-model="choiceHead.vendor_po_description"
+                                                        name="vendor_po_description" errorvaluechosen="choiceHead.vendor_po_description_error"
+                                                        required="" placeholder="Enter Vendor PO Description" data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.vendor_po_description.$invalid && choiceCtrl.isInvalidForm}"
+                                                    />
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- Status section start -->
+                                    <div class="col-xs-10 col-lg-8 p-0 box m-t-10 maintenanceworkspace">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Status</span>
+                                            <div>
+                                                <small>Current and next status for the MTO Choice Option</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-10">
+                                            <div class="col-md-6 col-xs-12">
+                                                <div class="form-group" valdr-form-group>
+                                                    <span class="c-red" ng-show="choiceCtrl.mto_choice_form.status_id.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="choiceCtrl.mto_choice_form.status_id.$valid">* </span>
+                                                    <label class="maintenance-field-label">Current Status</label>
+                                                    <select id="status_id" name="status_id" class="form-control select-component input-sm tabfocus" ng-change="choiceCtrl.changeevent(choiceHead);choiceCtrl.reloadUDDs()"
+                                                        ng-options="each.code as each.description disable when (each.code === choiceCtrl.statusCodes.Pending.ID) for each in statuses"
+                                                        ng-model="choiceHead.status_id" errorvaluechosen="choiceHead.status_id_error"
+                                                        data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.status_id.$invalid && choiceCtrl.isInvalidForm}"
+                                                        required="">
+                                                        <option value="" disabled>Select Current Status</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12">
+                                                <div class="form-group" valdr-form-group>
+                                                    <span class="c-red" ng-show="choiceCtrl.mto_choice_form.effective_date.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="choiceCtrl.mto_choice_form.effective_date.$valid">*
+                                                    </span>
+                                                    <label class="maintenance-field-label">Effective Date</label>
+                                                    <div class="form-group" ng-init="choiceHead.effective_date=getDateBasedOnFormat(choiceHead.effective_date)">
+                                                        <input type="text" id="effective_date" name="effective_date" required class="form-control input-sm rcp-mydatepicker" ng-model="choiceHead.effective_date"
+                                                            ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+                                                            model-view-value="true" is-effective-date="true" data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.effective_date.$invalid && choiceCtrl.isInvalidForm}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12">
+                                                <div class="form-group" valdr-form-group>
+                                                    <span class="c-red" ng-show="choiceCtrl.mto_choice_form.choice_next_status.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="choiceCtrl.mto_choice_form.choice_next_status.$valid">*
+                                                    </span>
+                                                    <label class="maintenance-field-label">Next Status</label>
+                                                    <select name="choice_next_status" class="form-control select-component input-sm tabfocus" ng-options="each.code as each.description disable when (each.code === choiceCtrl.statusCodes.Pending.ID && choiceHead.status_id !== choiceCtrl.statusCodes.Pending.ID) for each in next_statuses"
+                                                        ng-change="choiceCtrl.changeEvent(choiceHead)" ng-model="choiceHead.next_status_id"
+                                                        errorvaluechosen="choiceHead.next_status_id_error" required="" data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.choice_next_status.$invalid && choiceCtrl.isInvalidForm}">
+                                                        <option value="" disabled>Select Next Status</option>
+                                                    </select>
+                                                    <p ng-show="status_id_disable" class="m-b-0 c-red di-table">Invalid combination of current status and next status</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6" ng-if="effective_val">
+                                                <div class="form-group" valdr-form-group ng-init="choiceHead.next_effective_date=getDateBasedOnFormat(choiceHead.next_effective_date)">
+                                                    <span class="c-red" ng-show="choiceCtrl.mto_choice_form.next_effective_date.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="choiceCtrl.mto_choice_form.next_effective_date.$valid">*
+                                                    </span>
+                                                    <label class="maintenance-field-label">Next Effective Date</label>
+                                                    <input type="text" id="next_effective_date" name="next_effective_date" required class="form-control input-sm rcp-mydatepicker"
+                                                        ng-model="choiceHead.next_effective_date" ui-mask="{{ui_date_mask}}"
+                                                        mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                                        is-effective-date="false" data-ng-class="{'error-field-validation': choiceCtrl.mto_choice_form.next_effective_date.$invalid && choiceCtrl.isInvalidForm}">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xs-12 m-b-15">
+                                            <div class="col-xs-12">
+                                                <div class="rc-alert rc-alert-type-info" aria-hidden="false" role="alert">
+                                                    <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                        <div class="rc-alert-icon">
+                                                            <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                                                            </span>
+                                                        </div>
+                                                        <div style="flex:1;">
+                                                            <div class="f-14 f-700 text-info">Automatic status adjustment
+                                                            </div>
+                                                            <div>
+                                                                <span class="text-muted">
+                                                                    Based on the next effective date the current status will be automatically adjusted. If the current date is equal to the next
+                                                                    effective date then the current status will be changed
+                                                                    to the next status and the effective date will be updated
+                                                                    to the current date
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Status section end -->
+
+                                    <div class="col-xs-10 col-lg-8 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="choiceCtrl.validationMessage">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                                <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                    <div class="rc-alert-icon">
+                                                        <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px" title="Error message" title-direction="bottom" fixed-position="true">
+                                                        </span>
+                                                    </div>
+                                                    <div style="flex:1;">
+                                                        <div class="f-15 f-700 text-danger">Error!</div>
+                                                        <div>
+                                                            <span class="c-black">{{choiceCtrl.validationMessage}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Section for the buttons -- START -->
+                                    <div class="col-xs-10 col-lg-8 p-0 m-t-10">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-xs-6 p-0" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                                <div class="col-xs-6 p-0">
+                                                    <button type="button" class="btn-sm bgm-firebrick c-white btn btn-block f-700 tabfocus-btn" data-ng-click="choiceCtrl.confirmDel()"
+                                                        data-ng-disabled="choiceCtrl.disableActions || !choiceCtrl.permissionsMap.delete">
+                                                        <div title="{{!choiceCtrl.permissionsMap.delete ? 'Access denied' : ''}}" title-direction="top">
+                                                            <i class="zmdi zmdi-delete zmdi-hc-fw"></i>Delete</div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 p-0" data-ng-if="choiceCtrl.deleteVendorMessage">
+                                                <div class="col-xs-12 p-0">
+                                                    <div class="col-lg-12">
+                                                        <div class="alert alert-danger alert-dismissable">
+                                                            <button type="button" class="close" data-ng-click="choiceCtrl.deleteVendorMessage = null" aria-hidden="true">&times;</button>
+                                                            {{choiceCtrl.deleteVendorMessage}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                                <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 waves-effect tabfocus-btn" data-ng-click="choiceCtrl.closeForm('MTOChoice');choiceCtrl.reloadChoiceCountAndList(true);">Cancel</button>
+                                                <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 waves-effect tabfocus-btn" data-ng-click="choiceCtrl.continueFn('createForm');choiceCtrl.isShowPriceGroupDetails=false;choiceCtrl.isShowFamilyDetails = false; choiceCtrl.isShowCollectionDetails = false;">Next</button>
+                                            </div>
+                                            <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="!(choiceCtrl.showDependencyDetails || choiceCtrl.showDependencyDetailsData) && (choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                                <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700" data-ng-click="choiceCtrl.confirmDel()" data-ng-disabled="choiceCtrl.isLoadingDelete">Cancel</button>
+                                                <button type="button" class="btn btn-group-justified btn-sm btn-danger f-700 m-l-5 m-t-0" data-ng-click="choiceCtrl.delete(choiceHead);"
+                                                    data-ng-disabled="choiceCtrl.isLoadingDelete">
+                                                    <span data-ng-if="choiceCtrl.isLoadingDelete">
+                                                        <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                                    </span>
+                                                    Yes,Delete!</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Section for the buttons -- END -->
+                                </div>
+                                <!--UPDATE FORM END-->
+                            </ng-form>
+                        </div>
+                    </div>
+                    <!--Div for vendor configure start-->
+                    <div ng-show="choiceCtrl.configureScreen" ng-init="choiceCtrl.setStageIndication('configureform');">
+                        <div class="col-xs-10 col-lg-8 p-0">
+                            <div class="col-lg-12 d-flex update-maintenance-screen-title">
+                                <span class="f-16 c-white m-r-10 text-nowrap">
+                                    <i class="fa fa-edit"></i> Update MTO Choice - </span>
+                                <span class="f-16 c-white text-overflow-desc-auto" title="{{choiceHead.choice_description}}" title-direction="bottom">{{choiceHead.choice_description}}</span>
+                            </div>
+                            <div class="col-lg-12 col-xs-12 p-0 box maintenanceworkspace">
+                                <div class="col-lg-12 p-0 rcpscrollbar">
+                                    <mto-userdefined-data-directive></mto-userdefined-data-directive>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-b-10 p-0 m-t-10" data-ng-if="uddValidationErrors.length>0">
+                                <div class="rc-alert p-10" aria-hidden="false" role="alert">
+                                    <div class="col-xs-12 d-flex p-0 box">
+                                        <div style="flex:1;">
+                                            <div class="d-flex d-flex-v-center p-10" style="background-color: #fffdf7;border-bottom: 1px solid #eaeded;">
+                                                <span class="c-firebrick zmdi zmdi-alert-octagon" style="font-size:28px"></span>
+                                                <span class="c-firebrick m-l-10">
+                                                    Please add values before proceeding in maintenance.
+                                                </span>
+                                            </div>
+                                            <div class="p-5">
+                                                <!-- <div class="c-gray p-5">Click on each link to add values</div> -->
+                                                <div class="p-5" data-ng-repeat="uddValidationError in uddValidationErrors">
+                                                    <span class="d-flex d-flex-v-center">
+                                                        <span data-ng-if="uddValidationError.user_defined_data_type.toLowerCase() === 'attribute'">
+                                                            <img src="./img/sidebar-icons/package.svg" style="height:13px;width:15px;" />
+                                                        </span>
+                                                        <span data-ng-if="uddValidationError.user_defined_data_type.toLowerCase() === 'hierarchy'">
+                                                            <img src="./img/sidebar-icons/hierarchy-levels.svg" style="height:13px;width:15px;" />
+                                                        </span>
+                                                        <span class="c-bluegray f-400 m-l-5 m-r-5">{{uddValidationError.user_defined_data_type}}
+                                                        </span> -
+                                                        <span class="m-l-5 text-info">{{uddValidationError.udd_description}}</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="choiceCtrl.validationMessage">
+                                <div class="col-xs-12 p-0">
+                                    <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                        <div class="col-xs-12 d-flex m-b-5 p-0">
+                                            <div class="rc-alert-icon">
+                                                <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                </span>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div class="f-15 f-700 text-danger">Error!</div>
+                                                <div>
+                                                    <span class="c-black">{{choiceCtrl.validationMessage}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 p-t-10">
+                                <div class="col-xs-6 p-0" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                    <div class="col-xs-6 p-0">
+                                        <button type="button" class="btn-sm bgm-firebrick c-white btn btn-block f-700" data-ng-click="choiceCtrl.confirmDel()" data-ng-disabled="choiceCtrl.disableActions || !choiceCtrl.permissionsMap.delete">
+                                            <div title="{{!choiceCtrl.permissionsMap.delete ? 'Access denied' : ''}}" title-direction="top">
+                                                <i class="zmdi zmdi-delete zmdi-hc-fw"></i>Delete
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 p-0" data-ng-if="choiceCtrl.deleteVendorMessage">
+                                    <div class="col-xs-12 p-0">
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-danger alert-dismissable">
+                                                <button type="button" class="close" data-ng-click="choiceCtrl.deleteVendorMessage = null" aria-hidden="true">&times;</button>
+                                                {{choiceCtrl.deleteVendorMessage}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect" data-ng-click="choiceCtrl.closeForm('MTOChoice');choiceCtrl.reloadChoiceCountAndList(true);">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="choiceCtrl.backFn('configureScreen');">Back</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 waves-effect" data-ng-click="choiceCtrl.continueFn('configureScreen');">Next</button>
+                                </div>
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="!(choiceCtrl.showDependencyDetails || choiceCtrl.showDependencyDetailsData) && (choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700" data-ng-click="choiceCtrl.confirmDel()" data-ng-disabled="choiceCtrl.isLoadingDelete">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-danger f-700 m-l-5 m-t-0" data-ng-click="choiceCtrl.delete(choiceHead);"
+                                        data-ng-disabled="choiceCtrl.isLoadingDelete">
+                                        <span data-ng-if="choiceCtrl.isLoadingDelete">
+                                            <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                        </span>
+                                        Yes,Delete!
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ------------------------------------------- -->
+                        <!-- This Div contains the information about vendor UDD screen. Do not delete the code -->
+                        <!-- ------------------------------------------- -->
+                        <!-- <div class="col-xs-4">
+                            <div class="col-xs-12 p-10" style="background: #fafafa;border: 1px solid #dadada;">
+                                <div class="col-xs-12">
+                                    <h5 class="text-primary">User Defined Datatypes</h5>
+                                    <small>
+                                        User-defined datatypes use the built-in datatypes and other user-defined datatypes as the building blocks for datatypes that
+                                        model the structure and behavior of data in applications.
+                                    </small>
+                                </div>
+                                <div class="col-xs-12 p-10">
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/package.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Attributes
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Attributes are a quality, character, characteristic or property.
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/hierarchy-levels.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Hierarchy
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Hierarchies are any system of persons or things ranked one above another in hierarchical manner.
+
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="text-info f-500 d-flex d-flex-v-center">
+                                        <img src="./img/sidebar-icons/package.svg" style="height:15px;width:15px;" />
+                                        <span class="m-l-5 f-13">
+                                            Groups
+                                        </span>
+                                    </div>
+                                    <div class="m-t-10">
+                                        Groups are any assemblage of persons or things.
+                                        <ul class="p-l-15 m-t-5">
+                                            <li>
+                                                <i>Example: Large is an Attribute.</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- ------------------------------------------- -->
+                        <!-- This Div contains the information about vendor UDD screen. Do not delete the code -->
+                        <!-- ------------------------------------------- -->
+                        <!--<div class="col-md-4 hidden-md hidden-sm hidden-xs">
+                                <div class="col-md-12 p-10 rc-alert-type-info p-b-0" style="background: #fafafa;border: 1px solid #dadada;" aria-hidden="false" role="alert">
+                                    <div class="col-xs-12 p-0">
+                                        <div class="col-xs-12"><h5 class="text-primary">Immediate and Activation field labels</h5></div>
+                                        <div class="col-xs-12 p-5">
+                                            <div class="text-info f-500 d-flex">
+                                                <span class="text-info glyphicon glyphicon-arrow-right"></span>
+                                                <span class="m-l-5 f-13">
+                                                    Activation
+                                                </span>
+                                            </div>
+                                            <div class="p-l-10">
+                                                <small>
+                                                     Label indicate that the value is optional if the status is
+                                                        "Pending" but is required if the status is not "Pending"
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-5">
+                                            <div class="text-info f-500 d-flex">
+                                                <span class="text-danger glyphicon glyphicon-arrow-right"></span>
+                                                <span class="m-l-5 f-13">
+                                                    Immediate
+                                                </span>
+                                            </div>
+                                            <div class="p-l-10">
+                                                <small>
+                                                    indicates that the value for the field is always required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-5">
+                                            <div class="text-info f-500 d-flex">
+                                                <span class="text-success glyphicon glyphicon-arrow-right"></span>
+                                                <span class="m-l-5 f-13">
+                                                    Optional
+                                                </span>
+                                            </div>
+                                            <div class="p-l-10">
+                                                <small>
+                                                    indicates that the value for the field is always optional.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>-->
+                    </div>
+                    <!--End of configure vendor div -->
+
+                    <!--Div is for the manage drops in vendor-->
+                    <div ng-show="choiceCtrl.manageDropScreen" ng-init="choiceCtrl.setStageIndication('dropScreen');choiceCtrl.fetchDropsByUuidAndInstanceId(choiceHead.id);choiceCtrl.initializeDropForm()">
+                        <ng-form name="choiceCtrl.drop_form" novalidate="novalidate">
+                            <div class="col-xs-10 col-lg-8 p-0">
+                                <div class="col-lg-12 d-flex update-maintenance-screen-title">
+                                    <span class="f-16 c-white m-r-10 text-nowrap">
+                                        <i class="fa fa-edit"></i> Update MTO Choice - </span>
+                                    <span class="f-16 c-white text-overflow-desc-auto" title="{{choiceHead.choice_description}}" title-direction="bottom">{{choiceHead.choice_description}}</span>
+                                </div>
+                                <div class="col-xs-12 p-0 box maintenanceworkspace">
+                                    <div class="col-xs-12 f-16 panel-header">
+                                        <span class="f-700 main-header">Unstructured Data</span>
+                                        <div>
+                                            <small>Add/Remove drops for the MTO Choice</small>
+                                        </div>
+                                    </div>
+
+                                    <div data-ng-include="'./template/unstructured.data.info.section.html'"></div>
+                                    <div class="col-xs-12 p-10">
+                                        <div class="col-xs-6">
+                                            <div class="text-info text-center f-12 m-t-5" ng-if="loadingStreams">Loading streams...
+                                            </div>
+                                            <div class="text-info text-center f-12 m-t-5" ng-if="!streams.length && !loadingStreams">No streams exists for selected lake</div>
+                                            <div class="form-group" ng-if="drop.lake_id && !loadingStreams">
+                                                <span class="c-red" ng-show="choiceCtrl.drop_form.stream_id.$invalid">*
+                                                </span>
+                                                <span class="c-green" ng-show="choiceCtrl.drop_form.stream_id.$valid">*
+                                                </span>
+                                                <label>Stream</label>
+                                                <select id="stream_id" name="stream_id" ng-model="drop.stream_id" class="form-control select-component input-sm" ng-options="item.stream_id as item.stream for item in streams"
+                                                    data-ng-change="choiceCtrl.getLakeStreamLinkByIds(drop.lake_id,drop.stream_id);resetAllconfigData()"
+                                                    data-ng-disabled="showConfirm" required>
+                                                    <option value="" disabled>Select Stream</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 p-0">
+                                            <div class="col-xs-12">
+                                                <span class="c-green">*</span>
+                                                <label>Status</label>
+                                            </div>
+                                            <div class="col-xs-12 form-group d-flex m-t-5 p-0" data-ng-init="choiceCtrl.getDropStatus()">
+                                                <div ng-repeat="status in statusList">
+                                                    <div class="m-l-10 m-r-10" data-ng-init="status.isDefault ? drop.status_id = status.id : ''">
+                                                        <label class="d-flex align-items-center m-r-5">
+                                                            <input hidden="hidden" type="radio" name="status" id="{{$index}}-status-local" ng-model="drop.status_id" value="{{status.id}}"
+                                                                required ng-checked="status.isDefault">
+                                                            <i class="input-helper"></i>{{status.label}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-xs-12">
+                                                <span class="c-green">*</span>
+                                                <label>Source</label>
+                                            </div>
+                                            <div class="col-xs-12 form-group d-flex" data-ng-init="drop.source = 'Local'">
+                                                <div class="m-t-5">
+                                                    <label class="d-flex align-items-center">
+                                                        <input hidden="hidden" type="radio" name="match" id="match-local" ng-model="drop.source" data-ng-change="choiceCtrl.mtodataUploaderror = false;resetAllconfigData()" value="local" required>
+                                                        <i class="input-helper"></i>Upload from Local Computer
+                                                    </label>
+                                                </div>
+                                                <div class="m-t-5 m-l-10">
+                                                    <label class="d-flex align-items-center">
+                                                        <input hidden="hidden" type="radio" name="match" id="match-url" ng-model="drop.source" value="url" ng-click="drop.is_save_to_document_store=true;resetAllconfigData()"
+                                                            required>
+                                                        <i class="input-helper"></i>Upload from Internet
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-lg-12 p-0" data-ng-if="drop.source.toLowerCase() === 'local'" style="align-items:flex-end;">
+                                            <div class="col-xs-4 col-lg-7">
+                                                <div class="form-group" ng-repeat="f in files">
+                                                    <label>File Name</label>
+                                                    <label name="filename" class="form-control input-sm o-hidden text-overflow-desc-auto" title="{{f.name}}" disabled required>{{f.name}}</label>
+                                                </div>
+                                                <div class="text-danger p-t-10" data-ng-if="errFiles" data-ng-repeat="ef in errFiles">
+                                                    <span data-nf-if="ef.$errorMessages && ef.$errorMessages.maxSize">
+                                                        * {{ef.name}} exedes size limit {{ef.$errorParam}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8 col-lg-5 p-0" style="margin-top: 22px;">
+                                                <div class="col-lg-6 p-l-0 form-group pull-right" data-ng-click="choiceCtrl.isAllowedMultipleDropsForSelectedStream(drops)">
+                                                    <button type="button" class="btn btn-success f-700 btn-block" name="update_title_btn" id="update_title_btn" ng-disabled="!isAllowMultipleDrops || choiceCtrl.isProcessing || choiceCtrl.isDeleting || choiceCtrl.drop_form.$invalid || !files || !files.length || choiceCtrl.isUploading">
+                                                        <span data-ng-if="choiceCtrl.isUploading">
+                                                            <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                                        </span>Upload</button>
+                                                </div>
+                                                <div class="col-lg-6 p-l-0 form-group pull-right">
+                                                    <button type="button" class="btn btn-info f-700 btn-block" ng-disabled="!isAllowMultipleDrops || choiceCtrl.isUploading"
+                                                        name="update_title_btn" id="update_title_btn" ngf-select="choiceCtrl.selectFiles($files, $invalidFiles)" multiple
+                                                        accept="*" ngf-max-size="60MB">
+                                                        <span data-ng-if="!files || files.length <1">Select File</span>
+                                                        <span data-ng-if="files.length >=1">Choose File</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-lg-12 p-0">
+                                                <div class="checkbox m-b-10" data-ng-if="drop.stream_id == '33' && files.length">
+                                                    <label class="d-flex">
+                                                        <input type="checkbox" data-ng-model="choiceCtrl.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                                        <i class="input-helper"></i>
+                                                        <span class="m-t-5 m-l-10"> Save as thumbnail</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0 d-flex" data-ng-if="drop.source.toLowerCase() === 'url'" style="align-items:flex-end;">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <span class="c-red" ng-show="choiceCtrl.drop_form.url.$invalid">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="choiceCtrl.drop_form.url.$valid">*
+                                                    </span>
+                                                    <label>URL</label>
+                                                    <input id="url" ng-bind="datas" name="url" ng-pattern="/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/"
+                                                        type="text" class="form-control input-sm" ng-model="drop.url" placeholder="Enter URL" data-ng-change="choiceCtrl.showCantGen= false;"
+                                                        required>
+                                                        
+                                                    <span class="text-danger" ng-if="choiceCtrl.drop_form.url.$error.pattern && !choiceCtrl.drop_form.url.$pristine">Invalid URL
+                                                    </span>
+                                                    <span class="text-danger" ng-if="choiceCtrl.showCantGen">Cannot convert the given url into file
+                                                    </span>
+                                                    <!-- <img data-ng-if="drop.source.toLowerCase()=='url' &&choiceCtrl.drop_form.url.$valid && !choiceCtrl.showCantGen"
+                                                            ng-src="{{drop.url}}" style="height:125px;width:125px;" /> -->
+                                                    <div class="col-xs-12 p-0 form-group" data-ng-if="drop.source.toLowerCase()=='url' && isImage && files.length > 0" style="display: inline-flex;top: 5px;flex-direction: column;">
+                                                        <img data-ng-if="drop.source.toLowerCase()=='url' && choiceCtrl.drop_form.url.$valid && !choiceCtrl.showCantGen"
+                                                        ng-src="{{drop.url}}" style="height:125px;width:125px;" />
+                                                        <div class="d-flex" style="align-items: flex-end;" ng-repeat="f in files">
+                                                            <label class="c-gray f-300">{{f.type | truncate:40}}</label>
+                                                            <label class="c-gray f-300" style="margin-left: 15px">{{f.size}} kb</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div data-ng-if="drop.url&&drop.url.length>0&&choiceCtrl.drop_form.url.$valid" class="checkbox m-b-10" style="margin-left: -9px;">
+                                                    <label class="d-flex">
+                                                        <input type="checkbox" data-ng-disabled="drop.source.toLowerCase()=='url'" data-ng-model="drop.is_save_to_document_store" ng-true-value=true ng-false-value=false>
+                                                        <i class="input-helper" data-ng-disabled="drop.source.toLowerCase()=='url'" ng-class="{'cursor-nt-al': drop.source.toLowerCase()=='url'}"
+                                                         title="{{drop.source.toLowerCase()=='url'? 'Saving to document store by default':''}}"></i>
+                                                        <span class="m-t-5 m-l-10">Save to document store</span>
+                                                    </label>
+                                                    <label class="d-flex m-t-5" data-ng-if="drop.stream_id == '33'">
+                                                        <input type="checkbox" data-ng-model="choiceCtrl.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                                        <i class="input-helper"></i>
+                                                        <span class="m-t-5 m-l-10"> Save as thumbnail</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-xs-6 p-l-0 form-group pull-right" data-ng-click="choiceCtrl.isAllowedMultipleDropsForSelectedStream(drops)">
+                                                    <button type="button" ng-disabled="!isAllowMultipleDrops || choiceCtrl.drop_form.$invalid || choiceCtrl.showCantGen || choiceCtrl.isUploading" class="btn btn-success f-700 btn-block"
+                                                        name="update_title_btn" id="update_title_btn">Upload</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Message to replace existing drop and upload new drop when is upload multiple is false START -->
+                                        <div class="col-xs-12">
+                                            <div class="col-lg-12 col-xs-12 p-0" data-ng-if="!isAllowMultipleDrops" style="border: 1px solid lightgrey;box-shadow: 1px 1px 4px lightgrey;">
+                                                <div class="col-xs-12 p-10 d-flex d-flex-v-center f-15 f-500" style="background: #f5faff;border-bottom: 1px solid #e0e0e0;">
+                                                    Are you sure?
+                                                </div>
+                                                <div class="col-lg-12 d-flex d-flex-h-center d-flex-v-center p-10" style="flex-direction: column;line-height:2;">
+                                                    <span class="f-16 c-firebrick">{{selectedLakeStream.lake}} lake and {{selectedLakeStream.stream}} stream
+                                                        doesn't allow multiple drops.
+                                                    </span>
+                                                    <span class="text-info f-14 f-500">
+                                                        If you proceed current drop will be replaced. Do you want to replace and upload?
+                                                    </span>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group pull-right">
+                                                        <button class="btn btn-block btn-success waves-effect f-700" ng-if="!updateFile" ng-click="choiceCtrl.addCoverImg()"
+                                                            ng-disabled="choiceCtrl.drop_form.$invalid || choiceCtrl.isProcessing || choiceCtrl.isDeleting">
+                                                            <span ng-if="!(choiceCtrl.drop_form.$invalid || choiceCtrl.isProcessing || choiceCtrl.isDeleting)">Yes, Upload!</span>
+                                                            <span ng-if="choiceCtrl.drop_form.$invalid || choiceCtrl.isProcessing || choiceCtrl.isDeleting">Uploading...</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-group pull-right m-r-5">
+                                                        <button class="btn btn-block btn-inverse waves-effect f-700" data-ng-click="choiceCtrl.initializeDropForm()">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End -->
+                                        <!-- on deletion of cover image -->
+                                        <div class="col-xs-12">
+                                            <div class="col-lg-12 col-xs-12 p-0" data-ng-if="choiceCtrl.showConfirmDeletion" style="border: 1px solid lightgrey;box-shadow: 1px 1px 4px lightgrey;">
+                                                <div class="col-xs-12 p-10 d-flex d-flex-v-center f-15 f-500" style="background: #f5faff;border-bottom: 1px solid #e0e0e0;">
+                                                    Are you sure?
+                                                </div>
+                                                <div class="col-lg-12 col-xs-12 d-flex d-flex-h-center d-flex-v-center p-10" style="flex-direction: column;line-height:2;">
+                                                    <span class="f-16" style="color:#313131">Removing cover image will remove the same from thumbnail. Do you want
+                                                        to delete ?
+                                                    </span>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group pull-right">
+                                                        <button class="btn btn-block btn-success waves-effect f-700" ng-if="!updateFile" ng-click="choiceCtrl.removeDrop(drop)">
+                                                            Yes, Delete!
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-group pull-right m-r-5">
+                                                        <button class="btn btn-block btn-inverse waves-effect f-700" data-ng-click="choiceCtrl.initializeDropForm()">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End -->
+                                        <div class="f-14 f-700 c-firebrick" data-ng-if="choiceCtrl.mtodataUploaderror">{{choiceCtrl.mtodataUploaderror}}</div>
+                                    </div>
+                                </div>
+                                <!-- Table to show the cover images and the Thumbnails start -->
+                                <div class="col-xs-12 p-0 box maintenanceworkspace m-t-10">
+                                    <div class="col-xs-12 m-b-10 p-0">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Images linked to the MTO Choice</span>
+                                            <div>
+                                                <small>Images which are already linked are listed here.</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 o-auto p-t-10" id="showQueueMessage" data-ng-class="{'isProccessing':choiceCtrl.isDeleting && choiceCtrl.isDeleting === true,'processed':choiceCtrl.isDeleting && choiceCtrl.isDeleting === 1}">
+                                            <div class="col-xs-12 p-0" style="border:1px solid #ececec;">
+                                                <div class="col-xs-12 p-10 queue-message-header" style="background: #fafafa;color: #1369ab;font-weight: 700;">
+                                                    <span>Drop Status</span>
+                                                </div>
+                                                <!-- Section to show the message for the Image added to Queue start -->
+                                                <div class="col-xs-12 m-t-10 p-0">
+                                                    <div class="col-xs-12 p-10">
+                                                        <span class="d-flex f-14 f-700 di-block" style="color: #386d39;">
+                                                            <!-- <div class="text-center" ng-if="choiceCtrl.isDeleting && choiceCtrl.isDeleting === true">
+                                                            <img class="m-auto" src="/images/product_search.gif" alt="" width="40px" height="40px" />
+                                                        </div> -->
+                                                            <span class="f-21 f-700 m-r-5 text-success zmdi zmdi-check zmdi-hc-fw" ng-if="choiceCtrl.isDeleting && choiceCtrl.isDeleting === 1"
+                                                                style="color: #5ca05d;"></span>
+                                                            {{choiceCtrl.showSuccessQueueMessage}}
+                                                            <img src="./img/loadingData.gif" ng-if="choiceCtrl.isDeleting && choiceCtrl.isDeleting === true" style="height: 30px;width: 30px;"
+                                                            />
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- Section to show the message for the Image added to Queue end -->
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 o-auto p-t-10" data-ng-if="drops.length > 0 && !isLoadingDrops">
+                                            <table class="table table-condensed table-bordered-sm table-bordered table-vmiddle maintenance-drops-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name/URL</th>
+                                                        <th>Size</th>
+                                                        <th>Lake</th>
+                                                        <th>Stream</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody data-ng-repeat="(groupName,dropValues) in drops|groupBy:'stream' track by $index">
+                                                    <tr>
+                                                        <td colspan="5" class="group-header-cover-img">{{groupName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="repeated-item" data-ng-repeat="drop in dropValues" data-ng-init="drop.thumbnail=choiceCtrl.getDownloadUrl(drop.drop_id, drop.url)"
+                                                        ng-disabled="isDeleting">
+                                                        <td>{{drop.file_name || (drop.url | limitTo: 50)}}
+                                                            <span ng-if="drop.url">
+                                                                ... </span>
+                                                        </td>
+                                                        <td>
+                                                            <span data-ng-if="drop.size">{{drop.size/1024 | DecimalPrecision:1 }} KB</span>
+                                                            <span data-ng-if="!drop.size"> - </span>
+                                                        </td>
+                                                        <td>{{drop.lake}}</td>
+                                                        <td>{{drop.stream}}</td>
+                                                        <td class="text-center d-flex" style="justify-content: space-evenly;">
+                                                            <a class="c-teal f-500 cursor-pointer f-17" ng-click="choiceCtrl.previewDatalake(drop,drop.stream_code)" title="Preview">
+                                                                <span class="zmdi zmdi-picture-in-picture zmdi-hc-fw"></span>
+                                                            </a>
+                                                            <a class="f-500 cursor-pointer f-17" data-ng-disabled="drop.size == 0" ng-click="choiceCtrl.downloadFile(drop.drop_id,drop.file_name, drop)" title="Download Image">
+                                                                <span class="zmdi zmdi-download zmdi-hc-fw text-info"></span>
+                                                            </a>
+                                                            <a class="c-firebrick f-500 cursor-pointer f-17" ng-click="choiceCtrl.confirmRemoveDrop(drop)" title="Unlink Image">
+                                                                <span class="zmdi zmdi-delete zmdi-hc-fw"></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="col-xs-12 o-auto p-t-10" data-ng-if="drops.length === 0&&!isLoadingDrops">
+                                            <span>No drops exists for selected MTO Choice.</span>
+                                        </div>
+                                        <div class="col-xs-12 o-auto p-t-10" data-ng-if="isLoadingDrops">
+                                            <span>Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="choiceCtrl.validationMessage ">
+                                    <div class="col-xs-12 p-0">
+                                        <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                            <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                <div class="rc-alert-icon">
+                                                    <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                    </span>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div class="f-15 f-700 text-danger">Error!</div>
+                                                    <div>
+                                                        <span class="c-black">{{choiceCtrl.validationMessage}}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Table to show the cover images and the Thumbnails end -->
+                                <div class="col-xs-12 m-t-10 p-0">
+                                    <div class="col-xs-4 col-lg-6 p-0" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                        <div class="col-xs-6 p-0">
+                                            <button type="button" class="btn-sm bgm-firebrick c-white btn btn-block f-700" data-ng-click="choiceCtrl.confirmDel()" data-ng-disabled="choiceCtrl.disableActions || !choiceCtrl.permissionsMap.delete">
+                                                <div title="{{!choiceCtrl.permissionsMap.delete ? 'Access denied' : ''}}" title-direction="top">
+                                                    <i class="zmdi zmdi-delete zmdi-hc-fw"></i>Delete</div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-8 col-lg-6 p-0 pull-right d-flex" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                        <button type="button" class="btn btn-block btn-cancel f-700 waves-effect" data-ng-click="choiceCtrl.closeForm('MTOChoice');choiceCtrl.reloadChoiceCountAndList(true);">Cancel</button>
+                                        <button type="button" class="btn btn-block btn-inverse f-700 m-l-5 m-t-0 waves-effect" data-ng-click="choiceCtrl.backFn('dropScreen');"
+                                            ng-disabled="choiceCtrl.isProcessing ||choiceCtrl.isDeleting">Back</button>
+                                        <button type="button" class="btn btn-block btn-success f-700 m-l-5 m-t-0 waves-effect" data-ng-click="choiceCtrl.continueFn('dropScreen')"
+                                            ng-disabled="choiceCtrl.isProcessing ||choiceCtrl.isDeleting">Next</button>
+                                        <button data-ng-if="files.length > 0 || choiceCtrl.drop_form.url.$valid" type="button" class="btn btn-block btn-info f-700 m-l-5 m-t-0 waves-effect"
+                                            data-ng-click="choiceCtrl.continueFn('skip')" ng-disabled="choiceCtrl.isProcessing ||choiceCtrl.isDeleting">Skip</button>
+                                    </div>
+                                    <div class="col-xs-6 p-0" data-ng-if="choiceCtrl.deleteLocationMessage">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-lg-12">
+                                                <div class="alert alert-danger alert-dismissable">
+                                                    <button type="button" class="close" data-ng-click="choiceCtrl.deleteLocationMessage = null" aria-hidden="true">&times;</button>
+                                                    {{choiceCtrl.deleteLocationMessage}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="!(choiceCtrl.showDependencyDetails || choiceCtrl.showDependencyDetailsData) && (choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700" data-ng-click="choiceCtrl.confirmDel()" data-ng-disabled="choiceCtrl.isLoadingDelete">Cancel</button>
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-danger f-700 m-l-5 m-t-0" data-ng-click="choiceCtrl.delete(choiceHead);"
+                                            data-ng-disabled="choiceCtrl.isLoadingDelete">
+                                            <span data-ng-if="choiceCtrl.isLoadingDelete">
+                                                <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                            </span>
+                                            Yes,Delete!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                    <!--End of manage drops in vendor div -->
+
+                    <!--Div for preview and publish item stage start-->
+                    <div ng-if="choiceCtrl.previewAndPublish" ng-init="choiceCtrl.setStageIndication('previewandpublish');">
+                        <div class="col-lg-12 p-0 maintenanceworkspace noboxshadow">
+                            <div class="rcpscrollbar full-height">
+                                <div class="col-xs-12 m-b-10" data-ng-show1="!choiceCtrl.publishResponseMessage">
+                                    <div class="col-lg-12 d-flex update-maintenance-screen-title" data-ng-class="{'d-none' : choiceCtrl.publishResponseMessage}">
+                                        <span class="f-16 c-white m-r-10 text-nowrap">
+                                            <i class="fa fa-edit"></i> Update MTO Choice - </span>
+                                        <span class="f-16 c-white text-overflow-desc-auto" title="{{choiceHead.choice_description}}" title-direction="bottom">{{choiceHead.choice_description}}</span>
+                                    </div>
+                                    <div class="col-xs-12 d-flex p-0" style="min-height:50px;flex-direction:column;align-items:flex-end;">
+                                        <div class="col-xs-12 align-items-center justify-content-between type-success" aria-hidden="false" role="alert" ng-class="{'preview-screen':!choiceCtrl.publishResponseMessage, 'publish-screen':choiceCtrl.publishResponseMessage}">
+                                            <!-- Section to show the response of the published data start -->
+                                            <div class="col-xs-12 p-0" data-ng-if="choiceCtrl.publishResponseMessage">
+                                                <div class="col-xs-12 d-flex p-0 col-xs-12 justify-content-between p-0">
+                                                    <div class="col-xs-10 p-0">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="rc-alert-icon">
+                                                                <span class=" zmdi zmdi-globe text-info" style="font-size:35px" title="Update information" title-direction="bottom" fixed-position="true">
+                                                                </span>
+                                                            </span>
+                                                            <div data-ng-if="choiceCtrl.isProcessing">
+                                                                <i class="zmdi zmdi-hourglass-alt"></i> ...
+                                                            </div>
+                                                            <span class="f-14 f-700 text-success" data-ng-if="!choiceCtrl.isProcessing && mtoChoiceSuccessMessage">
+                                                                <span>MTO Choice
+                                                                </span> Updated
+                                                            </span>
+                                                            <div data-ng-if="!choiceCtrl.isProcessing">
+                                                                <span class="f-14 f-700 c-firebrick" data-ng-if="mtoChoiceErrorMessage">
+                                                                    <span>Error while updating the MTO Choice</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div style="padding-left:40px;" data-ng-if="!choiceCtrl.isProcessing">
+                                                            <div class="message-section success d-flex-v-center" data-ng-if="mtoChoiceSuccessMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{mtoChoiceSuccessMessage}}</span>
+                                                            </div>
+                                                            <div class="message-section success d-flex-v-center" data-ng-if="mtoChoiceUDDSuccessMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{mtoChoiceUDDSuccessMessage}}</span>
+                                                            </div>
+                                                            <div class="message-section error d-flex-v-center" data-ng-if="mtoChoiceErrorMessage &&  mtoChoiceErrorMessage.length > 0"
+                                                                data-ng-repeat="error in mtoChoiceErrorMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{error}}</span>
+                                                            </div>
+                                                            <span class="message-section" data-ng-if="mtoChoiceErrorMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                Will you go back and review your setup?
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-2 p-0" data-ng-if="!choiceCtrl.isProcessing">
+                                                        <div class="pull-right d-flex p-0 d-flex-h-center">
+                                                            <button type="button" class="btn btn-inverse f-300 waves-effect f-15 p-10" data-ng-click="choiceCtrl.closeForm('MTOChoice');choiceCtrl.reloadChoiceCountAndList(true);">Finish</button>
+                                                            <button type="button" class="btn btn-cancel f-300 waves-effect f-15 m-l-5 p-10" data-ng-if="mtoChoiceErrorMessage" data-ng-click="choiceCtrl.backFn('configureScreen');choiceCtrl.publishResponseMessage=false;">Go Back
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Section to show the response of the published data end -->
+                                            <div class="d-flex" data-ng-if="!choiceCtrl.publishResponseMessage">
+                                                <div class="rc-alert-icon">
+                                                    <span class=" zmdi zmdi-globe text-info" style="font-size:35px" title="Review" title-direction="bottom" fixed-position="true">
+                                                    </span>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div class="f-14 f-700">Review and Publish</div>
+                                                    <div>
+                                                        <span class="text-muted">
+                                                            <div class="list-style-none" style="line-height: 1.7;">
+                                                                <li>
+                                                                    <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                    <span class="">
+                                                                        <strong>Preview and Publish :</strong> Publish the entered/configured
+                                                                        details
+                                                                    </span>
+                                                                </li>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex" style="justify-content:space-between" data-ng-if="!choiceCtrl.publishResponseMessage">
+                                                <div class="pull-right d-flex">
+                                                    <button type="button" class="btn btn-lg btn-inverse f-700 waves-effect" data-ng-click="choiceCtrl.backFn('publishMTOChoice');"
+                                                        data-ng-if="choiceCtrl.previewAndPublish">Back</button>
+                                                    <button type="button" class="btn btn-lg btn-success f-700 m-l-5 waves-effect" data-ng-click="choiceCtrl.publishMTOChoice(choiceHead);">Publish {{moduleName}}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 p-0">
+                                    <!--BASIC DETAILS PREVIEW -- START-->
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="col-lg-12 p-0">
+                                            <div class="col-xs-12 f-16 panel-header">
+                                                <span class="f-700" style="color:darkgray;">
+                                                    MTO Choice Option Details
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-12 p-t-10 card previewnpublish f-13">
+                                                <div class="col-xs-12 form-group">
+                                                    <label class="panel-body-label">Description</label>
+                                                    <div class="description-data">
+                                                        <label class="m-0 p-0">
+                                                            {{choiceHead.choice_description}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6" ng-if="is_collection === true">
+                                                    <label class="panel-body-label">Collection</label>
+                                                    <div class="description-data p-0">
+                                                        <label class="m-0 p-0">
+                                                            <select selectize="selectCollection" items="choiceHead" name="collections" class="dropdown-to-label" options="choiceCtrl.allCollections"
+                                                                ng-model="choiceHead.collection_id" disabled>
+                                                            </select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6" ng-if="is_family === true">
+                                                    <label class="panel-body-label">Family</label>
+                                                    <div class="description-data p-0">
+                                                        <label class="m-0 p-0">
+                                                            <select selectize="selectFamily" items="choiceHead" name="families" class="dropdown-to-label" options="choiceCtrl.allFamilies"
+                                                                ng-model="choiceHead.family_id" disabled>
+                                                            </select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 p-t-10" ng-if="is_price === true">
+                                                    <label class="panel-body-label">Price Group</label>
+                                                    <div class="description-data  p-0">
+                                                        <label class="m-0 p-0">
+                                                            <select selectize="selectPriceGroup" items="choiceHead" name="price_groups" options="choiceCtrl.allPriceGroups" ng-model="choiceHead.price_group_id"
+                                                                disabled class="dropdown-to-label">
+                                                            </select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-t-10 form-group">
+                                                    <label class="panel-body-label">Vendor PO Description</label>
+                                                    <div class="description-data">
+                                                        <label class="m-0 p-0">
+                                                            <label class="dropdown-to-label">{{choiceHead.vendor_po_description}}</label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 p-t-10 p-0 form-group">
+                                                    <div class="col-xs-6">
+                                                        <label class="panel-body-label">Current Status</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                <select class="dropdown-to-label" ng-options="each.code as each.description for each in statuses" ng-model="choiceHead.status_id"
+                                                                    disabled></select>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 form-group">
+                                                        <label class="panel-body-label">Effective Date</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                {{choiceHead.effective_date }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 p-0 form-group">
+                                                    <div class="col-xs-6">
+                                                        <label class="panel-body-label">Next Status</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                <select class="dropdown-to-label" ng-options="each.code as each.description for each in next_statuses" ng-model="choiceHead.next_status_id"
+                                                                    disabled></select>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6" ng-if="effective_val">
+                                                        <label class="panel-body-label">Next Effective Date</label>
+                                                        <div class="description-data">
+                                                            <label class="maintenance-field-label publishData m-0 p-0">{{choiceHead.next_effective_date}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--BASIC DETAILS PREVIEW -- END-->
+                                    <!--UDD DETAILS PREVIEW -- START-->
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="col-lg-12 p-0 card m-b-0">
+                                            <div class="col-lg-12 f-16 panel-header c-white">
+                                                <span class="f-700" style="color:darkgray;">
+                                                    User Defined Data
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <preview-udd-directive udd-data="uddData" selected-hierarchy-property="selectedHierarchyProperty" attribute-values-map="choiceCtrl.attributeValuesMap"
+                                            mto-options-map="" is-summary="false"></preview-udd-directive>
+                                    </div>
+                                    <!--UDD DETAILS PREVIEW -- END-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Div for preview and publish item stage end-->
+                </div>
+            </div>
+            <!--Available screens in item update LINK start-->
+            <div id="fixed-side-navigation">
+                <div class="fixed-side-panel">
+                    <div>
+                        <ul class="p-0">
+                            <li data-ng-class="{'active-navigation' : choiceCtrl.createForm}" title="" title-direction="left">
+                                <a href="" data-ng-click="choiceCtrl.goToScreen('choiceMasterScreen')">
+                                    <span>MTO Choice Master Configuration</span>
+                                </a>
+                            </li>
+                            <li data-ng-class="{'active-navigation' : choiceCtrl.configureScreen}" title="" title-direction="left">
+                                <a href="" data-ng-click="choiceCtrl.goToScreen('userDefinedDataConfigurationScreen')">
+                                    <span>User Defined Data Configuration</span>
+                                </a>
+                            </li>
+                            <li data-ng-class="{'active-navigation' : choiceCtrl.manageDropScreen}" title="" title-direction="left">
+                                <a href="" data-ng-click="choiceCtrl.goToScreen('dropConfigurationScreen')">
+                                    <span>Document Configuration</span>
+                                </a>
+                            </li>
+                            <li data-ng-class="{'active-navigation' : choiceCtrl.previewAndPublish}" title="" title-direction="left">
+                                <a href="" data-ng-click="choiceCtrl.goToScreen('publishscreen')">
+                                    <span>Review and Publish</span>
+                                </a>
+                            </li>
+                            <li class="p-5" title="Publish Changes" title-direction="left" style="background:#fff1d4">
+                                <button class="btn btn-block f-13 bgm-ocean center-block" data-ng-disabled="mtoChoiceLoadingUDD" data-ng-click="choiceCtrl.publishMTOChoice(choiceHead, true)"
+                                    style="border: 1px dotted;">
+                                    <span data-ng-if="mtoChoiceLoadingUDD">
+                                        <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                    </span>
+                                    <span>Publish Changes</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--Available screens in item update LINK end-->
+        </div>
+        <!--show mto choice dependent details-->
+        <div id="rcrightsidebar" data-ng-class="{'changeposition': choiceCtrl.showDependencyDetails === true || showHistory === true,'toggled':choiceCtrl.showDependencyDetailsData === true}">
+            <div class="col-xs-12 m-t-25">
+                <div class="col-xs-3 p-0">
+                    <a data-ng-click="choiceCtrl.showDependencyDetailsData=false;choiceCtrl.showDependencyDetails = false;choiceCtrl.isLoadingDelete = false;"
+                        class="cursor-pointer">
+                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                    </a>
+                </div>
+                <div class="col-xs-9 p-0">
+                    <label class="rclabel editformlabel">
+                        <strong>Choice</strong> Dependency</label>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="d-flex m-b-10 m-t-10">
+                    <div class="m-auto updatepanel">
+                        <div data-ng-include="'./img/sidebar-icons/mto-choice.svg'"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="rc-alert rc-alert-error" aria-hidden="false" role="alert">
+                        <div class="rc-alert-icon-section">
+                            <span class="zmdi zmdi-alert-polygon">
+                            </span>
+                        </div>
+                        <div class="rc-alert-content-section">
+                            <div class="rc-alert-header">Dependency Check - Action can not be completed</div>
+                            <div class="rc-alert-body">
+                                <span>
+                                    Before deleting we checked and found some entities are still linked to choice.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12" ng-repeat="($groupName,$dependencyMain) in ( choiceCtrl.dependencyList | groupBy : 'dependent_entity')">
+                    <h4> Dependent Entities - {{$groupName}} </h4>
+                    <div class="rcpscrollbar dependency-entityBox">
+                        <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                            <div class="dependency-entityList" ng-click="choiceCtrl.showDependencyListDetails(dependency);">
+                                <span title="{{dependency.description}}">{{dependency.description | truncate:50}}</span>
+                                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group pull-right p-10">
+                    <button class="btn btn-secondary" ng-click="choiceCtrl.showDependencyDetailsData=false;choiceCtrl.showDependencyDetails = false;choiceCtrl.isLoadingDelete = false;">
+                        <span>
+                            <b>Cancel</b>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div data-ng-include="'./application/modules/mto/choice/panel.mto.choice.dependency.html'"></div>
+        </div>
+    </div>
+    <div ui-view></div>
+    <div id="rcrightsidebar" class="rcpscrollbar o-auto" data-ng-class="{'toggled':choiceCtrl.isShowCollectionDetails === true || choiceCtrl.isShowCollectionDetails === 1}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="choiceCtrl.isShowCollectionDetails=false" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="MTO Collection">Create
+                    <strong>MTO Collection</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="d-flex m-b-10 m-t-10" ng-if="!(choiceCtrl.isSaveSuccess)">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/mto_collections.svg'"></div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(choiceCtrl.isSaveSuccess)">
+                    <ng-form name="choiceCtrl.collection_form" role="form" novalidate="novalidate" valdr-type="RULES-33">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.collection_form.short_description.$invalid">*
+                            </span>
+                            <span class="c-green" ng-show="choiceCtrl.collection_form.short_description.$valid">*
+                            </span>
+                            <label>Short Description</label>
+                            <input id="short_description_collection" name="short_description" type="text" class="form-control input-sm" ng-model="choiceCtrl.collection_details.short_description"
+                                placeholder="Short description" errorvalue="choiceCtrl.collection_details.short_description_error"
+                                ng-model-options="{ updateOn: 'blur' }">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.collection_form.collection_status_id.$invalid">*
+                            </span>
+                            <span class="c-green" ng-show="choiceCtrl.collection_form.collection_status_id.$valid">*
+                            </span>
+                            <label>Status</label>
+                            <select name="collection_status_id" class="form-control select-component input-sm" id="mtoCol_status" ng-options="item.code as item.description for item in statuses"
+                                ng-model="choiceCtrl.collection_details.collection_status_id" errorvaluechosen="choiceCtrl.collection_details.collection_status_id_error">
+                                <option value="" disabled>Select an option</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn-block btn-lg btn-primal" id="save_btn" ng-click="choiceCtrl.save('MTOCollection',choiceCtrl.collection_details);"
+                                ng-class="{'btn-danger': choiceCtrl.saveBtnError === true}" ng-disabled="choiceCtrl.collection_form.$invalid || choiceCtrl.isLinkingVendor">
+                                <strong>{{choiceCtrl.saveBtnText}}</strong>
+                            </button>
+                        </div>
+                    </ng-form>
+                </div>
+                <rcp-success-form success-tick="success_tick.svg" create-new-fn="choiceCtrl.createAnotherForm('MTOCollection');" close-fn="choiceCtrl.isShowCollectionDetails=false"
+                    save-success="choiceCtrl.isSaveSuccess">
+                </rcp-success-form>
+            </div>
+            <div class="col-xs-12 p-0">
+                <div data-ng-show="choiceCtrl.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="choiceCtrl.message = null" aria-hidden="true">&times;</button> {{choiceCtrl.message}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="rcrightsidebar" class="rcpscrollbar o-auto" data-ng-class="{'toggled':choiceCtrl.isShowFamilyDetails === true || choiceCtrl.isShowFamilyDetails === 1}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="choiceCtrl.isShowFamilyDetails=false" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="MTO Family">Create
+                    <strong>MTO Family</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="d-flex m-b-10 m-t-10" ng-if="!(choiceCtrl.isSaveSuccess)">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/mto-family.svg'"></div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(choiceCtrl.isSaveSuccess)">
+                    <ng-form name="choiceCtrl.family_form" role="form" novalidate="novalidate" valdr-type="RULES-35">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.family_form.short_description.$invalid">* </span>
+                            <span class="c-green" ng-show="choiceCtrl.family_form.short_description.$valid">* </span>
+                            <label>Short Description</label>
+                            <input id="short_description_family" name="short_description" type="text" class="form-control input-sm" ng-model="choiceCtrl.family_details.short_description"
+                                placeholder="Short description" errorvalue="choiceCtrl.family_details.short_description_error"
+                                ng-model-options="{ updateOn: 'blur' }">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.family_form.families_status_id.$invalid">* </span>
+                            <span class="c-green" ng-show="choiceCtrl.family_form.families_status_id.$valid">* </span>
+                            <label>Status</label>
+                            <select name="families_status_id" class="form-control select-component input-sm" id="families_status_id" ng-options="item.code as item.description for item in statuses"
+                                ng-model="choiceCtrl.family_details.families_status_id" errorvaluechosen="choiceCtrl.family_details.families_status_id_error">
+                                <option value="" disabled>Select an option</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn-block btn-lg btn-primal" id="save_btn" ng-click="choiceCtrl.save('MTOFamily',choiceCtrl.family_details);"
+                                ng-class="{'btn-danger': choiceCtrl.saveBtnError === true}" ng-disabled="choiceCtrl.family_form.$invalid || choiceCtrl.isLinkingVendor">
+                                <strong>{{choiceCtrl.saveBtnText}}</strong>
+                            </button>
+                        </div>
+                    </ng-form>
+                </div>
+                <rcp-success-form success-tick="success_tick.svg" create-new-fn="choiceCtrl.createAnotherForm('MTOFamily');" close-fn="choiceCtrl.isShowFamilyDetails = false"
+                    save-success="choiceCtrl.isSaveSuccess">
+                </rcp-success-form>
+            </div>
+            <div class="col-xs-12 p-0">
+                <div data-ng-show="choiceCtrl.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="choiceCtrl.message = null" aria-hidden="true">&times;</button> {{choiceCtrl.message}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="rcrightsidebar" class="rcpscrollbar o-auto" data-ng-class="{'toggled':choiceCtrl.isShowPriceGroupDetails === true || choiceCtrl.isShowPriceGroupDetails === 1}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="choiceCtrl.isShowPriceGroupDetails=false;" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="MTO Price Group">Create
+                    <strong>MTO Price Group</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="d-flex m-b-10 m-t-10" ng-if="!(choiceCtrl.isSaveSuccess)">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/mto-price-group.svg'"></div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(choiceCtrl.isSaveSuccess)">
+                    <ng-form name="choiceCtrl.price_group_form" role="form" novalidate="novalidate" valdr-type="RULES-38">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.price_group_form.short_description.$invalid">*
+                            </span>
+                            <span class="c-green" ng-show="choiceCtrl.price_group_form.short_description.$valid">*
+                            </span>
+                            <label>Short Description</label>
+                            <input id="short_description_pg" name="short_description" type="text" class="form-control input-sm" ng-model="choiceCtrl.price_group_details.short_description"
+                                placeholder="Short description" errorvalue="choiceCtrl.price_group_details.short_description_error"
+                                ng-model-options="{ updateOn: 'blur' }">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.price_group_form.price_group_status_id.$invalid">*
+                            </span>
+                            <span class="c-green" ng-show="choiceCtrl.price_group_form.price_group_status_id.$valid">*
+                            </span>
+                            <label>Status</label>
+                            <select id="price_group_status_id" name="price_group_status_id" class="form-control select-component input-sm" chosen ng-options="item.code as item.description for item in statuses"
+                                ng-model="choiceCtrl.price_group_details.price_group_status_id" errorvaluechosen="czhoiceCtrl.price_group_details.price_group_status_id_error">
+                                <option value="" disabled>Select an option</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn-block btn-lg btn-primal" id="save_btn" ng-click="choiceCtrl.save('MTOPriceGroup',choiceCtrl.price_group_details);"
+                                ng-class="{'btn-danger': choiceCtrl.saveBtnError === true}" ng-disabled="choiceCtrl.price_group_form.$invalid || choiceCtrl.isLinkingVendor">
+                                <strong>{{choiceCtrl.saveBtnText}}</strong>
+                            </button>
+                        </div>
+                    </ng-form>
+                </div>
+            </div>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="choiceCtrl.createAnotherForm('MTOPriceGroup');" close-fn="choiceCtrl.isShowPriceGroupDetails = false"
+                save-success="choiceCtrl.isSaveSuccess">
+            </rcp-success-form>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="choiceCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="choiceCtrl.message = null" aria-hidden="true">&times;</button> {{choiceCtrl.message}}
+            </div>
+        </div>
+    </div>
+    <meta-data-panel></meta-data-panel>
+</div>

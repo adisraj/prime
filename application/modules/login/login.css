@@ -1,0 +1,317 @@
+body {
+    background: #fff;
+}
+
+.btn:hover,
+.btn:focus,
+.btn.focus {
+    color: #fff;
+}
+::-ms-reveal {
+    display: none;
+}
+
+.login-rclogo {
+    position: absolute;
+    height: 60px;
+    top: 115px;
+    left: 50%;
+    margin-left: -80px;
+}
+.password-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    flex: 1;
+}
+.password-input-container {
+    position: relative;
+ 
+}
+
+.password-input-container .zmdi {
+    position: absolute;
+    
+    transform: translateY(-10%);
+   
+}
+
+
+.login-page {
+    display: flex;
+    height: 100vh;
+    background: white;
+}
+
+.login-inputbox {
+    width: 100%;
+    border-radius: 2px;
+    background: white;
+    border: 1px solid #e4e3e3 !important;
+    color: black !important;
+    padding: 0.5rem 1rem;
+    line-height: 1.3rem;
+    box-shadow: none;
+    -webkit-appearance: none;
+    outline: none;
+    margin-top: 0 !important;
+    font-size: 16px;
+}
+
+.module-section {
+    width: 100%;
+    display: flex;
+}
+
+.workspace-area {
+    display: flex;
+    height: auto;
+}
+
+#version:hover {
+    color: #337ab7;
+  }
+
+.detailspace-area {
+    width: 50%;
+    float: left;
+    background: #2f3b62;
+    min-height: 550px;
+    padding: 30px;
+    background-image: url('../../../img/bg.jpg');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    height: 100vh;
+    text-align: center;
+}
+
+.workspace-area {
+    width: 50%;
+    min-height: 550px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+}
+
+.login-form-section .rc-text {
+    color: white;
+    background: rgb(47, 59, 98);
+    padding: 8px 11px 8px 8px;
+    border-radius: 3px 0px 0px 3px;
+    border-right: 0px;
+    letter-spacing: -1px;
+    font-weight: 300;
+}
+
+.workspace-area .module-name {
+    background: #000000;
+    color: white;
+    padding: 8px 8px 8px 11px;
+    border-radius: 0px 3px 3px 0px;
+    border-left: 0px;
+    letter-spacing: 1px;
+}
+
+
+.login-form-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    padding-bottom: 11px;
+}
+
+.login-form {
+    width: 80%;
+    padding-bottom: 3rem;
+}
+
+.login-form-section button {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    height: 2.7rem;
+    display: block;
+    border: 0;
+    border-radius: 2px;
+    font-weight: 400;
+    background: #282828;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.5s;
+    line-height: 24px;
+}
+
+
+.sign-in-header {
+    width: 100%;
+    flex-direction: column;
+    align-items: left;
+    padding: 20px 0px;
+    text-align: left;
+}
+
+.recovery-button-section div {
+    flex: 1;
+}
+
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+    opacity: 1;
+    background: #d3d3d3;
+}
+
+.btn-primal:hover,
+.btn-primal:focus,
+.btn-secondary:hover,
+.btn-secondary:hover .zmdi,
+.btn-secondary:focus {
+    background: #184799 !important;
+    color: white !important;
+}
+
+.recovery-button-section button:hover {
+    background: #184799 !important;
+}
+
+.recovery-button-section button:disabled {
+    background: lightgray !important;
+}
+
+@media only screen and (min-width:768px) and (max-width:1024px) {
+    .login-page .module-section {
+        width: 100%;
+    }
+
+    .login-page .module-section .detailspace-area {
+        width: 50%
+    }
+
+    .login-page .module-section .workspace-area {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .login-form-section {
+        width: 100%;
+    }
+
+}
+
+@media only screen and (max-device-width:767px) {
+    .module-section {
+        width: 90%;
+    }
+}
+
+@media (min-width:1281px) {
+    .workspace-area {
+        width: 50%;
+        min-height: 550px;
+        float: right;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ffffff;
+    }
+}
+
+.loader-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    z-index: 2;
+    background: #000000;
+    opacity: 0.4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+}
+
+.authentication-page {
+    width: 500px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #f1f1f1;
+}
+
+.bg-light {
+    background: #f1f1f1;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover {
+    -webkit-box-shadow: none;
+}
+
+#loginButton:hover {
+    background: #044389;
+}
+
+.btn[disabled]:hover {
+    background: #d3d3d3 !important;
+    opacity: 1 !important;
+    transition: all 0s;
+}
+
+.btn[disabled] {
+    transition: all 0s;
+}
+
+.login-text {
+    color: #176ede;
+    font-size: 25px;
+    font-weight: 400;
+    display: none;
+    margin-bottom: 50px;
+    text-align: center;
+    line-height: 40px;
+}
+
+.logo {
+    margin-bottom: 8vh;
+}
+
+@media (max-width: 1024px) {
+    .detailspace-area {
+        display: none;
+    }
+
+    .login-text {
+        display: block;
+    }
+
+    .logo {
+        margin-bottom: 10px;
+    }
+}
+
+.login-label {
+    line-height: 2rem;
+    font-weight: 400;
+    margin: 0px;
+    color: black
+}
+
+input:focus{
+    border-left: 3px solid #f9c10c!important;
+}
+
+button:focus, .btn:focus{
+    outline: 5px auto #6ecaf6!important;
+}

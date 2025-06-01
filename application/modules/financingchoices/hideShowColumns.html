@@ -1,0 +1,151 @@
+<div id="rightsidebar" data-ng-class="{'toggled':financingChoiceCtrl.isColumnSettingsVisible === true}">
+    <div class="m-t-25 d-flex">
+        <button type="button" id="hide_show_column" name="hide_show_column"
+            class="p-0 cursor-pointer bg-none border-none btn-link" ng-click="financingChoiceCtrl.isColumnSettingsVisible = false;">
+            <i class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x" aria-hidden="true"></i>
+        </button>
+        <div class="m-auto p-0 text-center">
+            <label class="editformlabel">Hide/Show <strong> Columns</strong> </label>
+        </div>
+    </div>
+    <div class="col-xs-12 updatepanel">
+        <svg height="130" width="200">
+            <svg version="1.1" id="Capa_1" class="sidebar-svg-icon" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="60px" y="20px" viewBox="0 0 19 19"
+                style="enable-background:new 0 0 19 19;" xml:space="preserve" height="80" width="150">
+                <g>
+                    <circle cx="2.5" cy="16.5" r="2.5" />
+                    <circle cx="2.5" cy="9.5" r="2.5" />
+                    <circle cx="2.5" cy="2.5" r="2.5" />
+                    <circle cx="9.5" cy="16.5" r="2.5" />
+                    <circle cx="9.5" cy="9.5" r="2.5" />
+                    <circle cx="9.5" cy="2.5" r="2.5" />
+                    <circle cx="16.5" cy="16.5" r="2.5" />
+                    <circle cx="16.5" cy="9.5" r="2.5" />
+                    <circle cx="16.5" cy="2.5" r="2.5" />
+                </g>
+            </svg>
+        </svg>
+    </div>
+    <div class="col-lg-12">
+        <div id="columns_container" class="col-lg-12 p-0">
+            <div class="checkbox col-xs-12 form-group">
+                <label for="id_col">
+                    <input id="id_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.id.visible"> Id
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+
+            <div class="checkbox col-xs-12 form-group">
+                <label for="status_col">
+                    <input id="status_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.status.visible"> Status
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+
+            <div class="checkbox col-xs-12 form-group">
+                <label for="description_col">
+                    <input id="description_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.description.visible"> Description
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+
+            <div class="checkbox col-xs-12 form-group">
+                <label for="is_eligible_for_finance_col">
+                    <input id="is_eligible_for_finance_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.is_eligible_for_finance.visible"> Is Eligible For Finance
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+
+            <div class="checkbox col-xs-12 form-group">
+                <label for="first_term_col">
+                    <input id="first_term_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.first_term_month.visible"> First Term(Months)
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="first_annual_interest_col">
+                    <input id="first_annual_interest_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.first_annual_interest.visible"> First Annual Interest Rate
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="first_minimum_monthly_col">
+                    <input id="first_minimum_monthly_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.first_minimum_monthly.visible"> First Monthly Payment
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="first_payment_factor_col">
+                    <input id="first_payment_factor_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.first_payment_factor.visible"> First Payment Factor
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="first_balloon_payment_col">
+                    <input id="first_balloon_payment_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.first_balloon_payment.visible"> First Balloon Payment
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="second_term_col">
+                    <input id="second_term_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.second_term_month.visible"> Second Term(Months)
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="second_annual_interest_col">
+                    <input id="second_annual_interest_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.second_annual_interest.visible"> Second Annual Interest Rate
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="second_minimum_monthly_col">
+                    <input id="second_minimum_monthly_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.second_minimum_monthly.visible"> Second Monthly Payment
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="second_payment_factor_col">
+                    <input id="second_payment_factor_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.second_payment_factor.visible"> Second Payment Factor
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+
+            <div class="checkbox col-xs-12 form-group">
+                <label for="second_balloon_payment_col">
+                    <input id="second_balloon_payment_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.second_balloon_payment.visible"> Second Balloon Payment
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="plan_number_col">
+                    <input id="plan_number_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.plan_number.visible"> Plan Number
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="display_col">
+                    <input id="display_col" type="checkbox" ng-true-value=true ng-false-value=false
+                        data-ng-model="financingChoiceCtrl.financingChoiceGrid.columns.display_criteria.visible"> Display Criteria
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory"
+    data-ng-class="{'toggled':financingChoiceCtrl.showErrorDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="financingChoiceCtrl.closeDependencyDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Financing Choice Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success"
+                            title="{{financingChoiceCtrl.financingChoiceDetails.description}}">
+                            {{financingChoiceCtrl.financingChoiceDetails.description | truncate:20}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{financingChoiceCtrl.financingChoiceDetails.status}}">
+                            {{financingChoiceCtrl.financingChoiceDetails.status}}
+                        </td>
+                    </tr>
+                </table>
+                <h4>{{financingChoiceCtrl.errorDependentData.dependent_entity}} - Dependent Details</h4>
+                <div>
+                    <table ng-if="financingChoiceCtrl.errorDependentData.dependent_entity === 'Financing Price Adjustments'" class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Pricing Choice</td>
+                            <td class="highlight-text-success"
+                                title="{{financingChoiceCtrl.errorDependentData.pricing_choice_description}}">
+                                {{financingChoiceCtrl.errorDependentData.pricing_choice_description | truncate:20}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Pricing Choice - Is Eligible For Finance</td>
+                            <td
+                                title="{{financingChoiceCtrl.errorDependentData.display_pricing_choice_is_eligible_for_finance}}">
+                                {{financingChoiceCtrl.errorDependentData.display_pricing_choice_is_eligible_for_finance}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Price Adjustment %</td>
+                            <td title="{{financingChoiceCtrl.errorDependentData.price_adjustment_percentage}}">
+                                {{financingChoiceCtrl.errorDependentData.price_adjustment_percentage}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{financingChoiceCtrl.errorDependentData.status}}">
+                                {{financingChoiceCtrl.errorDependentData.status}}
+                            </td>
+                        </tr>
+                    </table>
+                    <table ng-if="financingChoiceCtrl.errorDependentData.dependent_entity === 'Cart Header'" class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Cart Description</td>
+                            <td class="highlight-text-success"
+                                title="{{financingChoiceCtrl.errorDependentData.description}}">
+                                {{financingChoiceCtrl.errorDependentData.description | truncate:20}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                </br>
+                <div class="dependency-notifyMessage"> <i
+                        class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i><span>{{financingChoiceCtrl.errorDependentData.message}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

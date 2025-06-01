@@ -1,0 +1,35 @@
+<header id="header" class="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'./templates/header.html'" data-ng-controller="HeaderController as hctrl">
+</header>
+
+<section id="main">
+    <aside id="sidebar" class="sidebar" data-current-skin={{mactrl.currentSkin}} data-ng-include="'sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+    <aside id="minisidebar" class="minisidebar" data-current-skin={{mactrl.currentSkin}} data-ng-include="'./templates/mini-sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === false }">
+    </aside>
+    <!--<aside id="activitybar" data-ng-include="'./application/templates/infopage.html'"></aside>-->
+    
+    <section id="content" class="homepage-content" ng-init="activate();" data-ng-controller="DashboardController as dashboardCtrl">
+        <div class="margin-top" style="padding-left:9px;padding-right:9px;">
+            <div>
+                <!-- <div data-ng-controller="LoginController"> -->
+                <div class="alert alert-success alert-dismissible" ng-class="{fade: startFade}" role="alert" data-ng-controller="showUserMessageCtrl" ng-show="usermessageShow">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true" ng-click="closealert()">&times;</span>
+                    </button>
+                    <p data-ng-model="usermessageShow"><span>You last logged in at {{usermessageShow.date}}:{{usermessageShow.time}} from  {{usermessageShow.os_name}} with  {{usermessageShow.browser_name}}</span></p>
+                </div>
+                <div class="">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div data-ng-include="'./application/modules/dashboard/dashboard.entity.widget.html'"></div>
+                        <div data-ng-include="'./application/modules/dashboard/dashboard.entity.search.widget.html'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div data-ng-include src="'./template/workbenchmodal.html'"></div>
+
+    
+</section>
+
+
+<!--<footer id="footer" data-ng-include="'template/footer.html'"></footer>-->

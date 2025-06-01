@@ -1,0 +1,79 @@
+<!-- START: HIERARCHY PROPERTIES -->
+<div class="container col-lg-12 p-0" data-ng-controller="HierarchyValueController as valueCtrl"
+    data-ng-init="valueCtrl.fetchHierarchyById();">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/hierarchy-levels.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Hierarchy Values</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <button type="button" id="hierarchy_back" name="hierarchy_back" class="btn btn-cancel f-700 waves-effect"
+                                    data-ui-sref="common.prime.hierarchy">Go Back</button>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect"
+                                    data-ng-click="valueCtrl.openForm();"
+                                    data-ng-disabled="!valueCtrl.hierarchyValuePermissions.create">
+                                    <span
+                                        title="{{!valueCtrl.hierarchyValuePermissions.create ? 'Access denied' : ''}}">Create
+                                        Hierarchy Value</span>
+                                </button>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 m-b-15 p-l-15 module-content-configuration"
+        data-ng-if="valueCtrl.hierarchyValuePermissions.view">
+        <span>
+            <span class="f-300">Showing values for : </span>
+            <span class="selected-description"> {{selectedHierarchy.description}}</span>
+        </span>
+    </div>
+    <div class="col-xs-12 p-0 m-b-25">
+        <div class="col-lg-12 text-center" data-ng-if="!valueCtrl.isLoaded">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div data-ng-if="valueCtrl.rowsCount && valueCtrl.rowsCount !== 0 && valueCtrl.isLoaded">
+            <div class="rcp-table-container" ng-if="valueCtrl.isShowHierarchyValue">
+                <div ng-if="returnValues.length !== 0" class="values-treeDisplay">
+                    <panel>
+                        <tree-dnd tree-control="my_tree" tree-data="tree_table"
+                            tree-class="table table-hover table-vmiddle table-condensed table-bordered"
+                            callbacks="callbacks" enable-drag="allowDragNDrop" enable-drop="allowDragNDrop"
+                            column-defs="col_defs_table" expand-on="expanding_property">
+                        </tree-dnd>
+                    </panel>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="valueCtrl.rowsCount === 0 && valueCtrl.hierarchyValuePermissions.view">
+            <div class="col-xs-12 text-center text-info">
+                <span class="f-15 f-300">No value exists for selected hierarchy. Please add hierarchy.</span>
+            </div>
+        </div>
+        <div ng-if="!valueCtrl.hierarchyValuePermissions.view && valueCtrl.isLoaded"
+            data-ng-include="'./application/templates/restricted.access.html'"></div>
+        <meta-data-panel></meta-data-panel>
+        <div ng-include=" 'application/modules/hierarchy/panel.hierarchy.value.form.html'"></div>
+        <!-- END: HIERARCHY PROPERTIES-->
+    </div>
+
+</div>

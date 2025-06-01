@@ -1,0 +1,210 @@
+<div class="container col-lg-12 p-0" data-ng-controller="OffersController as offerController" data-ng-init="offerController.fetchOffer();">
+    <div>
+        <nav class="navbar navbar-toolbar navbar-default fixed-top">
+            <div class="bgm-white header-module">
+                <div class="navbar-header p-relative" style="min-height: inherit;">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="image-module p-absolute">
+                        <img src="./img/sidebar-icons/offers.svg" />
+                    </div>
+                    <div class="label-module p-absolute">
+                        <a class="navbar-brand" href="javascript:void(0)">Product Offers</a>
+                    </div>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse pull-right">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li> <a><button type="button" class="btn btn-success waves-effect f-700 " data-ng-click="offerController.PanelNewOffer();">Create Offer</button></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="col-lg-12 text-center m-t-25" data-ng-if="!offerController.rowsCount  && !offerController.isLoaded">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div data-ng-if="offerController.rowsCount && offerController.rowsCount !== 0">
+            <div class="rcp-table-container">
+                <div class="col-sm-12 m-b-10 p-0">
+                    <div class="entitygroupheader">
+                        <div class="col-lg-12 col-md-12 p-0 table-header-section">
+                            <div class="p-l-0 col-lg-3 col-md-3 col-sm-12 col-xs-12 p-0 tableheader-btn p-t-5">
+                                <span class="searchMessage" data-ng-if="!search"> {{offerController.rowsInfo}} </span>
+                                <span class="searchMessage" data-ng-if="search"> Displaying {{offers.length}} of {{offerController.Offers.length}} Records</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <input id="inlineSearch" class="form-control input-sm" type="text" ng-model="search" indicate-quick-search placeholder="Quick Search"/>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            </div>
+                            <div class="col-lg-1 col-md-2 col-sm-6 col-xs-12 tableheader-btn">
+                                <button type="button" id="refreshButton" ng-click="offerController.RefreshData();offerController.fetchOffer()" class="btn-primal btn-block  waves-effect"><span class="f-700 ng-binding">Refresh</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-ng-include="'./application/modules/attributes/hideShowColumns.html'"></div>
+                <div>
+                    <script type="text/javascript">
+                        function rules_hide_show_table(col_name) {
+                            if (!col_name) { //This code is to reset the labels in hide/show columns panel to checked
+                                let searchElements = {};
+                                let column_names = [];
+                                document.getElementById('id_col_head').style.display = 'none';
+                                document.getElementById('id_col').checked = false;
+                                document.getElementById('id_col').value = "show";
+                                if (document.getElementById("columns_container") !== null) {
+                                    searchElements = document.getElementById("columns_container").children;
+                                    for (let k = 0; k < searchElements.length; k++) {
+                                        column_names.push(searchElements[k].children[0].children[0].id);
+                                    }
+                                    for (let i = 0; i < column_names.length; i++) {
+                                        document.getElementById(column_names[i] + "_head").style.display = "table-cell";
+                                        document.getElementById(column_names[i]).value = "hide";
+                                        document.getElementById(column_names[i]).checked = true;
+                                    }
+                                }
+                            } else {
+                                var checkbox_val = document.getElementById(col_name).value;
+                                if (checkbox_val == "hide") {
+                                    var all_col = document.getElementsByClassName(col_name);
+                                    for (var i = 0; i < all_col.length; i++) {
+                                        all_col[i].style.display = "none";
+                                    }
+                                    document.getElementById(col_name + "_head").style.display = "none";
+                                    document.getElementById(col_name).value = "show";
+                                } else {
+                                    var all_col = document.getElementsByClassName(col_name);
+                                    for (var i = 0; i < all_col.length; i++) {
+                                        all_col[i].style.display = "table-cell";
+                                    }
+                                    document.getElementById(col_name + "_head").style.display = "table-cell";
+                                    document.getElementById(col_name).value = "hide";
+                                }
+                            }
+                        }
+                        $(function() {
+                            var pressed = false;
+                            var start = undefined;
+                            var startX, startWidth;
+
+                            $("table th").dblclick(function(e) {
+                                start = $(this);
+                                pressed = true;
+                                startX = e.pageX;
+                                startWidth = $(this).width();
+                                $(start).addClass("resizing");
+                            });
+
+                            $(document).mousemove(function(e) {
+                                if (pressed) {
+                                    $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                                }
+                            });
+
+                            $(document).mouseup(function() {
+                                if (pressed) {
+                                    $(start).removeClass("resizing");
+                                    pressed = false;
+                                }
+                            });
+                        });
+                    </script>
+                    <div class="table-responsive" ng-if="!offerController.$grid" data-ng-init="offerController.paginationHandler(1)">
+                        <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                            <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" id="name_col_head" drag-me drop-me data-handle=".handle" ng-click="offerController.sortType = 'name'; sortReverse = !sortReverse">
+                                            <span class="handle">Name</span>
+                                            <span ng-show="offerController.sortType == 'name' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="offerController.sortType == 'name' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="description_col_head" drag-me drop-me data-handle=".handle" ng-click="offerController.sortType = 'description'; sortReverse = !sortReverse">
+                                            <span class="handle">Description</span>
+                                            <span ng-show="offerController.sortType == 'description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="offerController.sortType == 'description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="coupon_required_col_head" drag-me drop-me data-handle=".handle" ng-click="offerController.sortType = 'coupon_required'; sortReverse = !sortReverse">
+                                            <span class="handle">Coupon Required</span>
+                                            <span ng-show="offerController.sortType == 'coupon_required' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="offerController.sortType == 'coupon_required' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="co_exist_col_head" drag-me drop-me data-handle=".handle" ng-click="offerController.sortType = 'co_exist'; sortReverse = !sortReverse">
+                                            <span class="handle">Co-Exist</span>
+                                            <span ng-show="offerController.sortType == 'co_exist' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="offerController.sortType == 'co_exist' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th id="benefits_col_head" class="text-center" style="width:5%" drag-me drop-me data-handle=".handle">
+                                            <span class="handle">Benefits</span>
+                                        </th>
+                                        <th id="rules_col_head" class="text-center" style="width:5%" drag-me drop-me data-handle=".handle">
+                                            <span class="handle">Rules</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="offer in offers = (offerController.Offers|filter:search)|orderBy:offerController.sortType:sortReverse|itemsPerPage:offerController.pageSize" data-ng-dblclick="offerController.PanelUpdateOffer(offer);">
+                                        <td class="name_col">{{offer.name}}</td>
+                                        <td class="description_col">{{offer.description}}</td>
+                                        <td class="coupon_col">
+                                            <span>      
+                                            <i ng-show="offer.coupon_required === 'Yes' || offer.coupon_required === 1" class="glyphicon glyphicon-ok c-green"></i>
+                                            <i ng-show="offer.coupon_required === 'No' || offer.coupon_required === 0" class="glyphicon glyphicon-remove c-red"></i>
+                                        </span>
+                                        </td>
+                                        <td class="coexist_col">
+                                            <span>      
+                                            <i ng-show="offer.co_exist === 'Yes' || offer.co_exist === 1" class="glyphicon glyphicon-ok c-green"></i>
+                                            <i ng-show="offer.co_exist === 'No' || offer.co_exist === 0" class="glyphicon glyphicon-remove c-red"></i>
+                                        </span>
+                                        </td>
+                                        <td class="benefits_col text-center">
+                                            <a class="text-center f-700" ng-click="offerController.viewOfferBenefits(offer.id)">View</a>
+                                        </td>
+                                        <td class="rules_col text-center">
+                                            <a class="text-center f-700" ng-click="offerController.viewOfferRules(offer.id)">View</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-12">
+                            <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="offerController.paginationHandler(newPageNumber)"></dir-pagination-controls>
+                            <div class="btn-group pull-right ng-table-counts">
+                                <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="offerController.pageSize = 10" ng-class="{'active':offerController.pageSize === 10}">10</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="offerController.pageSize = 25" ng-class="{'active':offerController.pageSize === 25}">25</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="offerController.pageSize = 50" ng-class="{'active':offerController.pageSize === 50}">50</button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="offerController.pageSize = 100" ng-class="{'active':offerController.pageSize === 100}">100</button>
+                            </div>
+                        </div>
+                    </div>
+                    <meta-data-panel></meta-data-panel>
+                </div>
+            </div>
+            <div class="col-lg-12 p-0">
+                <div id="refresh-table" class="p-15" data-ng-class="{'toggled':offerController.isRefreshTable}">
+                    <div class="col-xs-6 p-0">
+                        <span class="f-15 f-300 pull-left" id="refreshNotificationSpan">{{offerController.refreshTableText}}</span>
+                    </div>
+                    <div class="col-xs-6 p-0">
+                        <span class="pull-right f-300">
+                <span id="refreshDataCount"><strong>{{offerController.totalRecords}}</strong></span>
+                        <span class="f-14 c-gray">{{offerController.totalRecordsText}}</span>
+                        <span id="refreshTimeTaken" ng-bind-html="offerController.totalTimeText"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="offerController.rowsCount === 0">
+            <div class="col-xs-12 text-center text-info">
+                <span class="f-15 f-300">No offer exists. Please add product offer.</span>
+            </div>
+        </div>
+        <div ui-view> </div>
+    </div>

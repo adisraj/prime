@@ -1,0 +1,68 @@
+<style>
+    #itemSelectionModel .modal-dialog {
+        width: 700px !important;
+        margin: 30px auto;
+    }
+
+    .item-selection-gcard {
+        animation: fly-in-from-left .5s .1s ease both;
+        border-radius: 3px;
+        box-shadow: 0 1px 2px #aaa;
+        padding: 1rem 1rem 1.5rem 1.5rem;
+        user-select: none;
+        transform-origin: top left;
+        position: relative;
+        float: left;
+        width: calc(100% - 4px);
+    }
+
+    .item-selection-subheading {
+        color: gray;
+        font-weight: 400;
+        line-height: 1.250rem;
+        margin: 0;
+    }
+</style>
+<div id="itemSelectionModel" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="col-xs-12 modal-content p-0">
+            <div class="col-xs-12 p-10" style="border-bottom: 1px solid lightgray;">
+                <span class="f-17 f-700" style="color: sandybrown;">Item/Set</span>
+                <span class="item-selection-subheading p-l-15">Select an item sub type to continue</span>
+            </div>
+            <div class="col-xs-12 p-10 modal-body">
+                <div class="col-xs-6 p-10">
+                    <img src="./img/furniture.jpg" alt="" height="320" width="320">
+                </div>
+
+                <div class="col-xs-6 p-10">
+                    <section class="item-selection-gcard m-b-20" style="box-shadow: 0px 0px 1px 1px #ece9ec;
+                        background: linear-gradient(to right, #ffffff, #e0dcd5);">
+                        <div>
+                            <span class="gheading" style="color: #985802">Regular Item</span>
+                        </div>
+                        <span class="item-selection-subheading">One of the items that we sell – for example a chair, a table, a vase, a toy.
+                        </span>
+                        <button class="btn-primal btn-sm f-14 f-500 waves-effect btn-block m-t-10" data-ng-click="head.item_sub_type='Item';itemMaintCtrl.NewItem(head.item_sub_type)"
+                            style="background: #ad6202;  /* fallback for old browsers */">
+                            Create Regular Item
+                        </button>
+                    </section>
+                    <section class="item-selection-gcard" style="box-shadow: 0px 0px 1px 1px #ece9ec;
+                        background: linear-gradient(to right, #ffffff, #e0dcd5);">
+                        <div>
+                            <span class="gheading" style="color: #a94545">Set/Kit Item</span>
+                        </div>
+                        <span class="item-selection-subheading">A item built from many components together – build from regular items already available.
+                        </span>
+                        <button class="btn-primal btn-sm f-14 f-500 waves-effect btn-block m-t-10" data-ng-click="head.item_sub_type='Set';itemMaintCtrl.NewItem(head.item_sub_type)"
+                            style="background: #af4949;  /* fallback for old browsers */">
+                            Create Set Item
+                        </button>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

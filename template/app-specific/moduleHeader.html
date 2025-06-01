@@ -1,0 +1,22 @@
+<keybinding on="alt+n" invoke="createNewFn()" />
+<div class="parentheader">
+    <div class="moduleheader">
+        <img class="moduleimage" src="./img/sidebar-icons/{{svgImage}}" />
+    </div>
+    <p class="rclabel modulename">{{moduleName}}</p>
+    <div class="col-lg-10 pull-right p-r-0 createGroup">
+        <div class="pull-right">
+            <div class="pull-right">
+                <button type="button" data-ng-click="createNewFn()" class="btn addItembutton" ng-if="!tempFlag && moduleName !== 'Entities'" ng-disabled="disableActions"><span class="zmdi zmdi-plus"></span> <span>| </span><span class="f-700">Create {{buttonName}}</span></button>
+                <button type="button" data-ng-click="createNewFn()" class="btn addItembutton" ng-if="tempFlag && moduleName !== 'Entities'" ng-disabled="disableActions"><span class="zmdi zmdi-plus"></span> <span>| </span><span class="f-700">{{buttonName}}</span></button>
+            </div>
+            <div class="col-xs-8 pull-right backbtn m-r-0">
+                <button data-ng-if="hasParent" class="header-button pull-right" data-ng-click="backFn();"><i class="zmdi zmdi-arrow-left zmdi-hc-fw c-cyan"></i><span class="p-r-5 f-12"><b>Back</b></span></button>
+                <!-- <button data-ng-if="typeParameter" class="header-button show-parameter-btn pull-right" data-ng-click="openParameterFn();"><span>Show Parameter</span></button> -->
+            </div>
+        </div>
+    </div>
+
+</div>
+<p class="pull-right text-danger blinker" style="font-family: 'Roboto';font-size:13px;  
+    font-weight: 400;" data-ng-if="disableActions">* Configuration status should be "Active" to create & maintain entities.</p>

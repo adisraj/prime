@@ -1,0 +1,244 @@
+<style>
+    td ol,
+    td ul {
+        padding-left: 10px;
+        margin: 0;
+    }
+</style>
+<div class="container col-lg-12 p-0" data-ng-controller="CorporateControlController as orderHelpCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10" style="width: 50px;padding-top: 5px;">
+                        <div data-ng-include="'./img/sidebar-icons/corporatemsg.svg'"></div>
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Corporate Message</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!orderHelpCtrl.search"> {{orderHelpCtrl.rowsInfo}} </span>
+                        <span data-ng-if="orderHelpCtrl.search"> Displaying
+                            {{(orderHelpCtrl.CorporateConfigList|filterBy:['id','title','description','effective_date','end_date']:orderHelpCtrl.search).length}}
+                            of {{orderHelpCtrl.CorporateConfigList.length}} Records </span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    ng-if="orderHelpCtrl.CorporateConfigList.length > 0">
+                                    <input class="form-control input-sm " type="text " ng-model="orderHelpCtrl.search"
+                                        id="inlineSearch" name="inlineSearch"
+                                        data-ng-init="orderHelpCtrl.focusSearchField()" indicate-quick-search
+                                        placeholder="Quick Search " data-ng-disabled="orderHelpCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li data-ng-if="permissionsMap.view" class="non-collapsed-link"
+                            ng-if1="orderHelpCtrl.CorporateConfigList.length > 0">
+                            <a>
+                                <button type="button" ng-click="orderHelpCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block  waves-effect"
+                                    data-ng-disabled1="!orderHelpCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li data-ng-if="permissionsMap.view" class="non-collapsed-link"
+                            ng-if1="orderHelpCtrl.CorporateConfigList.length > 0">
+                            <a>
+                                <button type="button" ng-click="orderHelpCtrl.reload(true);"
+                                    class="btn-primal btn-block waves-effect"
+                                    data-ng-disabled1="!orderHelpCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect"
+                                    data-ng-click="orderHelpCtrl.openForm();" data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Corporate
+                                        Message</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15"
+                                style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right">
+                                <li class="add-btn cursor-pointer">
+                                    <button data-ng-click="orderHelpCtrl.openForm();" style="padding: 8px 20px"
+                                        class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Corporate Message
+                                    </button>
+                                </li>
+                                <li ng-if="orderHelpCtrl.CorporateConfigList.length > 0 || permissionsMap.view">
+                                    <a data-ng-click="!orderHelpCtrl.isLoaded ? orderHelpCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': orderHelpCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="orderHelpCtrl.CorporateConfigList.length > 0 || permissionsMap.view">
+                                    <a data-ng-click="!orderHelpCtrl.isLoaded ? orderHelpCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': orderHelpCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration"
+        data-ng-if="!orderHelpCtrl.rowsCount && orderHelpCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="orderHelpCtrl.rowsCount && orderHelpCtrl.rowsCount > 0">
+        <div class="rcp-table-container" ng-if="!orderHelpCtrl.isLoaded && permissionsMap.view">
+            <div class="col-xs-12 p-0">
+                <div data-ng-include="'./application/modules/corporate.control/hideShowColumns.html'"></div>
+                <div class="table-responsive module-content-configuration"
+                    data-ng-init="orderHelpCtrl.paginationHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered sticky-head-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="orderHelpCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="title_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="orderHelpCtrl.sortType = 'title'; sortReverse = !sortReverse"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.title.visible == 0">
+                                        <span class="handle">Title</span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'title' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'title' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="description_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="orderHelpCtrl.sortType = 'description'; sortReverse = !sortReverse"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.description.visible == 0">
+                                        <span class="handle">Corporate Message</span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'description' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="effective_date_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="orderHelpCtrl.sortType = 'effective_date'; sortReverse = !sortReverse"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.effective_date.visible == 0">
+                                        <span class="handle">Effective Date</span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'effective_date' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'effective_date' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="end_date_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="orderHelpCtrl.sortType = 'end_date'; sortReverse = !sortReverse"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.end_date.visible == 0">
+                                        <span class="handle">End Date</span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'end_date' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="orderHelpCtrl.sortType == 'end_date' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="ordertext in orderHelpCtrl.CorporateConfigList | filterBy:['id','description', 'title']:orderHelpCtrl.search|orderBy:orderHelpCtrl.sortType:sortReverse|itemsPerPage:orderHelpCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="orderHelpCtrl.setClickedRow($index);"
+                                    ios-dblclick="orderHelpCtrl.dblClickAction(ordertext);" selectedrow="{{ordertext}}">
+                                    <td class="id_col iconcolumnWidth"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.id.visible == 0">
+                                        {{ordertext.id}}
+                                    </td>
+                                    <td class="title_col iconcolumnWidth"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.title.visible == 0">
+                                        {{ordertext.title}}
+                                    </td>
+                                    <td class="description_col"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.description.visible == 0"
+                                        ng-bind-html="ordertext.description">
+                                    </td>
+                                    <td class="effective_date_col"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.effective_date.visible == 0">
+                                        {{ordertext.effective_date | date: 'MM/dd/yyyy'}}
+                                    </td>
+                                    <td class="end_date_col"
+                                        data-ng-hide="orderHelpCtrl.ordertextlistGrid.columns.end_date.visible == 0">
+                                        {{ordertext.end_date | date: 'MM/dd/yyyy'}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="align-items-center col-lg-12 d-flex justify-content-between">
+                        <dir-pagination-controls template-url="rc-pagination.html" boundary-links="true"
+                            on-page-change="orderHelpCtrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group ng-table-counts">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="orderHelpCtrl.pageSize = 10"
+                                ng-class="{'active':orderHelpCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="orderHelpCtrl.pageSize = 25"
+                                ng-class="{'active':orderHelpCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="orderHelpCtrl.pageSize = 50"
+                                ng-class="{'active':orderHelpCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="orderHelpCtrl.pageSize = 100"
+                                ng-class="{'active':orderHelpCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Details section for each code data -->
+        <meta-data-panel></meta-data-panel>
+    </div>
+    <div ng-if="!permissionsMap.view && !orderHelpCtrl.isLoaded"
+        data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="orderHelpCtrl.rowsCount === 0 && !orderHelpCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No Corporate Messages exists. Please add Corporate Message.</span>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0" ng-if1="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':orderHelpCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{orderHelpCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="orderHelpCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{orderHelpCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{orderHelpCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="orderHelpCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/corporate.control/panel.corporate.control.form.html'"></div>
+</div>

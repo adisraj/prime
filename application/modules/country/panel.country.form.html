@@ -1,0 +1,124 @@
+<div id="rcrightsidebar" class="c-overflow"
+    data-ng-class="{'toggled':ctryCtrl.isShowDetails === true || ctryCtrl.isShowDetails === 1,'changeposition':showhistory === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a class="cursor-pointer" data-ng-click="ctryCtrl.closeForm();closeShowHistory();">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!ctryCtrl.isDeleteSuccess && !ctryCtrl.isConfirmDelete && ctryCtrl.isShowAdd)"
+                title="{{ctryCtrl.entityInformation.name}}">Create
+                <strong>{{ctryCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(!ctryCtrl.isDeleteSuccess && !ctryCtrl.isConfirmDelete && !ctryCtrl.isShowAdd)"
+                title="{{ctryCtrl.entityInformation.name}}">View
+                <strong>{{ctryCtrl.entityInformation.name | truncate :30}} Details</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(ctryCtrl.isDeleteSuccess || ctryCtrl.isConfirmDelete && !ctryCtrl.isShowAdd)"
+                title="{{ctryCtrl.entityInformation.name}}">Delete
+                <strong>{{ctryCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!ctryCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="!(ctryCtrl.isUpdateSuccess || ctryCtrl.isSaveSuccess || ctryCtrl.isConfirmDelete || ctryCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/submenu_country.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" valdr-form-group>
+            <div
+                ng-if="!(ctryCtrl.isUpdateSuccess || ctryCtrl.isSaveSuccess || ctryCtrl.isConfirmDelete || ctryCtrl.isDeleteSuccess)">
+                <ng-form role="form " novalidate="novalidate" name="ctryCtrl.country_form" valdr-type="RULES-5">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="ctryCtrl.country_form.name.$invalid">* </span>
+                        <span class="c-green" ng-show="ctryCtrl.country_form.name.$valid">* </span>
+                        <label>Name</label>
+                        <input id="name" name="name" type="text" class="form-control input-sm"
+                            ng-model="ctryCtrl.country_details.name" errorvalue="ctryCtrl.country_details.name_error"
+                            placeholder="Enter Name" ng-model-options="{ updateOn: 'blur' }" />
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="ctryCtrl.country_form.iso2_code.$invalid">* </span>
+                        <span class="c-green" ng-show="ctryCtrl.country_form.iso2_code.$valid">* </span>
+                        <label>ISO2 code</label>
+                        <input id="iso2_code" name="iso2_code" type="text"
+                            class="form-control input-sm" ng-model="ctryCtrl.country_details.iso2_code"
+                            errorvalue="ctryCtrl.country_details.iso2_code_error" placeholder="Enter ISO2 code"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="ctryCtrl.country_form.iso3_code.$invalid">* </span>
+                        <span class="c-green" ng-show="ctryCtrl.country_form.iso3_code.$valid">* </span>
+                        <label>ISO3 code</label>
+                        <input id="iso3_code" name="iso3_code" type="text"
+                            class="form-control input-sm" ng-model="ctryCtrl.country_details.iso3_code"
+                            errorvalue="ctryCtrl.country_details.iso3_code_error" placeholder="Enter ISO3 code"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="ctryCtrl.country_form.currencies.$invalid">* </span>
+                        <span class="c-green" ng-show="ctryCtrl.country_form.currencies.$valid">* </span>
+                        <label>Currencies</label>
+                        <input id="currencies" required name="currencies" type="text"
+                            class="form-control input-sm" ng-model="ctryCtrl.country_details.currencies"
+                            errorvalue="ctryCtrl.country_details.currencies_error" placeholder="Enter Currencies"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="ctryCtrl.country_form.language_code.$invalid">* </span>
+                        <span class="c-green" ng-show="ctryCtrl.country_form.language_code.$valid">* </span>
+                        <label>Language Code</label>
+                        <input id="language_code" required name="language_code" type="text"
+                            class="form-control input-sm" ng-model="ctryCtrl.country_details.language_code"
+                            errorvalue="ctryCtrl.country_details.language_code_error" placeholder="Enter Language Code"
+                            ng-model-options="{ updateOn: 'blur' }">
+
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="ctryCtrl.country_form.calling_codes.$invalid">* </span>
+                        <span class="c-green" ng-show="ctryCtrl.country_form.calling_codes.$valid">* </span>
+                        <label>Calling Code</label>
+                        <input id="calling_codes" required name="calling_codes" type="text"
+                            class="form-control input-sm" ng-model="ctryCtrl.country_details.calling_codes"
+                            errorvalue="ctryCtrl.country_details.calling_codes_error" placeholder="Enter Calling Code"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="ctryCtrl.country_form.timezones.$invalid">* </span>
+                        <span class="c-green" ng-show="ctryCtrl.country_form.timezones.$valid">* </span>
+                        <label>Timezone</label>
+                        <input id="timezones" required name="timezones" type="text"
+                            class="form-control input-sm" ng-model="ctryCtrl.country_details.timezones"
+                            errorvalue="ctryCtrl.country_details.timezones_error" placeholder="Enter Timezone"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <!-- <rcp-edit-form-btns new-form="ctryCtrl.isShowAdd" save-fn="ctryCtrl.save(ctryCtrl.country_details);"
+                        save-btn-text="ctryCtrl.saveBtnText" save-btn-error="ctryCtrl.saveBtnError"
+                        update-fn="ctryCtrl.update(ctryCtrl.country_details);" update-btn-text="ctryCtrl.updateBtnText"
+                        update-btn-error="ctryCtrl.updateBtnError" confirm-fn="ctryCtrl.showconfirm();"
+                        confirm-delete123="ctryCtrl.isConfirmDelete" update-success="ctryCtrl.isUpdateSuccess"
+                        entity-id12="ctryCtrl.country_details.id" access-permissions="ctryCtrl.countryPermissions"
+                        enable-button="ctryCtrl.country_form.$invalid || !ctryCtrl.isBtnEnable "></rcp-edit-form-btns> -->
+                </ng-form>
+            </div>
+
+            <!--user not allowed to delete country-->
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="ctryCtrl.createAnotherForm('Country');"
+                close-fn="ctryCtrl.closeForm(); " update-success="ctryCtrl.isUpdateSuccess"
+                save-success="ctryCtrl.isSaveSuccess" delete-success="ctryCtrl.isDeleteSuccess">
+            </rcp-success-form>
+
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="ctryCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="ctryCtrl.message = null"
+                    aria-hidden="true">&times;</button> {{ctryCtrl.message}}
+            </div>
+        </div>
+    </div>
+    <div ng-if="ctryCtrl.isUnauthorized && (ctryCtrl.isShowAdd || !ctryCtrl.isShowAdd || ctryCtrl.isConfirmDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'"></div>
+</div>

@@ -1,0 +1,323 @@
+<style>
+    .item-list-card {
+        padding: 5px;
+        border: 1px solid #ececec;
+        margin-bottom: 10px;
+        box-shadow: 0px 2px 3px #ececec;
+    }
+
+    .rc-alert-info {
+        border-color: #cad9e0;
+        background-color: #f5fcff;
+    }
+
+    .table>thead:first-child>tr:first-child>th {
+        border-bottom: 1px solid #ececec;
+    }
+
+    .item-list-container {
+        height: auto;
+        max-height: calc(100% - 350px);
+        overflow: auto;
+    }
+
+    .checkbox-border {
+        border-top: none;
+        border-right: 1px solid #cad9e0;
+        border-left: 1px solid #cad9e0;
+        border-bottom: 1px solid #cad9e0;
+    }
+
+    button#create_new_btn {
+        display: none;
+    }
+
+    .transfer-sku img.updatesuccessicon {
+        margin: 10% 0;
+    }
+</style>
+<keybinding on="esc" invoke="skuMaintCtrl.closeMoveSKUPanel()" />
+<div id="rcrightsidebar-large" class="rcpscrollbar changehistory" data-ng-class="{'toggled':skuMaintCtrl.isShowMoveSKUPanel === true}">
+    <div class="col-xs-12 m-t-25">
+        <button type="button" class="col-xs-1 p-0 bg-none border-none btn-link" data-ng-click="skuMaintCtrl.isShowMoveSKUPanel = false;skuMaintCtrl.noSkuFound=false;skuMaintCtrl.searchedSkuNumber=undefined;skuMaintCtrl.focusMoveSku();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="col-xs-11 p-0 text-center">
+            <label class="rclabel editformlabel ng-isolate-scope" style="margin-left:-45px;">
+                <strong> SKU Transfer</strong>
+            </label>
+        </div>
+        <div class="text-center m-auto updatepanel p-b-10" data-ng-if="!skuMaintCtrl.isSaveSuccess">
+            <div data-ng-include="'./img/sidebar-icons/move-sku.svg'"></div>
+        </div>
+    </div>
+    <div class="col-xs-12" data-ng-if="!skuMaintCtrl.isSaveSuccess">
+        <!-- General Information -->
+        <div class="col-xs-12 rc-alert rc-alert-info flex-column m-b-10">
+            <div class="col-xs-12 d-flex p-0">
+                <div class="rc-alert-icon m-r-10">
+                    <span class="text-info zmdi zmdi-info-outline" style="font-size:35px;color: #3b5ca3;">
+                    </span>
+                </div>
+                <div style="flex:1;">
+                    <div>
+                        <div class="f-15 f-700 text-info">Transferring SKU</div>
+                        <div>
+                            <span class="c-black f-14">
+                                You can move/transfer the selected SKU to different 'active' and 'pending inactive' Item under the same item type and vendor.
+                                <div class="p-5" ng-class="{'bg-info': skuMaintCtrl.isShowSelectedItem === false}">
+                                    <strong>Step 1 - </strong>Select the target item from the list below.
+                                </div>
+                                <div class="p-5" ng-class="{'bg-info': skuMaintCtrl.isShowSelectedItem === true}">
+                                    <strong>Step 2 - </strong>Review the changes and confirm the transfer.
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-10 f-14 f-300">
+
+        </div>
+        <div class="col-xs-12 item-list-container rcpscrollbar text-center f-15" ng-if="skuMaintCtrl.isFetchingItems">
+            <span class="text-center">Loading...</span>
+        </div>
+        <!--List Item START-->
+        <div class="col-xs-12  rcpscrollbar" ng-if="!skuMaintCtrl.isFetchingItems&&skuMaintCtrl.isListItems">
+            <!-- Item information table -->
+
+            <!--View Selected SKU START-->
+            <div class="col-xs-12 p-0 bgm-white" style="border: 1px solid#ddd">
+                <div class="f-15 f-700 p-5 text-info m-b-5" style="border-top: none;
+                                                    border-bottom: 1px solid #ddd;
+                                                    background: navy;
+                                                    color: white;">
+                    <i class="fa fa-arrow-alt-circle-right p-r-5"></i>SKU Details</div>
+                <div class="col-xs-12 item-component-section-header d-flex align-items-center justify-content-between p-5">
+                    <div class="col-xs-12" data-ng-init="skuMaintCtrl.skuSubType.toLowerCase()=== 'installation_fee'? skuMaintCtrl.skuSubType='SERVICE SKU' : null;">
+                        <strong style="overflow-wrap: anywhere;">{{skuMaintCtrl.selectedSkuDescription | truncate: 80}}</strong>
+                        ({{skuMaintCtrl.skuSubType.toUpperCase()}})
+                    </div>
+                    <div class="col-xs-6 d-flex">
+                        <div class="f-500 p-l-0 item-component-label">SKU# :</div>
+                        <div class="p-l-10 p-r-0">{{skuMaintCtrl.skuNumber}}</div>
+                    </div>
+                </div>
+            </div>
+            <!--View Selected SKU END-->
+            <div class="col-xs-12 p-0" ng-if="skuMaintCtrl.Items.length>0">
+                <div class="col-xs-12 m-t-10 p-0" style="border-top: 1px solid #efefef">
+                    <div>
+                        <div class="f-15 bgm-sdskin col-xs-12 p-10">
+                            <span class="c-white">Item Type -
+                                <strong>
+                                    <span>{{selected_item.division}}</span>
+                                    <span ng-if="selected_item.department_id" class="p-l-5 p-r-5 zmdi zmdi-long-arrow-right arrow-style c-firebrick"></span>
+                                    <span ng-if="selected_item.department_id">{{selected_item.department}}</span>
+                                    <span ng-if="selected_item.class" class="p-l-5 p-r-5 zmdi zmdi-long-arrow-right arrow-style c-firebrick"></span>
+                                    <span ng-if="selected_item.class">{{selected_item.class_info}}</span>
+                                </strong>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 m-t-10 p-b-10 p-t-10" style="background: #f9f9f9;">
+                    <div class="p-0">
+                        <div class="col-xs-12 p-0 m-b-10" colspan="1" id="search">
+                            <input auto-focus name="item_description" id="item_description" type="text" data-ng-model="search" class="form-control input-sm"
+                                placeholder="Search Items">
+                        </div>
+                    </div>
+                    <div class="p-0">
+                        <div class="col-xs-12 p-0" colspan="1" id="search">
+                            <div class="p-0 m-r-5 col-xs-8">
+                                <input type="text" data-ng-model="sku_search" class="form-control input-sm" placeholder="Search by SKU#" ng-change="skuMaintCtrl.noSkuFound = false;"
+                                    ng-keyup="$event.keyCode == 13 ? skuMaintCtrl.getItemBySKUNumber(sku_search):null">
+                            </div>
+                            <button class="btn btn-info m-l-20" data-ng-disabled="!sku_search||sku_search.length===0" data-ng-click="skuMaintCtrl.getItemBySKUNumber(sku_search)">Search</button>
+                            <button class="btn btn-info m-l-5" data-ng-disabled="!sku_search||sku_search.length===0" data-ng-click="skuMaintCtrl.ClearSearch();sku_search = undefined;skuMaintCtrl.searchedSkuNumber=undefined;skuMaintCtrl.noSkuFound = false;">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="skuMaintCtrl.isSearching">
+                    <div>
+                        <div class="text-center">
+                            <span>
+                                Loading...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border-bottom: 1px solid #efefef;" ng-if="skuMaintCtrl.noSkuFound===true">
+                    <div>
+                        <div>
+                            <span ng-if="skuMaintCtrl.noSkuFound===true" class="text-center text-danger">
+                                {{skuMaintCtrl.skuTransferError}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0 m-t-10 transfer-sku-table-overflow m-b-10">
+                    <table class="col-xs-12 table table-hover table-vmiddle table-condensed table-bordered m-b-0">
+                        <thead style="border-bottom: 1px solid #efefef !important; " ng-if="skuMaintCtrl.noSkuFound!==true&&skuMaintCtrl.isSearching!==true">
+                            <tr>
+                                <th class="f-14 sticky-header" colspan="2" id="description_col_head">
+                                    Item Description
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="item in skuMaintCtrl.Items | filter: search" ng-if="skuMaintCtrl.noSkuFound!==true&&skuMaintCtrl.isSearching!==true">
+                                <td title="{{item.description}}"> {{item.description | truncate:50}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary f-13 btn-sm pull-right" ng-click="skuMaintCtrl.ShowSelectedItemDetails(item)">
+                                        Select
+                                        <strong>Item</strong>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div ng-if="skuMaintCtrl.Items.length===0" class="col-xs-12 text-center m-t-20">
+                <span class="f-15 text-muted">No Items found under the selected item type.</span>
+            </div>
+        </div>
+        <!--List Item END-->
+        <!--View Selected Item START-->
+        <div class="col-xs-12 p-0 bgm-white" style="border: 1px solid#ddd" ng-if="skuMaintCtrl.isShowSelectedItem">
+            <div class="f-15 f-700 p-5 text-info m-b-5" style="border-top: none;
+                border-bottom: 1px solid #ddd;
+                background: navy;
+                color: white;">
+                <i class="fa fa-arrow-alt-circle-right p-r-5"></i>Source Item Details</div>
+            <div class="item-component-section-header d-flex align-items-center justify-content-between p-5">
+                <div>
+                    <strong>{{selected_item.description | truncate: 70}}</strong>
+                </div>
+            </div>
+            <div class="p-0 col-xs-12" style="line-height:1.7">
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">Status :</div>
+                    <div class="p-l-10 p-r-0">{{selected_item.status}}</div>
+                </div>
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">Sub Type :</div>
+                    <div class="p-l-10 p-r-0">{{selected_item.item_sub_type}}</div>
+                </div>
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">Vendor :</div>
+                    <div class="p-l-10 p-r-0">{{selected_item.vendor}}</div>
+                </div>
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">Effective Date :</div>
+                    <div class="p-l-10 p-r-0">{{selected_item.status_effective_date | FormatDate}}</div>
+                </div>
+            </div>
+        </div>
+
+        <svg width="300" height="65" ng-if="skuMaintCtrl.isShowSelectedItem">
+            <defs>
+                <marker id="arrow" markerWidth="13" markerHeight="13" refx="2" refy="6" orient="auto">
+                    <path d="M2,1 L2,10 L10,6 L2,2" style="fill:black;" />
+                </marker>
+            </defs>
+
+            <path d="M 20 0 L20 50 5 L11 0 10 z10" style="stroke:black; stroke-width: 1.75px; fill: none;marker-end: url(#arrow);" />
+        </svg>
+        <div class="col-xs-12 p-0 bgm-white" style="border: 1px solid#ddd" ng-if="skuMaintCtrl.isShowSelectedItem">
+            <div class="f-15 f-700 p-5 text-info m-b-5" style="border-top: none;
+                border-bottom: 1px solid #ddd;
+                background: navy;
+                color: white;">
+                <i class="fa fa-arrow-alt-circle-left p-r-5"></i>Target Item Details</div>
+            <div class="item-component-section-header d-flex align-items-center justify-content-between p-5">
+                <div>
+                    <strong>{{skuMaintCtrl.selectedItem.description | truncate: 100}}</strong>
+                </div>
+            </div>
+            <div class="p-0 col-xs-12" style="line-height:1.7">
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">Status :</div>
+                    <div class="p-r-0 p-l-10">{{skuMaintCtrl.selectedItem.status}}</div>
+                </div>
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">Sub Type :</div>
+                    <div class="p-l-10 p-r-0">{{skuMaintCtrl.selectedItem.item_sub_type}}</div>
+                </div>
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">Vendor :</div>
+                    <div class="p-l-10 p-r-0">{{skuMaintCtrl.selectedItem.vendor}}</div>
+                </div>
+                <div class="col-xs-6 d-flex">
+                    <div class="f-500 p-l-0 item-component-label">Effective Date :</div>
+                    <div class="p-l-10 p-r-0">{{skuMaintCtrl.selectedItem.status_effective_date | FormatDate}}</div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="skuMaintCtrl.skus.length-1===0" ng-init="skuMaintCtrl.is_delete_item=false">
+            <div ng-if="skuMaintCtrl.isShowSelectedItem&&!skuMaintCtrl.moveSkuToItem&&!skuMaintCtrl.isProcessing">
+                <div class="col-xs-12 m-t-10 p-10" style="background: #f5fcff;border: 1px solid #cad9e0;">
+                    <div class="col-xs-12 d-flex p-0 align-items-center">
+                        <div class="rc-alert-icon m-r-10">
+                            <span class="zmdi zmdi-alert-polygon" style="font-size:30px;color: #ff6c3c;">
+                            </span>
+                        </div>
+                        <div style="flex:1;">
+                            <div class="f-14 f-700 text-info m-t-5">Select the below checkbox to delete the item after SKU transfer.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 m-t-2 p-10 checkbox-border" style="background: #ffffff ;">
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label data-ng-class="{'d-block': !skuHead || !skuHead.id}">
+                                <div class="m-t-5 m-l-5">Delete Item</div>
+                                <input hidden="hidden" id="is_delete_item" name="is_delete_item" ng-false-value='false' ng-model="skuMaintCtrl.is_delete_item"
+                                    ng-true-value='true' type="checkbox">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 m-t-10 p-0">
+            <div class="col-xs-12 p-0 d-flex m-b-15" ng-if="skuMaintCtrl.isShowSelectedItem">
+                <button type="button" class="btn btn-success btn-block m-r-20" id="proceed_button" data-ng-click="skuMaintCtrl.updateItemForSku(skuMaintCtrl.selectedSkuId,skuMaintCtrl.selectedItem.id,skuMaintCtrl.is_delete_item)"
+                    data-ng-disabled="skuMaintCtrl.isProcessing">
+                    <strong>Proceed</strong>
+                </button>
+                <button type="button" class="btn btn-cancel btn-block m-t-0" id="cancel-button" data-ng-click="skuMaintCtrl.cancelMoveSkuToItem();"
+                    data-ng-disabled="skuMaintCtrl.isProcessing">
+                    <strong>Back</strong>
+                </button>
+            </div>
+            <!-- <div ng-if="skuMaintCtrl.moveSkuToItem&&skuMaintCtrl.isShowSelectedItem"
+                class="col-xs-12 rc-alert rc-alert-info flex-column m-t-10 m-b-20 p-0">
+                <div class="m-t-10">
+                    <span class="text-success p-5">
+                        SKU "{{skuMaintCtrl.selectedSkuDescription}}" moved into Item
+                        "{{skuMaintCtrl.selectedItem.description}}" successfully.
+                    </span>
+                </div>
+            </div> -->
+            <div ng-if="skuMaintCtrl.moveSkuToItemError&&skuMaintCtrl.isShowSelectedItem" class="col-xs-12 rc-alert rc-alert-info rc-alert-danger flex-column m-b-20 m-t-10 p-0">
+                <div class="m-t-10">
+                    <span class="text-danger p-5">
+                        SKU "{{skuMaintCtrl.selectedSkuDescription}}" already exists in Item "{{skuMaintCtrl.selectedItem.description}}".
+                    </span>
+                </div>
+            </div>
+            <!--View Selected Item END-->
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <rcp-success-form class="transfer-sku text-center" success-tick="success_tick.svg" transfer-success="skuMaintCtrl.isSaveSuccess"
+            close-fn="skuMaintCtrl.transferSkuClose()"></rcp-success-form>
+    </div>
+</div>

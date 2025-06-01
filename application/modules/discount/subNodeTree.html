@@ -1,0 +1,34 @@
+<li>
+        <input type="checkbox" id="subType-{{subType.id}}-{{$index}}" checked data-ng-click="discountTypeCtrl.getNodes(subType)">
+        <label class="d-flex justify-content-between" for="subType-{{subType.id}}-{{$index}}">
+            <div class="d-flex d-flex-v-center flex-fill justify-content-between">
+                <div class="d-flex d-flex-v-center" style="flex:3;">
+                    {{subType.description}}
+                </div>
+                <div style="width:60px;">
+                    <div class="tag">{{subType.discount_percentage}}%</div>
+                </div>
+            </div>
+            <div>
+                <button class="m-l-10 btn btn-sm btn-link" data-ng-click="discountTypeCtrl.openNewValueForm(subType);">
+                    <span class="fa fa-plus fa-fw"></span> New Discount Type
+                </button>
+                <button class="m-l-10 btn btn-sm btn-link" data-ng-click="discountTypeCtrl.dblClickAction(subType,'DiscountTypeValue');">
+                    <span class="fa fa-pen fa-fw"></span> Edit
+                </button>
+            </div>
+        </label>
+        <ul>
+            <div data-ng-if="(!subType.nodes || subType.nodes.length === 0) && !subType.isLoaded">
+                <span>Loading...</span>
+            </div>
+            <div data-ng-if="subType.nodes.length === 0 && subType.isLoaded">
+                <span class="text-muted">No values exists!</span>
+            </div>
+        </ul>
+        <!-- Values for selected discount type - START -->
+        <ul class="list-lakes" data-ng-repeat="subType in subType.nodes|orderBy:'description' track by subType.id">
+            <div data-ng-include="'./application/modules/discount/subNodeTree.html'"></div>
+        </ul>
+        <!-- Values for selected discount type - END -->        
+    </li>

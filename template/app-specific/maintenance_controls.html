@@ -1,0 +1,31 @@
+<div class="col-xs-12 form-group p-t-5 p-0 form-btn-div-h">
+    <!--style="box-shadow: 0 -2px 5px -3px black;"-->
+    <div class="col-sm-5 col-xs-12 m-0 p-0 row pull-left form-btn-div-h hidden-xs" data-ng-if="!confirmDelete">
+        <div growl></div>
+    </div>
+    <div class="col-sm-7 col-xs-12 m-0 row pull-right p-0 form-btn-div-h" data-ng-if="(!confirmDelete && !opdone)">
+        <button type="button" class="btn-lg btn-success btn btn-secondary f-700 pull-right" data-ng-click="continueFn('configureScreen')" data-ng-if="configureScreen" data-ng-disabled="isConfigureInvalid">Continue</button>
+        <button type="button" class="btn-lg btn-success btn btn-secondary f-700 pull-right" data-ng-click="continueFn('createForm')" data-ng-if="createForm" data-ng-disabled="isInvalid">Continue</button>
+        <button type="button" class="btn-lg btn-success btn btn-secondary f-700 pull-right" ng-click="continueFn('locationAddressForm')" data-ng-if="locationAddressForm">Continue</button>
+        <button type="button" class="btn-lg btn-success btn btn-secondary f-700 pull-right" data-ng-click="continueFn('itemSetForm')" data-ng-if="itemSetForm" data-ng-disabled="isInvalid">PREVIEW ITEM SET</button>
+        <button type="button" class="btn-lg btn-success btn btn-secondary f-700 pull-right" data-ng-click="publishFn();" data-ng-if="previewAndPublish" data-ng-disabled="disableActions">Publish {{moduleName}}</button>
+        <button type="button" class="btn-lg btn-secondary btn-inverse btn m-r-5 f-700 pull-right" data-ng-if="createForm || previewAndPublish" data-ng-click="closeFn();">Cancel</button>
+        <button type="button" class="btn-lg btn-primal btn m-r-5 f-700 pull-right" ng-click="backFn('configureScreen')" data-ng-if="configureScreen">Back</button>
+        <button type="button" class="btn-lg btn-primal btn m-r-5 f-700 pull-right" ng-click="backFn('itemSetForm')" data-ng-if="itemSetForm">Back</button>
+        <button type="button" class="btn-lg btn-primal btn m-r-5 f-700 pull-right" ng-click="backFn('locationAddressForm')" data-ng-if="locationAddressForm">Back</button>
+        <button type="button" class="btn-lg btn-primal btn m-r-5 f-700 pull-right" data-ng-click="backFn('publishItem');" data-ng-if="previewAndPublish">Back</button>
+        <button type="button" class="btn-lg btn-secondary btn-inverse btn m-r-5 f-700 pull-right" ng-click="confirmDel()" data-ng-if="isUpdate" data-ng-disabled="disableActions">Delete</button>
+    </div>
+    <div class="col-lg-12 pull-left p-0" data-ng-if="!(showErrorDetails || showErrorDetailsData) && (confirmDelete && !opdone)">
+        <div class="col-lg-12 form-btn-div-h p-0">
+            <button type="button" class="btn-lg btn-secondary f-700 pull-right" data-ng-click="confirmDel()">Cancel</button>
+            <button type="button" class="btn-lg btn-primal m-r-5 f-700 pull-right" data-ng-click="deleteFn();">Yes,Delete!</button>
+        </div>
+    </div>
+    <div class="col-lg-7 m-0 row pull-right form-btn-div-h" data-ng-if="opdone">
+        <button type="button" class="btn-primal f-700 pull-right" data-ng-click="closeFn();">Done</button>
+    </div>
+</div>
+<!--<div data-ng-if="disableActions">
+    <p class="text-danger" style="position: absolute;bottom:0">* Configuration status should be "Active" to create & maintain entities.</p>
+</div>-->

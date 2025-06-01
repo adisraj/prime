@@ -1,0 +1,81 @@
+<header id="header" class="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'template/header.html'" data-ng-controller="HeaderController as hctrl"></header>
+<section id="main">
+    <aside id="sidebar" class="sidebar" data-current-skin={{mactrl.currentSkin}} data-ng-include="'sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+    <aside id="minisidebar" class="minisidebar" data-current-skin={{mactrl.currentSkin}} data-ng-include="'template/mini-sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === false }"></aside>
+    <aside id="activitybar" data-ng-include="'template/infopage.html'"></aside>
+    <section id="content" class="homepage-content" ng-init="loadbargraph();">
+        <div class="margin-top" style="padding-left:9px;padding-right:9px;">
+            <div data-ng-controller="StatsController as statsCtrl">
+                <!-- <div data-ng-controller="LoginController"> -->
+                <div class="alert alert-success alert-dismissible" ng-class="{fade: startFade}" role="alert" data-ng-controller="showUserMessageCtrl" ng-show="usermessageShow">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true" ng-click="closealert()">&times;</span>
+                    </button>
+                    <p data-ng-model="usermessageShow"><span>You last logged in at {{usermessageShow.date}}:{{usermessageShow.time}} from  {{usermessageShow.os_name}} with  {{usermessageShow.browser_name}}</span></p>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 p-15">
+                            <!-- <img src="./img/logo.jpg" alt="" />-->
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="aligncenter">
+                                    <img class="img-responsive" src="./img/american-sale-logo.png" style="min-height:75px;" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <img class="pull-right cursor-pointer" src="./img/prodexp-link.jpg" alt="" data-ng-click="openProductExplorer();" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                            <widget-count wd-label="Attributes" wd-path="common.prime.attributes" wd-count="statsCtrl.uuidMap.Attributes" open-form="openForm"></widget-count>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                            <widget-count wd-label="Hierarchies" wd-path="common.prime.hierarchy" wd-count="statsCtrl.uuidMap.Hierarchies" open-form="openForm"></widget-count>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                            <widget-count wd-label="Items" wd-path="common.prime.itemMaintenance" wd-count="statsCtrl.uuidMap.Items" open-form="openForm"></widget-count>
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                            <widget-count wd-label="Locations" wd-path="common.prime.location" wd-count="statsCtrl.uuidMap.Locations" open-form="openForm"></widget-count>
+                        </div>
+                        <!--<div class="col-lg-2 col-md-6 col-sm-6">
+                        <widget-count wd-label="Departments" wd-path="common.prime.company" wd-count="statsCtrl.uuidMap.Departments" open-form="openForm"></widget-count>
+                    </div>-->
+
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                            <widget-count wd-label="Vendors" wd-path="common.prime.vendor" wd-count="statsCtrl.uuidMap.Vendors" open-form="openForm"></widget-count>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                            <widget-count wd-label="MTO Options" wd-path="common.prime.mtoMaintenance" wd-count="statsCtrl.uuidMap.MTOs" open-form="openForm"></widget-count>
+                        </div>
+
+                        <!--<div class="col-lg-2 col-md-6 col-sm-6">
+                        <widget-count wd-label="Sales Assistant" wd-path="common.prime.salesAssistant" wd-count="statsCtrl.uuidMap.salesAssistant" open-form="openForm"></widget-count>
+                    </div>-->
+                    </div>
+                </div>
+                <!-- <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 p-0" style="height: 400px;border:1px solid lightgray">
+                    <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 linktoprodexp">
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6" style="height: inherit;">
+                        <div style="margin:125px 0%">
+                            <h1 style="text-align: center;margin:25px 0px;">View our product explorer</h1>
+                            <div style="margin: 15% 20%;">
+                                <button type="button" class="btn btn-lg m-r-5 noboxshadow pull-right" style="color: #ffffff;line-height: 0;font-size: 14px;font-family:'Roboto Condensed';font-weight:700;background: black;height: 40px;border: 1px solid grey;" data-ng-click="openProductExplorer();">Product Explorer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="body">
+
+            </div>
+        </div>
+    </section>
+</section>
+<!--<footer id="footer" data-ng-include="'template/footer.html'"></footer>-->

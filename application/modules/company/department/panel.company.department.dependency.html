@@ -1,0 +1,42 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':deptCtrl.showErrorDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="deptCtrl.closeDependencyDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Department Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Name</td>
+                        <td class="highlight-text-success" title="{{deptCtrl.department_details.name}}">{{deptCtrl.department_details.name | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{deptCtrl.department_details.status}}">{{deptCtrl.department_details.status}}</td>
+                    </tr>
+                </table>
+                <h4>{{deptCtrl.errorDependentData.dependent_entity}} - Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Associate Name</td>
+                        <td class="highlight-text-success" title="{{deptCtrl.errorDependentData.individual}}">{{deptCtrl.errorDependentData.individual | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{deptCtrl.errorDependentData.status}}">{{deptCtrl.errorDependentData.status}}</td>
+                    </tr>
+                </table>
+                </br>
+                <div class="dependency-notifyMessage"> <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i><span>{{deptCtrl.errorDependentData.message}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>

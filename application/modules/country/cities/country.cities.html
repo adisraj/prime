@@ -1,0 +1,230 @@
+<div data-ng-controller="CountryCityController as cityCtrl" ui-view>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/department.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Cities - {{cityCtrl.selectedState.region_name}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!cityCtrl.search"> {{cityCtrl.rowsInfo}} </span>
+                        <span data-ng-if="cityCtrl.search"> Displaying
+                            {{(cityCtrl.cityList|filterBy:['region_id','city_name']:cityCtrl.search).length}} of
+                            {{cityCtrl.cityList.length}} Records
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    ng-if="cityCtrl.cityList.length > 0">
+                                    <div class="input-group full-width">
+                                        <input class="form-control input-sm" type="text" ng-model="cityCtrl.search"
+                                            id="inlineSearch" name="inlineSearch" data-ng-init="stateCtrl.focusSearchField()"
+                                            indicate-quick-search placeholder="Quick Search"
+                                            data-ng-disabled="!cityCtrl.isLoaded" />
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="cityCtrl.cityList.length > 0">
+                            <a>
+                                <button type="button" ng-click="cityCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block btn-brd-none" data-ng-disabled="!cityCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="cityCtrl.cityList.length > 0">
+                            <a>
+                                <button type="button" ng-click="cityCtrl.reload(true);"
+                                    class="btn-primal btn-block btn-brd-none" data-ng-disabled="!cityCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-cancel f-700"
+                                    data-ui-sref="common.prime.country.states">Go Back</button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a data-ng-disabled="!cityCtrl.cityPermissions.create">
+                                <button type="button" class="btn btn-success f-700" title-direction="bottom"
+                                    title="{{cityCtrl.cityPermissions && !cityCtrl.cityPermissions.create && cityCtrl.isLoaded ? 'Create permission is not available for the user' : 'Create City'}}"
+                                    data-ng-disabled="!cityCtrl.cityPermissions.create"
+                                    data-ng-click="cityCtrl.openForm();">Create City</button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right">
+                                <li class="cursor-pointer add-btn">
+                                    <a data-ng-click="cityCtrl.openForm();"
+                                        data-ng-disabled="!cityCtrl.cityPermissions.view">
+                                        <i class="zmdi zmdi-plus text-success"></i> Create City </a>
+                                </li>
+                                <li ng-if="cityCtrl.cityList.length > 0">
+                                    <a data-ng-click="cityCtrl.isLoaded ? cityCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': !cityCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="cityCtrl.cityList.length > 0">
+                                    <a data-ng-click="cityCtrl.isLoaded ? cityCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': !cityCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh </a>
+                                </li>
+                                <li class="cursor-pointer">
+                                    <a data-ui-sref="common.prime.country.states">
+                                        <i class="zmdi zmdi-long-arrow-left"></i>
+                                        Go Back</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/country/cities/hideShowColumns.html'"></div>
+    <div class="col-xs-12 text-center module-content-configuration"
+        data-ng-if="!cityCtrl.rowsCount && !cityCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="cityCtrl.rowsCount === 0 && cityCtrl.isLoaded && cityCtrl.cityPermissions.view"
+        class="col-xs-12 text-center module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No city exists for selected state. Please add city.</span>
+        </div>
+    </div>
+    <div data-ng-if="cityCtrl.rowsCount !== 0 && cityCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0">
+
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+
+
+                <div class="city-table-content table-responsive module-content-configuration">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="cityCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="cityCtrl.sortType = 'region_id'; sortReverse = !sortReverse"
+                                        data-ng-hide="cityCtrl.countryCitiesGrid.columns.region_id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="cityCtrl.sortType == 'region_id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="cityCtrl.sortType == 'region_id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="name_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="cityCtrl.sortType = 'city_name'; sortReverse = !sortReverse"
+                                        data-ng-hide="cityCtrl.countryCitiesGrid.columns.city_name.visible == 0">
+                                        <span class="handle">City Name</span>
+                                        <span ng-show="cityCtrl.sortType == 'city_name' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="cityCtrl.sortType == 'city_name' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="city in cityCtrl.cityList|filterBy:['region_id','city_name']:cityCtrl.search|orderBy:'city_name'|orderBy:cityCtrl.sortType:sortReverse|itemsPerPage:cityCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="cityCtrl.setClickedRow($index);"
+                                    ios-dblclick="cityCtrl.dblClickAction(city);" selectedrow="{{city}}">
+                                    <td class="id_col"
+                                        data-ng-hide="cityCtrl.countryCitiesGrid.columns.region_id.visible == 0">
+                                        {{city.region_id}}</td>
+                                    <td class="name_col"
+                                        data-ng-hide="cityCtrl.countryCitiesGrid.columns.city_name.visible == 0">
+                                        {{city.city_name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                            boundary-links="true" on-page-change="cityCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="cityCtrl.pageSize = 25"
+                                ng-class="{'active':cityCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="cityCtrl.pageSize = 50"
+                                ng-class="{'active':cityCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="cityCtrl.pageSize = 100"
+                                ng-class="{'active':cityCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="cityCtrl.cityPermissions && !cityCtrl.cityPermissions.view && cityCtrl.isLoaded"
+        data-ng-include="'./application/templates/restricted.access.html'"></div>
+
+    <div data-ng-include="'./application/modules/country/cities/panel.country.cities.form.html'"></div>
+    <div class="col-lg-12 p-0" data-ng-if="cityCtrl.cityPermissions.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':cityCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{cityCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="cityCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{cityCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{cityCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="cityCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>

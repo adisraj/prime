@@ -1,0 +1,897 @@
+<style>
+    .vendor-advance-search multiselect .btn-group button.btn.btn-default.dropdown-toggle.waves-effect:focus {
+        border-left: 3px solid #f9c10c !important;
+        background: white !important;
+        outline: none !important;
+        margin-left: -3px;
+    }
+</style>
+<div class="container col-lg-12 p-0 p-b-30 m-b-30" data-ng-controller="VendorMaintenanceController as venMaintCtrl"
+    data-auto-scroll>
+    <ul style="display:none">
+        <li>
+            <keybinding on="ctrl+f" invoke="venMaintCtrl.focusSearchField()" />
+        </li>
+    </ul>
+    <div ui-view>
+        <div data-ng-init="venMaintCtrl.setInitialHeight();">
+            <div class="col-lg-12 p-0 rc-module-header-wrapper" style="height: auto;">
+                <div class="rc-module-header" style="height: auto;">
+                    <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+                        <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                            <div class="p-relative">
+                                <div class="image-module p-absolute top-10">
+                                    <img src="./img/sidebar-icons/entity-config-vendor.svg" />
+                                </div>
+                                <div class="label-module top-10">
+                                    <a class="p-l-40" href="javascript:void(0)">Vendors</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex" style="flex: 5;" data-ng-if="venMaintCtrl.vendorPermissions.view">
+                            <div class="d-flex d-flex-v-center p-l-20">
+                                <span data-ng-show="!venMaintCtrl.groupByField" class="f-12">Loaded
+                                    <i class="zmdi zmdi-hourglass-alt"
+                                        ng-if="!venMaintCtrl.vendorsDataList.length && venMaintCtrl.vendorsDataList.length != 0"></i>{{
+                                    venMaintCtrl.vendorsDataList.length}} of
+                                    <i class="zmdi zmdi-hourglass-alt"
+                                        ng-if="!venMaintCtrl.totalRecordCount && venMaintCtrl.totalRecordCount != 0"></i>{{venMaintCtrl.totalRecordCount}}
+                                    Records
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex p-0"
+                            data-ng-if="venMaintCtrl.isFilterApplied && venMaintCtrl.appliedFilterCount">
+                            <button type="button" id="filter_applied" name="filter_applied"
+                                class="hidden-sm visible-md visible-lg bg-none border-none" data-toggle="collapse"
+                                data-target="#advanced-search" data-ng-disabled="(
+                                    (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                    (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                )" data-ng-click="venMaintCtrl.showAdvancedFilter(true);">
+                                <span class="c-red m-t-10">
+                                    <i class="fa fa-filter p-r-5"></i>{{venMaintCtrl.appliedFilterCount}} Filter(s)
+                                    Applied
+                                </span>
+                            </button>
+                            <button type="button" class="hidden-lg hidden-md visible-sm bg-none border-none"
+                                data-toggle="collapse" data-target="#advanced-search" data-ng-disabled="(
+                                    (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                    (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                )" data-ng-click="venMaintCtrl.showAdvancedFilter(true);">
+                                <span class="c-red m-t-10">
+                                    <i class="fa fa-filter p-r-5"></i>{{venMaintCtrl.appliedFilterCount}}
+                                </span>
+                            </button>
+                            <button type="button" id="reset_btn" name="reset_btn" class="hidden-sm bg-none border-none"
+                                data-ng-click="venMaintCtrl.resetFilters();" data-ng-disabled="(
+                                    (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                    (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                )">
+                                <span class="text-primary m-t-10 m-l-10">
+                                    <i class="fa fa-undo f-12 p-r-5" aria-hidden="true"></i>Reset Filters
+                                </span>
+                            </button>
+                        </div>
+                        <div class="d-flex">
+                            <div id="navbar" class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li
+                                        ng-if="venMaintCtrl.vendorsDataList.length > 0 && venMaintCtrl.vendorPermissions.view">
+                                        <a class="d-flex">
+                                            <div class="group-by-section tableheader-btn"
+                                                ng-init="venMaintCtrl.sortBy = venMaintCtrl.sortByField !== 'none' ? venMaintCtrl.sortByField : sortableFields[0].value"
+                                                style="width: 100%;">
+                                                <select class="form-control select-component input-sm"
+                                                    ng-options="each.value as each.field for each in sortableFields"
+                                                    ng-model="venMaintCtrl.sortBy"
+                                                    ng-change="venMaintCtrl.sortByField=venMaintCtrl.sortBy; venMaintCtrl.sortByOrder='asc'; venMaintCtrl.isGroupByApplied ? venMaintCtrl.groupByData(venMaintCtrl.groupByField) : venMaintCtrl.reload(); venMaintCtrl.scrollToPosition(0, 0);"
+                                                    data-ng-disabled="(
+                                                        (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                                        (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                                    )">
+                                                </select>
+                                            </div>
+                                            <div class="tableheader-btn"
+                                                ng-if="venMaintCtrl.sortByOrder==='asc' && venMaintCtrl.sortBy !== 'none' && venMaintCtrl.sortBy !== '' && venMaintCtrl.isLoaded"
+                                                data-ng-click="venMaintCtrl.sortByOrder = 'desc';  venMaintCtrl.isGroupByApplied ? venMaintCtrl.groupByData(venMaintCtrl.groupByField) : venMaintCtrl.reload(); venMaintCtrl.scrollToPosition(0, 0);">
+                                                <span>
+                                                    <i class="m-t-5 zmdi zmdi-long-arrow-down zmdi-hc-fw f-700 f-20"
+                                                        style="color: firebrick;"></i>
+                                                </span>
+                                            </div>
+                                            <div class="tablcol-xs-12 p-0 d-flex align-items-centereheader-btn"
+                                                ng-if="venMaintCtrl.sortByOrder==='desc' && venMaintCtrl.sortBy !== 'none' && venMaintCtrl.sortBy !== '' && venMaintCtrl.isLoaded"
+                                                data-ng-click="venMaintCtrl.sortByOrder = 'asc'; venMaintCtrl.isGroupByApplied ? venMaintCtrl.groupByData(venMaintCtrl.groupByField) : venMaintCtrl.reload(); venMaintCtrl.scrollToPosition(0, 0);">
+                                                <span>
+                                                    <i class="m-t-5 zmdi zmdi-long-arrow-up zmdi-hc-fw f-700 f-20"
+                                                        style="color: firebrick;"></i>
+                                                </span>
+                                            </div>
+                                            <span class="cursor-not-allowed"
+                                                ng-if="!venMaintCtrl.isLoaded && venMaintCtrl.recordsCount">
+                                                <img src="./img/loading-circle.gif" style="height: 30px;width: 30px;" />
+                                            </span>
+                                            <div class="form-group" style="padding-left: 18px">
+                                                <multiselect id="vendor_id" style="width:250px"
+                                                    ng-model="venMaintCtrl.filters.vendorIds"
+                                                    options="vendor.id as (vendor.name + ' (' + vendor.VendorType + ')') for vendor in venMaintCtrl.allVendors"
+                                                    select-limit="100" header="Filter Vendor"
+                                                    selected-header="options selected" multiple="true" required
+                                                    enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-change="venMaintCtrl.reload()"
+                                                    ng-class="{'highlight-filter':venMaintCtrl.filters.vendorIds.length>0}">
+                                                </multiselect>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li data-ng-if="venMaintCtrl.vendorPermissions.view">
+                                        <a>
+                                            <div class="group-by-section tableheader-btn"
+                                                ng-if="venMaintCtrl.vendorsDataList.length > 0">
+                                                <select class="form-control select-component input-sm"
+                                                    ng-model="venMaintCtrl.groupByField"
+                                                    ng-change="venMaintCtrl.groupByData(venMaintCtrl.groupByField);"
+                                                    data-ng-disabled="(
+                                                        (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                                        (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                                    )"
+                                                    ng-options="each.prefix as each.name for each in venmGroupByDropdown|filter:{prefix:'!name'}|filter:{prefix:'!next_effective_date'}|filter:{prefix:'!effective_date'}">
+                                                </select>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="non-collapsed-link" data-ng-if="venMaintCtrl.vendorPermissions.view">
+                                        <a>
+                                            <button class="btn search-box-advanced-btn btn-sm" fixed-position="true"
+                                                data-toggle="collapse" data-target="#advanced-search"
+                                                data-ng-click="venMaintCtrl.showAdvancedFilter(true);" data-ng-disabled="(
+                                                    (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                                    (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                                )">Search</button>
+                                        </a>
+                                    </li>
+                                    <li class="non-collapsed-link" data-ng-if="venMaintCtrl.vendorPermissions.view">
+                                        <a>
+                                            <button type="button"
+                                                data-ng-click="venMaintCtrl.reloadVendorCountAndList(true);"
+                                                data-ng-disabled="(
+                                                    (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                                    (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                                )" class="btn-primal btn-block waves-effect">
+                                                <span class="f-700 ng-binding">Refresh</span>
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="m-r-10 non-collapsed-link">
+                                        <a>
+                                            <button type="button" class="btn btn-success f-700 waves-effect"
+                                                ui-sref="common.prime.vendor.new"
+                                                data-ng-disabled="disableActions || !venMaintCtrl.vendorPermissions.create">
+                                                <span
+                                                    title="{{!venMaintCtrl.vendorPermissions.create ? 'Access denied' : ''}}"
+                                                    title-direction="top">Create Vendor</span>
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="dropdown collapsed-link" uib-dropdown>
+                                        <a uib-dropdown-toggle class="" href="">
+                                            <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                            <li class="cursor-pointer">
+                                                <button style="padding: 8px 20px" class="restricted-btn"
+                                                    title="{{!venMaintCtrl.vendorPermissions.create ? 'Access denied' : ''}}"
+                                                    data-ng-disabled="disableActions || !venMaintCtrl.vendorPermissions.create"
+                                                    data-ng-class="{'opacity50' : !venMaintCtrl.vendorPermissions.create}"
+                                                    ui-sref="common.prime.vendor.new">
+                                                    <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create
+                                                    Vendor
+                                                </button>
+                                            </li>
+                                            <li class="cursor-pointer" data-ng-if="venMaintCtrl.vendorPermissions.view">
+                                                <a href="" data-ng-click="venMaintCtrl.reloadVendorCountAndList(true);"
+                                                    data-ng-disabled="(
+                                                        (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                                        (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                                    )" class="btn-block waves-effect">
+                                                    <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                            </li>
+                                            <li class="cursor-pointer" data-ng-if="venMaintCtrl.vendorPermissions.view">
+                                                <a data-toggle="collapse" data-target="#advanced-search"
+                                                    data-ng-click="venMaintCtrl.showAdvancedFilter(true);"
+                                                    data-ng-disabled="(
+                                                        (!venMaintCtrl.isGroupByApplied && !venMaintCtrl.isLoaded) ||
+                                                        (venMaintCtrl.isGroupByApplied && !venMaintCtrl.isGroupHeader)
+                                                    )">
+                                                    <i class="zmdi zmdi-search"></i> Search
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Advanced search panel start -->
+                    <div class="col-xs-12 collapse" style="height: auto;" id="advanced-search">
+                        <div class="col-xs-12 p-0" style="height: auto;">
+                            <div class="col-xs-12 p-0 filter-search-body p-10">
+                                <div class="col-xs-12 filter-search-header">
+                                    <span>Advanced Search</span>
+                                    <span class="zmdi zmdi-close c-white cursor-pointer f-19 pull-right p-r-5"
+                                        data-ng-click="venMaintCtrl.showAdvancedFilter(true);"></span>
+                                </div>
+                                <div class="col-xs-12 filter-search-content">
+                                    <ng-form class="vendor-advance-search" name="venMaintCtrl.vendor_filter_from"
+                                        role="form" novalidate="novalidate">
+                                        <div class="col-xs-12 m-t-10">
+                                            <div class="form-group">
+                                                <div class="checkbox col-xs-12 form-group">
+                                                    <label for="search_company_col">
+                                                        <input id="search_company_col"
+                                                            ng-model="venMaintCtrl.filters.individualOrCompany"
+                                                            type="checkbox" ng-true-value="'Company'"
+                                                            ng-false-value="undefined"
+                                                            data-ng-change="venMaintCtrl.checkFilterHeight();"> Company
+                                                        <i class="input-helper"></i>
+                                                    </label>
+
+                                                    <label for="search_individual_col" class="m-l-20">
+                                                        <input id="search_individual_col"
+                                                            ng-model="venMaintCtrl.filters.individualOrCompany"
+                                                            type="checkbox" ng-true-value="'Individual'"
+                                                            ng-false-value="undefined"
+                                                            data-ng-change="venMaintCtrl.checkFilterHeight();">
+                                                        Individual
+                                                        <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6" data-ng-if="venMaintCtrl.filters.individualOrCompany">
+                                            <div class="form-group"
+                                                data-ng-if="venMaintCtrl.filters.individualOrCompany.toLowerCase() === 'company'">
+                                                <label>Company</label>
+                                                <multiselect class="tabfocus"
+                                                    ng-model="venMaintCtrl.filters.individualOrCompanyIds"
+                                                    options="company.id as company.name for company in venMaintCtrl.allCompanies"
+                                                    select-limit="100" header="Select Company"
+                                                    selected-header="options selected" multiple="true" required
+                                                    enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':venMaintCtrl.filters.individualOrCompanyIds.length>0}">
+                                            </div>
+                                            <div class="form-group"
+                                                data-ng-if="venMaintCtrl.filters.individualOrCompany.toLowerCase() === 'individual'">
+                                                <label>Individual</label>
+                                                <multiselect class="tabfocus"
+                                                    ng-model="venMaintCtrl.filters.individualOrCompanyIds"
+                                                    options="individual.id as individual.name for individual in venMaintCtrl.allindividuals"
+                                                    select-limit="100" header="Select Individual"
+                                                    selected-header="options selected" multiple="true" required
+                                                    enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':venMaintCtrl.filters.individualOrCompanyIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group">
+                                                <label>Vendor Name</label>
+                                                <!-- <multiselect ng-model="venMaintCtrl.filters.vendorTypeIds" options="type.id as type.short_description for type in venMaintCtrl.allVendorTypes"
+                                                        select-limit="100" header="Select Type" selected-header="options selected"
+                                                        multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                        ng-class="{'highlight-filter':venMaintCtrl.filters.vendorTypeIds.length>0}"> -->
+                                                <div class="form-group" valdr-form-group>
+                                                    <input type="text" autofocus nextfocus id="vendor_name_search"
+                                                        class="form-control input-sm"
+                                                        ng-model="venMaintCtrl.filters.name" placeholder="Vendor Name"
+                                                        ng-keyup="$event.keyCode == 13 ? venMaintCtrl.applyFilters():null" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6" ng-if="venMaintCtrl.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Vendor Type</label>
+                                                <multiselect class="tabfocus"
+                                                    ng-model="venMaintCtrl.filters.vendorTypeIds"
+                                                    options="type.id as type.short_description for type in venMaintCtrl.allVendorTypes"
+                                                    select-limit="100" header="Select Type"
+                                                    selected-header="options selected" multiple="true" required
+                                                    enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':venMaintCtrl.filters.vendorTypeIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6" ng-if="venMaintCtrl.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Vendor Term</label>
+                                                <multiselect class="tabfocus"
+                                                    ng-model="venMaintCtrl.filters.vendorTermIds"
+                                                    options="term.id as term.description for term in venMaintCtrl.allVendorPurchaseTerms"
+                                                    select-limit="100" header="Select Term"
+                                                    selected-header="options selected" multiple="true" required
+                                                    enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':venMaintCtrl.filters.vendorTermIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6" ng-if="venMaintCtrl.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Current Status</label>
+                                                <multiselect class="tabfocus"
+                                                    ng-model="venMaintCtrl.filters.currentStatusIds"
+                                                    options="status.code as status.description for status in statuses"
+                                                    select-limit="100" header="Select Current Status"
+                                                    selected-header="options selected" multiple="true" required
+                                                    enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':venMaintCtrl.filters.currentStatusIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6" ng-if="venMaintCtrl.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Next Status</label>
+                                                <multiselect class="tabfocus"
+                                                    ng-model="venMaintCtrl.filters.nextStatusIds"
+                                                    options="status.code as status.description for status in next_statuses"
+                                                    select-limit="100" header="Select Next Status"
+                                                    selected-header="options selected" multiple="true" required
+                                                    enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':venMaintCtrl.filters.nextStatusIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group">
+                                                <label>Buyer</label>
+                                                <multiselect class="tabfocus" ng-model="venMaintCtrl.filters.buyerIds"
+                                                    options="each.id as each.short_description for each in venMaintCtrl.buyerValues"
+                                                    select-limit="100" header="Select Buyer"
+                                                    selected-header="options selected" multiple="true" required
+                                                    enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':venMaintCtrl.filters.buyerIds.length>0}">
+                                            </div>
+                                        </div>
+                                    </ng-form>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-b-10">
+                                <div class="pull-left text-danger" data-ng-if="!venMaintCtrl.applyFilterSuccess">
+                                    {{venMaintCtrl.applyFilterMessage}}</div>
+                                <div class="m-b-0 pull-left alert alert-success alert-dismissable p-b-5 p-t-5"
+                                    data-ng-show="venMaintCtrl.message && venMaintCtrl.isFilterApplied">
+                                    <button type="button" class="close" data-ng-click="venMaintCtrl.message = null"
+                                        aria-hidden="true">&times;</button> {{venMaintCtrl.message}}
+                                </div>
+                                <div class="m-b-0 pull-left alert alert-success alert-dismissable p-b-5 p-t-5"
+                                    data-ng-show="venMaintCtrl.resetMessage">
+                                    <button type="button" class="close" data-ng-click="venMaintCtrl.resetMessage = null"
+                                        aria-hidden="true">&times;</button> {{venMaintCtrl.resetMessage}}
+                                </div>
+                                <div class="ipad-advance-search pull-right">
+                                    <span class="f-300 text-info m-r-5">[ You can expect some delay as the advanced
+                                        search will be performed on the server side.
+                                        ]
+                                    </span>
+                                    <span class="c-red m-r-5"
+                                        data-ng-if="venMaintCtrl.isFilterApplied && venMaintCtrl.appliedFilterCount">
+                                        <i class="fa fa-filter p-r-5"></i>
+                                        {{venMaintCtrl.appliedFilterCount}} Filter(s) Applied
+                                    </span>
+                                    <span class="m-r-5"
+                                        data-ng-if="!venMaintCtrl.isFilterApplied || !venMaintCtrl.appliedFilterCount">
+                                        <i class="fa fa-filter p-r-5"></i> Not applied</span>
+                                    <button type="button" class="btn-primary btn tabfocus-btn hidden-sm"
+                                        id="filter_attribute_btn"
+                                        ng-click="venMaintCtrl.applyFilters(); venMaintCtrl.scrollToPosition(0, 0);"
+                                        ng-model-options="{debounce:3000}" data-ng-disabled="venMaintCtrl.isRefreshing">
+                                        <strong>{{venMaintCtrl.applyFiltersBtnLabel}}</strong>
+                                    </button>
+                                    <button type="button" class="btn btn-cancel tabfocus-btn hidden-sm"
+                                        id="vendor_filter_reset_btn"
+                                        ng-click="venMaintCtrl.resetFilters(-1); venMaintCtrl.scrollToPosition(0, 0);"
+                                        data-ng-disabled="venMaintCtrl.isRefreshing">
+                                        <strong>Reset Filters</strong>
+                                    </button>
+                                    <div class="hidden-lg hidden-md m-t-10">
+                                        <button type="button" class="btn-primary btn tabfocus-btn"
+                                            id="filter_attribute_btn"
+                                            ng-click="venMaintCtrl.applyFilters(); venMaintCtrl.scrollToPosition(0, 0);"
+                                            ng-model-options="{debounce:3000}"
+                                            data-ng-disabled="venMaintCtrl.isRefreshing">
+                                            <strong>{{venMaintCtrl.applyFiltersBtnLabel}}</strong>
+                                        </button>
+                                        <button type="button" class="btn btn-cancel tabfocus-btn"
+                                            id="vendor_filter_reset_btn"
+                                            ng-click="venMaintCtrl.resetFilters(-1); venMaintCtrl.scrollToPosition(0, 0);"
+                                            data-ng-disabled="venMaintCtrl.isRefreshing">
+                                            <strong>Reset Filters</strong>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./Advanced Search panel -->
+                </div>
+            </div>
+            <!-- ./rc-module-header -->
+            <div class="col-lg-12 text-center module-content"
+                data-ng-if="!venMaintCtrl.recordsCount  && !venMaintCtrl.isLoaded">
+                <div class="m-t-25">
+                    <span class="f-17 f-700 c-black">Loading</span>
+                    <span class="f-700" style="letter-spacing: 3px;">....</span>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 module-content"
+                data-ng-if="venMaintCtrl.recordsCount && venMaintCtrl.recordsCount !== 0">
+                <div class="col-lg-12 p-0" data-ng-if="venMaintCtrl.vendorPermissions.view">
+                    <div class="col-xs-12 p-0"
+                        data-ng-class="venMaintCtrl.groupByField.length>0 ? 'p-r-25 col-xs-12':'col-lg-12'">
+                    </div>
+
+                    <!-- Vendors List view when group by not applied - START -->
+                    <div class="col-lg-12 col-xs-12 text-center text-info f-300 f-15 m-t-15"
+                        data-ng-if="venMaintCtrl.recordsCount === 0 && !venMaintCtrl.isFilterApplied">No vendor exists.
+                        Please add vendor.</div>
+                    <div class="col-lg-12 col-xs-12 rcpscrollbar p-0 o-auto pageHeight m-t-10"
+                        data-ng-if="!venMaintCtrl.groupByField && venMaintCtrl.vendorsDataList.length > 0">
+                        <div class="col-md-6 col-sm-12 col-xs-12 m-b-10"
+                            data-ng-repeat="vendor in venMaintCtrl.vendorsDataList"
+                            ios-dblclick="venMaintCtrl.updateVendor(vendor);">
+                            <div class="col-xs-12 p-0">
+                                <div class="d-flex update-process-overlay" data-ng-show="vendor.isShowUpdateProcessing">
+                                    <img class="m-auto" src="./img/loading.gif" alt=""
+                                        style="width:100px;height:100px;">
+                                </div>
+                                <div class="col-xs-12 main-card box p-0">
+                                    <div class="col-xs-12 header-section"
+                                        ng-class="{'status-active f-500':vendor.status==='Active','status-pending-active f-300':vendor.status==='Pending Active', 'status-inactive f-300':vendor.status==='Inactive','status-pending-inactive f-300':vendor.status==='Pending Inactive','hightlight-activehistory':vendor.showhistory === true}">
+                                        <span class="d-flex">
+                                            <img class="m-r-5" title="{{vendor.individual_or_company}}"
+                                                data-ng-if="vendor.individual_or_company === 'Company'"
+                                                src="./application/modules/vendor/maintenance/icons/bank-building.svg"
+                                                alt="" style="height:15px;width:15px;">
+                                            <img class="m-r-5" title="{{vendor.individual_or_company}}"
+                                                data-ng-if="vendor.individual_or_company === 'Individual'"
+                                                src="./application/modules/vendor/maintenance/icons/avatar.svg" alt=""
+                                                style="height:15px;width:15px;">
+                                            <span class="text-overflow-desc-auto"
+                                                title="{{vendor.name}}">{{vendor.name}}</span>
+                                        </span>
+                                        <div class="pull-right">
+                                            <img class="p-r-5" data-ng-if="vendor.isLoadingClone" src="./img/loader.gif"
+                                                alt="Loading" height="25px" />
+                                            <a class="cursor-pointer m-r-5"
+                                                data-ng-click="venMaintCtrl.showVendorPortalPanel(vendor);"
+                                                title="Vendor portal access">
+                                                <img src="./img/sidebar-icons/vendor-portal.svg"
+                                                    style="height: 18px;width:18px;" alt="">
+                                            </a>
+                                            <a class="cursor-pointer m-r-5"
+                                                data-ng-click="venMaintCtrl.toggleSKUListPanel(vendor);">
+                                                <span class="f-16 zmdi zmdi-incandescent zmdi-hc-fw c-gray"
+                                                    title="Insights" title-direction="top-left"
+                                                    fixed-position="true"></span>
+                                            </a>
+                                            <a class="cursor-pointer m-r-5"
+                                                data-ng-click="venMaintCtrl.showHistoryDetails(vendor);">
+                                                <span class="f-16 fa fa-history c-gray" title="History"
+                                                    title-direction="top-left" fixed-position="true"></span>
+                                            </a>
+                                            <a class="cursor-pointer m-r-5"
+                                                data-ng-click="venMaintCtrl.openGenerateReportPanel(vendor);">
+                                                <span class="f-20  zmdi zmdi-open-in-browser zmdi-hc-fw c-gray"
+                                                    title="Generate Vendor Report" title-direction="top-left"
+                                                    fixed-position="true"></span>
+                                            </a>
+                                            <button class="restricted-btn p-0"
+                                                ng-click="showMetaData(venMaintCtrl.entityInformation,vendor,venMaintCtrl.vendorPermissions);"
+                                                data-ng-disabled="!venMaintCtrl.vendorPermissions.drop">
+                                                <span class="zmdi zmdi-cloud-outline zmdi-hc-fw f-19 c-gray"
+                                                    data-ng-if="venMaintCtrl.vendorPermissions.drop"
+                                                    title="Click here to manage documents" title-direction="right"
+                                                    fixed-position="true"></span>
+                                                <span class="zmdi zmdi-cloud-off zmdi-hc-fw f-19 c-gray"
+                                                    data-ng-if="!venMaintCtrl.vendorPermissions.drop"
+                                                    title="Access denied" title-direction="right"
+                                                    fixed-position="true"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 content-section">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-xs-3 p-0 d-flex">
+                                                <img check-image class="img-responsive card-image m-auto cursor-pointer"
+                                                    data-ng-click="vendor.thumbnail?venMaintCtrl.previewDatalake(vendor,'cover_image'):''"
+                                                    image-name="entity-config-vendor.svg"
+                                                    ng-src="{{vendor.thumbnail}}" />
+                                            </div>
+                                            <div class="col-xs-9">
+                                                <div class="col-xs-12 p-0" style="max-height:100px;overflow:auto;">
+                                                    <div class="col-sm-6 col-xs-12 p-0 m-b-10">
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Vendor Type :</label>
+                                                            <label class="rclabel m-l-10 c-gray word-break-all">
+                                                                {{vendor.VendorType}}
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Status :</label>
+                                                            <label class="rclabel m-l-10"
+                                                                ng-class="{'text-success f-500': vendor.status==='Active' , 'text-warning f-300': vendor.status ==='Pending Active', 'text-primary f-300': vendor.status ==='Inactive','text-info f-300': vendor.status==='Pending Inactive'}">{{vendor.status}}</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Next Status :</label>
+                                                            <label
+                                                                class="rclabel m-l-10 c-gray">{{vendor.next_status}}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 col-xs-12"
+                                                        style="border-left: 1px solid #ececec;">
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Next Effective Date :</label>
+                                                            <label data-ng-show="vendor.next_status !== 'None'"
+                                                                class="c-gray m-l-10">{{vendor.next_effective_date |
+                                                                FormatDate}}</label>
+                                                            <label data-ng-show="vendor.next_status === 'None'"
+                                                                class="c-gray m-l-10">N/A</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Vendor Terms :</label>
+                                                            <label class="rclabel m-l-10 c-gray">
+                                                                {{vendor.purchase_terms}}
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Buyer :</label>
+                                                            <label class="rclabel m-l-10 c-gray">
+                                                                <span data-ng-if="vendor.buyer"
+                                                                    ng-bind-html="vendor.buyer"></span>
+                                                                <span data-ng-if="!vendor.buyer">NA</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Edit Vendor Icon-->
+                                        <div class="col-xs-12 m-t-5 text-center d-flex"
+                                            style="justify-content:space-between;align-items:center;">
+                                            <div class="cursor-pointer d-flex" style="align-items:flex-end;">
+                                                <button class="f-14 restricted-btn text-primary"
+                                                    data-ng-class="{'opacity50' : !venMaintCtrl.vendorPermissions.update}"
+                                                    data-ng-click="venMaintCtrl.updateVendor(vendor);"
+                                                    data-ng-disabled="!venMaintCtrl.vendorPermissions.update">
+                                                    <span class="f-13"
+                                                        title="{{!venMaintCtrl.vendorPermissions.update ? 'Access denied' : ''}}"
+                                                        title-direction="top">
+                                                        <i class="fa fa-edit m-r-5"></i>Edit Vendor
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- Edit Vendor Icon-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="venMaintCtrl.isLoading">
+                            <span class="f-17 f-700 c-black">Loading</span>
+                            <span class="f-700" style="letter-spacing: 3px;">
+                                <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                <span>
+                        </div>
+                        <div ng-if="venMaintCtrl.availableVendorsCount > 0 && !venMaintCtrl.isLoading">
+                            <div class="col-lg-12 col-md-12 col-sm-12 aligncenter p-t-10 m-b-10">
+                                <button class="btn btn-sm btn-inverse f-700"
+                                    data-ng-click="venMaintCtrl.loadMoreVendors()">Load Remaining
+                                    {{venMaintCtrl.availableVendorsCount}} Records</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Vendors List view when group by not applied - END -->
+
+                    <!-- Vendors List view when group by is applied - START -->
+                    <div class="col-lg-12 col-xs-12 rcpscrollbar p-0 o-auto pageHeight m-t-10"
+                        data-ng-if="venMaintCtrl.groupByField">
+                        <d-expand-collapse>
+                            <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="!venMaintCtrl.isGroupHeader">
+                                <span class="f-17 f-700 c-black">Loading</span>
+                                <span class="f-700" style="letter-spacing: 3px;">
+                                    <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                    <span>
+                            </div>
+                            <div data-ng-if="venMaintCtrl.isGroupHeader === true && vendorGroup.selected === 1"
+                                ng-repeat="vendorGroup in venMaintCtrl.groupVendors">
+                                <div class="col-xs-12"
+                                    data-ng-click="venMaintCtrl.showVendorData(venMaintCtrl.groupByField,vendorGroup)">
+                                    <div class="col-xs-12 card-group-header" data-ng-click="toggleCollapse($event);">
+                                        <span data-ng-if="venMaintCtrl.groupByField.includes('effective_date')">
+                                            {{vendorGroup[venMaintCtrl.groupByField] | FormatDate}}
+                                            <span class="zmdi-hc-fw">({{vendorGroup.count}})</span>
+                                        </span>
+                                        <span data-ng-if="!venMaintCtrl.groupByField.includes('effective_date')">
+                                            {{vendorGroup[venMaintCtrl.groupByField]}} ({{vendorGroup.count}})
+                                        </span>
+                                        <div id="{{$index}}-groupHeaderIcon" class="pull-right zmdi inline-block"
+                                            data-ng-init="initGroupHeader('{{$index}}-groupHeaderIcon',vendorGroup)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-0 expand-collapse-me m-0"
+                                    data-ng-class="{'d-none':!vendorGroup.expanded}" data-ng-if="vendorGroup.vendors">
+                                    <div class="col-xs-12 m-t-5 m-b-5">
+                                        <span data-ng-show="venMaintCtrl.groupByField">{{ vendorGroup.vendors.length}}
+                                            of {{vendorGroup.count}} Records found </span>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12 m-b-10"
+                                        data-ng-if="vendorGroup.isVendorsLoaded === true"
+                                        data-ng-repeat="vendor in vendorGroup.vendors"
+                                        ios-dblclick="venMaintCtrl.updateVendor(vendor);">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="d-flex update-process-overlay"
+                                                data-ng-show="vendor.isShowUpdateProcessing">
+                                                <img class="m-auto" src="./img/loading.gif" alt=""
+                                                    style="width:100px;height:100px;">
+                                            </div>
+                                            <div class="col-xs-12 main-card box p-0">
+                                                <div class="col-xs-12 header-section"
+                                                    ng-class="{'status-active f-500':vendor.status==='Active','status-pending-active f-300':vendor.status==='Pending Active', 'status-inactive f-300':vendor.status==='Inactive','status-pending-inactive f-300':vendor.status==='Pending Inactive','hightlight-activehistory':vendor.showhistory === true}">
+                                                    <span class="d-flex">
+                                                        <img class="m-r-5" title="{{vendor.individual_or_company}}"
+                                                            data-ng-if="vendor.individual_or_company === 'Company'"
+                                                            src="./application/modules/vendor/maintenance/icons/bank-building.svg"
+                                                            alt="" style="height:15px;width:15px;">
+                                                        <img class="m-r-5" title="{{vendor.individual_or_company}}"
+                                                            data-ng-if="vendor.individual_or_company === 'Individual'"
+                                                            src="./application/modules/vendor/maintenance/icons/avatar.svg"
+                                                            alt="" style="height:15px;width:15px;">
+                                                        <span class="text-overflow-desc-auto"
+                                                            title="{{vendor.name}}">{{vendor.name}}</span>
+                                                    </span>
+                                                    <div class="pull-right d-flex align-items-center">
+                                                        <a class="cursor-pointer m-r-5"
+                                                            data-ng-click="venMaintCtrl.showVendorPortalPanel(vendor);"
+                                                            title="Vendor portal access">
+                                                            <img src="./img/sidebar-icons/vendor-portal.svg"
+                                                                style="height: 18px;width:18px;" alt="">
+                                                        </a>
+                                                        <a class="cursor-pointer m-r-5"
+                                                            data-ng-click="venMaintCtrl.toggleSKUListPanel(vendor)">
+                                                            <span class="f-16 zmdi zmdi-incandescent zmdi-hc-fw c-gray"
+                                                                title="Insights" title-direction="top-left"
+                                                                fixed-position="true"></span>
+                                                        </a>
+                                                        <a class="cursor-pointer m-r-5"
+                                                            data-ng-click="venMaintCtrl.showHistoryDetails(vendor);">
+                                                            <span class="f-16 fa fa-history c-gray" title="History"
+                                                                title-direction="top-left" fixed-position="true"></span>
+                                                        </a>
+                                                        <a class="cursor-pointer m-r-5"
+                                                            data-ng-click="venMaintCtrl.openGenerateReportPanel(vendor);">
+                                                            <span
+                                                                class="f-20  zmdi zmdi-open-in-browser zmdi-hc-fw c-gray"
+                                                                title="Generate Vendor Report"
+                                                                title-direction="top-left" fixed-position="true"></span>
+                                                        </a>
+                                                        <button class="restricted-btn p-0"
+                                                            ng-click="showMetaData(venMaintCtrl.entityInformation,vendor,venMaintCtrl.vendorPermissions);"
+                                                            data-ng-disabled="!venMaintCtrl.vendorPermissions.drop">
+                                                            <span class="zmdi zmdi-cloud-outline zmdi-hc-fw f-19 c-gray"
+                                                                data-ng-if="venMaintCtrl.vendorPermissions.drop"
+                                                                title="Click here to manage documents"
+                                                                title-direction="top" fixed-position="true"></span>
+                                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw f-19 c-gray"
+                                                                data-ng-if="!venMaintCtrl.vendorPermissions.drop"
+                                                                title="Access denied" title-direction="top"
+                                                                fixed-position="true"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 content-section">
+                                                    <div class="col-xs-12 p-0">
+                                                        <div class="col-xs-3 p-0 d-flex">
+                                                            <img check-image
+                                                                class="img-responsive card-image m-auto cursor-pointer"
+                                                                image-name="entity-config-vendor.svg"
+                                                                data-ng-click="vendor.thumbnail?venMaintCtrl.previewDatalake(vendor,'cover_image'):''"
+                                                                ng-src="{{vendor.thumbnail}}" />
+                                                        </div>
+                                                        <div class="col-xs-9 p-0"
+                                                            style="max-height:180px;overflow:auto;">
+                                                            <div class="col-sm-6 col-xs-12 p-0 m-b-10">
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Vendor Type :</label>
+                                                                    <label class="rclabel m-l-10 c-gray word-break-all">
+                                                                        {{vendor.VendorType}}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Status :</label>
+                                                                    <label class="rclabel m-l-10"
+                                                                        ng-class="{'text-success f-500': vendor.status==='Active' , 'text-warning f-300': vendor.status ==='Pending Active', 'text-primary f-300': vendor.status ==='Inactive','text-info f-300': vendor.status==='Pending Inactive'}">{{vendor.status}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Next Status :
+                                                                    </label>
+                                                                    <label
+                                                                        class="rclabel m-l-10 c-gray">{{vendor.next_status}}</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6 col-xs-12"
+                                                                style="border-left: 1px solid #ececec;">
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Next Effective Date :
+                                                                    </label>
+                                                                    <label data-ng-show="vendor.next_status !== 'None'"
+                                                                        class="c-gray m-l-10">{{vendor.next_effective_date
+                                                                        | FormatDate}}</label>
+                                                                    <label data-ng-show="vendor.next_status === 'None'"
+                                                                        class="c-gray m-l-10">N/A</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Vendor Terms :
+                                                                    </label>
+                                                                    <label class="rclabel m-l-10 c-gray">
+                                                                        {{vendor.purchase_terms}}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Buyer :</label>
+                                                                    <label class="rclabel m-l-10 c-gray">
+                                                                        <span
+                                                                            data-ng-if="vendor.buyer">{{vendor.buyer}}</span>
+                                                                        <span data-ng-if="!vendor.buyer">NA</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Edit Vendor Icon-->
+                                                    <div class="col-xs-12 m-t-5 text-center d-flex"
+                                                        style="justify-content:space-between;align-items:center;">
+                                                        <div class="cursor-pointer d-flex"
+                                                            style="align-items:flex-end;">
+                                                            <button class="f-14 restricted-btn text-primary"
+                                                                data-ng-class="{'opacity50' : !venMaintCtrl.vendorPermissions.update}"
+                                                                data-ng-click="venMaintCtrl.updateVendor(vendor);"
+                                                                data-ng-disabled="!venMaintCtrl.vendorPermissions.update">
+                                                                <span class="f-13"
+                                                                    title="{{!venMaintCtrl.vendorPermissions.update ? 'Access denied' : ''}}"
+                                                                    title-direction="top">
+                                                                    <i class="fa fa-edit m-r-5"></i>Edit Vendor
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Edit Vendor Icon-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        data-ng-if="vendorGroup.availableGroupVendors > 0 && vendorGroup.isVendorsLoaded === true">
+                                        <div class="col-lg-12 col-md-12 aligncenter p-t-10 m-b-10">
+                                            <button class="btn btn-sm btn-inverse"
+                                                data-ng-disabled="vendorGroup.isMoreVendorsLoaded === false"
+                                                data-ng-click="venMaintCtrl.loadMoreVendorData(venMaintCtrl.groupByField,vendorGroup)">Load
+                                                Remaining {{vendorGroup.availableGroupVendors}} Records</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 text-center m-t-25 m-b-30"
+                                    data-ng-if="vendorGroup.isVendorsLoaded === false || vendorGroup.isMoreVendorsLoaded === false">
+                                    <span class="f-17 f-700 c-black">Loading</span>
+                                    <span class="f-700" style="letter-spacing: 3px;">
+                                        <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                        <span>
+                                </div>
+                            </div>
+                    </div>
+                    <!-- Group by panel Section start -->
+                    <div class="group-by-panel" data-ng-class="{'activate':venMaintCtrl.showgroupByMenu}"
+                        data-ng-if="venMaintCtrl.groupByField.length>0">
+                        <span class="d-flex d-flex-h-center d-flex-v-center bg-primary"
+                            data-ng-if="!venMaintCtrl.showgroupByMenu" id="open-setting"
+                            data-ng-click="venMaintCtrl.showgroupByMenu = !venMaintCtrl.showgroupByMenu;">
+                            <i class="zmdi zmdi-settings"></i>
+                        </span>
+                        <span class="d-flex d-flex-h-center d-flex-v-center bg-primary"
+                            data-ng-if="venMaintCtrl.showgroupByMenu" id="close-setting"
+                            data-ng-click="venMaintCtrl.showgroupByMenu = !venMaintCtrl.showgroupByMenu;">
+                            <i class="zmdi zmdi-close"></i>
+                        </span>
+                        <form>
+                            <span class="no-padding group-by-header-panel c-bluegray">Group by</span>
+                            <div class="col-xs-12 p-0 m-b-10">
+                                <select class="form-control select-component input-sm"
+                                    ng-model="venMaintCtrl.groupByField"
+                                    ng-change="venMaintCtrl.groupByData(venMaintCtrl.groupByField);"
+                                    ng-options="each.prefix as each.name for each in venmGroupByDropdown|filter:{prefix:'!name'}|filter:{prefix:'!next_effective_date'}|filter:{prefix:'!effective_date'}">
+                                </select>
+                            </div>
+                            <div class="col-xs-12 p-0 m-b-10 f-500">
+                                <a class="cursor-pointer">
+                                    <span data-ng-click="venMaintCtrl.toggleAllGroups(1);">Select All</span>
+                                </a> |
+                                <a class="cursor-pointer">
+                                    <span data-ng-click="venMaintCtrl.toggleAllGroups(0);">Unselect All</span>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 p-0 groupitems-container rc-scroll-bar">
+                                <div data-ng-repeat="gc in venMaintCtrl.groupVendors">
+                                    <div class="checkbox p-l-5">
+                                        <label>
+                                            <span
+                                                data-ng-if="venMaintCtrl.groupByField.includes('effective_date')">{{gc[venMaintCtrl.groupByField]|FormatDate}}
+                                                <span style="color:green"> [{{gc.count}}]</span>
+                                            </span>
+                                            <span
+                                                data-ng-if="!venMaintCtrl.groupByField.includes('effective_date')">{{gc[venMaintCtrl.groupByField]}}
+                                                <span style="color:green">
+                                                    <span class="f-14 f-700">( {{gc.count}} )</span>
+                                                </span>
+                                            </span>
+                                            <input type="checkbox" ng-model="gc.selected" ng-true-value="1"
+                                                ng-false-value="0"
+                                                ng-click="venMaintCtrl.toggleselectedGroupVendor(gc,$index);toggleCollapse($event);">
+                                            <i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- ./group-by-panel -->
+                    </d-expand-collapse>
+                </div>
+                <!-- Vendors List view when group by is applied - START -->
+                <div ng-if="!venMaintCtrl.vendorPermissions.view"
+                    data-ng-include="'./application/templates/restricted.access.html'"></div>
+            </div>
+            <div class="col-xs-12 p-0" ng-if="venMaintCtrl.isShowHistory === true;"
+                data-ng-include="'./application/templates/history.html'"></div>
+            <div ui-view="filter"></div>
+            <div ui-view="clone"></div>
+            <div data-ng-show="venMaintCtrl.showSKUList"
+                data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.insights.html'">
+            </div>
+            <div data-ng-if="venMaintCtrl.PortalAccess"
+                data-ng-include="'./application/modules/vendor/maintenance/panel.vendor.maintenance.portalaccess.html'">
+            </div>
+            <div ng-if="venMaintCtrl.showAddrCnt"
+                data-ng-include="'./application/templates/panel.address.contact.html'">
+            </div>
+            <div data-ng-include="'./application/modules/vendor/maintenance/panel.generate.vendor.reports.html'"></div>
+            <meta-data-panel></meta-data-panel>
+            <div class="col-lg-12 p-0">
+                <div id="refresh-table" class="p-15" data-ng-class="{'toggled':venMaintCtrl.isRefreshing}">
+                    <div class="col-xs-6 p-0">
+                        <span class="f-15 f-300 pull-left">{{venMaintCtrl.refreshTableText}}</span>
+                    </div>
+                    <div class="col-xs-6 p-0" data-ng-if="venMaintCtrl.totalTimeText">
+                        <span class="pull-right f-300">
+                            <strong>{{venMaintCtrl.vendorsDataList.length}}</strong>
+                            <span class="f-14 c-gray">{{venMaintCtrl.totalRecordsText}}</span>
+                            <span ng-bind-html="venMaintCtrl.totalTimeText"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- If vendor data list is zero and filter applied is true then displays as NO matching results  -->
+        <div class="col-xs-12 p-0" data-ng-class="{'module-content': !venMaintCtrl.recordsCount}" data-ng-if="
+                venMaintCtrl.isFilterApplied &&
+                (
+                    (!venMaintCtrl.isGroupByApplied && venMaintCtrl.vendorsDataList.length === 0 && venMaintCtrl.isLoaded) ||
+                    (venMaintCtrl.isGroupByApplied && venMaintCtrl.groupVendors.length === 0 && venMaintCtrl.isGroupHeader)
+                )
+            ">
+            <div class="col-xs-12 text-center text-info m-t-25">
+                <span class="f-15 f-300">No results matching your criteria. Please amend your search options.</span>
+            </div>
+        </div>
+    </div>
+    <!-- If vendor record count is zero and no filter applied then displays as NO vendor exists  -->
+    <div class="col-xs-12 p-0 module-content"
+        data-ng-if="!venMaintCtrl.isFilterApplied && !venMaintCtrl.recordsCount && venMaintCtrl.isLoaded">
+        <div class="col-xs-12 text-center text-info m-t-25">
+            <span class="f-15 f-300">No Vendor exists. Please add vendor.</span>
+        </div>
+    </div>
+</div>

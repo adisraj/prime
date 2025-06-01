@@ -1,0 +1,119 @@
+<link rel="stylesheet" href="./application/modules/item/retail/retail.css">
+<div data-ng-controller="RetailMaintenance as retailCtrl">
+    <div data-ng-if="retailCtrl.isSkuSelectionModal">
+        <!-- Section to show the module header section -->
+        <div class="rc-module-header-wrapper" style="height: auto;">
+            <div class="rc-module-header" style="height: auto;">
+                <div class="col-xs-12 p-0 d-flex justify-content-between">
+                    <div class="sub-title-box">
+                        <div class="d-flex p-l-5 align-items-center">
+                            <span class="align-items-center d-grid image-module">
+                                <img src="./img/sidebar-icons/retail.svg" />
+                            </span>
+                            <span class="align-items-center label-module sub-title-desc-truncate">
+                                <a href="javascript:void(0)">{{retailCtrl.selected_item.description}} - Retail Maintenance</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div id="navbar" class="navbar-collapse collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="non-collapsed-link">
+                                    <a>
+                                        <button type="button" class="btn btn-cancel waves-effect f-700" data-ui-sref="common.prime.itemMaintenance">Go Back</button>
+                                    </a>
+                                </li>
+                                <li class="m-r-10 non-collapsed-link">
+                                    <a>
+                                        <button type="button" class="btn btn-success f-700 waves-effect" ng-disabled="retailCtrl.Skus.length === 0||(retailCtrl.selectedSkuCount===0||retailCtrl.selectedSkuCount===undefined)" data-ng-click="retailCtrl.getSkuRetails()">Show Retails</button>
+                                    </a>
+                                </li>
+                                <li class="dropdown collapsed-link" uib-dropdown>
+                                    <a uib-dropdown-toggle class="full-height" href="">
+                                        <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dm-icon pull-right">
+                                        <li>
+                                            <button class="bg-none border-none" style="padding: 8px 20px" ng-disabled="retailCtrl.Skus.length === 0||(retailCtrl.selectedSkuCount===0||retailCtrl.selectedSkuCount===undefined)" data-ng-click="retailCtrl.getSkuRetails()">
+                                                <i class="zmdi zmdi-shopping-cart text-info f-17 m-r-10"></i>
+                                                Show Retails 
+                                            </button>
+                                        </li>
+                                        <li class="cursor-pointer">
+                                            <a data-ui-sref="common.prime.itemMaintenance">
+                                                <i class="zmdi zmdi-long-arrow-left"></i> Go Back
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ./rc-module-header -->
+        <div class="rcp-table-container" data-ng-if="retailCtrl.Skus.length > 0">
+            <!-- Section to show the information of the first step in retail configuration start-->
+            <div class="col-xs-12 p-0" style="margin-top: 80px;">
+                <div class="col-xs-12 steps-info-section">
+                    <i class="d-flex d-flex-v-center justify-content-between">
+                        <div>
+                            <span class="f-17 text-warning" style="color: #ca0b0a;">Step 1:</span>
+                            <span class="f-700 f-14 c-firebrick">Select SKU's to be shown in the Retail screen</span>
+                        </div>
+                        <div>
+                            <span class="f-13 c-teal">** SKUs of same 
+                                <b class="c-firebrick">type</b> can be selected at a time.</span>
+                        </div>
+                    </i>
+                </div>
+            </div>
+            <!-- Section to show the information of the first step in retail configuration end -->
+            <div class="col-xs-12 p-0">
+                <div class="col-xs-12 p-0 m-t-20 table-responsive module-content-configuration">
+                    <table class="table table-hover table-vmiddle table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-center">SKU Number</th>
+                                <th class="text-center">SKU Description</th>
+                                <th class="text-center">SKU Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="sku in retailCtrl.Skus | orderBy:'sku_type'">
+                                <td class="text-center p-t-10 p-b-10 iconcolumnwidth">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" ng-disabled="sku.isDisabled===true" data-ng-model="sku.checked" data-ng-change="retailCtrl.selectSku(sku)" ng-true-value='true' ng-false-value='false'>
+                                            <i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td class="text-center">{{sku.sku }}</td>
+                                <td>{{sku.description}}</td>
+                                <td class="text-center">{{sku.sku_type.toUpperCase()}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="retailCtrl.Skus.length === 0">
+            <div class="empty_state">
+                <i>
+                    <img src="https://app.optimizely.com/static/img/p13n/page-list-empty-state.svg" class="anchor--middle push--ends" width="250">
+                </i>
+                <div>
+                    <h3 class="">No SKUs !</h3>
+                    <p>Create SKUs for retail. </p>
+                    <p>
+                        <button class="btn btn-secondary f-700 btn-block  waves-effect m-t-10" style="width:300px" ui-sref="common.prime.itemMaintenance">Go Back</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Model content end-->
+    </div>
+    <div ng-if="retailCtrl.isShowSkuRetails === true" data-ng-include="'./application/modules/item/retail/rc.retail.design.html'"></div>

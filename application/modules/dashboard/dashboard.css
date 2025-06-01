@@ -1,0 +1,276 @@
+/* Style for each entity module container and its buttons start */
+
+.entity-section {
+    display: flex;
+}
+
+/* Style for the attribute module section */
+
+.entity-section.attribute {
+    color: #5f5f5f;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0fdfd;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.37);
+    border-radius: 0 2px 2px 0;
+    padding: 10px;
+    border: 1px solid #cfe4e4;
+    border-left: 5px solid #4ea5a7;
+}
+
+.entity-section.attribute button {
+    background: #4ea5a7;
+    color: white;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #4ea5a7;
+    border-radius: 15px;
+}
+
+/* Style for the hierarchy module section */
+
+.entity-section.hierarchy {
+    color: #5f5f5f;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ebeaf9;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.37);
+    border-radius: 0 2px 2px 0;
+    padding: 10px;
+    border: 1px solid #e3dffd;
+    border-left: 5px solid #a8a7e0;
+}
+
+.entity-section.hierarchy button {
+    background: #a8a7e0;
+    color: white;
+    height: 31px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #a8a7e0;
+    border-radius: 15px;
+}
+
+/* Style for the vendor module section */
+
+.entity-section.vendor {
+    color: #5f5f5f;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff6e5;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.37);
+    border-radius: 0 2px 2px 0;
+    padding: 10px;
+    border: 1px solid #ffefce;
+    border-left: 5px solid #ffc657;
+}
+
+.entity-section.vendor button {
+    background: #e5a527;
+    color: white;
+    height: 31px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #e5a527;
+    border-radius: 15px;
+}
+
+/* Style for the location module section */
+
+.entity-section.location {
+    color: #5f5f5f;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f7eded;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.37);
+    border-radius: 0 2px 2px 0;
+    padding: 10px;
+    border: 1px solid #fbe0e0;
+    border-left: 5px solid #ca5757;
+}
+
+.entity-section.location button {
+    background: #ca5757;
+    color: white;
+    height: 31px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #ca5757;
+    border-radius: 15px;
+}
+
+/* Style for the mto module section */
+
+.entity-section.mto-option {
+    color: #5f5f5f;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #e2f5ff;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.37);
+    border-radius: 0 2px 2px 0;
+    padding: 10px;
+    border: 1px solid #c7e9fb;
+    border-left: 5px solid #029ef1;
+}
+
+.entity-section.mto-option button {
+    background: #029ef1;
+    color: white;
+    height: 31px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #029ef1;
+    border-radius: 15px;
+}
+
+/* Style for the item module section */
+
+.entity-section.item {
+    color: #5f5f5f;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ebfdf3;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.37);
+    border-radius: 0 2px 2px 0;
+    padding: 10px;
+    border: 1px solid #d1f9e0;
+    border-left: 5px solid #1db663;
+}
+
+.entity-section.item button {
+    background: #1db663;
+    color: white;
+    height: 31px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #1db663;
+    border-radius: 15px;
+}
+
+/* Style for each entity module container and its buttons end */
+
+/* Style for the dashboard widget count number section start*/
+
+.entity-count {
+    flex: 1;
+    min-width: 75px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+}
+
+/* Style for the dashboard widget count number section end*/
+
+.dashboard-section-container {
+    margin-top: 10px;
+    background: white;
+    box-shadow: 0px 1px 10px #e8e8e8;
+    border: 1px solid #e4e4e4;
+    border-radius: 3px;
+    height:230px;
+}
+
+.widget-header {
+    background: #f5f5f5;
+    padding: 7px 10px;
+    border-bottom: 1px solid #ff9191;
+}
+
+.widget-header-description {
+    color: #464646;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: lato;
+    display: flex;
+    align-items: center;
+}
+
+.widget-data {
+    border-bottom: 1px solid #ececec;
+}
+
+/* .widget-body {
+    min-height: 20px;
+    height: 200px;
+} */
+
+.widget-body-content {
+    /* height: calc(100% - 38px); */
+    overflow: auto;
+    border-top: 1px solid #ececec;
+    z-index: 1;
+    margin-top: -1px;
+}
+
+.widget-body-content .view-count {
+    color: #c30006;
+    font-weight: normal;
+    font-size: 16px !important;
+}
+
+.underline-short::after {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    height: 2px;
+    border-radius: 3px;
+    width: 25%;
+    background: #dd382d;
+    left: calc(50% - 25%);
+}
+
+.dashboard-widget-group-by {
+    padding: 0px;
+    display: flex;
+    align-items: center;
+}
+
+.dashboard-widget-group-by .item {
+    font-size: 14px;
+    cursor: pointer;
+    background: #f7f7f7;
+    color: #484848;
+    padding: 5px 25px;
+    box-shadow: inset 0px 0px 3px #b7b7b7;
+}
+
+.dashboard-widget-group-by .item:hover {
+    color: #494949;
+}
+
+.dashboard-widget-group-by .item.active {
+    padding: 5px 25px;
+    color: #3b54a0;
+    font-weight: 500;
+    background: #ffffff;
+    z-index: 5;
+    box-shadow: none;
+    border-right: 1px solid #ececec;
+    border-bottom: none;
+    margin: 0px;
+}
+
+.dashboard-table.table > tbody > tr > td {
+    font-size: 14px;
+    font-weight: 300;
+    padding: 6px 4px 3px 8px;
+    line-height: inherit;
+}
+tr:last-child td{
+    border-bottom:0;
+}
+/* .top-trending-product-table>tbody>tr:last-child>td {
+    border-bottom: 1px solid transparent;
+} */

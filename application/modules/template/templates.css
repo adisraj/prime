@@ -1,0 +1,147 @@
+.flex-1 {
+    flex:1;
+}
+.flex-2 {
+    flex:2;
+}
+.flex-3 {
+    flex:3;
+}
+
+.treeview {
+    float: left;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    background: #ffffff;
+}
+
+.template-list-container {
+    background: #ffffff;
+    border-right: 2px solid #e0e0e0;
+    height: calc(100vh - 115px);
+    padding: 10px 12px;
+    margin-top: 60px;
+}
+
+.template-sku-abbrevation {
+    border-right: 1px solid #e6e6e6;
+    min-height: 45px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-right: 5px;
+    color: #929292;
+}
+
+.template-name-header {
+    border-bottom: 1px solid #d2d2d2;
+    color: #5c6da5;
+    font-size: 12.5px;
+    padding: 8px;
+    background: linear-gradient(#ffffff, #f5f5f5);
+    font-weight: 500;
+    height: 34px;
+}
+
+.template-name-main-header {
+    padding: 30px 0px;
+    background: lightyellow;
+}
+
+.template-name-sub-section-header {
+    padding: 20px 0px;
+    background: lightyellow;
+}
+
+.template-row-data {
+    padding-left:9px;
+    font-family: 'lato',sans-serif;
+    font-weight: 600;
+}
+
+.parameter-list .template-row-data {
+    color: #b21ad8;
+}
+
+.package-list .template-row-data {
+    color:#7856d6
+}
+
+.treeview ul {
+    list-style: none;
+    padding-left: 0;
+    line-height: 2.2;
+    margin-bottom: 0px;
+}
+.treeview input {
+    display: none;
+}
+.treeview input:checked ~ label {
+    color: black;
+}
+.treeview input ~ label {
+    cursor: pointer;
+    color: #e88f00;
+    font-weight: 400;
+    font-family: "Lato", "roboto", sans-serif;
+}
+.treeview label {
+    margin-bottom: 0px;
+}
+.table-bordered{
+    box-shadow: none!important;
+}
+.template-configure-btn .active-btn{
+    fill:#4caf50;
+    color: #4caf50;
+}
+.background-transparent{
+    background: transparent;
+}
+.btn:active, .btn.active{
+    box-shadow: none;
+    background: transparent !important;
+}
+.link-color{
+    color: #2196f3;
+}
+
+.template-configure-row li {
+    background: #fbfbfb;
+}
+.template-configure-row .active-row{
+    background: #daf1fe!important;
+    box-shadow: none;
+}
+
+.optionTableSpace {
+    margin-top: 60px;
+    height: calc(100vh - 115px);
+}
+
+
+.optionTableSpace.m-t-8{
+    padding: 10px 12px;
+}
+.module-content-configurations{
+    margin-top:120px;
+}
+.editing-inline-form .valdr-message.ng-dirty.ng-invalid.ng-touched{
+    margin: 0;
+}
+
+.expanded-option-header {
+    background: #99c1d8 !important;
+    color: white !important;
+}
+
+.choice-package-header {
+    border-bottom: 1px solid #ababab;
+    border-top: 1px solid #ececec;
+    background: whitesmoke;
+}

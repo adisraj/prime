@@ -1,0 +1,254 @@
+<div data-ng-controller="CountryStateController as stateCtrl" ui-view>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/department.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">States - {{stateCtrl.selectedCountry.name}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!stateCtrl.search"> {{stateCtrl.rowsInfo}} </span>
+                        <span data-ng-if="stateCtrl.search"> Displaying
+                            {{(stateCtrl.statesList | filterBy:['id','region_name','region_code']:stateCtrl.search).length}}
+                            of
+                            {{stateCtrl.statesList.length}} Records
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    ng-if="stateCtrl.statesList.length > 0">
+                                    <div class="input-group full-width">
+                                        <input class="form-control input-sm" type="text" ng-model="stateCtrl.search"
+                                            id="inlineSearch" name="inlineSearch" data-ng-init="stateCtrl.focusSearchField()" indicate-quick-search placeholder="Quick Search"
+                                            data-ng-disabled="!stateCtrl.isLoaded" />
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="stateCtrl.statesList.length > 0">
+                            <a>
+                                <button type="button" ng-click="stateCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block btn-brd-none" data-ng-disabled="!stateCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="stateCtrl.statesList.length > 0">
+                            <a>
+                                <button type="button" ng-click="stateCtrl.reload(true);"
+                                    class="btn-primal btn-block btn-brd-none" data-ng-disabled="!stateCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-cancel f-700"
+                                    data-ui-sref="common.prime.country">Go Back</button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700" title-direction="bottom"
+                                    title="{{stateCtrl.statePermissions && !stateCtrl.statePermissions.create && stateCtrl.isLoaded ? 'Create permission is not available for the user' : 'Create State'}}"
+                                    data-ng-disabled="!stateCtrl.statePermissions.create"
+                                    data-ng-click="stateCtrl.openForm();">Create State</button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right">
+                                <li class="cursor-pointer add-btn">
+                                    <a data-ng-click="stateCtrl.openForm();"
+                                        data-ng-disabled="stateCtrl.statePermissions.view === undefined">
+                                        <i class="zmdi zmdi-plus text-success"></i> Create State </a>
+                                </li>
+                                <li ng-if="stateCtrl.statesList.length > 0">
+                                    <a data-ng-click="stateCtrl.isLoaded ? stateCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': !stateCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="stateCtrl.statesList.length > 0">
+                                    <a data-ng-click="stateCtrl.isLoaded ? stateCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': !stateCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh </a>
+                                </li>
+                                <li class="cursor-pointer">
+                                    <a data-ui-sref="common.prime.country">
+                                        <i class="zmdi zmdi-long-arrow-left"></i>
+                                        Go Back</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/country/states/hideShowColumns.html'"></div>
+    <div class="col-xs-12 text-center module-content-configuration"
+        data-ng-if="!stateCtrl.rowsCount && !stateCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="stateCtrl.rowsCount === 0 && stateCtrl.isLoaded && stateCtrl.statePermissions.view"
+        class="col-xs-12 text-center module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No state exists for selected country. Please add state.</span>
+        </div>
+    </div>
+    <div data-ng-if="stateCtrl.rowsCount !== 0 && stateCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div class="state-table-content table-responsive module-content-configuration">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="stateCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="stateCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="stateCtrl.countrySatesGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="stateCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="stateCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="name_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="stateCtrl.sortType = 'name'; sortReverse = !sortReverse"
+                                        data-ng-hide="stateCtrl.countrySatesGrid.columns.region_name.visible == 0">
+                                        <span class="handle">States Name</span>
+                                        <span ng-show="stateCtrl.sortType == 'region_name' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="stateCtrl.sortType == 'region_name' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="timezones_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="stateCtrl.sortType = 'timezones_col'; sortReverse = !sortReverse"
+                                        data-ng-hide="stateCtrl.countrySatesGrid.columns.region_code.visible == 0">
+                                        <span class="handle">States Code</span>
+                                        <span ng-show="stateCtrl.sortType == 'region_code' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="stateCtrl.sortType == 'region_code' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="states_code_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        data-ng-hide="stateCtrl.countrySatesGrid.columns.cities.visible == 0">
+                                        <span class="handle">Cities</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="state in stateCtrl.statesList|filterBy:['id','region_name','region_code']:stateCtrl.search|orderBy:'region_name'|orderBy:stateCtrl.sortType:sortReverse|itemsPerPage:stateCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="stateCtrl.setClickedRow($index);"
+                                    ios-dblclick="stateCtrl.dblClickAction(state);" selectedrow="{{state}}">
+                                    <td class="id_col"
+                                        data-ng-hide="stateCtrl.countrySatesGrid.columns.id.visible == 0">{{state.id}}
+                                    </td>
+                                    <td class="name_col"
+                                        data-ng-hide="stateCtrl.countrySatesGrid.columns.region_name.visible == 0">
+                                        {{state.region_name}}</td>
+                                    <td class="timezones_col"
+                                        data-ng-hide="stateCtrl.countrySatesGrid.columns.region_code.visible == 0">
+                                        {{state.region_code}}</td>
+                                    <td class="text-center cities_code_col"
+                                        data-ng-hide="stateCtrl.countrySatesGrid.columns.cities.visible == 0"
+                                        data-ng-class="{'cursor-not-allowed':isShowAddressContactPanel}">
+                                            <button type="button" class="btn btn-link f-700 ng-scope waves-effect"
+                                            ng-click="stateCtrl.gotoCities(state.id);"
+                                            data-ng-class="{'disable-pointer':isShowAddressContactPanel}">
+                                            <span>View</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 justify-content-between d-flex align-items-center">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                            boundary-links="true" on-page-change="stateCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="stateCtrl.pageSize = 25"
+                                ng-class="{'active':stateCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="stateCtrl.pageSize = 50"
+                                ng-class="{'active':stateCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="stateCtrl.pageSize = 100"
+                                ng-class="{'active':stateCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="stateCtrl.statePermissions && !stateCtrl.statePermissions.view && stateCtrl.isLoaded"
+        data-ng-include="'./application/templates/restricted.access.html'">
+    </div>
+    <div data-ng-include="'./application/modules/country/states/panel.country.states.form.html'"></div>
+    <div class="col-lg-12 p-0" data-ng-if="stateCtrl.statePermissions.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':stateCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{stateCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="stateCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{stateCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{stateCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="stateCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>

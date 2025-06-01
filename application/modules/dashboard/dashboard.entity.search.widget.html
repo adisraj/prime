@@ -1,0 +1,60 @@
+<!--<script type="text/ng-template" id="sku_typeahead">
+    <input id="description" name="description" type="text" class="form-control input-sm" ng-model="dashboardCtrl.description" placeholder="SKU#" uib-typeahead="each.sku as  each.sku for each in dashboardCtrl.allDescriptionList  | filter:$viewValue | limitTo:8"
+        typeahead-on-select="dashboardCtrl.searchRecords(dashboardCtrl.description)" />
+</script>
+<script type="text/ng-template" id="location_vendor_typeahead">
+    <input id="description" name="description" type="text" class="form-control input-sm" ng-model="dashboardCtrl.description" placeholder="Name" uib-typeahead="each.name as each.name for each in dashboardCtrl.allDescriptionList  | filter:$viewValue | limitTo:8"
+        typeahead-on-select="dashboardCtrl.searchRecords(dashboardCtrl.description)" />
+</script>
+<script type="text/ng-template" id="item_mto_typeahead">
+    <input id="description" name="description" type="text" class="form-control input-sm" ng-model="dashboardCtrl.description" placeholder="Description" uib-typeahead="each.description as each.description for each in dashboardCtrl.allDescriptionList  | filter:$viewValue | limitTo:8"
+        typeahead-on-select="dashboardCtrl.searchRecords(dashboardCtrl.description)" />
+</script>
+<script type="text/ng-template" id="choice_typeahead">
+    <input id="description" name="sku" type="text" class="form-control input-sm" ng-model="dashboardCtrl.description" placeholder="Choice Description" uib-typeahead="each.choice_description as each.choice_description for each in dashboardCtrl.allDescriptionList  | filter:$viewValue | limitTo:8"
+        typeahead-on-select="dashboardCtrl.searchRecords(dashboardCtrl.description)" />
+</script>
+
+<div class="col-xs-12">
+    <div class="col-lg-12 p-0 box">
+        <div class="col-lg-12 p-20">
+            <form class="d-flex">
+                <div class="col-lg-2 m-r-5 p-0">
+                    <select class="form-control select-component input-sm" ng-model="dashboardCtrl.entityDetails" ng-change="dashboardCtrl.setEntity(dashboardCtrl.entityDetails);" data-ng-options="each.entity for each in   dashboardCtrl.entityDropdown">
+                        <option value="" disabled="" selected="selected">Select Entity</option>                
+                    </select>
+                </div>
+                <div class="col-lg-8 m-r-5 p-0" ng-include src="dashboardCtrl.selectedEntity.typeahead">
+                </div>
+                <div class="col-lg-2 p-0 aligncenter">
+                    <button class="btn btn-secondary" type="button" ng-click="dashboardCtrl.searchRecords(dashboardCtrl.description)">Search</button>
+                </div>
+            </form>
+            <div ng-if="dashboardCtrl.isShowMessage">
+                <span class="c-red">No {{dashboardCtrl.selectedEntity.entity}} exist!</span>
+            </div>
+        </div>
+        <div class="col-lg-12 p-t-20" ng-if="dashboardCtrl.isShowRecord">
+            <div class="col-lg-4">
+                <div class="col-lg-12 col-md-12 col-sm-12 p-0">
+                    <img class="img-responsive thumbnail" src="https://ii1.pepperfry.com/media/catalog/product/c/a/360x180/castilla-three-seater-sofa-in-grey-colour-by-casacraft-castilla-three-seater-sofa-in-grey-colour-by--ktldcu.jpg">
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <table class="table-bordered-sm table-condensed">
+                    <tbody>
+                        <tr ng-repeat="col in dashboardCtrl.selectedEntity.showFields">
+                            <td>{{col.label}}</td>
+                            <td ng-if="col.field !== dashboardCtrl.selectedEntity.searchField"><span>{{dashboardCtrl.entityRecords[col.field]}}</span></td>
+                            <td ng-if="col.field === dashboardCtrl.selectedEntity.searchField"><span class="text-success"><b>{{dashboardCtrl.entityRecords[col.field]}}</b></span></td>
+                        </tr>
+                        <tr ng-if="dashboardCtrl.selectedEntity.entity ==='Location'">
+                            <td>{{dashboardCtrl.entityRecords.pricing_classification_group}}</td>
+                            <td>{{dashboardCtrl.entityRecords.pricing_classification_group_value_desc}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>-->

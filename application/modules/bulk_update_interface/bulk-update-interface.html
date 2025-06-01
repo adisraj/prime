@@ -1,0 +1,47 @@
+<style>
+    .arrow-style {
+        color: brown;
+    }
+
+    .short_description_col {
+        background: #fafdfb;
+    }
+
+    .arrow_box_menu:after {
+        top: 25%
+    }
+</style>
+<div class="container col-lg-12 p-0" data-ng-controller="bulkupdateinterfaceController as itemTypeCtrl">
+    <!--list panel-->
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="itemTypeCtrl.openForm()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="itemTypeCtrl.closeForm();itemTypeCtrl.isColumnSettingsVisible = false" />
+        </li>
+        <li>
+            <keybinding on="ctrl+f" invoke="itemTypeCtrl.focusSearchField()" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="itemTypeCtrl.reload('refresh')" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="itemTypeCtrl.isColumnSettingsVisible = true" />
+        </li>
+    </ul>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/entity-config-item.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Bulk Update Interface</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

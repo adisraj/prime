@@ -1,0 +1,319 @@
+<!--list panel-->
+<div class="col-lg-12 p-0" data-ng-controller="MTOTypeUDDController as mtoTypeUDDCtrl">
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="mtoTypeUDDCtrl.openForm()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="mtoTypeUDDCtrl.closeForm();mtoTypeUDDCtrl.isColumnSettingsVisible = false;" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="mtoTypeUDDCtrl.reload('refresh')" />
+        </li>
+        <li>
+            <keybinding on="ctrl+f" invoke="mtoTypeUDDCtrl.focusSearchField()" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="mtoTypeUDDCtrl.isColumnSettingsVisible = true;" />
+        </li>
+
+    </ul>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/entity-config-made-to-order.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">MTO Type User Defined Data</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="tableheader-btn">
+                        <span data-ng-if="!mtoTypeUDDCtrl.search"> {{mtoTypeUDDCtrl.rowsInfo}} </span>
+                        <span data-ng-if="mtoTypeUDDCtrl.search"> Displaying {{(mtoTypeUDDCtrl.mtostypeudd_data | filterBy:['id','status','option_type','user_defined_data_type','attribute_or_hierarchy','maintenance_description','display_sequence','required','entrylevel'] : mtoTypeUDDCtrl.search).length}} of {{mtoTypeUDDCtrl.mtostypeudd_data.length}}
+                            Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="mtoTypeUDDCtrl.mtostypeudd_data.length > 0">
+                                    <input class="form-control input-sm " type="text " ng-model="mtoTypeUDDCtrl.search" id="inlineSearch" 
+                                        name="inlineSearch" data-ng-init="mtoTypeUDDCtrl.focusSearchField()"
+                                        indicate-quick-search placeholder="Quick Search " data-ng-disabled="!mtoTypeUDDCtrl.isLoaded"
+                                    />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="mtoTypeUDDCtrl.mtostypeudd_data.length > 0">
+                            <a>
+                                <button type="button" ng-click="mtoTypeUDDCtrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect" data-ng-disabled="!mtoTypeUDDCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="mtoTypeUDDCtrl.mtostypeudd_data.length > 0">
+                            <a>
+                                <button type="button" ng-click="mtoTypeUDDCtrl.reload(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="!mtoTypeUDDCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-cancel waves-effect f-700" data-ui-sref="common.prime.mtotype">Go Back</button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="mtoTypeUDDCtrl.openForm();"
+                                data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Add User Defined Data</span></button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="mtoTypeUDDCtrl.openForm();"
+                                    style="padding: 8px 18px" class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}" data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Add User Defined Data
+                                    </button>
+                                </li>
+                                <li ng-if="mtoTypeUDDCtrl.mtostypeudd_data.length > 0">
+                                    <a data-ng-click="mtoTypeUDDCtrl.isLoaded ? mtoTypeUDDCtrl.ShowHideColumnSettings() : '' " data-ng-class="{'cursor-not-allowed': !mtoTypeUDDCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="mtoTypeUDDCtrl.mtostypeudd_data.length > 0">
+                                    <a data-ng-click="mtoTypeUDDCtrl.isLoaded ? mtoTypeUDDCtrl.reload(true) : '' " data-ng-class="{'cursor-not-allowed': !mtoTypeUDDCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                                <li>
+                                    <a data-ui-sref="common.prime.mtotype">
+                                        <i class="zmdi zmdi-long-arrow-left"></i> Go Back</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 p-l-15 m-b-15 module-content-configuration" data-ng-if="mtoTypeUDDCtrl.rowsCount > 0 && mtoTypeUDDCtrl.isLoaded">
+        <div class="d-flex d-flex-v-center flex-wrap">
+            <span class="f-300 text-nowrap">Showing UDDs for : </span>
+            <div class="selected-description m-l-5 m-b-5" data-ng-repeat="data in mtoTypeUDDCtrl.selectedDescription | limitTo : mtoTypeUDDCtrl.typeLimit">
+                <span>
+                    {{data.option_type}}
+                </span>
+            </div>
+            <div class="cursor-pointer selected-description load-more m-l-5 m-b-5" data-ng-if="mtoTypeUDDCtrl.selectedDescription.length > mtoTypeUDDCtrl.typeLimit" data-ng-click="mtoTypeUDDCtrl.typeLimit = mtoTypeUDDCtrl.typeLimit+5">
+                <span> Load more </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!mtoTypeUDDCtrl.rowsCount && !mtoTypeUDDCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="mtoTypeUDDCtrl.rowsCount > 0 && mtoTypeUDDCtrl.isLoaded">
+        <div class="rcp-table-container" ng-if="permissionsMap.view">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/mto/type.udd/hideShowColumns.html'"></div>
+                <div class="table-responsive">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="mtoTypeUDDCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'status' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'status' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="option_type_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'option_type'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.optionType.visible == 0">
+                                        <span class="handle">Option Type</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'option_type' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'option_type' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="user_defined_data_type_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'user_defined_data_type'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.userDefinedDataType.visible == 0">
+                                        <span class="handle">UDD Type</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'user_defined_data_type' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'user_defined_data_type' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="attribute_or_hierarchy_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'attribute_or_hierarchy'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.attributesFacts.visible == 0">
+                                        <span class="handle">User Defined Data</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'attribute_or_hierarchy' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'attribute_or_hierarchy' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="maintenance_description_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'maintenance_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.description.visible == 0">
+                                        <span class="handle">Description</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'maintenance_description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'maintenance_description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="default_value_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'default_value'; sortReverse = !sortReverse"
+                                    data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.default_value.visible == 0">
+                                        <span class="handle">Default Value</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'default_value' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'default_value' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="entrylevel_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'entrylevel'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.entryLevel.visible == 0">
+                                        <span class="handle">Entry Level</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'entrylevel' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'entrylevel' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="display_sequence_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'display_sequence'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.displaySequence.visible == 0">
+                                        <span class="handle">Sequence</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'display_sequence' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'display_sequence' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="required_col_head" drag-me drop-me data-handle=".handle" ng-click="mtoTypeUDDCtrl.sortType = 'required'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.required.visible == 0">
+                                        <span class="handle">Required</span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'required' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeUDDCtrl.sortType == 'required' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="datalake_col_head" drag-me drop-me data-handle=".handle" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.datalake.visible == 0">
+                                        <span class="handle">Documents</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="mtotype_udd in mtoTypeUDDCtrl.mtostypeudd_data | filterBy:['id','status','option_type','user_defined_data_type','attribute_or_hierarchy','maintenance_description','default_value_view || default_value','display_sequence','required','entrylevel'] : mtoTypeUDDCtrl.search|orderBy:mtoTypeUDDCtrl.sortType:sortReverse|itemsPerPage:mtoTypeUDDCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}" data-ng-click="mtoTypeUDDCtrl.setClickedRow($index);"
+                                    ios-dblclick="mtoTypeUDDCtrl.dblClickAction(mtotype_udd);" selectedrow="{{mtotype_udd}}">
+                                    <td class="id_col text-center" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.id.visible == 0">{{mtotype_udd.id}}</td>
+                                    <td class="status_col" ng-class="{'text-success f-500': mtotype_udd.status==='Active' , 'text-warning f-300': mtotype_udd.status ==='Pending Active', 'text-primary f-300': mtotype_udd.status ==='Inactive','text-info f-300': mtotype_udd.status==='Pending Inactive'}"
+                                        data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.status.visible == 0">{{mtotype_udd.status}}
+
+                                    </td>
+                                    <td class="option_type_col" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.optionType.visible == 0">{{mtotype_udd.option_type}}</td>
+                                    <td class="user_defined_data_type_col" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.userDefinedDataType.visible == 0">{{mtotype_udd.user_defined_data_type}}
+
+                                    </td>
+
+                                    <td class="attribute_or_hierarchy_col" ng-class="{'significant-attribute': mtotype_udd.is_important}" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.attributesFacts.visible == 0">{{mtotype_udd.attribute_or_hierarchy}}
+                                    </td>
+
+                                    <td class="maintenance_description_col" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.description.visible == 0">{{mtotype_udd.maintenance_description}}
+                                    </td>
+                                    <td class="default_value_col" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.default_value.visible == 0">
+                                        <span title="{{mtotype_udd.default_value_view}}" data-ng-if="mtotype_udd.user_defined_data_type.toLowerCase() !== 'hierarchy'">
+                                            <span data-ng-if="mtotype_udd.default_value_view">{{mtotype_udd.default_value_view | truncate : 50}}
+                                            </span>
+                                            <span ng-if="mtotype_udd.default_value && (mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase()==='url')"><span data-ng-if="mtotype_udd.default_value&&mtotype_udd.default_value.split('::')[0]">{{mtotype_udd.default_value.split('::')[0]}}::</span>{{mtotype_udd.default_value.split('::')[1]}}</span>
+                                            <span title="{{mtotype_udd.default_value}}" data-ng-if="!mtotype_udd.default_value_view && mtotype_udd.default_value && (mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase()!=='url'&&mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase() !== 'value list' && mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase() !== 'rating' && mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase() !== 'multiselect')">{{mtotype_udd.default_value |truncate:50}}<span data-ng-if="mtoTypeUDDCtrl.attributeListMap && mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase() === 'percentage' && mtotype_udd.default_value">%</span>
+                                            </span>
+                                        </span>
+                                        <span data-ng-if="mtotype_udd.user_defined_data_type.toLowerCase() === 'hierarchy'" data-ng-init="mtoTypeUDDCtrl.fetchHierarchyValuesByHierarchyId(mtotype_udd);" ng-bind-html="mtotype_udd.default_value_path">
+                                        </span>
+                                        <span data-ng-if="(!mtotype_udd.default_value_view && !mtotype_udd.default_value) || (!mtotype_udd.default_value_view && mtotype_udd.default_value && (mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase() === 'value list' || mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase() === 'rating' || mtoTypeUDDCtrl.attributeListMap[mtotype_udd.user_defined_data_id].format.toLowerCase() === 'multiselect'))" class="text-muted">Not Configured</span>
+                                    </td>
+                                    <td class="entrylevel_col" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.entryLevel.visible == 0">{{mtotype_udd.entrylevel}}
+                                    </td>
+                                    <td class="display_sequence_col text-center" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.displaySequence.visible == 0">{{mtotype_udd.display_sequence}}
+                                    </td>
+                                    <td class="required_col" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.required.visible == 0">{{mtotype_udd.required}}
+                                    </td>
+                                    <td class="datalake_col text-center" data-ng-hide="mtoTypeUDDCtrl.mtoUddGrid.columns.datalake.visible == 0">
+                                        <button type="button" class="p-l-5 header-button datalake-button" ng-click="showMetaData(mtoTypeUDDCtrl.entityInformation,mtotype_udd,permissionsMap);" data-ng-disabled="!permissionsMap.drop">
+                                            <span class="zmdi zmdi-cloud zmdi-hc-fw" data-ng-if="permissionsMap.drop" title="Click here to manage documents" title-direction="left" fixed-position="true"></span>
+                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw" data-ng-if="!permissionsMap.drop" title="Access denied" title-direction="left" fixed-position="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="mtoTypeUDDCtrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtoTypeUDDCtrl.pageSize = 10" ng-class="{'active':mtoTypeUDDCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtoTypeUDDCtrl.pageSize = 25" ng-class="{'active':mtoTypeUDDCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtoTypeUDDCtrl.pageSize = 50" ng-class="{'active':mtoTypeUDDCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="mtoTypeUDDCtrl.pageSize = 100" ng-class="{'active':mtoTypeUDDCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <meta-data-panel></meta-data-panel>
+    </div>
+    <div ng-if="permissionsMap && !permissionsMap.view && mtoTypeUDDCtrl.isLoaded" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <!-- Modal to show dislpay sequence update notification - START-->
+    <div data-ng-include="'./template/view.update.display.sequence.html'"></div>
+    <!-- Modal to show dislpay sequence update notification - END-->
+    <ui-view></ui-view>
+    <div data-ng-if="mtoTypeUDDCtrl.rowsCount === 0 && mtoTypeUDDCtrl.isLoaded && permissionsMap.view" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No user defined data exists for selected MTO type[s]. Please add user defined data.</span>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':mtoTypeUDDCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{mtoTypeUDDCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="mtoTypeUDDCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{mtoTypeUDDCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{mtoTypeUDDCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="mtoTypeUDDCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+<div>
+    <div id="rcrightsidebar" class="rcp-scrollbar associate-sku-list"
+        data-ng-class="{'toggled':venMaintCtrl.isEditVendorName && venMaintCtrl.edit_vendor.individual_or_company.toLowerCase()=='individual'}">
+        <!-- Section for Panel header and icon start -->
+        <div>
+            <div class="m-t-25" style="display:flex">
+                <div class="p-0 p-absolute cursor-pointer">
+                    <a class="cursor-pointer" data-ng-click="venMaintCtrl.isEditVendorName = false; venMaintCtrl.isUpdateNameSuccess = false; venMaintCtrl.nameValidationMessage = '';">
+                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                    </a>
+                </div>
+                <div class="p-0 m-auto">
+                    <label class="rclabel editformlabel" title="Edit Vendor Name">
+                        <strong>Edit Vendor Name</strong>
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-12" data-ng-if="!venMaintCtrl.isUpdateNameSuccess">
+                <div class="m-b-10 m-t-10" data-ng-if="venMaintCtrl.edit_vendor.individual_or_company.toLowerCase()=='individual'" data-ng-init="venMaintCtrl.getModelAndSetValidationRules('28');">
+                    <div class="d-flex">
+                        <div class="m-auto updatepanel">
+                            <div data-ng-include="'./img/sidebar-icons/submenu_individual.svg'"></div>
+                        </div>
+                    </div>
+                    <ng-form name="venMaintCtrl.individual_form" role="form">
+                        <div class="m-auto updatepanel">
+                            <div class="form-group">
+                                <span class="c-red" ng-show="venMaintCtrl.individual_form.first_name.$invalid">* </span>
+                                <span class="c-green" ng-show="venMaintCtrl.individual_form.first_name.$valid">* </span>
+                                <label>Individual First Name</label>
+                                <input id="first_name" name="first_name" type="text" class="form-control input-sm"
+                                    data-ng-change="venMaintCtrl.validateIndividualUpdateForm(venMaintCtrl.edit_vendor)"
+                                    ng-model="venMaintCtrl.edit_vendor.first_name" placeholder="Enter Individual First Name"
+                                    errorvalue="venMaintCtrl.edit_vendor.first_name_error">
+                            </div>
+                            <div class="form-group">
+                                <span class="c-red" ng-show="venMaintCtrl.individual_form.last_name.$invalid">* </span>
+                                <span class="c-green" ng-show="venMaintCtrl.individual_form.last_name.$valid">* </span>
+                                <label>Individual Last Name</label>
+                                <input id="last_name" name="last_name" type="text" class="form-control input-sm"
+                                    data-ng-change="venMaintCtrl.validateIndividualUpdateForm(venMaintCtrl.edit_vendor)"
+                                    ng-model="venMaintCtrl.edit_vendor.last_name" placeholder="Enter Individual Last Name"
+                                    errorvalue="venMaintCtrl.edit_vendor.last_name_error">
+                            </div>
+                            <div class="form-group">
+                                <span class="p-5 text-danger f-300" data-ng-if="venMaintCtrl.nameValidationMessage">{{venMaintCtrl.nameValidationMessage}}</span>
+                            </div>
+                        </div>
+                        <button data-ng-if="venMaintCtrl.nothingToUpdate!==true" data-ng-disabled="(venMaintCtrl.nameValidationMessage && venMaintCtrl.nameValidationMessage.length) || !venMaintCtrl.edit_vendor.name || venMaintCtrl.edit_vendor.name.length===0" type="button" class="btn-block btn-primal btn-lg tabfocus-btn ng-scope" id="update_btn" ng-click="venMaintCtrl.updateVendorName(venMaintCtrl.edit_vendor)">
+                            <div title="" class="ng-isolate-scope">
+                                <strong class="ng-binding">Update</strong></div>
+                        </button>
+                    <button data-ng-if="venMaintCtrl.nothingToUpdate==true" type="button" class="m-t-10 btn-primal btn-danger c-white btn-lg btn-block"
+                            data-ng-disabled="venMaintCtrl.disableActions || !venMaintCtrl.vendorPermissions.delete">
+                            <div title="{{!venMaintCtrl.vendorPermissions.delete ? 'Access denied' : ''}}"
+                                title-direction="top" fixed-position="true">
+                                <strong class="ng-binding">Nothing To Update</strong>
+                        </button>
+                        <div class="m-t-10" data-ng-if="venMaintCtrl.updateError">
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-ng-click="venMaintCtrl.updateError = null" aria-hidden="true">&times;</button> {{venMaintCtrl.updateError}}
+                            </div>
+                        </div>
+                    </ng-form>
+                </div>
+
+                <!-- <div class="m-b-10 m-t-10" data-ng-if="venMaintCtrl.edit_vendor.individual_or_company.toLowerCase()=='company'" data-ng-init="venMaintCtrl.getModelAndSetValidationRules('6');">
+                    <div class="d-flex">
+                        <div class="m-auto updatepanel">
+                            <div data-ng-include="'./img/sidebar-icons/submenu_company.svg'"></div>
+                        </div>
+                    </div>
+                    <ng-form name="venMaintCtrl.individual_form" valdr-type="RULES-6" role="form" novalidate="novalidate">
+                        <div class="m-auto updatepanel">
+                            <div class="form-group" valdr-form-group>
+                                <span class="c-red" ng-show="venMaintCtrl.individual_form.name.$invalid">* </span>
+                                <span class="c-green" ng-show="venMaintCtrl.individual_form.name.$valid">* </span>
+                                <label>Company Name</label>
+                                <input id="name" name="name" type="text" class="form-control input-sm"
+                                    ng-model="venMaintCtrl.edit_vendor.name" placeholder="Enter Company Name" 
+                                    errorvalue="venMaintCtrl.edit_vendor.name_error" ng-model-options="{ updateOn: 'blur' }"
+                                    required>
+                            </div>
+                            <button data-ng-if="venMaintCtrl.nothingToUpdate!==true" data-ng-disabled="!venMaintCtrl.edit_vendor.name || venMaintCtrl.edit_vendor.name.length===0" type="button" class="btn-block btn-primal btn-lg tabfocus-btn ng-scope" id="update_btn" ng-click="venMaintCtrl.updateVendorName(venMaintCtrl.edit_vendor)">
+                                <div title="" class="ng-isolate-scope">
+                                    <strong class="ng-binding">Update</strong></div>
+                            </button>
+                            <button data-ng-if="venMaintCtrl.nothingToUpdate==true" type="button" class="m-t-10 btn-primal btn-danger c-white btn-lg btn-block">
+                            <div title-direction="top" fixed-position="true">
+                                <strong class="ng-binding">Nothing To Update</strong>
+                        </button>
+                        <div class="m-t-10" data-ng-if="venMaintCtrl.updateError">
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-ng-click="venMaintCtrl.updateError = null" aria-hidden="true">&times;</button> {{venMaintCtrl.updateError}}
+                            </div>
+                        </div>
+                        </div>
+                    </ng-form>
+                </div> -->
+            </div>
+            <keybinding on="esc" invoke="closeFn()" />
+            <div data-ng-if="venMaintCtrl.isUpdateNameSuccess" class="form-group col-xs-12" valdr-form-group>
+                <img class="updatesuccessicon" src="./img/success_tick.svg" />
+                <label class="editformlabel success-page-text text-center">You have updated
+                    <strong>Successfully!</strong></label>
+                <button type="button" class="btn-block btn-primal btn-lg" id="done_btn" data-ng-click="venMaintCtrl.isEditVendorName=false;venMaintCtrl.isUpdateNameSuccess=false;">
+                    <strong>Done</strong>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

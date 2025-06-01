@@ -1,0 +1,89 @@
+<div id="rcrightsidebar" class="rcpscrollbar" data-ng-class="{'toggled':availabilityController.isShowInventoryUpdate}" data-ng-if="!availabilityController.showLockedScreen">
+    <div class="m-t-25 d-flex">
+        <button type="button" class="cursor-pointer p-0 p-absolute bg-none border-none btn-link" data-ng-click="availabilityController.isShowInventoryUpdate = false;availabilityController.focusBacktoToggle()">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="p-0 m-auto">
+            <label class="rclabel editformlabel" title="Update Inventory Availability">Manage
+                <strong>Inventory Details</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-lg-12 m-t-20 m-b-20">
+        <div class="d-flex m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/sku-availability.svg'"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="form-group col-xs-12 p-0 f-14">
+            Location :
+            <span class="f-700 text-primary">{{availabilityController.selectedAvailability.name}}</span>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div>
+                <ng-form name="availabilityController.inventory_form" role="form" novalidate="novalidate">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="availabilityController.inventory_form.inventory_type.$invalid">* </span>
+                        <span class="c-green" ng-show="availabilityController.inventory_form.inventory_type.$valid">* </span>
+                        <label>Inventory Type</label>
+                        <select class="form-control select-component input-sm tabfocus" auto-focus id="inventory_type_id" name="inventory_type"
+                            data-ng-options="type.id as type.inventory_type for type in availabilityController.inventoryTypes" ng-model="availabilityController.inventoryDetails.inventory_type_id"
+                            data-ng-change="availabilityController.inventoryDetails.inventory_type = (availabilityController.inventoryTypes|filter:{id:availabilityController.inventoryDetails.inventory_type_id})[0].inventory_type"
+                            required>
+                            <option value="" disabled>Select Inventory Type</option>
+                        </select>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="availabilityController.inventory_form.inventory_quality.$invalid">* </span>
+                        <span class="c-green" ng-show="availabilityController.inventory_form.inventory_quality.$valid">* </span>
+                        <label>Inventory Quality</label>
+                        <select class="form-control select-component input-sm tabfocus" id="inventory_quality_id" name="inventory_quality"
+                            data-ng-options="quality.id as quality.quality for quality in availabilityController.qualitiesList" data-ng-change="availabilityController.inventoryDetails.inventory_quality = (availabilityController.qualitiesList|filter:{id:availabilityController.inventoryDetails.inventory_quality_id})[0].quality"
+                            ng-model="availabilityController.inventoryDetails.inventory_quality_id" required>
+                            <option value="" disabled>Select Quality</option>
+                        </select>
+                    </div>
+                    <div class="form-group m-b-15" valdr-form-group>
+                        <span class="c-red" ng-show="availabilityController.inventory_form.inventory_quantity.$invalid">* </span>
+                        <span class="c-green" ng-show="availabilityController.inventory_form.inventory_quantity.$valid">* </span>
+                        <label>Quantity</label>
+                        <div class="d-flex d-flex-v-center">
+                            <div class="input-group-percentage m-r-10">
+                                <input class="input-sm form-control" id="inventory_quantity" name="inventory_quantity" maxlength="9" only-integer type="text" placeholder="Enter Quantity" ng-model="availabilityController.inventoryDetails.inventory_quantity"
+                                    required/>
+                            </div>
+                            <label class="d-flex align-items-center text-success f-700 m-r-15">
+                                <input type="radio" name="method" ng-model="availabilityController.inventoryDetails.method" value="1">
+                                <i class="input-helper"></i> Increase
+                            </label>
+                            <label class="d-flex align-items-center text-danger f-700">
+                                <input type="radio" name="method" ng-model="availabilityController.inventoryDetails.method" value="0">
+                                <i class="input-helper"></i> Decrease
+                            </label>
+                        </div>
+                    </div>
+                    <div class="fg-line form-group">
+                        <button type="button" class="btn-block btn-primal btn-lg" id="update_btn" ng-click="availabilityController.updateInventoryAvailibility(availabilityController.inventoryDetails);"
+                            data-ng-disabled="availabilityController.inventory_form.$invalid || availabilityController.updatingInventory || !(availabilityController.inventoryDetails.method)">
+                            <strong>{{availabilityController.inventoryUpdateBtn}}</strong>
+                    </div>
+                </ng-form>
+            </div>
+            <div class="col-xs-12 p-0">
+                <div data-ng-if="availabilityController.inventoryMessage" class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-ng-click="availabilityController.inventoryMessage = null" aria-hidden="true">&times;</button>
+                    {{availabilityController.inventoryMessage}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<secondary-authentication
+    feature-code="'sku-availability'"
+    show-locked-screen="availabilityController.showLockedScreen"
+    close-fn="availabilityController.isShowInventoryUpdate = false; availabilityController.showLockedScreen = false;"
+    is-show-inventory-update="availabilityController.isShowInventoryUpdate"
+    data-ng-if="availabilityController.showLockedScreen">
+</secondary-authentication>

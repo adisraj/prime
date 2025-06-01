@@ -1,0 +1,37 @@
+<div class="lock-screen-modal" data-ng-if="vm.showModel" ng-keyup="$event.keyCode === vm.common.ShortCuts.global.close.key && closeFn()">
+    <ul style="display:none;">
+        <li>
+            <keybinding on="esc" invoke="closeFn();" />
+        </li>
+    </ul>
+    <div class="p-10" style="background: #0d964a;color: #ddffec;font-weight: 600;font-size: 15px;border-bottom: 1px dotted;font-variant: small-caps;">
+        <span>Security check for validating privilege</span>
+    </div>
+    <div class="modal-container d-flex">
+        <div class="img-section p-5 d-flex m-t-10">
+            <img src="./img/locked-icon.svg" style="height:115px"/>
+        </div>
+        <div class="data-section flex-fill">
+            <div class="d-flex flex-column m-b-10">
+                <span class="f-22">Unlock</span>
+                <span class="text-muted f-300">Enter password to unlock</span>
+            </div>
+            <ng-form name="secondaryPasswordForm" autocomplete="off">
+                <div class="m-b-10">
+                    <a href="" class="f-14">{{ vm.currentUserName }}</a>
+                </div>
+                <div class="m-b-10">
+                    <input type="password" id="clone_password" name="clone_password" auto-focus autocomplete="off" rc-on-enter="vm.unlockWithSecondaryPassword();"
+                        class="form-control input-sm" placeholder="Enter Password" ng-model="vm.secondaryPassword">
+                </div>
+                <div>
+                    <span class="text-danger">{{ vm.message }}</span>
+                    <button name="auth-unlock" id="auth-unlock" class="btn btn-primary btn-sm pull-right"
+                        data-ng-click="vm.unlockWithSecondaryPassword();"> Unlock </button>
+                    <button name="auth-cancel" id="auth-cancel" class="btn btn-cancel btn-sm pull-right m-r-5"
+                        data-ng-click="vm.restoreScroll();closeFn();vm.focusCloneItem();vm.focusCloneSku();"> Cancel </button>
+                </div>
+            </ng-form>
+        </div>
+    </div>
+</div>

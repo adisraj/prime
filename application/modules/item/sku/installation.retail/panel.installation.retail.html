@@ -1,0 +1,129 @@
+<style>
+    button#create_new_btn {
+    display: none;
+}
+</style>
+<div id="rcrightsidebar" class="toggled" data-ng-controller="SKUInstallationRetailController as installationRetailController">
+    <div class="m-t-25" style="display:flex">
+        <button type="button" class="p-0 p-absolute cursor-pointer bg-none border-none btn-link" ng-click="installationRetailController.goBack();">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="p-0 m-auto">
+            <label class="rclabel editformlabel" title="UPC">Installation
+                <strong>Fees</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" data-ng-if="!installationRetailController.isSaveSuccess && !installationRetailController.isDeleteSuccess">
+        <div class="d-flex m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/clone/module.svg'"></div>
+            </div>
+        </div>
+        <!-- Form fields section start -->
+        <div class="form-group col-xs-12 p-0">
+            <ng-form role="form" novalidate="novalidate" name="installationRetailController.installation_retail_form">
+                <div class="col-xs-12 p-5">
+                    <span>SKU:
+                        <span class="p-l-5 text-warning f-500">{{installationRetailController.skuDetails.description}}</span>
+                    </span>
+                </div>
+                <div class="col-xs-12 p-0 m-t-5 box maintenanceworkspace">
+                    <div class="col-xs-12 p-10">
+                        <div class="col-xs-12 p-0">
+                            <div class="col-xs-12 p-0">
+                                <div class="form-group" valdr-form-group>
+                                    <label class="panel-body-label">Effective Date</label>
+                                    <input type="text" ng-disabled="installationRetailController.isUpdate===true" id="copy_to_effective_date"
+                                        name="copy_to_effective_date" required class="form-control input-sm rcp-mydatepicker"
+                                        ng-model="installationRetailController.installationRetail.effective_date" ui-mask="{{ui_date_mask}}"
+                                        mydatepicker model-view-value="true" is-effective-date="false">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 form-group">
+                                <div class="" valdr-form-group>
+                                    <label class="panel-body-label">Installation price</label>
+                                    <input id="price" name="price" type="number" auto-focus min="1" max="1000000" ng-pattern="/^[0-9]+(\.[0-9]{0,1000})?$/" class="form-control input-sm" decimal-numbers
+                                        ng-model="installationRetailController.installationRetail.installation_charge" placeholder="Price"
+                                        required>
+                                </div>
+                                <span class="text-danger" ng-if="installationRetailController.installation_retail_form.price.$invalid && installationRetailController.installation_retail_form.price.$dirty">
+                                Installation Charge can be between 1 to 1000000 only.
+                                </span>
+                            </div>
+                            <div class="col-xs-12 p-0 form-group">
+                                <div class="" valdr-form-group>
+                                    <label class="panel-body-label">Installation cost</label>
+                                    <input id="cost" name="cost" type="number" min="1" max="999999999999" ng-pattern="/^[0-9]+(\.[0-9]{0,2})?$/" decimal-numbers
+                                     class="form-control input-sm" ng-model="installationRetailController.installationRetail.installation_cost" placeholder="Cost"
+                                        required>
+                                </div>
+                                <span class="text-danger" ng-if="installationRetailController.installation_retail_form.cost.$invalid && installationRetailController.installation_retail_form.cost.$dirty">
+                                Cost has to be between min:1 and max:9,99,99,99,99,999 with two decimals (Eg:x.xx).
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 text-info d-flex d-flex-v-center m-b-10" style="justify-content: space-between;">
+                        <button class="btn btn-success btn-sm f-700 pull-right " ng-disabled="!installationRetailController.installationRetail.installation_charge || installationRetailController.installation_retail_form.$invalid || !installationRetailController.installationRetail.effective_date || installationRetailController.isProcessing===true"
+                            data-ng-click="installationRetailController.createOrUpdateInstallationRetail();">
+                            {{installationRetailController.button}}
+                        </button>
+
+                        <button class="btn btn-cancel btn-sm f-700 pull-right " ng-if="installationRetailController.isUpdate===true" ng-disabled1="!installationRetailController.installationRetail.installation_charge || !installationRetailController.installationRetail.effective_date || installationRetailController.isProcessing===true"
+                            data-ng-click="installationRetailController.cancelUpdate()">Cancel</button>
+                    </div>
+                </div>
+            </ng-form>
+        </div>
+        <!-- Form fields section end -->
+        <div class="col-xs-12 p-0">
+            <div data-ng-if="installationRetailController.message" class="alert alert-success">
+                <button type="button" class="close" data-ng-click="installationRetailController.message = null" aria-hidden="true">&times;</button>{{installationRetailController.message}}
+            </div>
+            <div data-ng-if="installationRetailController.error" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="installationRetailController.error = null" aria-hidden="true">&times;</button>{{installationRetailController.error}}
+            </div>
+        </div>
+        <!-- Table information display section start -->
+        <div class="col-xs-12 p-0 m-t-10" ng-if="installationRetailController.installationRetails.length>0">
+            <table class="table table-condensed table-bordered table-responsive table-vmiddle m-b-20" data-ng-class="">
+                <thead>
+                    <tr role="row ">
+                        <th>Effective Date</th>
+                        <th>Installation Retail</th>
+                        <th>Installation Cost</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="installation_retail in installationRetailController.installationRetails | orderBy: 'effective_date'" ios-dblclick="installationRetailController.updateInstallationRetail(installation_retail)">
+                        <td>{{installation_retail.effective_date | FormatDate}}</td>
+                        <td class="retail-text">{{installation_retail.installation_charge | ThousandSeparator:"$":2}}</td>
+                        <td class="retail-text">{{installation_retail.installation_cost | ThousandSeparator:"$":2}}</td>
+                        <td style="width:5%">
+                            <button class="btn btn-link" type="button" ng-if="!installation_retail.showRemoveConfirmation" ng-click="installation_retail.showRemoveConfirmation=!installation_retail.showRemoveConfirmation" data-ng-disabled="installationRetailController.isProcessing===true || (installationRetailController.isUpdate===true && installationRetailController.installationRetail.id===installation_retail.id)">
+                                <span class="zmdi zmdi-delete zmdi-hc-fw text-danger f-14"></span>
+                            </button>
+                            <span ng-if="installation_retail.showRemoveConfirmation">
+                                <i class="zmdi zmdi-check m-r-5" data-ng-class="{'opacity50': installationRetailController.isProcessing}"
+                                    data-ng-click="installation_retail.isProcessing ? null : installationRetailController.deleteInstallationRetail(installation_retail);"
+                                    style="background-color: #008e00; color: white; padding: 1px 5px 2px 5px; font-size: 15px; margin-top: 3px;"></i>
+                                <i class="zmdi zmdi-close" data-ng-class="{'opacity50': venMaintCtrl.isProcessing}" data-ng-click="installation_retail.isProcessing ? null : installation_retail.showRemoveConfirmation = false"
+                                    style="background-color: #f44336; color: white; padding: 1px 6px 2px 6px; font-size: 15px; margin-top: 3px;"></i>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-12 m-t-10 p-0 p-t-10 text-center text-info" ng-if="installationRetailController.installationRetails.length===0">
+            <span>Installation Retails does not exist for the selected SKU.</span>
+        </div>
+        <!-- Table information display section end -->
+    </div>
+    <div class="col-xs-12" data-ng-if1="installationRetailController.isSaveSuccess">
+        <rcp-success-form  success-tick="success_tick.svg"
+        save-success="installationRetailController.isSaveSuccess"  delete-success="installationRetailController.isDeleteSuccess" close-fn="installationRetailController.goBack()"></rcp-success-form>
+    </div>
+</div>

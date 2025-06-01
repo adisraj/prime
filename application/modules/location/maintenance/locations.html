@@ -1,0 +1,777 @@
+<style>
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+    }
+    .location-advance-search multiselect .btn-group button.btn.btn-default.dropdown-toggle.waves-effect:focus {
+    border-left: 3px solid #f9c10c !important;
+    background: white!important;
+    outline: none!important;
+    margin-left: -3px;
+}
+</style>
+<div class="container col-lg-12 p-0 p-b-30" data-ng-controller="LocationController as locationController"
+    data-auto-scroll>
+    <!--list panel-->
+    <!-- This ui-view will replace the main state with different state(eg:new or update state) -->
+    <ul style="display:none">
+        <li>
+            <keybinding on="ctrl+f" invoke="locationController.focusSearchField()" />
+        </li>
+    </ul>
+    <div ui-view>
+        <div data-ng-init="locationController.setInitialHeight();">
+            <div class="col-lg-12 p-0 rc-module-header-wrapper" style="height: auto;">
+                <!-- Section to show the module header section -->
+                <div class="rc-module-header" style="height: auto;">
+                    <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+                        <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                            <div class="p-relative">
+                                <div class="image-module p-absolute top-10">
+                                    <img src="./img/sidebar-icons/entity-config-location.svg" />
+                                </div>
+                                <div class="label-module top-10">
+                                    <a class="p-l-40" href="javascript:void(0)">Locations</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap.view">
+                            <div class="d-flex d-flex-v-center p-l-20">
+                                <span data-ng-show="!locationController.groupByField" class="f-12">Loaded
+                                    <i class="zmdi zmdi-hourglass-alt" ng-if="!locationController.locationsDataList.length && locationController.locationsDataList.length != 0"></i>{{locationController.locationsDataList.length}}
+                                    of
+                                    <i class="zmdi zmdi-hourglass-alt" ng-if="!locationController.totalRecordCount && locationController.totalRecordCount != 0"></i>{{locationController.totalRecordCount}}
+                                    Records
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex p-0" data-ng-if="locationController.isFilterApplied && locationController.appliedFilterCount">
+                            <button type="button" id="filter_applied" name="filter_applied" class="hidden-sm visible-md visible-lg bg-none border-none"
+                                data-toggle="collapse" data-target="#advanced-search" data-ng-disabled="(
+                                    (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                    (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                )"
+                                data-ng-click="locationController.showAdvancedSearchPanel(true);">
+                                <span class="c-red m-t-10">
+                                    <i class="fa fa-filter p-r-5"></i>{{locationController.appliedFilterCount}} Filter(s) Applied
+                                </span>
+                            </button>
+                            <button type="button" class="hidden-lg hidden-md visible-sm bg-none border-none"
+                                data-toggle="collapse" data-target="#advanced-search" data-ng-disabled="(
+                                    (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                    (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                )"
+                                data-ng-click="locationController.showAdvancedSearchPanel(true);">
+                                <span class="c-red m-t-10">
+                                    <i class="fa fa-filter p-r-5"></i>{{locationController.appliedFilterCount}}
+                                </span>
+                            </button>
+                            <button type="button" id="reset_btn" name="reset_btn" class="hidden-sm bg-none border-none"
+                                data-ng-click="locationController.resetFilters();" data-ng-disabled="(
+                                    (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                    (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                )">
+                                <span class="text-primary m-t-10 m-l-10">
+                                    <i class="fa fa-undo f-12 p-r-5" aria-hidden="true"></i>Reset Filters
+                                </span>
+                            </button>
+                        </div>
+                        <div class="d-flex">
+                            <div id="navbar" class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li ng-if="locationController.locationsDataList.length > 0 && permissionsMap.view">
+                                        <a class="d-flex">
+                                            <div class="group-by-section tableheader-btn" ng-init="locationController.sortBy = locationController.sortByField !== 'none' ? locationController.sortByField : sortableFields[0].value"
+                                                style="width: 180px;">
+                                                <select class="form-control select-component input-sm" ng-options="each.value as each.field for each in sortableFields"
+                                                    ng-model="locationController.sortBy" ng-change="locationController.sortByField=locationController.sortBy;locationController.sortByOrder='asc'; locationController.isGroupByApplied ? locationController.groupByData(locationController.groupByField) : locationController.FetchLocations();locationController.scrollToPosition(0, 0);"
+                                                    data-ng-disabled="(
+                                                        (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                                        (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                                    )">
+                                                </select>
+                                            </div>
+                                            <div class="tableheader-btn" ng-if="locationController.sortByOrder==='asc' && locationController.sortBy !== 'none' && locationController.sortBy !== '' && locationController.isLoaded"
+                                                data-ng-click="locationController.sortByOrder = 'desc'; locationController.isGroupByApplied ? locationController.groupByData(locationController.groupByField) : locationController.FetchLocations(); locationController.scrollToPosition(0, 0); ">
+                                                <span>
+                                                    <i class="m-t-5 zmdi zmdi-long-arrow-down zmdi-hc-fw f-700 f-20"
+                                                        style="color: firebrick;"></i>
+                                                </span>
+                                            </div>
+                                            <div class="tableheader-btn" ng-if="locationController.sortByOrder==='desc' && locationController.sortBy !== 'none' && locationController.sortBy !== '' &&locationController.isLoaded"
+                                                data-ng-click="locationController.sortByOrder = 'asc'; locationController.isGroupByApplied ? locationController.groupByData(locationController.groupByField) : locationController.FetchLocations(); locationController.scrollToPosition(0, 0);">
+                                                <span>
+                                                    <i class="m-t-5 zmdi zmdi-long-arrow-up zmdi-hc-fw f-700 f-20"
+                                                        style="color: firebrick;"></i>
+                                                </span>
+                                            </div>
+                                            <!-- ng-if consists condition for recordsCount is true - couse, when recordsCount is false there is another loading symbol -->
+                                            <span class="cursor-not-allowed" ng-if="!locationController.isLoaded && locationController.recordsCount">
+                                                <img src="./img/loading-circle.gif" style="height: 30px;width: 30px;" />
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li ng-if="locationController.locationsDataList.length > 0 && permissionsMap.view">
+                                        <a>
+                                            <div class="group-by-section tableheader-btn">
+                                                <select class="form-control select-component input-sm" ng-model="locationController.groupByField"
+                                                    ng-change="locationController.groupByData(locationController.groupByField);locationController.selectedGroupHeader = [];"
+                                                    ng-options="each.prefix as each.name for each in locmGroupByDropdown|filter:{prefix:'!short_name'}|filter:{prefix:'!next_effective_date'}|filter:{prefix:'!effective_date'}"
+                                                    data-ng-disabled="(
+                                                        (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                                        (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                                    )">
+                                                </select>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="non-collapsed-link" data-ng-if="permissionsMap.view">
+                                        <a>
+                                            <button class="btn search-box-advanced-btn btn-sm" title="Search will be performed at the server."
+                                                data-toggle="collapse" data-target="#advanced-search" data-ng-click="locationController.showAdvancedSearchPanel(true);"
+                                                 data-ng-disabled="(
+                                                    (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                                    (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                                )">Search
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="non-collapsed-link" data-ng-if="permissionsMap.view">
+                                        <a>
+                                            <button type="button" data-ng-click="locationController.reloadLocationCountAndList(true);"
+                                                 data-ng-disabled="(
+                                                    (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                                    (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                                )" class="btn-primal btn-block waves-effect">
+                                                <span class="f-700 ng-binding">Refresh</span>
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="m-r-10 non-collapsed-link">
+                                        <a>
+                                            <button type="button" class="btn btn-success f-700 waves-effect"
+                                                data-ng-click="locationController.NewLocation();" data-ng-disabled="disableActions || !permissionsMap.create">
+                                                <span title="{{!permissionsMap.create ? 'Access denied' : ''}}" title-direction="top">Create Location</span>
+                                            </button>
+                                        </a>
+                                    </li>
+                                    <li class="dropdown collapsed-link" uib-dropdown>
+                                        <a uib-dropdown-toggle class="full-height" href="">
+                                            <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dm-icon pull-right">
+                                            <li class="cursor-pointer">
+                                                <a title="{{!permissionsMap.create ? 'Access denied' : ''}}" data-ng-click="locationController.NewLocation();"
+                                                    data-ng-disabled="disableActions || !permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                                    <i class="zmdi zmdi-plus text-success"></i> Create Location
+                                                </a>
+                                            </li>
+                                            <li class="cursor-pointer" data-ng-if="permissionsMap.view">
+                                                <a href="" data-ng-click="locationController.reloadLocationCountAndList(true);"
+                                                     data-ng-disabled="(
+                                                        (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                                        (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                                    )">
+                                                    <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                            </li>
+                                            <li class="cursor-pointer" data-ng-if="permissionsMap.view">
+                                                <a data-toggle="collapse" data-target="#advanced-search" data-ng-click="locationController.showAdvancedSearchPanel(true);"
+                                                    data-ng-disabled="(
+                                                        (!locationController.isGroupByApplied && !locationController.isLoaded) ||
+                                                        (locationController.isGroupByApplied && !locationController.isGroupHeader)
+                                                    )">
+                                                        <i class="zmdi zmdi-search"></i> Search
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li> 
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-0 collapse" id="advanced-search">
+                        <div class="col-xs-12 p-0 ">
+                            <div class="col-xs-12 p-0 filter-search-body p-10">
+                                <div class="col-xs-12 filter-search-header">
+                                    <span>Advanced Search</span>
+                                    <span class="zmdi zmdi-close c-white cursor-pointer f-19 pull-right p-r-5"
+                                        data-ng-click="locationController.showAdvancedSearchPanel(true);"></span>
+                                </div>
+                                <div class="col-xs-12 filter-search-content">
+                                    <ng-form class="col-xs-12 p-0 location-advance-search" name="locationController.location_filter_from" role="form"
+                                        novalidate="novalidate">
+                                        <div class="col-xs-6" ng-if="locationController.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Location Type</label>
+                                                <multiselect class="tabfocus" ng-model="locationController.filters.locationTypeIds"
+                                                    options="type.id as type.short_description for type in locationController.allLocationTypes"
+                                                    select-limit="100" header="Select Type" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':locationController.filters.locationTypeIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6" ng-if="locationController.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Current Status</label>
+                                                <multiselect class="tabfocus" ng-model="locationController.filters.currentStatusIds"
+                                                    options="status.code as status.description for status in statuses"
+                                                    select-limit="100" header="Select Current Status" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':locationController.filters.currentStatusIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6" ng-if="locationController.isResetFilter===false">
+                                            <div class="form-group">
+                                                <label>Next Status</label>
+                                                <multiselect class="tabfocus" ng-model="locationController.filters.nextStatusIds"
+                                                    options="status.code as status.description for status in next_statuses"
+                                                    select-limit="100" header="Select Next Status" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':locationController.filters.nextStatusIds.length>0}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-6">
+                                            <div class="form-group" ng-if="locationController.isPrimaryHierarchyLoaded && locationController.reloadHierarchy">
+                                                <label>{{locationConfig.primary_location_hierarchy_desc}} </label>
+                                                <hierarchy-tree-view primary-hierarchy-id="locationConfig.primary_location_hierarchy_id"
+                                                    path="primary_location_hierarchy_value_name"
+                                                    primary-hierarchy-value-id="primary_location_hierarchy_value_id"
+                                                    directive-end-fn='end(directiveData)' form-header="{{locationConfig.primary_location_hierarchy_desc}}"
+                                                    tree-view-fn="locationController.toggleTreeViewPanel(flagData)"
+                                                    clear-path="locationController.clearPath"></hierarchy-tree-view>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group" ng-if="locationController.isPrimaryHierarchyLoaded && locationController.reloadHierarchy">
+                                                <label>{{locationConfig.pricing_classification_group_desc}}</label>
+                                                <hierarchy-tree-view primary-hierarchy-id="locationConfig.pricing_classification_group"
+                                                    path="pricing_classification_group_value_name"
+                                                    primary-hierarchy-value-id="pricing_classification_group_value_id"
+                                                    directive-end-fn='sendPrimayClassificationGroup(directiveData)'
+                                                    form-header="{{locationConfig.pricing_classification_group_desc}}"
+                                                    tree-view-fn="locationController.toggleTreeViewPanel(flagData)"
+                                                    clear-path="locationController.clearPath"></hierarchy-tree-view>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group" ng-if="locationController.isPrimaryHierarchyLoaded && locationController.reloadHierarchy">
+                                                <label>{{locationConfig.assortment_classification_group_desc}}</label>
+                                                <hierarchy-tree-view primary-hierarchy-id="locationConfig.assortment_classification_group"
+                                                    path="assortment_classification_group_value_name"
+                                                    primary-hierarchy-value-id="assortment_classification_group_value_id"
+                                                    directive-end-fn='sendAssortmentClassificationGroup(directiveData)'
+                                                    form-header="{{locationConfig.assortment_classification_group_desc}}"
+                                                    tree-view-fn="locationController.toggleTreeViewPanel(flagData)"
+                                                    clear-path="locationController.clearPath"></hierarchy-tree-view>
+                                            </div>
+                                        </div>
+                                    </ng-form>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-b-10">
+                                <div class="pull-left text-danger" data-ng-if="locationController.applyFilterSuccess === false">
+                                    {{locationController.applyFilterMessage}}
+                                </div>
+                                <div class="m-b-0 pull-left alert alert-success alert-dismissable p-b-5 p-t-5"
+                                    data-ng-show="locationController.message && locationController.isFilterApplied">
+                                    <button type="button" class="close" data-ng-click="locationController.message = null"
+                                        aria-hidden="true">&times;
+                                    </button>
+                                    {{locationController.message}}
+                                </div>
+                                <div class="m-b-0 pull-left alert alert-success alert-dismissable p-b-5 p-t-5"
+                                    data-ng-show="locationController.resetMessage">
+                                    <button type="button" class="close" data-ng-click="locationController.resetMessage = null"
+                                        aria-hidden="true">
+                                        &times;
+                                    </button>
+                                    {{locationController.resetMessage}}
+                                </div>
+                                <div class="ipad-advance-search pull-right">
+                                    <span class="f-300 text-info m-r-5">[ You can expect some delay as the advanced
+                                        search will be performed on the server side.
+                                        ]
+                                    </span>
+                                    <span class="c-red m-r-5" data-ng-if="locationController.isFilterApplied && locationController.appliedFilterCount"> <i class="fa fa-filter p-r-5"></i>{{locationController.appliedFilterCount}} Filter(s) Applied </span>
+                                    <span class="m-r-5" data-ng-if="!locationController.isFilterApplied || !locationController.appliedFilterCount"> <i class="fa fa-filter p-r-5"></i> Not applied</span>
+                                    <button type="button" class="btn-primary btn tabfocus-btn hidden-sm" id="filter_attribute_btn" ng-click="locationController.applyFilters();"
+                                        ng-model-options="{debounce:3000}" data-ng-disabled="locationController.isRefreshing">
+                                        <strong>{{locationController.applyFiltersBtnLabel}}</strong>
+                                    </button>
+                                    <button type="button" class="btn btn-cancel tabfocus-btn hidden-sm" id="vendor_filter_reset_btn" ng-click="locationController.resetFilters(-1);" data-ng-disabled="locationController.isRefreshing">
+                                        <strong>Reset Filters</strong>
+                                    </button>
+                                    <div class="hidden-lg hidden-md m-t-10">
+                                        <button type="button" class="btn-primary btn tabfocus-btn" id="filter_attribute_btn" ng-click="locationController.applyFilters();"
+                                            ng-model-options="{debounce:3000}" data-ng-disabled="locationController.isRefreshing">
+                                            <strong>{{locationController.applyFiltersBtnLabel}}</strong>
+                                        </button>
+                                        <button type="button" class="btn btn-cancel tabfocus-btn" id="vendor_filter_reset_btn" ng-click="locationController.resetFilters(-1);" data-ng-disabled="locationController.isRefreshing">
+                                            <strong>Reset Filters</strong>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./rc-module-header -->
+            </div>
+
+
+            <div class="col-lg-12 text-center module-content" data-ng-if="!locationController.recordsCount && !locationController.isLoaded">
+                <div class="m-t-25">
+                    <span class="f-17 f-700 c-black">Loading</span>
+                    <span class="f-700" style="letter-spacing: 3px;">....</span>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 module-content" data-ng-if="locationController.recordsCount && locationController.recordsCount !== 0">
+                <div class="col-xs-12 p-l-0 p-r-0" id="searchPanel" data-ng-if="permissionsMap.view">
+                    <div class="col-xs-12 p-0" data-ng-class="locationController.groupByField.length>0 ? 'p-r-25 col-xs-12':'col-lg-12'">
+                        <!-- Advanced search panel start -->
+
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="col-xs-12" data-ng-if="locationController.disableActions">
+                            <span class="pull-right text-danger blinker">* Configuration status should be "Active" to
+                                create & maintain entities.</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 rcpscrollbar p-0 o-auto pageHeight m-t-10" data-ng-if="!locationController.groupByField">
+                        <div class="col-md-6 col-sm-12 col-xs-12 m-b-10" ng-repeat="location in locationController.locationsDataList">
+                            <div class="col-xs-12 p-0 expand-collapse-me m-0">
+                                <div class="d-flex update-process-overlay" data-ng-show="location.isShowUpdateProcessing">
+                                    <img class="m-auto" src="./img/loading.gif" alt="" style="width:100px;height:100px;">
+                                </div>
+
+                                <div ios-dblclick="locationController.UpdateLocation(location,$index);">
+                                    <div class="col-xs-12 main-card box p-0">
+                                        <div class="col-xs-12 header-section" ng-class="{'status-active f-500':location.status_id===200,'status-pending-active f-300':location.status_id===100, 'status-inactive f-300':location.status_id===300,'status-pending-inactive f-300':location.status_id===400,
+                                        'hightlight-activehistory':(location.showhistory && locationController.isShowHistory)|| (location.id == locationController.instance_id && isShowAddressContactPanel) || (location.id == $stateParams.id)}">
+                                            <span class="text-overflow-desc-auto" title="{{location.name}}">{{location.name}}
+                                            </span>
+                                            <div class="pull-right d-flex d-flex-v-center">
+                                                <img class="p-r-5" data-ng-if="location.isLoadingClone" src="./img/loader.gif" alt="Loading" height="25px" />
+                                                <a class="cursor-pointer m-r-5" data-ng-click="locationController.showHistoryDetails(location);">
+                                                    <span class="f-16 fa fa-history c-gray" title="History"
+                                                        title-direction="top-left" fixed-position="true"></span>
+                                                </a>
+                                                <a class="cursor-not-allowed clone-not-allowed" data-ng-if="!locationController.isCloneAllowed"
+                                                    rc-popover popover-title="Cloning feature is disabled"
+                                                    popover-content="No access for clone. Enable access to clone location."
+                                                    popover-trigger="hover" popover-placement="bottom">
+                                                    <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                </a>
+                                                <a class="cursor-not-allowed clone-not-allowed" data-ng-if="locationController.isCloneAllowed && (location.name.includes('clone') || location.name.includes('Clone'))"
+                                                    rc-popover popover-title="Cloning is disabled for this Location"
+                                                    popover-content="Have same identity as the cloned parent Location, to enable cloning change any master properties of this entity."
+                                                    popover-trigger="hover" popover-placement="bottom">
+                                                    <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                </a>
+                                                <a class="cursor-pointer" data-ng-if="locationController.isCloneAllowed && !(location.name.includes('clone') || location.name.includes('Clone'))"
+                                                    data-ng-class="{'cursor-not-allowed diable-pointer':isShowAddressContactPanel ||($state.current.name == 'common.prime.location.clone')}"
+                                                    data-ng-click="locationController.goToClonePanel(location)">
+                                                    <span class="zmdi zmdi-copy zmdi-hc-fw f-19 c-gray" style="margin-right: 4px;"
+                                                        title="Clone" title-direction="top-left" fixed-position="true"></span>
+                                                </a>
+                                                <a class="cursor-pointer" data-ng-class="{'cursor-not-allowed disable-pointer':isShowAddressContactPanel || ($state.current.name == 'common.prime.location.clone')}"
+                                                    ng-click="locationController.openAddressContactPanel();openAddressPanel(location.id);location.showhistory = false;">
+                                                    <span class="zmdi zmdi-account-calendar zmdi-hc-fw f-19 c-gray" title="Address and contact"
+                                                        title-direction="top-left" fixed-position="true"></span>
+                                                </a>
+                                                <button class="restricted-btn p-0" ng-click="showMetaData(locationController.entityInformation,location,permissionsMap);selectedDropId=location.id;" data-ng-disabled="!permissionsMap.drop">
+                                                    <span class="zmdi zmdi-cloud-outline zmdi-hc-fw f-19 c-gray" data-ng-if="permissionsMap.drop" title="Click here to manage documents" title-direction="top" fixed-position="true"></span>
+                                                    <span class="zmdi zmdi-cloud-off zmdi-hc-fw f-19 c-gray" data-ng-if="!permissionsMap.drop" title="Access denied" title-direction="top" fixed-position="true"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 content-section">
+                                            <div class="col-xs-12 p-0">
+                                                <div class="col-xs-3 p-0 d-flex">
+                                                    <img check-image class="img-responsive card-image m-auto cursor-pointer"
+                                                        image-name="entity-config-location.svg" data-ng-click="location.thumbnail?locationController.previewDatalake(location,'cover_image'):''"
+                                                        ng-src="{{location.thumbnail}}" />
+                                                </div>
+                                                <div class="col-xs-9 p-0" style="max-height:171px;overflow:auto;">
+                                                    <div class="col-sm-7 col-xs-12 p-0 m-b-10">
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Short Name :</label>
+                                                            <label class="c-gray m-l-10">{{location.short_name |
+                                                                truncate: 40}}</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Location Type:</label>
+                                                            <label class="rclabel m-l-10 c-gray">{{location.type}}</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Status :</label>
+                                                            <label class="rclabel m-l-10" ng-class="{'text-success f-500': location.status_id===200 , 'text-warning f-300': location.status_id ===100, 'text-primary f-300': location.status_id ===300,'text-info f-300': location.status_id===400}">{{location.status}}</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Next Status :</label>
+                                                            <label class="rclabel m-l-10 c-gray">{{location.next_status}}</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">Next Effective Date :</label>
+                                                            <label data-ng-show="location.next_status !== 'None'" class="c-gray m-l-10">{{location.next_effective_date
+                                                                | FormatDate}}</label>
+                                                            <label data-ng-show="location.next_status === 'None'" class="c-gray m-l-10">N/A</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <label class="rclabel m-l-10">{{location.pricing_classification_group}}
+                                                                :</label>
+                                                            <span data-ng-if="!locationController.isMapDataLoaded">
+                                                                Loading ...</span>
+                                                            <label data-ng-if="locationController.isMapDataLoaded"
+                                                                class="rclabel m-l-10 c-gray" ng-init="price_path=locationController.getTreePath(location.pricing_classification_group_value_id,location.pricing_classification_group_value_path);location.price_classification_path = price_path.join(' ');">
+                                                                <ul class="hierarchytreelist p-0" data-ng-repeat="name in price_path">
+                                                                    <li ng-style="{'margin-left': 15*$index+'px'}">
+                                                                        {{name}}
+                                                                    </li>
+                                                                </ul>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-5 col-xs-12" style="height: inherit;border-left: 1px solid #ececec;">
+                                                        <div class="col-xs-12 m-b-10" style="padding: 0px 7px 6px 7px;border-bottom: 1px solid #ececec">
+                                                            <label class="rclabel m-b-0 f-700 c-gray">{{location.primary_location_hierarchy}}</label>
+                                                        </div>
+                                                        <div class="col-xs-12 p-0">
+                                                            <span data-ng-if="!locationController.isMapDataLoaded">
+                                                                Loading ...</span>
+                                                            <label data-ng-if="locationController.isMapDataLoaded"
+                                                                class="rclabel m-l-10 maintenance-card-label-value"
+                                                                ng-init="path=locationController.getTreePath(location.primary_location_hierarchy_value_id,location.primary_location_hierarchy_value_path); location.primary_hierarchy_path_value = path.join(' ')">
+                                                                <ul class="hierarchytreelist p-0" data-ng-repeat="name in path">
+                                                                    <li ng-style="{'margin-left': 15*$index+'px'}">
+                                                                        {{name}}
+                                                                    </li>
+                                                                </ul>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Edit Location Icon-->
+                                            <div class="col-xs-12 m-t-5 text-center d-flex" style="justify-content:space-between;align-items:center;">
+                                                <div class="cursor-pointer d-flex" style="align-items:flex-end;">
+                                                    <button class="f-14 restricted-btn text-primary" data-ng-class="{'opacity50' : !permissionsMap.update}" data-ng-click="locationController.UpdateLocation(location,$index);" data-ng-disabled="!permissionsMap.update">
+                                                        <span class="f-13" title="{{!permissionsMap.update ? 'Access denied' : ''}}" title-direction="top">
+                                                        <i class="fa fa-edit m-r-5"></i>Edit Location
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            <!-- Edit Location Icon-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="locationController.isLoading">
+                            <span class="f-17 f-700 c-black">Loading</span>
+                            <span class="f-700" style="letter-spacing: 3px;">
+                                <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                <span>
+                        </div>
+                        <div ng-if="locationController.availableLocationsCount > 0 && !locationController.isLoading">
+                            <div class="col-lg-12 col-md-12 aligncenter p-t-10 m-b-10">
+                                <button class="btn btn-sm btn-inverse" data-ng-click="locationController.loadMoreLocations()">Load
+                                    Remaining
+                                    {{locationController.availableLocationsCount}} Records
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Start Group By View -->
+                    <div class="col-xs-12 rcpscrollbar p-0 o-auto pageHeight m-t-10" data-ng-if="locationController.groupByField">
+                        <d-expand-collapse>
+                            <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="!locationController.isGroupHeader">
+                                <span class="f-17 f-700 c-black">Loading</span>
+                                <span class="f-700" style="letter-spacing: 3px;">
+                                    <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                    <span>
+                            </div>
+                            <div ng-repeat="locationGroup in locationController.groupLocations" data-ng-if="locationController.isGroupHeader === true && locationGroup.selected === 1">
+                                <div class="col-xs-12" data-ng-click="locationController.showLocationData(locationController.groupByField,locationGroup)">
+                                    <div class="col-xs-12 card-group-header" data-ng-click="toggleCollapse($event);">
+                                        <span data-ng-if="locationController.groupByField.includes('effective_date')">
+                                            {{locationGroup[locationController.groupByField] | FormatDate}}
+                                            <span class="zmdi-hc-fw">({{locationGroup.count}})</span>
+                                        </span>
+                                        <span data-ng-if="!locationController.groupByField.includes('effective_date')">
+                                            {{locationGroup[locationController.groupByField]}}
+                                            ({{locationGroup.count}})
+                                        </span>
+                                        <div id="{{$index}}-groupHeaderIcon" class="pull-right zmdi inline-block"
+                                            data-ng-init="initGroupHeader('{{$index}}-groupHeaderIcon',locationGroup)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 p-0 expand-collapse-me m-0" data-ng-class="{'d-none':!locationGroup.expanded}"
+                                    data-ng-if="locationGroup.locations">
+                                    <div class="col-xs-12 m-t-5 m-b-5">
+                                        <span data-ng-show="locationController.groupByField">{{
+                                            locationGroup.locations.length}} of {{locationGroup.count}} Records found
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12 p-0 m-0">
+                                        <div class="col-md-6 col-sm-12 col-xs-12 m-b-10" data-ng-if="locationGroup.isLocationsLoaded === true"
+                                            data-ng-repeat="location in locationGroup.locations" ios-dblclick="locationController.UpdateLocation(location,$index,locationGroup);">
+                                            <div class="d-flex update-process-overlay" data-ng-show="location.isShowUpdateProcessing">
+                                                <img class="m-auto" src="./img/loading.gif" alt="" style="width:100px;height:100px;">
+                                            </div>
+                                            <div class="col-xs-12 main-card box p-0">
+                                                <div class="col-xs-12 header-section" ng-class="{'text-success f-500': location.status_id===200 , 'text-warning f-300': location.status_id ===100, 'text-primary f-300': location.status_id ===300,'text-info f-300': location.status_id===400,
+                                                'hightlight-activehistory':(location.showhistory && locationController.isShowHistory)|| (location.id == locationController.instance_id && isShowAddressContactPanel) || (location.id == $stateParams.id)}">
+                                                    <span title="{{location.name}}" style="color: #393e52;font-weight: 500;">{{location.name
+                                                        | truncate: 50}}
+                                                    </span>
+                                                    <div class="pull-right">
+                                                        <a class="cursor-pointer m-r-5" data-ng-click="locationController.showHistoryDetails(location);">
+                                                            <span class="f-16 fa fa-history c-gray" title="History"
+                                                                title-direction="top-left" fixed-position="true"></span>
+                                                        </a>
+                                                        <a class="cursor-not-allowed clone-not-allowed" data-ng-if="!locationController.isCloneAllowed"
+                                                            rc-popover popover-title="Cloning feature is disabled"
+                                                            popover-content="No access for clone. Enable access to clone location."
+                                                            popover-trigger="hover" popover-placement="bottom">
+                                                            <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                        </a>
+                                                        <a class="cursor-not-allowed clone-not-allowed" data-ng-if="locationController.isCloneAllowed && (location.name.includes('clone') || location.name.includes('Clone'))"
+                                                            rc-popover popover-title="Cloning is disabled for this Location"
+                                                            popover-content="Have same identity as the cloned parent Location, to enable cloning change any master properties of this entity."
+                                                            popover-trigger="hover" popover-placement="bottom">
+                                                            <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                        </a>
+                                                        <a class="cursor-pointer" data-ng-click="locationController.goToClonePanel(location)"
+                                                            data-ng-if="locationController.isCloneAllowed && !(location.name.includes('clone') || location.name.includes('Clone'))">
+                                                            <span class="zmdi zmdi-copy zmdi-hc-fw f-19" title="Clone"
+                                                                title-direction="top-left" fixed-position="true" style="color: #82848c;"></span>
+                                                        </a>
+                                                        <a class="cursor-pointer" data-ng-class="{'cursor-not-allowed disable-pointer':isShowAddressContactPanel}"
+                                                            ng-click="locationController.openAddressContactPanel();openAddressPanel(location.id);location.showhistory = false;">
+                                                            <span class="zmdi zmdi-account-calendar zmdi-hc-fw f-19"
+                                                                style="color: #757575"></span>
+                                                        </a>
+                                                        <button class="restricted-btn p-0" ng-click="showMetaData(locationController.entityInformation,location,permissionsMap);"
+                                                            data-ng-disabled="!permissionsMap.drop">
+                                                            <span class="zmdi zmdi-cloud-outline zmdi-hc-fw f-19 c-gray" data-ng-if="permissionsMap.drop" title="Click here to manage documents" title-direction="top" fixed-position="true"></span>
+                                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw f-19 c-gray" data-ng-if="!permissionsMap.drop" title="Access denied" title-direction="top" fixed-position="true"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 content-section">
+                                                    <div class="col-xs-12 p-0">
+                                                        <div class="col-xs-3 p-0 d-flex">
+                                                            <img check-image class="img-responsive card-image m-auto"
+                                                                image-name="entity-config-location.svg" data-ng-click="location.thumbnail?locationController.previewDatalake(location,'cover_image'):''"
+                                                                ng-src="{{location.thumbnail}}" />
+                                                        </div>
+                                                        <div class="col-xs-9 p-0" style="max-height:171px;overflow:auto;">
+                                                            <div class="col-sm-7 col-xs-12 p-0 m-b-10">
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Short
+                                                                        Name :</label>
+                                                                    <label class="c-gray m-l-10">{{location.short_name
+                                                                        |
+                                                                        truncate: 40}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Location
+                                                                        Type:</label>
+                                                                    <label class="rclabel m-l-10 c-gray">{{location.type}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Status :</label>
+                                                                    <label class="rclabel m-l-10" ng-class="{'text-success f-500': location.status_id===200 , 'text-warning f-300': location.status_id ===100, 'text-primary f-300': location.status_id ===300,'text-info f-300': location.status_id===400}">{{location.status}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Next
+                                                                        Status :</label>
+                                                                    <label class="rclabel m-l-10 c-gray">{{location.next_status}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">Next
+                                                                        Effective Date
+                                                                        :</label>
+                                                                    <label data-ng-show="location.next_status !== 'None'"
+                                                                        class="c-gray m-l-10">{{location.next_effective_date
+                                                                        | FormatDate}}</label>
+                                                                    <label data-ng-show="location.next_status === 'None'"
+                                                                        class="c-gray m-l-10">N/A</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <label class="rclabel m-l-10">{{location.pricing_classification_group}}
+                                                                        :</label>
+                                                                    <span data-ng-if="!locationController.isMapDataLoaded">
+                                                                        Loading ...</span>
+                                                                    <label data-ng-if="locationController.isMapDataLoaded"
+                                                                        class="rclabel m-l-10 c-gray" ng-init="price_path=locationController.getTreePath(location.pricing_classification_group_value_id,location.pricing_classification_group_value_path);">
+                                                                        <ul class="hierarchytreelist p-0"
+                                                                            data-ng-repeat="name in price_path">
+                                                                            <li ng-style="{'margin-left': 15*$index+'px'}">
+                                                                                {{name}}
+                                                                            </li>
+                                                                        </ul>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-5 col-xs-12" style="height: inherit;border-left: 1px solid #ececec;">
+                                                                <div class="col-xs-12 m-b-10" style="padding: 0px 7px 6px 7px;border-bottom: 1px solid #ececec">
+                                                                    <label class="rclabel m-b-0 f-700 c-gray">{{location.primary_location_hierarchy}}</label>
+                                                                </div>
+                                                                <div class="col-xs-12 p-0">
+                                                                    <span data-ng-if="!locationController.isMapDataLoaded">
+                                                                        Loading ...</span>
+                                                                    <label data-ng-if="locationController.isMapDataLoaded"
+                                                                        class="rclabel m-l-10 maintenance-card-label-value"
+                                                                        ng-init="path=locationController.getTreePath(location.primary_location_hierarchy_value_id,location.primary_location_hierarchy_value_path); location.primary_hierarchy_path_value = path.join(' ')">
+                                                                        <ul class="hierarchytreelist p-0" ng-if="path"
+                                                                            data-ng-repeat="name in path">
+                                                                            <li ng-style="{'margin-left': 15*$index+'px'}">
+                                                                                {{name}}
+                                                                            </li>
+                                                                        </ul>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Edit Location Icon-->
+                                                    <div class="col-xs-12 m-t-5 text-center d-flex" style="justify-content:space-between;align-items:center;">
+                                                        <div class="cursor-pointer d-flex" style="align-items:flex-end;">
+                                                            <button class="f-14 restricted-btn text-primary" data-ng-click="locationController.UpdateLocation(location,$index,locationGroup);"
+                                                                    data-ng-class="{'opacity50' : !permissionsMap.update}" data-ng-disabled="!permissionsMap.update">
+                                                                    <span class="f-13" title="{{!permissionsMap.update ? 'Access denied' : ''}}" title-direction="top"><i class="fa fa-edit m-r-5"></i>Edit Location</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Edit Location Icon-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div data-ng-if="locationGroup.availableGroupLocations > 0 && locationGroup.isLocationsLoaded === true">
+                                        <div class="col-lg-12 col-md-12 aligncenter p-t-10 m-b-10">
+                                            <button class="btn btn-sm btn-inverse ng-binding waves-effect"
+                                                data-ng-disabled="locationGroup.isMoreLocationsLoaded === false"
+                                                data-ng-click="locationController.loadMoreLocationData(locationController.groupByField,locationGroup)">
+                                                Load Remaining {{locationGroup.availableGroupLocations}}
+                                                Records
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="locationGroup.isLocationsLoaded === false || locationGroup.isMoreLocationsLoaded === false">
+                                    <span class="f-17 f-700 c-black">Loading</span>
+                                    <span class="f-700" style="letter-spacing: 3px;">
+                                        <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                        <span>
+                                </div>
+                            </div>
+                            <!-- Group by panel Section start -->
+                            <div class="group-by-panel" data-ng-class="{'activate':locationController.showgroupByMenu}"
+                                data-ng-if="locationController.groupByField.length>0">
+                                <span class="d-flex d-flex-h-center d-flex-v-center bg-primary" data-ng-if="!locationController.showgroupByMenu"
+                                    id="open-setting" data-ng-click="locationController.showgroupByMenu = !locationController.showgroupByMenu;">
+                                    <i class="zmdi zmdi-settings"></i>
+                                </span>
+                                <span class="d-flex d-flex-h-center d-flex-v-center bg-primary" data-ng-if="locationController.showgroupByMenu"
+                                    id="close-setting" data-ng-click="locationController.showgroupByMenu = !locationController.showgroupByMenu;">
+                                    <i class="zmdi zmdi-close"></i>
+                                </span>
+                                <form>
+                                    <span class="no-padding group-by-header-panel c-bluegray">Group by</span>
+                                    <div class="col-xs-12 p-0 m-b-10">
+                                        <select class="form-control select-component input-sm" ng-model="locationController.groupByField"
+                                            ng-change="locationController.groupByData(locationController.groupByField);"
+                                            ng-options="each.prefix as each.name for each in locmGroupByDropdown|filter:{prefix:'!short_name'}|filter:{prefix:'!next_effective_date'}|filter:{prefix:'!effective_date'}">
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-12 p-0 m-b-10 f-500">
+                                        <a class="cursor-pointer">
+                                            <span data-ng-click="locationController.toggleAllGroups(1);">
+                                                Select All</span>
+                                        </a> |
+                                        <a class="cursor-pointer">
+                                            <span data-ng-click="locationController.toggleAllGroups(0);">
+                                                Unselect All</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-12 p-0 groupitems-container rc-scroll-bar">
+                                        <div data-ng-repeat="gc in locationController.groupLocations">
+                                            <div class="checkbox p-l-5">
+                                                <label>
+                                                    <span data-ng-if="locationController.groupByField.includes('effective_date')">
+                                                        {{gc[locationController.groupByField]|FormatDate}}
+                                                        <span style="color:green"> [{{gc.count}}]</span>
+                                                    </span>
+                                                    <span data-ng-if="!locationController.groupByField.includes('effective_date')">{{gc[locationController.groupByField]}}
+                                                        <span style="color:green">
+                                                            <span class="f-14 f-700">( {{gc.count}} )</span>
+                                                        </span>
+                                                    </span>
+                                                    <input type="checkbox" ng-model="gc.selected" ng-true-value="1"
+                                                        ng-false-value="0" ng-click="locationController.toggleselectedGroupLocation(gc,$index);toggleCollapse($event);">
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- ./group-by-panel -->
+                        </d-expand-collapse>
+                    </div>
+                    <!-- End Group By View -->
+                </div>
+        <div ui-view></div>
+                <div class="col-xs-12 p-0" ng-if="locationController.isShowHistory === true;" data-ng-include="'./application/templates/history.html'"></div>
+                <!-- <meta-data-panel></meta-data-panel> -->
+                <!-- This will call filter state keeping the main location state -->
+                <div ui-view="filter"></div>
+                <div class="col-lg-12 p-0">
+                    <div id="refresh-table" class="p-15" data-ng-class="{'toggled':locationController.isRefreshing}">
+                        <div class="col-xs-6 p-0">
+                            <span class="f-15 f-300 pull-left">{{locationController.refreshTableText}}</span>
+                        </div>
+                        <div class="col-xs-6 p-0" data-ng-if="locationController.totalTimeText">
+                            <span class="pull-right f-300">
+                                <strong>{{locationController.locationsDataList.length}}</strong>
+                                <span class="f-14 c-gray">{{locationController.totalRecordsText}}</span>
+                                <span ng-bind-html="locationController.totalTimeText"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="permissionsMap && !permissionsMap.view" data-ng-include="'./application/templates/restricted.access.html'"></div>
+        </div>
+        <div ui-view="clone"></div>
+        <div ng-if="locationController.showAddrCnt" data-ng-include="'./application/templates/panel.address.contact.html'">
+        </div>
+        <meta-data-panel></meta-data-panel>
+        <!-- If location data list is zero and filter applied is true then displays as NO matching results  -->
+        <div class="col-xs-12 p-0" data-ng-class="{'module-content': !locationController.recordsCount}"
+            data-ng-if="
+                locationController.isFilterApplied &&
+                (
+                    (!locationController.isGroupByApplied && locationController.locationsDataList.length === 0 && locationController.isLoaded) ||
+                    (locationController.isGroupByApplied && locationController.groupLocations.length === 0 && locationController.isGroupHeader)
+                )
+            ">
+            <div class="col-xs-12 text-center text-info m-t-25">
+                <span class="f-15 f-300">No results matching your criteria. Please amend your search options.</span>
+            </div>
+        </div>
+    </div>
+    <!-- If location record count is zero and no filter applied then displays as NO location exists  -->
+    <div class="col-xs-12 p-0 module-content" data-ng-if="!locationController.isFilterApplied && !locationController.recordsCount && locationController.isLoaded">
+        <div class="col-xs-12 text-center text-info m-t-25">
+            <span class="f-15 f-300">No location exists. Please add location.</span>
+        </div>
+    </div>
+</div>

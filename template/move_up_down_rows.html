@@ -1,0 +1,24 @@
+<div>
+    <div style="text-align:center">
+        <ul class="lv-actions actions m-b-0">
+            <li ng-if="(first || !last) && !(first && last)" title="Move down" title-direction="right"
+                fixed-position="true">
+                <span class="cursor-pointer"
+                    data-ng-click="updateDisplaySequence(apiInstanceDisplayValues,'Down',filterValues,instanceId,reloadMethodDisplayValues);"
+                    data-toggle="modal" data-backdrop="static" data-keyboard="false">
+                    <i class="zmdi zmdi-long-arrow-down zmdi-hc-fw f-700 f-14" style="color: firebrick;"></i>
+                </span>
+            </li>
+            <li ng-if="(!first && !last)" title="Move up" title-direction="right" fixed-position="true"><span
+                    style="color:#ededed"> | </span></li>
+            <li ng-if="(!first || last) && !(first && last)" title="Move up" title-direction="right"
+                fixed-position="true">
+                <span class="cursor-pointer"
+                    data-ng-click="updateDisplaySequence(apiInstanceDisplayValues,'Up',filterValues,instanceId,reloadMethodDisplayValues);"
+                    data-toggle="modal" data-backdrop="static" data-keyboard="false">
+                    <i class="zmdi zmdi-long-arrow-up zmdi-hc-fw c-green f-700 f-14"></i>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>

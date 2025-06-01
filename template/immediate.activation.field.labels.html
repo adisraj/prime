@@ -1,0 +1,45 @@
+ <div class="col-xs-12 m-t-15 m-b-10">
+            <div class="rc-alert rc-alert-type-info p-b-0" aria-hidden="false" role="alert">
+                <div class="col-xs-12 d-flex m-b-5 p-0">
+                    <div class="rc-alert-icon">
+                        <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px" title="Information about immediate and activation field labels" title-direction="right" fixed-position="true">
+                        </span>
+                    </div>
+                    <div style="flex:1;">
+                        <div class="f-14 f-700 text-info">Immediate and Activation field labels</div>
+                        <div class="m-b-5">
+                            <span class="text-muted">
+                                <div class="list-style-none" style="line-height: 1.7;">
+                                    <li>
+                                        <span class="text-info glyphicon glyphicon-arrow-right"></span>
+                                        <span class="">
+                                            <strong>Activation</strong> Label indicate that the value is optional if the status is
+                                         "Pending" but is required if the status is not "Pending"
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="text-danger glyphicon glyphicon-arrow-right"></span>
+                                        <span class="">
+                                            <strong>Immediate</strong> Indicates that the value for the field is always required.
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="text-success glyphicon glyphicon-arrow-right"></span>
+                                        <span class="">
+                                            <strong>Optional</strong> Indicates that the value for the field is always optional.
+                                        </span>
+                                    </li>
+                                    <li data-ng-if="$location.path().contains('/items/item')">
+                                        <span class="glyphicon-square" style="margin:5px 3px 0 0;"></span>
+                                        <span class="">
+                                            <strong>Significant</strong> Indicates that the value for the field is significant.
+                                        </span>
+                                    </li>
+                                </div>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>

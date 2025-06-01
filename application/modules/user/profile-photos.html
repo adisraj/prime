@@ -1,0 +1,91 @@
+<div class="card" ng-controller="HeaderController as hctrl">
+
+    <div class="card" ng-hide="showVal">
+        <div class="card-header c-white">
+            <button class="btn btn-default btn-icon-text waves-effect" ng-click="composeNewClick()"><i class="zmdi zmdi-edit"></i> <span style="color: #D74A38;">Compose</span></button>
+
+
+        </div>
+    </div>
+    <div ng-show="showVal">
+
+        <div class="card">
+            <div class="card-header bgm-gray m-b-10 ">
+                <h2>Send Message <small></small> </h2>
+            </div>
+            <div class="card-body ">
+                <form name="compose_frm" role="form" novalidate="novalidate" class="form-horizontal">
+
+                    <div class="row m-b-10">
+                        <div class="col-sm-1">
+                            <i class=" zmdi zmdi-mail-send" style="font-size: 20px;padding-left: 5px;"></i>
+
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="newUser" class="form-control input-sm" placeholder="Enter recipient address here" />
+                        </div>
+
+                    </div>
+                    <div class="row m-b-10">
+                        <div class="col-sm-1">
+
+                        </div>
+                        <div class="col-sm-10">
+                            <textarea style="resize:vertical" rows="3" cols="45" id="comment" placeholder="Enter your message here" ng-model="replymsg"></textarea>
+                        </div>
+                    </div>
+                    <div class="row m-b-10">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-default btn-icon-text waves-effect" ng-click="composeMessage(newUser,replymsg)"><i class="zmdi zmdi-comment-text-alt"></i> <span style="color: #D74A38;">Send</span></button>
+                            <button class="btn btn-default btn-icon-text waves-effect" ng-click="closeComposeNewClick()"><i class="zmdi zmdi-close"></i> <span style="color: #D74A38;">Close</span></button>
+                        </div>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- Showing Inbox message -->
+    <div class="card" ng-hide="showVal">
+        <div class="card-header bgm-gray c-white">
+            <h2 style="color: #D74A38;">Inbox</h2>
+        </div>
+
+        <div class="card-body m-t-0">
+            <table class="table table-inner table-vmiddle">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">Recieved On</th>
+                        <th style="width: 20%">From</th>
+                        <th style="width: 20%">Message</th>
+                        <th style="width: 20%">Reply</th>
+                        <th style="width: 20%">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="w in messageResultProf | orderBy: '-created_dt'|limitTo:5 " ng-class="{selected: w.message === $root.userIdselect}">
+                        <td class="f-500 c-indigo" ng-click="messageDialog(w.username,w.message,w.created_dt)">{{w.created_dt | date:"MM/dd/yyyy 'at' h:mma"}}</td>
+                        <td class="f-500 c-indigo" ng-click="messageDialog(w.username,w.message,w.created_dt)">{{w.username}}</td>
+                        <td class="f-500 c-indigo m-t-10" ng-click="messageDialog(w.username,w.message,w.created_dt)">{{ w.message | limitTo: 20 }}{{w.message.length > 20 ? '.....' : ''}}</td>
+                        <td class="f-500" ng-click="messageBoxFill(w.username,w.created_dt)"><a href=""><i class="zmdi zmdi-comment-text-alt"></i></a></td>
+                        <td class="f-500" ng-click="hctrl.deleteMessage(w.id)"><a href=""><i class="zmdi zmdi-delete"></i></a></td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+</div>

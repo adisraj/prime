@@ -1,0 +1,707 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    .select2-container-active,
+    trix-editor:focus {
+        border-left: 3px solid #f9c10c !important;
+    }
+
+    input[type="radio"]:focus,
+    input[type="radio"]:checked {
+        border: 2px solid #f9c10c !important;
+        border-radius: 50%;
+        background-color: #009688;
+        box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, .4), 0 1px 1px hsla(0, 0%, 100%, .8);
+        content: '';
+        height: 20px;
+        width: 20px;
+    }
+
+    input[type="radio"] {
+        border: 1px solid #5d4565;
+        border-radius: 50%;
+        cursor: pointer;
+        display: inline-block;
+        height: 20px;
+        margin-right: 15px;
+        position: relative;
+        width: 20px;
+        -webkit-appearance: none;
+    }
+
+    .select2-container-multi {
+        display: block;
+        border-left: 3px solid #d8d8d8;
+    }
+
+    .select2-container-multi .select2-choice {
+        display: flex !important;
+        position: relative !important;
+        white-space: nowrap !important;
+        color: #444444 !important;
+        background-clip: padding-box !important;
+        background-image: none !important;
+        padding-left: 9px !important;
+        overflow: hidden !important;
+        border: 1px solid#e2e2e2 !important;
+        text-decoration: none !important;
+        border-radius: 0px !important;
+        align-items: center;
+        height: 30px !important;
+    }
+
+    .select2-arrow {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .select2-dropdown-open .select2-choice {
+        box-shadow: none !important;
+        background-color: white !important;
+    }
+
+    .select2-results {
+        padding: 0;
+        margin: 4px 0px;
+    }
+
+    .select2-results li {
+        border-top: 1px solid #dcdcdc;
+    }
+
+    .select2-results .select2-result-label {
+        padding: 6px;
+    }
+
+    .select2-search-field {
+        width: 0px;
+    }
+
+    .select2-container-multi .select2-choices {
+        border: 1px solid #d8d8d8;
+        background: white;
+    }
+
+    .select2-container-multi .select2-choices .select2-search-field input {
+        cursor: default;
+    }
+
+    .select2-container-multi.select2-container-active .select2-choices {
+        border: none;
+    }
+
+    .select2-drop-active{
+        border: none;
+    }
+
+    .select2-search-multi input {
+        padding: 5px;
+        margin: 0 auto;
+        background-image: url('./img/icons/search-2.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center right;
+    }
+
+    .select2-multi-drop-active {
+        border: 1px solid #e2e2e2;
+    }
+
+    .select2-multi-drop {
+        width: 100.2%;
+        left: -2px;
+        z-index: 1;
+    }
+
+    .select2-search-multi {
+        margin-top: 5px;
+    }
+
+    .select2-search-multi input:focus {
+        background-image: url('./img/icons/search-2.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center right;
+    }
+
+    .select2-results .select2-highlighted span {
+        color: #fff;
+    }
+
+    .select2-results .select2-disabled.select2-highlighted span {
+        color: #666;
+    }
+
+    .disableHierarchy {
+        cursor: not-allowed !important;
+        pointer-events: none;
+        opacity: 0.5 !important;
+
+    }
+
+    .vendor-dropdown-arrow {
+        display: inline-block;
+        font: normal normal normal 14px/1 'Material-Design-Iconic-Font';
+        font-size: 29px;
+        transform: translateY(-50%);
+        border-left: 5px solid transparent;
+    }
+
+</style>
+<div class="col-xs-12 m-t-5" data-ng-controller="MassMaintenanceController as maintenanceController">
+    <script type="text/javascript">
+        window.onbeforeunload = (evt) => {
+            if (window.localStorage.getItem('isExecuting') == 'true') {
+                let message = 'Are you sure you want to leave?';
+                evt.preventDefault();
+                return message;
+            }
+        }
+    </script>
+    <div class="col-xs-6 m-b-30">
+        <ng-form role="form" novalidate="novalidate" name="maintenanceController.mass_retail_maintenance_form">
+            <div class="col-xs-12 p-0 box maintenanceworkspace">
+                <div class="col-xs-12 f-16 panel-header">
+                    <span class="f-700 main-header">Mass Maintenance</span>
+                    <div>
+                        <small>Filter on your preferred retail details</small>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-10" ng-if = "permissionsMap && permissionsMap.view && maintenanceController.isLoaded">
+                    <div class="col-xs-12 p-0">
+                        <div class="col-lg-12 col-md-10 col-sm-12">
+                            <div class="form-group">
+                                <span style="color:red;" ng-show="!maintenanceController.maintenanceObject.item_type_id && !maintenanceController.selectedVendor && !maintenanceController.selectedDivision && !maintenanceController.selectedDepartment">*
+                                </span>
+                                <span style="color:green;" ng-show="maintenanceController.maintenanceObject.item_type_id ||maintenanceController.selectedVendor || maintenanceController.selectedDivision || maintenanceController.selectedDepartment">*
+                                </span>
+                                <label class="panel-body-label">Division/Department/Class</label>
+                                <fieldset ng-disabled="maintenanceController.selectedDivision || maintenanceController.selectedDepartment" ng-class = "{'disableHierarchy': maintenanceController.selectedDivision || maintenanceController.selectedDepartment}">
+                                <span class="col-lg-12 m-t-5 m-b-5" data-ng-if="!maintenanceController.isPrimaryHierarchyLoaded">Loading ...</span>
+                                <hierarchy-tree-view data-ng-if="maintenanceController.isPrimaryHierarchyLoaded"  primary-hierarchy-id="maintenanceController.productExplorerId"
+                                    path="maintenanceController.maintenanceObject.primary_item_hierarchy_value_path" primary-hierarchy-value-id=""
+                                    directive-end-fn='maintenanceController.end(directiveData)' enable-valdr-validation enable-valdr-message visible="false"
+                                    form-data="" form-header="Division/Department/Class" place-holder="Search in Division/Department/Class"
+                                    tree-view-fn="maintenanceController.toggleTreeViewPanel(flagData)" clear-path="maintenanceController.clearPath"></hierarchy-tree-view>
+                                </fieldset>
+                            </div>
+                        </div>
+                            <div class="col-lg-12 col-md-10 col-sm-12 form-group">
+                                <label class="panel-body-label">Division</label>
+                                <div class="input-group" style="width:95%;float:left;">
+                                    <select class="form-control select-component input-sm" ng-change = "maintenanceController.loadingSkus=true; maintenanceController.GetSelectedDivisionVendors(maintenanceController.selectedDivision);maintenanceController.FetchAllDepartments(maintenanceController.selectedDivision);maintenanceController.FetchClassForDivisionAndDepartment(maintenanceController.selectedDivision)" 
+                                    ng-options="each.id  as each.division for each in allDivisions" ng-model="maintenanceController.selectedDivision" data-ng-disabled="maintenanceController.maintenanceObject.item_type_id" >
+                                    <option value="" disabled>Select Division</option>
+                                    </select>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:3%;float:right;" data-ng-click="maintenanceController.resetDivision();">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-10 col-sm-12 form-group" ng-if = "maintenanceController.selectedDivision && allDepartments.length">
+                                <label class="panel-body-label">Department</label>
+                                <div class="input-group" style="width:95%;float:left;">
+                                    <select class="form-control select-component input-sm" ng-change = "maintenanceController.loadingSkus=true; maintenanceController.GetSelectedDivisionVendors(maintenanceController.selectedDivision, maintenanceController.selectedDepartment);maintenanceController.FetchClassForDivisionAndDepartment(maintenanceController.selectedDivision, maintenanceController.selectedDepartment);" 
+                                    ng-options="each.id  as each.department for each in allDepartments" ng-model="maintenanceController.selectedDepartment"  data-ng-disabled="maintenanceController.maintenanceObject.item_type_id">
+                                    <option value="" disabled>Select Department</option></select>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16" title="Reset value" style="width:3%;float:right;" data-ng-click="maintenanceController.resetDepartment();">
+                                </div>
+                            </div>
+                            <span class="col-lg-12 m-t-5 m-b-5" data-ng-if="maintenanceController.LoadingClass">Loading Class...</span>
+                            <div class="col-lg-12 col-md-10 col-sm-12 form-group" data-ng-if="maintenanceController.selectedDepartment && allClasses.length > 0">
+                                <div class="input-group" style="width:95%;float:left;">
+                                    <label class="panel-body-label">Class</label>
+                                <multiselect id="class" name="class" ng-model="maintenanceController.selectedClasses"
+                                    options="p.id as p.class for p in allClasses|orderBy:['-is_default','id']"
+                                    data-ng-change="maintenanceController.FetchSkusForGivenClass();" header="Select Class" selected-header="options selected"
+                                    multiple="true" >
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16 m-t-20" title="Reset value" style="width:3%;float:right;" data-ng-click="maintenanceController.resetClass();allClasses = undefined;">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-10 col-sm-12 form-group">
+                                <span style="color:red;" ng-show="maintenanceController.mass_retail_maintenance_form.vendor_id.$invalid">*
+                                </span>
+                                <span style="color:green;" ng-show="maintenanceController.mass_retail_maintenance_form.vendor_id.$valid">*
+                                </span>
+                                <span class="col-lg-12 m-t-5 m-b-5" data-ng-if="!maintenanceController.isVendorLoaded">Loading ...</span>
+                                <div class="input-group" style="width:95%;float:left;">
+                                <label class="panel-body-label">Vendor</label>
+                                    <ui-select items="maintenanceController.maintenanceObject" ng-click="maintenanceController.toggleDropdown()" 
+                                    multiple ng-model="maintenanceController.selectedVendor" theme="select2" close-on-select = "false" 
+                                        data-ng-change="maintenanceController.loadingSkus = true; maintenanceController.getCollections(maintenanceController.selectedVendor); maintenanceController.fetchPricingFactorForVendor()" ng-required="!maintenanceController.maintenanceObject.item_type_id && !maintenanceController.selectedDivision && !maintenanceController.selectedDepartment">
+                                        <ui-select-match  style="width:0px" placeholder="Select Vendor">{{$item.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices 
+                                            repeat="vendor in allVendors | filterBy:['name'] : $select.search | limitTo: $select.search.length ? 100 : 100"
+                                            ui-disable-choice="vendor.status.toLowerCase() === 'inactive'"
+                                            data-ng-class="{'opacity50' : vendor.status.toLowerCase() === 'inactive'}" style="border: 1px solid #d8d8d8;">
+                                            <span class="m-r-10" ng-bind="vendor.name" title="Vendor"></span>
+                                            <span class="f-12 text-muted" ng-bind="vendor.status" title="Vendor Status"></span>
+                                            <span class="pull-right f-12 text-muted" ng-bind="vendor.VendorType" title="Vendor Type"></span>
+                                    </ui-select-choices>
+                                </ui-select><span class="vendor-dropdown-arrow zmdi-caret-down" ng-click="maintenanceController.toggleVendorDropdown()" style="
+                                position: absolute; right: 10px;top: 40px;"></span>
+                                </div>
+                                <div class="resetbtn fa fa-times-circle f-16 m-t-20" title="Reset value" style="width:3%;float:right;" data-ng-click="maintenanceController.resetVendorValue(maintenanceController.selectedVendor);">
+                                </div>
+                            </div>
+
+                        <div class="col-lg-12 col-md-10 col-sm-12" ng-if="maintenanceController.selectedVendor&&maintenanceController.VendorCollections.length>0">
+                            <div class="form-group">
+                                <label class="panel-body-label">Collection</label>
+                                <select name="collection_id" id="collection_id" class="form-control select-component input-sm tabfocus"
+                                    ng-options="each.collection_id as each.collection for each in maintenanceController.VendorCollections"
+                                    ng-model="maintenanceController.maintenanceObject.collection_id" ng-change="maintenanceController.loadingSkus = true; maintenanceController.FetchRetailDatesForVendorOrCollection(maintenanceController.selectedVendorIds,maintenanceController.maintenanceObject.collection_id, undefined, maintenanceController.maintenanceObject.item_type_id, maintenanceController.selectedDivision, maintenanceObject.selectedDepartment); maintenanceController.GetCollectionNameById(maintenanceController.maintenanceObject.collection_id);">
+                                    <option value="" disabled>Select Collection</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-10 col-sm-12">
+                            <div class="form-group">
+                                <span style="color:red;" ng-show="!maintenanceController.isSkuTypeSelected">* </span>
+                                <span style="color:green;" ng-show="maintenanceController.isSkuTypeSelected">* </span>
+                                <label>SKU Type</label>
+                                <div class="checkbox rclabel col-xs-12 m-t-5 m-b-5" ng-init="maintenanceController.maintenanceObject.stock_sku_type=1">
+                                    <label> Stock
+                                        <input id="stock_sku_type" name="stock_sku_type" type="checkbox" hidden="hidden" ng-change='maintenanceController.FetchSkusByType("stock",maintenanceController.maintenanceObject.stock_sku_type)'
+                                            ng-model="maintenanceController.maintenanceObject.stock_sku_type" ng-true-value="1"
+                                            ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox rclabel col-xs-12 m-t-5 m-b-5" ng-init="maintenanceController.maintenanceObject.mto_sku_type=1">
+                                    <label> MTO
+                                        <input id="mto_sku_type" id="mto_sku_type" type="checkbox" hidden="hidden" ng-change='maintenanceController.FetchSkusByType("mto",maintenanceController.maintenanceObject.mto_sku_type)'
+                                            ng-model="maintenanceController.maintenanceObject.mto_sku_type" ng-true-value="1"
+                                            ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox rclabel col-xs-12 m-t-5 m-b-5" ng-init="maintenanceController.maintenanceObject.stock_plus_sku_type=1">
+                                    <label> Stock Plus
+                                        <input id="stock_plus_sku_type" name="stock_plus_sku_type" type="checkbox" hidden="hidden" ng-change='maintenanceController.FetchSkusByType("stock plus",maintenanceController.maintenanceObject.stock_plus_sku_type)'
+                                            ng-model="maintenanceController.maintenanceObject.stock_plus_sku_type" ng-true-value="1"
+                                            ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 p-0 m-t-5 box maintenanceworkspace" ng-if = "permissionsMap && permissionsMap.view && maintenanceController.isLoaded">
+                <div class="col-xs-12 f-16 panel-header">
+                    <span class="f-700 main-header">Existing Retails</span>
+                    <div>
+                        <small>Select a date to copy retails from</small>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-10">
+                    <div class="col-xs-12 p-0">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group" valdr-form-group>
+                                <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.copy_from_effective_date.$invalid">*
+                                </span>
+                                <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.copy_from_effective_date.$valid">*
+                                </span>
+                                <label class="panel-body-label">Existing Dates</label>
+                                <select name="copy_from_effective_date" id="copy_from_effective_date" class="form-control select-component input-sm tabfocus"
+                                    ng-options="each.effective_date as (each.label | FormatDate) for each in maintenanceController.RetailDates"
+                                    ng-model="maintenanceController.maintenanceObject.from_effective_date" data-ng-change="maintenanceController.getPriceTypesIdsByEffectiveDate(maintenanceController.maintenanceObject.from_effective_date)"
+                                    required>
+                                    <option value="" disabled>Select Date</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.copy_from_price_type_id.$invalid">*
+                                </span>
+                                <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.copy_from_price_type_id.$valid">*
+                                </span>
+                                <label class="panel-body-label">Price Type</label>
+                                <select name="copy_from_price_type_id" id="copy_fromprice_type_id" class="form-control select-component input-sm tabfocus"
+                                    ng-options="each.id as each.name for each in maintenanceController.CopyFromPriceTypes|orderBy:['-is_default','id']"
+                                    required ng-model="maintenanceController.maintenanceObject.copy_from_price_type_id" ng-change="maintenanceController.fetchValidPriceTypes()"
+                                    required ng-disabled="!maintenanceController.maintenanceObject.from_effective_date">
+                                    <option value="" disabled>Select Price Type</option>
+                                </select>
+                                <!-- <multiselect id="copy_from_price_type" name="copy_from_price_type" ng-model="maintenanceController.maintenanceObject.copy_from_price_type_ids"
+                                    options="p.id as p.name for p in maintenanceController.PriceTypes|orderBy:['-is_default','id']"
+                                    ng-change="maintenanceController.fetchValidPriceTypes()" header="Select Price Type" selected-header="options selected"
+                                    multiple="true" required ng-disabled="!maintenanceController.maintenanceObject.from_effective_date"> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 p-0 m-t-5 box maintenanceworkspace" ng-if = "permissionsMap && permissionsMap.view && maintenanceController.isLoaded">
+                <div class="col-xs-12 f-16 panel-header">
+                    <span class="f-700 main-header">Price Change Reason</span>
+                    <div>
+                        <small>Select Price Change Reason</small>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-10">
+                    <div class="col-xs-12 p-0">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group" valdr-form-group>
+                                <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.retail_reason_type.$invalid">*
+                                </span>
+                                <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.retail_reason_type.$valid">*
+                                </span>
+                                <label class="panel-body-label">Price Change Type</label>
+                                <select name="retail_reason_type" class="form-control select-component input-sm" ng-model="maintenanceController.maintenanceObject.reason_type_id"
+                                    ng-options="p.id as p.reason_type for p in maintenanceController.retail_reason_types" data-ng-change="maintenanceController.filterRetailReason();"
+                                    required>
+                                    <option value="" disabled>Select Price Change Type</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.retail_reason.$invalid">*
+                                </span>
+                                <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.retail_reason.$valid">*
+                                </span>
+                                <label class="panel-body-label">Price Change Reason</label>
+                                <select name="retail_reason" class="form-control select-component input-sm" ng-model="maintenanceController.maintenanceObject.reason_id"
+                                    ng-options="p.id as p.name for p in maintenanceController.retail_filtered_reasons" required>
+                                    <option value="" disabled>Select Price Change Reason</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 p-0 m-t-5 box maintenanceworkspace" ng-if = "permissionsMap && permissionsMap.view && maintenanceController.isLoaded">
+                <div class="col-xs-12 f-16 panel-header">
+                    <span class="f-700 main-header">New Retail</span>
+                    <div>
+                        <small>Set New Retail</small>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-10" style="background: #fefff7;">
+                    <div class="col-xs-12 p-0">
+                        <div class="col-xs-12 p-0">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group" valdr-form-group>
+                                    <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.copy_to_effective_date.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.copy_to_effective_date.$valid">*
+                                    </span>
+                                    <label class="panel-body-label">Start Date</label>
+                                    <input type="text" id="copy_to_effective_date" name="copy_to_effective_date" required
+                                        class="form-control input-sm rcp-mydatepicker" ng-model="maintenanceController.maintenanceObject.copy_to_effective_date"
+                                        ng-change="maintenanceController.fetchValidPriceTypes()" ui-mask="{{ui_date_mask}}" mydatepicker
+                                        model-view-value="true" is-effective-date="false">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6" data-ng-if="maintenanceController.maintenanceObject.reason_type_id === 2">
+                                <div class="form-group" valdr-form-group>
+                                    <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.copy_to_effective_date.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.copy_to_effective_date.$valid">*
+                                    </span>
+                                    <label class="panel-body-label">End Date</label>
+                                    <input type="text" id="end_date" name="end_date" class="form-control input-sm rcp-mydatepicker" ng-model="maintenanceController.maintenanceObject.end_date"
+                                        ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                        is-effective-date="false" start-date="maintenanceController.maintenanceObject.copy_to_effective_date"
+                                        data-ng-change="maintenanceController.ValidationFromTo();">
+                                    <span class="validation-error-message" data-ng-if="maintenanceController.ValidationError">
+                                        {{skuRetailCtrl.ValidationError}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 p-0">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.copy_to_price_type_id.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.copy_to_price_type_id.$valid">*
+                                    </span>
+                                    <label class="panel-body-label">Price Type</label>
+                                    <select name="copy_to_price_type_id" id="copy_to_price_type_id" class="form-control select-component input-sm tabfocus"
+                                        ng-options="each.id as each.name for each in maintenanceController.CopyToPriceTypes|orderBy:['-is_default','id']"
+                                        required ng-model="maintenanceController.maintenanceObject.copy_to_price_type_id" ng-disabled="!maintenanceController.maintenanceObject.copy_to_effective_date">
+                                        <option value="" disabled>Select Price Type</option>
+                                    </select>
+                                    <!-- <multiselect id="copy_to_price_type_ids" name="copy_to_price_type_ids" ng-model="maintenanceController.maintenanceObject.copy_to_price_type_ids"
+                                            options="p.id as p.name for p in maintenanceController.CopyToPriceTypes|orderBy:['-is_default','id']"
+                                            header="Select Price Type" selected-header="options selected" multiple="true" required
+                                            ng-disabled="!maintenanceController.maintenanceObject.copy_to_effective_date"> -->
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 p-0 d-flex d-flex-v-center">
+                            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+                                <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.price_generate_method.$invalid">*
+                                </span>
+                                <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.price_generate_method.$valid">*
+                                </span>
+                                <label class="panel-body-label">Generate Price </label>
+                                <span data-ng-if="maintenanceController.maintenanceObject.price_generate_method" class="text-info zmdi zmdi-alert-octagon ng-isolate-scope p-l-5"
+                                    style="font-size:17px" title-direction="right" fixed-position="true" title="{{maintenanceController.generateRetailsInfo}}">
+                                </span>
+                                <select name="price_generate_method" id="copy_to_price_type_id" class="form-control select-component input-sm tabfocus" ng-model="maintenanceController.maintenanceObject.price_generate_method"
+                                    data-ng-change="maintenanceController.checkPriceGeneratingMethod(maintenanceController.maintenanceObject.price_generate_method);"
+                                    data-ng-required="maintenanceController.maintenanceObject.from_effective_date !== 'current'">
+                                    <option value="" disabled>Select Method</option>
+                                    <option value="percentage">By Percentage</option>
+                                    <option value="pricing_factor">By Pricing Factor</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-8" data-ng-if="maintenanceController.maintenanceObject.price_generate_method === 'percentage'">
+                                <div class="col-xs-12 d-flex p-0 m-t-10" style="align-items: center;padding: 5px 20px;">
+                                    <div class="input-group-percentage">
+                                        <input id="percentage_change_value" name="percentage_change_value" type="number" class="form-control input-sm"
+                                            ng-model="maintenanceController.maintenanceObject.percentage_change_value" placeholder="Percentage"
+                                            min="0" max="100" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon1">%</span>
+                                        </div>
+                                    </div>
+                                    <label class="align-items-center d-flex text-success m-l-15" style="font-weight: 700;">
+                                        <input type="radio" class="m-t-0 m-r-10" name="method"
+                                            ng-model="maintenanceController.maintenanceObject.method" value="inc"
+                                            data-ng-click="maintenanceController.maintenanceObject.no_lower_retail_change = null">
+                                        <i class="input-helper"></i> Increase
+                                    </label>
+                                    <label class="align-items-center d-flex text-danger m-l-15" style="font-weight: 700;">
+                                        <input type="radio" class="m-t-0 m-r-10" name="method"
+                                            ng-model="maintenanceController.maintenanceObject.method" value="off"
+                                            data-ng-click="maintenanceController.maintenanceObject.no_lower_retail_change = true">
+                                        <i class="input-helper"></i> Decrease
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4" data-ng-if="maintenanceController.maintenanceObject.price_generate_method === 'pricing_factor'">
+                                <div class="form-group">
+                                    <span class="c-red" ng-show="maintenanceController.mass_retail_maintenance_form.pricingFactor.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="maintenanceController.mass_retail_maintenance_form.pricingFactor.$valid">*
+                                    </span>
+                                    <label class="panel-body-label">Pricing Factor </label>
+                                    <input id="pricingFactor" name="pricingFactor" type="number" class="form-control input-sm" ng-model="maintenanceController.maintenanceObject.pricingFactor"
+                                        placeholder="Enter Pricing factor" min="1" max="5" required>
+                                </div>
+                                <!-- <div class="col-xs-12 d-flex p-l-0" style="align-items: center;padding: 5px 20px;" data-ng-if="maintenanceController.pricingFactor && maintenanceController.pricingFactor.factor">
+                                    <span>Pricing Factor: {{maintenanceController.pricingFactor.factor}}</span>
+                                </div>
+                                <div class="col-xs-12" data-ng-if="!maintenanceController.pricingFactor || !maintenanceController.pricingFactor.factor">
+                                    <span style="font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto';">Pricing factor does not exist for selected vendor.</span>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="col-xs-8 pull-right" ng-if="maintenanceController.maintenanceObject.price_generate_method !== 'pricing_factor' && (maintenanceController.mass_retail_maintenance_form.percentage_change_value.$error.min||maintenanceController.mass_retail_maintenance_form.percentage_change_value.$error.max)">
+                                <span class="text-danger">Percentage value can be between 1 to 100.
+                                </span>
+                            </div>
+                            <div class="col-xs-6 pull-right" ng-if="maintenanceController.maintenanceObject.price_generate_method === 'pricing_factor' &&(maintenanceController.mass_retail_maintenance_form.pricingFactor.$error.min||maintenanceController.mass_retail_maintenance_form.pricingFactor.$error.max)">
+                                <span class="text-danger p-l-20">Pricing factor value can be between 1 to 5.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12" data-ng-if="maintenanceController.maintenanceObject.method === 'off'">
+                            <div class="col-lg-8 col-md-8 col-sm-8 form-group m-b-10 p-l-5">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" data-ng-model="maintenanceController.maintenanceObject.no_lower_retail_change"
+                                            ng-true-value=true ng-false-value=false>
+                                        <i class="input-helper"></i> Don't change retail if existed retail has lower value
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-10 col-sm-12">
+                        <div class="form-group">
+                            <span style="color:red;" ng-show="maintenanceController.mass_retail_maintenance_form.rule_group_id.$invalid">*
+                            </span>
+                            <span style="color:green;" ng-show="maintenanceController.mass_retail_maintenance_form.rule_group_id.$valid">*
+                            </span>
+                            <label class="panel-body-label">Rounding Rule</label>
+                            <div class="d-flex">
+                                <select name="rule_group_id" id="rule_group_id" class="form-control select-component input-sm tabfocus"
+                                    ng-options="each.id as each.rule_group for each in maintenanceController.RoundingRuleGroups"
+                                    ng-model="maintenanceController.maintenanceObject.rule_group_id">
+                                    <option value="">None</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 m-t-10 m-b-30 p-0" ng-if = "permissionsMap && permissionsMap.view && maintenanceController.isLoaded">
+                <div class="col-xs-6 p-0 pull-right d-flex">
+                    <button id="executeButtonId" type="button" ng-disabled="!permissionsMap.create || maintenanceController.mass_retail_maintenance_form.$invalid||!maintenanceController.isSkuTypeSelected||maintenanceController.isExecuting===true || (maintenanceController.maintenanceObject.price_generate_method === 'pricing_factor' && !maintenanceController.maintenanceObject.pricingFactor) || (maintenanceController.maintenanceObject.price_generate_method === 'percentage' && (!maintenanceController.maintenanceObject.percentage_change_value || !maintenanceController.maintenanceObject.method))"
+                        class="btn btn-block btn-success f-700 m-l-5 m-t-0 waves-effect tabfocus-btn" ng-click="maintenanceController.executeRetailsCopy()"
+                        data-ng-disabled="maintenanceController.isExecuting">
+                        <span title="{{!permissionsMap.create ? 'Access denied' : ''}}" data-ng-if="!maintenanceController.isExecuting">Execute</span>
+                        <span data-ng-if="maintenanceController.isExecuting">
+                            <span class="fa fa-spin fa-spinner f-15 m-r-5"></span> Executing...
+                        </span>
+                    </button>
+                </div>
+                <div class="col-xs-6 d-flex col-xs-6 d-flex retail-success-msg text-success" data-ng-if="maintenanceController.successMsg && !maintenanceController.errorMsg">
+                    <span>{{maintenanceController.successMsg}}</span>
+                </div>
+                <div class="col-xs-6 d-flex col-xs-6 d-flex retail-error-msg text-danger" data-ng-if="maintenanceController.errorMsg">
+                    <span>{{maintenanceController.errorMsg}}</span>
+                </div>
+            </div>
+        </ng-form>
+    </div>
+    
+    <div ng-if="permissionsMap && !permissionsMap.view && maintenanceController.isLoaded"
+    ng-include="'./application/templates/restricted.access.html'"></div>
+    <div class="col-lg-12 text-center module-content-configuration p-0 "
+    data-ng-if="!maintenanceController.isLoaded">
+    <span class="f-17 f-700 c-black">Loading</span>
+    <span class="f-700" style="letter-spacing: 3px;">....</span>
+</div>
+    <div class="col-xs-5 p-0">
+        <div class="col-xs-12 p-0 mass-maintenance-detail-section" data-ng-if="maintenanceController.selectedVendor || maintenanceController.selectedPath || maintenanceController.selectedDivision|| maintenanceController.selectedDepartment">
+            <div class="col-xs-12">
+                <div class="col-xs-12 f-16 p-10 header-section bgm-white">
+                    <span class="f-700">Details</span>
+                </div>
+                <div class="col-xs-12 box filter-detail-section">
+                    <div class="count-section" data-ng-if="!maintenanceController.loadingSkus">
+                        <span>{{maintenanceController.Skus.length}}</span>
+                    </div>
+                    <div class="count-section" data-ng-if="maintenanceController.loadingSkus">
+                        <span>
+                            <i class="fa fa-spinner fa-spin f-20"></i>
+                        </span>
+                    </div>
+                    <div class="content-section">
+                        <div>SKUs are associated </div>
+                        <div class="d-flex d-flex-v-center" data-ng-if="maintenanceController.selectedPath">
+                            <div class="m-r-5" style="opacity: 0.3">
+                                <img src="./img/sidebar-icons/hierarchy-levels.svg" title="Division/Department/Class" style="width:18px;" />
+                            </div> -
+                            <span class="vendor-name m-l-5" ng-bind-html="maintenanceController.selectedPath"></span>
+                        </div>
+                        <div class="d-flex d-flex-v-center" data-ng-if="maintenanceController.selectedDivision && ! maintenanceController.selectedDepartment">
+                            <div class="m-r-5" style="opacity: 0.3">
+                                <img src="./img/sidebar-icons/hierarchy-levels.svg" title="Division/Department/Class" style="width:18px;" />
+                            </div> -
+                            <span class="vendor-name m-l-5" ng-bind-html="maintenanceController.division[0].division"></span>
+                        </div>
+                        <div class="d-flex d-flex-v-center" data-ng-if="maintenanceController.selectedDepartment || maintenanceController.selectedClasses">
+                            <div class="m-r-5" style="opacity: 0.3">
+                                <img src="./img/sidebar-icons/hierarchy-levels.svg" title="Division/Department/Class" style="width:18px;" />
+                            </div> -
+                            <span ng-if="!maintenanceController.selectedClasses || maintenanceController.selectedClasses.length ==0" class="vendor-name m-l-5">
+                                <span>{{maintenanceController.division[0].division}} <span class="zmdi zmdi-long-arrow-right c-red m-l-5 m-r-5"></span> 
+                                {{maintenanceController.department[0].department}}</span>
+                            </span>
+                            <span ng-if="maintenanceController.selectedClasses.length" class="vendor-name m-l-5">
+                                <span>{{maintenanceController.division[0].division}} <span class="zmdi zmdi-long-arrow-right c-red m-l-5 m-r-5"></span> {{maintenanceController.department[0].department}}
+                                <span class="zmdi zmdi-long-arrow-right c-red m-l-5 m-r-5"></span>{{maintenanceController.selectedClassNames}}</span>
+                            </span>
+                        </div>
+                        <div class="d-flex d-flex-v-center" data-ng-if="maintenanceController.selectedVendor">
+                            <div class="m-r-5" style="opacity: 0.3">
+                                <img src="./img/sidebar-icons/entity-config-vendor.svg" title="Vendor" style="width:18px;" />
+                            </div> -
+                            <span class="vendor-name m-l-5"> {{maintenanceController.selectedVendorNames}}</span>
+                        </div>
+                        <div class="d-flex d-flex-v-center" ng-if="maintenanceController.VendorCollections.length>0&&maintenanceController.selectedCollection">
+                            <div class="m-r-5" style="opacity: 0.3">
+                                <img src="./img/sidebar-icons/itemCollection.svg" title="Collection" style="width:18px;" />
+                            </div> -
+                            <span class="vendor-name m-l-5"> {{maintenanceController.selectedCollection}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 p-5 d-flex" data-ng-if="maintenanceController.executedCount || maintenanceController.failedCount || maintenanceController.retailExists || maintenanceController.notFound">
+                <div class="status-container">
+                    <div class="status-count passed">
+                        {{maintenanceController.executedCount}}
+                    </div>
+                    <div class="status-label">
+                        Copied
+                    </div>
+                </div>
+                <div class="status-container">
+                    <div class="status-count failed">
+                        {{maintenanceController.failedCount}}
+                    </div>
+                    <div class="status-label">
+                        Failed
+                    </div>
+                </div>
+                <div class="status-container">
+                    <div class="status-count exist">
+                        {{maintenanceController.retailExists}}
+                    </div>
+                    <div class="status-label">
+                        Exists
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 d-flex d-flex-h-center d-flex-v-center p-t-10 p-b-10" style="border: 1px solid #efeeee" data-ng-if="maintenanceController.notFound">
+                <span class="text-danger f-17">
+                    Retails not found for {{maintenanceController.notFound}} sku[s]
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 m-t-10" data-ng-if="maintenanceController.Skus.length === 0 && maintenanceController.selectedVendor && !maintenanceController.selectedPath && !maintenanceController.loadingSkus">
+            <div class="rc-alert-type-info" aria-hidden="false" role="alert">
+                <div class="col-xs-12 d-flex m-b-5 p-0">
+                    <div class="m-r-10">
+                        <span class="text-info zmdi zmdi-alert-octagon ng-isolate-scope" style="font-size:35px" title-direction="right" fixed-position="true">
+                        </span>
+                    </div>
+                    <div style="flex:1;">
+                        <div class="f-15 f-700 text-info">Info</div>
+                        <div>
+                            <span class="c-black ng-binding">Please reset the selected vendor and check for any other vendors which has SKUs.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 m-t-10" data-ng-if="(maintenanceController.Skus.length === 0 &&  !maintenanceController.loadingSkus && !maintenanceController.selectedVendor) && (maintenanceController.selectedPath || maintenanceController.selectedDivision || maintenanceController.selectedDepartment)">
+            <div class="rc-alert-type-info" aria-hidden="false" role="alert">
+                <div class="col-xs-12 d-flex m-b-5 p-0">
+                    <div class="m-r-10">
+                        <span class="text-info zmdi zmdi-alert-octagon ng-isolate-scope" style="font-size:35px" title-direction="right" fixed-position="true">
+                        </span>
+                    </div>
+                    <div style="flex:1;">
+                        <div class="f-15 f-700 text-info">Information</div>
+                        <div>
+                            <span class="c-black ng-binding" data-ng-if="!maintenanceController.selectedVendor">Please reset the selected Division/Department/Class and check for any other Division/Department/Class
+                                which has SKUs.
+                            </span>
+                            <span class="c-black ng-binding" data-ng-if="maintenanceController.selectedVendor">Please reset the selected Division/Department/Class or selected vendor which has SKUs.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

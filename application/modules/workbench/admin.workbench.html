@@ -1,0 +1,441 @@
+<ul class="col-xs-12 main-menu rcpscrollbar o-auto" style="height: calc(100% - 80px);">
+    <li data-ui-sref-active="active">
+        <keybinding on="home" invoke="mactrl.goToPage( 'common.dashboard')" />
+        <a data-ui-sref="common.dashboard" data-ng-click="mactrl.sidebarStat($event)" ng-show="!showalert">
+            <div data-ng-include="'./img/sidebar-icons/home.svg'"></div>
+            <span class="module-name">Home
+            </span>
+        </a>
+    </li>
+
+    <li data-ui-sref-active="active">
+        <a data-ui-sref="common.prime.attributes" data-ng-click="mactrl.sidebarStat($event)">
+            <div data-ng-include="'./img/sidebar-icons/package.svg'"></div>
+            <span class="module-name">Attributes</span>
+        </a>
+    </li>
+    <li data-ui-sref-active="active">
+        <a data-ui-sref="common.prime.hierarchy" data-ng-click="mactrl.sidebarStat($event)">
+            <div data-ng-include="'./img/sidebar-icons/hierarchy-levels.svg'"></div>
+            <span class="module-name">Hierarchies</span>
+        </a>
+    </li>
+    <li class="sub-menu p-relative"
+        data-ng-class="{'active toggled' : mactrl.locationState.$$url.includes('/reference')}">
+        <a href="" toggle-submenu>
+            <div data-ng-include="'./img/sidebar-icons/reference_files.svg'"></div>
+            <span class="module-name">Reference Files</span>
+        </a>
+        <ul class="main-menu">
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.codelist" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/submenu_code.svg'"></div>
+                    <span class="module-name">System Codes</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.company" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/submenu_company.svg'"></div>
+                    <span class="module-name">Company</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.title" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/submenu_title.svg'"></div>
+                    <span class="module-name">Job Title</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.mtocollections" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/mto_collections.svg'"></div>
+                    <span class="module-name">MTO Collections</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.mtofamilies" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/mto-family.svg'"></div>
+                    <span class="module-name">MTO Families</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.mtopricegroups" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/mto-price-group.svg'"></div>
+                    <span class="module-name">MTO Price Groups</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.itemcollections" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/itemCollection.svg'"></div>
+                    <span class="module-name">Item Collections</span>
+                </a>
+            </li>
+
+            <!------------------Hide SKU Options menu----------------->
+            <!-------------------------------------------------------->
+            <!-- <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.skuHeader" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/skuOption.svg'"></div>
+                    <span class="module-name">SKU Options</span>
+                </a>
+            </li> -->
+            <!------------------Hide SKU Options menu----------------->
+            <!-------------------------------------------------------->
+
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.inventorymethods" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/inventory-method.svg'"></div>
+                    <span class="module-name">Inventory Methods</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.inventorytypes" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/inventory-type.svg'"></div>
+                    <span class="module-name">Inventory Types</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.inventoryquality" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/inventory-quality.svg'"></div>
+                    <span class="module-name">Inventory Qualities</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.country" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/submenu_country.svg'"></div>
+                    <span class="module-name">Country</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.vendorpurchase" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/submenu_vendor_purchase.svg'"></div>
+                    <span class="module-name">Vendor Terms</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.corporatecontrol" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/corporatemsg.svg'"></div>
+                    <span class="module-name">Corporate Message</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.contactsubtypes" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/submenu_contact.svg'"></div>
+                    <span class="module-name">Contact Sub Types</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.individual" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/submenu_individual.svg'"></div>
+                    <span class="module-name">Individual</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.orderhelptext" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/type.svg'"></div>
+                    <span class="module-name">Order Help Text</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.invoicetermsandconditions" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/invoice_copy.svg'"></div>
+                    <span class="module-name">Invoice Terms and Conditions</span>
+                </a>
+            </li>            
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.financeterms" data-ng-click="mactrl.sidebarStat($event)">
+                    <i class="fas fa-money-check-alt" style="left: 12px !important;"></i>
+                    <span class="module-name">Financing Terms</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.financepricefactor" data-ng-click="mactrl.sidebarStat($event)">
+                    <i class="fas fa-donate" style="left: 12px !important;"></i>
+                    <span class="module-name">Financing Payment Factor</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.financingchoices" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/finance-choice.svg'"></div>
+                    <span class="module-name">Financing Choices</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.pricingchoices" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/retail_price_type.svg'"></div>
+                    <span class="module-name">Pricing Choices</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.financingpriceadjustments" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/finance-price-adjustment.svg'"></div>
+                    <span class="module-name">Financing Price Adjustments</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.upcconfiguration" data-ng-click="mactrl.sidebarStat($event)">
+                    <i class="fas fa-barcode" style="left: 12px !important;"></i>
+                    <span class="module-name">UPC Duplicate Configuration</span>
+                </a>
+            </li>
+
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.peexport" data-ng-click="mactrl.sidebarStat($event)">
+                    <i class="zmdi zmdi-cloud zmdi-hc-fw" style="left: 12px !important;"></i>
+                    <span class="module-name">Image Report</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="sub-menu p-relative"
+        data-ng-class="{'active toggled' : mactrl.locationState.$$url.includes('/configure')}">
+        <a href="" toggle-submenu>
+            <div data-ng-include="'./img/sidebar-icons/file_configuration.svg'"></div>
+            <span class="module-name">File Configuration</span>
+        </a>
+        <ul class="main-menu">
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.locationtype"
+                    data-ng-class="{'active': mactrl.locationState.$$url.includes('/configure/location')}"
+                    data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-location-type.svg'"></div>
+                    <span class="module-name">Location
+                        Type</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.vendortype"
+                    data-ng-class="{'active': mactrl.locationState.$$url.includes('/configure/vendor')}"
+                    data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-vendor-type.svg'"></div>
+                    <span class="module-name">Vendor Type</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.mtotype"
+                    data-ng-class="{'active': mactrl.locationState.$$url.includes('/configure/mto')}"
+                    data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-made-to-order-type.svg'"></div>
+                    <span class="module-name">Made to Order Type</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.itemtype"
+                    data-ng-class="{'active': mactrl.locationState.$$url.includes('/configure/item')}"
+                    data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-item.svg'"></div>
+                    <span class="module-name">Item Type</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.orderadvisortype"
+                    data-ng-class="{'active': mactrl.locationState.$$url.includes('/configure/orderadvisor')}"
+                    data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/order-advisor.svg'"></div>
+                    <span class="module-name">Sale Order Advisor Type</span>
+                </a>
+            </li>
+            <!-- <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.bulkupdateinterface"
+                    data-ng-class="{'active': mactrl.locationState.$$url.includes('/configure/bulkupdateinterface')}"
+                    data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-vendor-type.svg'"></div>
+                    <span class="module-name">Bulk Update Interface</span>
+                </a>
+            </li> -->
+        </ul>
+    </li>
+    <li class="sub-menu p-relative"
+        data-ng-class="{'active toggled' : mactrl.locationState.$$url.includes('/maintenance')}">
+        <a href="" toggle-submenu>
+            <div data-ng-include="'./img/sidebar-icons/database.svg'"></div>
+            <span class="module-name">Master Files</span>
+        </a>
+        <ul class="main-menu">
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.location" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-location.svg'"></div>
+                    <span class="module-name">Location</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.vendor" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-vendor.svg'"></div>
+                    <span class="module-name">Vendor</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.mtooptions"
+                    data-ng-class="{'active' : mactrl.locationState.$$url.includes('/maintenance/mto')}"
+                    data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-made-to-order.svg'"></div>
+                    <span class="module-name">Made To Order</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.itemMaintenance" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/entity-config-item-type.svg'"></div>
+                    <span class="module-name">Item, SKU and Retail</span>
+                </a>
+            </li>
+            <!-- <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.templatesku" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/template.svg'"></div>
+                    <span class="module-name">Templates</span>
+                </a>
+            </li> -->
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.orderadvisor" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/order-advisor.svg'"></div>
+                    <span class="module-name">Sale Order Advisors</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- Interface Resync Menu START -->
+    <li class="sub-menu p-relative" data-ng-class="{'active toggled' : mactrl.locationState.$$url.includes('/resync')}">
+        <a href="" toggle-submenu>
+            <div data-ng-include="'./img/sidebar-icons/interface.svg'"></div>
+            <span class="module-name">Interfaces</span>
+        </a>
+        <ul class="main-menu">
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.interface" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/interface_resync.svg'"></div>
+                    <span class="module-name">Interface Resync</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <!-- Interface Resync Menu END -->
+
+    <div class="p-10 sidebar-section-header">Settings</div>
+    <li class="sub-menu p-relative"
+        data-ng-class="{'active toggled': mactrl.locationState.$$url.includes('/retailsetting') }">
+        <a href="" toggle-submenu>
+            <div data-ng-include="'./img/sidebar-icons/settings.svg'"></div>
+            <span class="module-name">Retail Settings</span>
+        </a>
+        <ul class="main-menu">
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.roundingrules" data-ng-click="mactrl.sidebarStat($event)">
+                    <svg title="Rounding Rules" title-direction="right" version="1.1" id="Capa_1"
+                        class="sidebar-svg-icon" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink " x="0px " y="0px " viewBox="0 0 510 510 " style="enable-background:new 0 0
+                            510 510; " xml:space="preserve">
+                        <g>
+                            <g id="unknown-2 ">
+                                <path d="M255,357h127.5v-38.25H255V357z M255,0C114.75,0,0,114.75,0,255s114.75,255,255,255s255-114.75,255-255S395.25,0,255,0z M102,153h51v-51h38.25v51h51v38.25h-51v51H153v-51h-51V153z M255,459c-56.1,0-107.1-22.95-145.35-58.65l290.7-290.7
+                    C436.05,147.9,459,198.9,459,255C459,367.2,367.2,459,255,459z " />
+                            </g>
+                        </g>
+                    </svg>
+                    <span class="module-name">Rounding Rules</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.retailpricetype" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/retail_price_type.svg'"></div>
+                    <span class="module-name">Price Types</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.massmaintenance" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/retail_maintenance.svg'"></div>
+                    <span class="module-name">Mass Maintenance</span>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="common.prime.retailreport" data-ng-click="mactrl.sidebarStat($event)">
+                    <div data-ng-include="'./img/sidebar-icons/retail_report.svg'"></div>
+                    <span class="module-name">Retail Report</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li data-ui-sref-active="active">
+        <a data-ui-sref="common.prime.reactivatskus" data-ng-click="mactrl.sidebarStat($event)">
+            <div data-ng-include="'./img/sidebar-icons/reactivate.svg'"></div>
+            <span class="module-name">Reactivate SKUs</span>
+        </a>
+    </li>
+    <li data-ui-sref-active="active">
+        <a data-ui-sref="common.prime.tax" data-ng-click="mactrl.sidebarStat($event)">
+            <div data-ng-include="'./img/sidebar-icons/tax.svg'"></div>
+            <span class="module-name">Sales Tax</span>
+        </a>
+    </li>
+    <!-- <li data-ui-sref-active="active">
+        <a data-ui-sref="common.prime.discount" data-ng-click="mactrl.sidebarStat($event)">
+            <div data-ng-include="'./img/sidebar-icons/discount-type.svg'"></div>
+            <span class="module-name">Discount Types</span>
+        </a>
+    </li> -->
+    <li data-ui-sref-active="active">
+        <a class="d-flex" style="padding: 12px;" data-ui-sref="common.prime.marketingcampaigns"
+            data-ng-click="mactrl.sidebarStat($event)">
+            <div style="margin: auto auto; width: 9%;">
+                <span data-ng-include="'./img/sidebar-icons/marketing-campaigns-promotions.svg'"></span>
+            </div>
+            <span style="width: 90%;" class="module-name p-l-10" title="Marketing Campaigns and Promotions">
+                Marketing Campaigns and Promotions
+            </span>
+        </a>
+    </li>
+    <li data-ui-sref-active="active">
+        <a data-ui-sref="common.prime.templates" data-ng-click="mactrl.sidebarStat($event)">
+            <div data-ng-include="'./img/sidebar-icons/toolbar-quick-access.svg'"></div>
+            <span class="module-name">Quick Access Toolbar</span>
+        </a>
+    </li>
+    <li class="hidden-md hidden-sm hidden-xs">
+        <a class="bottom-menu-icon d-flex align-items-center cursor-pointer pull-left c-white"
+            style="padding-left:10px;position:fixed;" data-target="sidebar" data-change-layout="mactrl.layoutType"
+            data-ng-click="mactrl.expandMinimizeSidebar()">
+            <img src="./img/double-arrow-right.svg" data-ng-if="mactrl.issideMenuVisible === true">
+            <img src="./img/double-arrow-left.svg" data-ng-if="mactrl.issideMenuVisible === false">
+        </a>
+    </li>
+    <li class="hidden-md hidden-sm hidden-xs">
+        <a class="bottom-menu-icon d-flex align-items-center cursor-pointer pull-left c-white"
+            style="padding: 12px 15px;left: 0;background: #31384c;position:fixed;" data-target="sidebar"
+            data-change-layout="mactrl.layoutType" data-ng-click="mactrl.expandMinimizeSidebar()">
+            <img src="./img/double-arrow-right.svg" data-ng-if="mactrl.issideMenuVisible === true" title="Expand"
+                title-direction="right">
+            <img src="./img/double-arrow-left.svg" data-ng-if="mactrl.issideMenuVisible === false" title="contraction"
+                title-direction="right">
+        </a>
+    </li>
+    <!--<li class="sub-menu p-relative" data-ng-class="{'active toggled': mactrl.$state.includes('data-setup') }">-->
+    <!--<a href="" toggle-submenu>-->
+    <!--<div data-ng-include="'./img/sidebar-icons/sku.svg'"></div>-->
+    <!--<span class="module-name">SKU Settings</span>-->
+    <!--</a>-->
+    <!--<ul class="main-menu">-->
+    <!--<li data-ui-sref-active="active">-->
+    <!--<a data-ui-sref="common.prime.skuformat" data-ng-click="mactrl.sidebarStat($event)">-->
+    <!--<div data-ng-include="'./img/sidebar-icons/sku.svg'"></div>-->
+    <!--<span class="module-name">SKU Number Format</span>-->
+    <!--</a>-->
+    <!--</li>-->
+    <!--<li data-ui-sref-active="active">-->
+    <!--<a data-ui-sref="common.prime.tag" data-ng-click="mactrl.sidebarStat($event)">-->
+    <!--<div data-ng-include="'./img/sidebar-icons/hangtag.svg'"></div>-->
+    <!--<span class="module-name">Hang Tags</span>-->
+    <!--</a>-->
+    <!--</li>-->
+    <!--</ul>-->
+    <!--</li>-->
+    <!--<li data-ui-sref-active="active">-->
+    <!--<a data-ui-sref="common.prime.tickets" data-ng-click="mactrl.sidebarStat($event)">-->
+    <!--<div data-ng-include="'./img/sidebar-icons/check.svg'"></div>-->
+    <!--<span class="module-name">Service Requests</span>-->
+    <!--</a>-->
+    <!--</li>-->
+    <!-- <a class="d-flex align-items-center cursor-pointer pull-left hidden-md hidden-sm hidden-xs c-white" data-target="sidebar" data-change-layout="mactrl.layoutType"
+            data-ng-click="mactrl.sidebarStat($event)" style="font-size: 22px;padding:12px 10px;position:fixed;bottom:0;">
+            <i class="zmdi zmdi-menu"></i>
+                 <span class="f-12 sidemenuText m-l-10" data-ng-class="{'d-none':mactrl.issideMenuVisible === true}">Collapse</span>
+    </a> -->
+
+</ul>

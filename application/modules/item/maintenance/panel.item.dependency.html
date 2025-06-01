@@ -1,0 +1,141 @@
+<style>
+    button:focus {
+      outline: 5px auto #6ecaf6!important
+    }
+  
+    .dependentEntityList {
+      font-size: 0.89em;
+      margin: 2px 0px;
+      padding: 5px 0px;
+      background-color: #1e2c58;
+      padding: 6px;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':itemMaintCtrl.$showErrorDetails === true || itemMaintCtrl.showDuplicateItems === true}">
+    <div class="col-xs-12 m-t-25 d-flex">
+        <button type="button" id="dep_det_close" name="dep_det_close" class="p-0 bg-none border-none  btn-link" data-ng-click="itemMaintCtrl.closeForm('linkedVendor');itemMaintCtrl.showDuplicateItems = false;">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="p-0 text-center" style="flex:1">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if = "!itemMaintCtrl.showDuplicateItems">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h5>Item Details</h5>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success" title="{{itemMaintCtrl.itemCol_details.description}}">{{itemMaintCtrl.itemCol_details.description | truncate:50}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{itemMaintCtrl.itemCol_details.status}}">{{itemMaintCtrl.itemCol_details.status}}</td>
+                    </tr>
+                </table>
+                <h5> Dependent {{itemMaintCtrl.$errorDependentData.dependent_entity}} Details</h5>
+                <div ng-if="itemMaintCtrl.$errorDependentData.dependent_entity === 'SKU'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Description</td>
+                            <td style="white-space:pre-wrap;line-height:1.2 !important" class="highlight-text-success" title="{{itemMaintCtrl.$errorDependentData.description}}">{{itemMaintCtrl.$errorDependentData.description}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{itemMaintCtrl.$errorDependentData.status}}">{{itemMaintCtrl.$errorDependentData.status | truncate:50}}</td>
+                        </tr>
+                        <tr>
+                            <td>SKU type</td>
+                            <td title="{{itemMaintCtrl.$errorDependentData.sku_type}}">{{itemMaintCtrl.$errorDependentData.sku_type | titleCase}}</td>
+                        </tr>
+                        <tr>
+                            <td>SKU #</td>
+                            <td title="{{itemMaintCtrl.$errorDependentData.sku}}">{{itemMaintCtrl.$errorDependentData.sku }}</td>
+                        </tr>
+                        <tr>
+                            <td>SKU option</td>
+                            <td title="{{itemMaintCtrl.$errorDependentData.option_list_name}}">{{itemMaintCtrl.$errorDependentData.option_list_name}}</td>
+                        </tr>
+                        <!-- <tr>
+                            <td>Next Effective Date</td>
+                            <td ng-show="itemMaintCtrl.$errorDependentData.next_status !== 'None'" title="{{itemMaintCtrl.$errorDependentData.next_effective_date | FormatDate}}">{{itemMaintCtrl.$errorDependentData.next_effective_date | FormatDate}}</td>
+                            <td ng-show="itemMaintCtrl.$errorDependentData.next_status === 'None'" title="{{itemMaintCtrl.$errorDependentData.next_effective_date}}">N/A</td>
+                        </tr> -->
+                    </table>
+                </div>
+                <div ng-if="itemMaintCtrl.$errorDependentData.dependent_entity === 'Item Set'">
+                    <table class="table table-bordered dependency-table">
+                        <!--<tr>
+                            <td>Description</td>
+                            <td class="highlight-text-success" title="{{itemMaintCtrl.$errorDependentData.description}}">{{itemMaintCtrl.$errorDependentData.description | truncate:20}}</td>
+                        </tr>-->
+                        <tr>
+                            <td>Set Description</td>
+                            <td class="highlight-text-success" title="{{itemMaintCtrl.$errorDependentData.item_description}}">{{itemMaintCtrl.$errorDependentData.item_description}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{itemMaintCtrl.$errorDependentData.code}}">{{itemMaintCtrl.$errorDependentData.code | truncate:50}}</td>
+                        </tr>
+                        <!--  <tr>
+                            <td>Quantity</td>
+                            <td title="{{itemMaintCtrl.$errorDependentData.quantity}}">{{itemMaintCtrl.$errorDependentData.quantity}}</td>
+                        </tr> -->
+                    </table>
+                </div>
+                </br>
+                <div class="dependency-notifyMessage"><span>{{itemMaintCtrl.$errorDependentData.message}}</span></div>
+                <!-- <button type="button" class="btn btn-view-values m-5 pull-right m-t-10" ng-click=""><bold>Delete Item</bold></button>-->
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if = "itemMaintCtrl.showDuplicateItems === true;">
+        <div class="d-flex m-b-10 m-t-10">
+          <div class="m-auto updatepanel">
+            <div data-ng-include="'./img/sidebar-icons/entity-config-item.svg'"></div>
+          </div>
+        </div>
+        <div>
+          <div class="col-xs-12">
+            <div class="dependencyMargin">
+                <div class="col-xs-12 p-0 m-b-20">
+                    <h5>Item Details</h5>
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Item Type</td>
+                            <td>
+                            <label ng-repeat="itemType in head.selectedTreePath">
+                                {{itemType}}
+                                <span ng-if="$index!==(head.selectedTreePath.length-1)" class="p-l-5 p-r-5 zmdi zmdi-long-arrow-right arrow-style c-firebrick"></span>
+                            </label></td>
+                        </tr>
+                        <tr>
+                            <td>Vendor</td>
+                            <td>{{itemMaintCtrl.selectedVendor.name}}</td>
+                        </tr>
+                    </table>
+                </div>
+            <div>
+              <h4> Similar Item Descriptions </h4>
+              <div class="rcpscrollbar dependency-entityBox">
+                <div class="col-xs-12 p-0" data-ng-repeat="item in itemMaintCtrl.duplicateItemList">
+                    <div class="dependentEntityList">
+                      <span title="{{item.description}}">{{item.description | truncate:40}}</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+              <button class="btn-secondary waves-effect" ng-click="itemMaintCtrl.showDuplicateItems = false;">
+                <span>
+                  <b>Cancel</b>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

@@ -1,0 +1,38 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+    .tabselected {
+    border-bottom: 1px solid #2196f3!important;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+</style>
+<div id="rcrightsidebar" class="rc-scroll-bar" data-ng-controller="AddrCntController as addrcntCtrl"
+    data-ng-class="{'toggled':isShowAddressContactPanel === true}" data-ng-init="addrcntCtrl.showAddressPanel();">
+    <div class="m-t-25 d-flex">
+        <button type="button" class="p-0 cursor-pointer p-absolute bg-none border-none btn-link" data-ng-click="closeAddrCntPanel();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="p-0 m-auto">
+            <label class="rclabel editformlabel" title=""><strong>Address and contact</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <button type="button" id="add_tab" name="add_tab" class="col-xs-6 text-center p-15 cursor-pointer bg-none" style="  border-top: none;
+        border-right: none;border-left: none;border-bottom:none" data-ng-click="addrcntCtrl.showAddressPanel();"
+            data-ng-class="{'tabselected f-700':addrcntCtrl.showAddress}">
+            <span class="f-14">Address</span>
+        </button>
+        <button type="button" id="cont_tab" name="cont_tab" class="col-xs-6 text-center p-15 cursor-pointer bg-none" style="border-top: none;
+        border-right: none;border-left: none;border-bottom:none;" data-ng-click="addrcntCtrl.showContactPanel();"
+            data-ng-class="{'tabselected f-700':addrcntCtrl.showContacts}">
+            <span class="f-14">Contact</span>
+        </button>
+    </div>
+    <div class="col-xs-12 p-0" ng-if="addrcntCtrl.showAddress"
+        data-ng-include="'./application/templates/panel.address.html'"></div>
+    <div class="col-xs-12 p-0" ng-if="addrcntCtrl.showContacts"
+        data-ng-include="'./application/templates/panel.contacts.html'"></div>
+</div>

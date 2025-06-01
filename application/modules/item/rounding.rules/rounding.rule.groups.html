@@ -1,0 +1,257 @@
+<div class="container col-lg-12 p-0" data-ng-controller="RoundingRuleGroupsController as ruleCtrl">
+    <!--list panel-->
+    <!--  <rcp-module-header module-name="Individual" button-name="Individual" svg-image="submenu_individual.svg" create-new-fn="ruleCtrl.openForm();"></rcp-module-header>-->
+    <!-- <nav class="navbar navbar-toolbar navbar-default fixed-top">
+        <div class="bgm-white header-module">
+            <div class="navbar-header p-relative" style="min-height: inherit;">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                <div class="image-module p-absolute">
+                    <img src="./img/sidebar-icons/rounding_rules.svg" />
+                </div>
+                <div class="label-module p-absolute">
+                    <a class="navbar-brand" href="javascript:void(0)">Rounding Rule Groups</a>
+                </div>
+            </div>
+        </div>
+    </nav> -->
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/rounding_rules.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Rounding Rule Groups</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+                    <div class="record-count-section tableheader-btn">
+                        <!-- <span data-ng-if="!search"> {{ruleCtrl.rowsInfo}} </span> -->
+                        <span> Displaying {{(ruleCtrl.allRuleGroups|filter:search).length}} of {{ruleCtrl.rowsCount}}
+                            Records </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right">
+                                    <input class="form-control input-sm " type="text " ng-model="search"
+                                        id="inlineSearch" indicate-quick-search placeholder="Quick Search "
+                                        />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" ng-click="ruleCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block waves-effect">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" ng-click="ruleCtrl.getRoundingRuleGroups(true);"
+                                    class="btn-primal btn-block waves-effect">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right">
+                                <li>
+                                    <a data-ng-click="ruleCtrl.ShowHideColumnSettings()" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li>
+                                    <a data-ng-click="ruleCtrl.getRoundingRuleGroups(true);" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration"
+        data-ng-if="!ruleCtrl.rowsCount && !ruleCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="ruleCtrl.rowsCount > 0 && ruleCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/item/rounding.rules/hideShowColumns.html'"></div>
+                <div class="table-responsive module-content-configuration">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table-without-documents-icon table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="ruleCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="ruleCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="ruleCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="ruleCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="ruleCtrl.sortType = 'status_id'; sortReverse = !sortReverse"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="ruleCtrl.sortType == 'status_id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="ruleCtrl.sortType == 'status_id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="rule_group_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="ruleCtrl.sortType = 'rule_group'; sortReverse = !sortReverse"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.ruleGroupName.visible == 0">
+                                        <span class="handle">Rule Group Name</span>
+                                        <span ng-show="ruleCtrl.sortType == 'rule_group' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="ruleCtrl.sortType == 'rule_group' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="is_default_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="ruleCtrl.sortType = 'is_default'; sortReverse = !sortReverse"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.isDefault.visible == 0">
+                                        <span class="handle">Is Default</span>
+                                        <span ng-show="ruleCtrl.sortType == 'is_default' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="ruleCtrl.sortType == 'is_default' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" style="width:5%" id="view_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.rules.visible == 0">
+                                        <span class="handle">Rules</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="rule in rules = (ruleCtrl.allRuleGroups|filter:search)|orderBy:ruleCtrl.sortType:sortReverse|itemsPerPage:ruleCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === ruleCtrl.selectedRow}"
+                                    ng-click="ruleCtrl.setClickedRow($index,rule);" selectedrow="{{rule}}">
+                                    <td class="id_col text-center"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.id.visible == 0">
+                                        {{rule.id}}</td>
+                                    <td class="status_col"
+                                        ng-class="{'text-success f-500': rule.status==='Active' , 'text-warning f-300': rule.status ==='Pending Active', 'text-primary f-300': rule.status ==='Inactive','text-info f-300': rule.status==='Pending Inactive'}"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.status.visible == 0">
+                                        {{rule.status}}</td>
+                                    <td class="rules_col"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.ruleGroupName.visible == 0">
+                                        {{rule.rule_group}}</td>
+                                    <td class="is_default_col text-center"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.isDefault.visible == 0">
+                                        <span>
+                                            <i ng-show="rule.is_default === 1" class="glyphicon glyphicon-ok c-green"
+                                                title="Yes" title-direction="right" fixed-position="true"></i>
+                                            <i ng-show="rule.is_default === 0" class="glyphicon glyphicon-remove c-red"
+                                                title="No" title-direction="right" fixed-position="true"></i>
+                                        </span>
+                                    </td>
+                                    <td class="view_col text-center"
+                                        data-ng-hide="ruleCtrl.roundingRulesGroupGrid.columns.rules.visible == 0">
+                                        <a class="f-700 cursor-pointer"
+                                            data-ui-sref="common.prime.rules({rule_group_id:rule.id, rule_group_name:rule.rule_group})">View
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 justify-content-between d-flex align-items-center">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                            boundary-links="true" on-page-change="ruleCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="ruleCtrl.pageSize = 10"
+                                ng-class="{'active':ruleCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="ruleCtrl.pageSize = 25"
+                                ng-class="{'active':ruleCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="ruleCtrl.pageSize = 50"
+                                ng-class="{'active':ruleCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="ruleCtrl.pageSize = 100"
+                                ng-class="{'active':ruleCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="ruleCtrl.rowsCount === 0 && ruleCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No rounding rule group exists. Please add rounding rule group.</span>
+        </div>
+    </div>
+    <!--     <div data-ng-include="'./application/modules/item/rounding.rules/panel.rounding.rules.details.html'"></div> -->
+    <div class="col-lg-12 p-0">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':ruleCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{ruleCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="ruleCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{ruleCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{ruleCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="ruleCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

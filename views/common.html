@@ -1,0 +1,24 @@
+<header id="header" class="header" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'application/templates/header.html'" data-ng-controller="HeaderController as hctrl">
+</header>
+<section id="main" class="main-section" data-current-skin={{mactrl.currentSkin}}>
+
+    <div class="col-md-12 pull-right">
+        <!--<div growl></div>-->
+    </div>
+
+
+    <aside id="sidebar" class="sidebar" data-workbench="{{mactrl.selected_workbench}}" data-current-skin={{mactrl.currentSkin}} data-ng-include src="'sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+    <aside id="minisidebar" class="minisidebar" data-workbench="{{mactrl.selected_workbench}}" data-current-skin={{mactrl.currentSkin}} data-ng-include="'./application/templates/mini-sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === false }"
+        style="overflow:visible;"></aside>
+
+    <aside id="chat" data-ui-view="info" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content" class="page-view" data-ui-view>
+    </section>
+
+</section>
+<!-- Section to add the footer in all pages -->
+<div class="col-xs-12 p-0" data-ng-controller="DashboardController as dashboardController">
+    <div data-ng-include src="'application/modules/dashboard/dashboard-version-popup.html'"></div>
+    <div data-ng-include src="'template/footer.html'"  style="position: inherit;"></div>
+</div>

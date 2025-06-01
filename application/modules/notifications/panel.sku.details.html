@@ -1,0 +1,100 @@
+<div id="rcrightsidebar" class="changehistory" ng-class="{'toggled':notificationCtrl.showSkusDetail}">
+  <div class="col-xs-12 d-flex d-flex-v-center sidepanel-header m-t-15">
+    <div class="close-icon">
+      <a data-ng-click="notificationCtrl.showSkusDetail = false;" class="cursor-pointer">
+        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+      </a>
+    </div>
+    <div class="d-flex-h-center d-flex panel-name-section" style="flex:1;">
+      <label class="rclabel editformlabel" style="margin-left: -7px;">
+        <strong>More Details</strong>
+      </label>
+    </div>
+  </div>
+
+  <div class="col-lg-12 d-flex justify-content-center">
+    <div class="m-b-10 m-t-10">
+      <div class="m-auto updatepanel">
+        <div data-ng-include="'./img/sidebar-icons/more.svg'" style="height: 150px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notification-details-container overflow-auto col-xs-12">
+    <div class="f-14 notification-tab m-b-10 p-10">
+      <div class="p-0 m-r-10">
+        <strong>
+          <span data-ng-if="notificationCtrl.selectedNotification.created_by">{{notificationCtrl.usersMap[notificationCtrl.selectedNotification.created_by].name}}</span>
+          <span data-ng-if="!notificationCtrl.selectedNotification.created_by && notificationCtrl.selectedNotification.email_id">{{notificationCtrl.selectedNotification.email_id}}</span>
+        </strong>
+        <span data-ng-if="notificationCtrl.selectedNotification.maintenance_description.toLowerCase() !== 'image[s]'">
+          <span data-ng-if="notificationCtrl.selectedNotification.status !== 'reverted'">changed</span>
+          <span data-ng-if="notificationCtrl.selectedNotification.status === 'reverted'">reverted</span>
+          <strong>{{notificationCtrl.selectedNotification.maintenance_description}}</strong> to
+        </span>
+        <span data-ng-if="notificationCtrl.selectedNotification.maintenance_description.toLowerCase() === 'image[s]'">
+          <span>
+            <span data-ng-if="notificationCtrl.selectedNotification.status !== 'reverted'"> uploaded </span>
+            <span data-ng-if="notificationCtrl.selectedNotification.status === 'reverted'"> reverted </span> image[s]
+            <span data-ng-if="notificationCtrl.selectedNotification.status === 'reverted'"> to </span>
+          </span>
+        </span>
+      </div>
+      <div>
+        <span style="word-break: break-word;" data-ng-if="notificationCtrl.selectedNotification.maintenance_description.toLowerCase() !== 'image[s]' && notificationCtrl.selectedNotification.maintenance_description.toLowerCase() !== 'first cost' && notificationCtrl.selectedNotification.valueDescription"
+          data-ng-bind-html="notificationCtrl.selectedNotification.valueDescription"></span>
+        <span data-ng-if="notificationCtrl.selectedNotification.maintenance_description.toLowerCase() === 'first cost' && notificationCtrl.selectedNotification.valueDescription">${{ notificationCtrl.selectedNotification.valueDescription | DecimalPrecision:2}}</span>
+        <span data-ng-if="notificationCtrl.selectedNotification.maintenance_description.toLowerCase() !== 'image[s]' && !notificationCtrl.selectedNotification.valueDescription">
+          Null
+        </span>
+        <div data-ng-if="notificationCtrl.selectedNotification.maintenance_description.toLowerCase() === 'image[s]' && notificationCtrl.selectedNotification.dropsList">
+          <div data-ng-repeat="drop in notificationCtrl.selectedNotification.dropsList" class="f-17  text-overflow-desc-auto" title="{{drop.name}}">{{drop.name}}</div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-xs-12 p-5 c-black" style="background: #ddd;">
+      <div>Status:
+        <span data-ng-class="{'text-success': notificationCtrl.selectedNotification.status === 'completed', 'text-danger': notificationCtrl.selectedNotification.status === 'failed', 'text-info': notificationCtrl.selectedNotification.status === 'reverted', 'text-warning': notificationCtrl.selectedNotification.status === 'approved'}">{{notificationCtrl.selectedNotification.status|titleCase}}</span>
+      </div> -->
+    <!-- <div>Requested By:
+            <span data-ng-if="notificationCtrl.selectedNotification.created_by">{{notificationCtrl.usersMap[notificationCtrl.selectedNotification.created_by].name}}</span>
+            <span data-ng-if="!notificationCtrl.selectedNotification.created_by && notificationCtrl.selectedNotification.email_id">{{notificationCtrl.usersMap[notificationCtrl.email_id}}</span>
+          </div> -->
+    <!-- </div> -->
+    <div class="border border-top-0">
+      <div data-ng-repeat="sku in notificationCtrl.selectedNotification.skusList">
+        <div class="align-items-center notification-box border-bottom border-top d-flex justify-content-between p-10 f-500 c-black">
+          <div title="{{sku.description}}">{{sku.description|truncate:50}}</div>
+          <div>
+            <span class="product-skunumber mr-2 border-0" title="SKU number"> #{{sku.sku}}</span>
+          </div>
+        </div>
+        <div class="p-10">
+          <div class="align-items-center d-flex justify-content-between">
+            <div class="col-xs-4 p-0 text-muted">Status: </div>
+            <div class="col-xs-8 p-0" ng-class="{'text-success f-500': sku.status==='Active' , 'text-warning f-300': sku.status ==='Pending Active', 'text-primary f-300': sku.status ==='Inactive','text-info f-300': sku.status==='Pending Inactive'}">
+              {{sku.status}} </div>
+          </div>
+          <!-- <div class="align-items-center d-flex justify-content-between">
+            <div class="col-xs-4 p-0 text-muted">Item Description: </div>
+            <div class="col-xs-8 p-0"> Bag Toss, Basketball </div>
+          </div> -->
+          <div class="align-items-center d-flex justify-content-between">
+            <div class="col-xs-4 p-0 text-muted">Vendor Item Number: </div>
+            <div class="col-xs-8 p-0"> {{sku.vendor_item_number}}
+              <span data-ng-if="!sku.vendor_item_number" class="text-muted">Not Available</span>
+            </div>
+          </div>
+          <div class="align-items-center d-flex justify-content-between">
+            <div class="col-xs-4 p-0 text-muted">SKU Type: </div>
+            <div class="col-xs-8 p-0"> {{sku.sku_type | titleCase}} </div>
+          </div>
+          <div class="align-items-center d-flex justify-content-between">
+            <div class="col-xs-4 p-0 text-muted">SKU Sub Type: </div>
+            <div class="col-xs-8 p-0"> {{sku.sku_sub_type | titleCase}} </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

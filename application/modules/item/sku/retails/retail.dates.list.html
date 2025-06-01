@@ -1,0 +1,15 @@
+<div class="effective-date-section" data-ng-class="{'scrolled':skuRetailCtrl.boolChangeClass}" data-ng-if="skuRetailCtrl.retail_dates.length > 0">
+    <div class="effective-date-header text-center">
+        <h4>Effective Date</h4>
+    </div>
+    <div class="effective-dates">
+        <div class="each-retail" data-ng-repeat="retail_date in skuRetailCtrl.retail_dates">
+            <div data-ng-class1="{'past-date':$index ===0||1,'future-date':$index >2,'current-date-retail':$index===2}">
+                <span ng-bind-html="retail_date.effective_date | FormatDate"></span>
+            </div>
+            <div class="cursor-pointer">
+                <a data-ng-click="skuRetailCtrl.showRetailForSelectedDate(retail_date.effective_date)"><span>Show Retail</span></a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,174 @@
+<div id="rcrightsidebar" class="toggled" data-ng-init="UDDCtrl.InitializeUpdateForm();UDDCtrl.isShowHistory = true;"
+    ng-keyup="$event.keyCode === UDDCtrl.common.ShortCuts.global.close.key && UDDCtrl.closeForm()"
+    data-ng-class="{'changeposition' : showhistory}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="UDDCtrl.Exit();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel">Update
+                <strong>Sale Order Advisor Type UDD</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!UDDCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="!(UDDCtrl.isUpdateSuccess || UDDCtrl.isConfirmDelete || UDDCtrl.isDeleteSuccess) || UDDCtrl.isDependent">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/order-advisor.svg'"></div>
+            </div>
+        </div>
+        <div data-ng-if="!UDDCtrl.messagesList ||  UDDCtrl.messagesList.length === 0">
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(UDDCtrl.isUpdateSuccess || UDDCtrl.isConfirmDelete || UDDCtrl.isDeleteSuccess)">
+                    <ng-form role="form" novalidate="novalidate" name="type_udd_form" valdr-type="RULES-55">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="type_udd_form.maintenance_description.$invalid">*
+                            </span>
+                            <span class="c-green" ng-show="type_udd_form.maintenance_description.$valid">*
+                            </span>
+                            <label>Description</label>
+                            <input id="maintenance_description" name="maintenance_description"
+                                type="text" class="form-control input-sm" required
+                                ng-model="UDDCtrl.TypeUDD.maintenance_description"
+                                errorvalue="UDDCtrl.TypeUDD.maintenance_description_error"
+                                placeholder="Enter Description">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="type_udd_form.display_sequence.$invalid">* </span>
+                            <span class="c-green" ng-show="type_udd_form.display_sequence.$valid">* </span>
+                            <label>Sequence</label>
+                            <input id="display_sequence" name="display_sequence"
+                                class="form-control input-sm" ng-model="UDDCtrl.TypeUDD.sequence"
+                                errorvalue="UDDCtrl.TypeUDD.display_sequence_error" type="number"
+                                placeholder="Enter Sequence" required>
+                            <span class="text-danger" data-ng-if="UDDCtrl.TypeUDD.sequence < 1">
+                                Sequence number should be 1 or more.
+                            </span>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <div class="checkbox">
+                                <label> Required
+                                    <input id="required" name="required" type="checkbox"
+                                        hidden="hidden" ng-model="UDDCtrl.TypeUDD.required" ng-true-value="true"
+                                        ng-false-value="false" ng-disabled="locTypeCtrl.disableActions">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <div class="checkbox">
+                                <label> Allow Multiple Choices
+                                    <input id="sale_allowed" name="sale_allowed"
+                                        type="checkbox" hidden="hidden"
+                                        ng-model="UDDCtrl.TypeUDD.allow_multiple_choices" ng-true-value="true"
+                                        ng-false-value="false">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="type_udd_form.minimum_quantity.$invalid">* </span>
+                            <span class="c-green" ng-show="type_udd_form.minimum_quantity.$valid">* </span>
+                            <label>Minimum Quantities</label>
+                            <input id="minimum_quantity" name="minimum_quantity" required
+                                class="form-control input-sm" ng-model="UDDCtrl.TypeUDD.minimum_quantity"
+                                errorvalue="UDDCtrl.TypeUDD.minimum_quantity_error" type="number"
+                                placeholder="Enter minimum quantity">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="type_udd_form.maximum_quantity.$invalid">* </span>
+                            <span class="c-green" ng-show="type_udd_form.maximum_quantity.$valid">* </span>
+                            <label>Maximum Quantities</label>
+                            <input id="maximum_quantity" name="maximum_quantity" required
+                                class="form-control input-sm" ng-model="UDDCtrl.TypeUDD.maximum_quantity"
+                                errorvalue="UDDCtrl.TypeUDD.maximum_quantity_error" type="number"
+                                placeholder="Enter maximum quantity">
+                            <span class="text-danger"
+                                data-ng-if="UDDCtrl.TypeUDD.minimum_quantity && UDDCtrl.TypeUDD.maximum_quantity &&(UDDCtrl.TypeUDD.maximum_quantity < UDDCtrl.TypeUDD.minimum_quantity)">
+                                Maximum quantity should be greater than the minimum quantity.
+                            </span>
+                        </div>
+                        <rcp-edit-form-btns new-form="false" update-fn="UDDCtrl.UpdateAdvisorTypeUDD()"
+                            update-btn-text="UDDCtrl.updateBtnText" update-btn-error="UDDCtrl.updateBtnError"
+                            confirm-fn="UDDCtrl.ShowDeleteConfirmPanel()" confirm-delete="UDDCtrl.isConfirmDelete"
+                            update-success="UDDCtrl.isUpdateSuccess" entity-id="UDDCtrl.TypeUDD.id"
+                            enable-button="type_udd_form.$invalid || (UDDCtrl.TypeUDD.sequence < 1) || (UDDCtrl.TypeUDD.maximum_quantity < UDDCtrl.TypeUDD.minimum_quantity)"
+                            access-permissions="permissionsMap"></rcp-edit-form-btns>
+                    </ng-form>
+                </div>
+                <rcp-delete-form data-ng-if="!UDDCtrl.isDeleteSuccess && UDDCtrl.isConfirmDelete&&!UDDCtrl.isDependent"
+                    image-name="order-advisor.svg" close-fn="UDDCtrl.CloseUpdateForm();"
+                    delete-fn="UDDCtrl.RemoveAdvisorTypeUDD();" confirm-delete="UDDCtrl.isConfirmDelete">
+                </rcp-delete-form>
+                <rcp-success-form success-tick="success_tick.svg" close-fn="UDDCtrl.CloseUpdateForm(); "
+                    update-success="UDDCtrl.isUpdateSuccess" delete-success="UDDCtrl.isDeleteSuccess">
+                </rcp-success-form>
+
+                <div
+                    ng-if="isMaintenance !== true && !UDDCtrl.isUpdateSuccess && !UDDCtrl.isConfirmDelete && !UDDCtrl.isDeleteSuccess">
+                    <button class="f-700 btn-link btn-block m-b-15 tabfocus-btn"
+                        data-ng-click="loadHistory();" data-ng-if="!showhistoryloading"
+                        data-ng-disabled="showhistory">View History</button>
+                    <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading
+                        history...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/location/type.udd/location.udd.type.exists.messages.html'"></div>
+    <div class="col-xs-12">
+        <div data-ng-show="UDDCtrl.message" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="UDDCtrl.message = null"
+                aria-hidden="true">&times;</button> {{UDDCtrl.message}}
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-show="UDDCtrl.error" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="UDDCtrl.error = null" aria-hidden="true">&times;</button>
+            {{UDDCtrl.error}}
+        </div>
+    </div>
+    <!--Delete UDD notification message START-->
+    <div data-ng-if="UDDCtrl.isDependent" class="col-xs-12 rc-alert rc-alert-info flex-column">
+        <div class="col-xs-12 d-flex m-b-5 p-0">
+            <div class="rc-alert-icon m-r-10">
+                <span class="zmdi zmdi-alert-polygon" style="font-size:35px;color: #ff6c3c;">
+                </span>
+            </div>
+            <div style="flex:1;">
+                <div>
+                    <div class="f-15 f-700 text-info m-b-5">UDD is being used!</div>
+                    <div>
+                        <span class="f-14">
+                            Deleting the user defined data will
+                            <strong>remove all user defined values</strong> configured for order advisor[s] in
+                            <span class="text-info f-700">{{UDDCtrl.oldTypeUdd.maintenance_description}}</span>.
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-0 m-t-10 d-flex">
+                    <button type="button" class="btn btn-success btn-block m-r-20" id="update_title_btn"
+                        data-ng-disabled="UDDCtrl.isProcessing" data-ng-click="UDDCtrl.RemoveAdvisorTypeUDD(true);">
+                        <strong>Proceed</strong>
+                    </button>
+                    <button type="button" class="btn btn-cancel btn-block m-t-0" id="cancel-dependency-button"
+                        data-ng-disabled="UDDCtrl.isProcessing" data-ng-click="UDDCtrl.isDependent=false;">
+                        <strong>Cancel</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-5 d-flex justify-content-center align-items-center"
+        data-ng-if="UDDCtrl.isDependent && UDDCtrl.isProcessing">
+        <img class="p-r-5" src="./img/loader.gif" alt="Loading" height="25px" />Deleting Item UDD ...
+    </div>
+    <!--Delete UDD notification message END-->
+    <div ng-if="UDDCtrl.isUnauthorized" data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-xs-12 p-0" ng-if="UDDCtrl.isShowHistory" data-ng-include="'./application/templates/history.html'">
+</div>

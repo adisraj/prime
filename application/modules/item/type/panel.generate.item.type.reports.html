@@ -1,0 +1,101 @@
+<style>
+  .item-list-card {
+    padding: 5px;
+    border: 1px solid #ececec;
+    margin-bottom: 10px;
+    box-shadow: 0px 2px 3px #ececec;
+  }
+
+  .rc-alert-info {
+    border-color: #cad9e0;
+    background-color: #f5fcff;
+  }
+
+  .table>thead:first-child>tr:first-child>th {
+    border-bottom: 1px solid #ececec;
+  }
+
+  .item-list-container {
+    height: auto;
+    max-height: calc(100% - 350px);
+    overflow: auto;
+  }
+
+  .checkbox-border {
+    border-top: none;
+    border-right: 1px solid #cad9e0;
+    border-left: 1px solid #cad9e0;
+    border-bottom: 1px solid #cad9e0;
+  }
+</style>
+<div>
+  <div id="rcrightsidebar" class="associate-sku-list p-5" data-ng-class="{'toggled':itemTypeCtrl.showGenerateReportPanel}">
+    <div>
+      <div class="m-t-25" style="display:flex">
+        <div class="p-0 p-absolute cursor-pointer">
+          <a class="cursor-pointer" data-ng-click="itemTypeCtrl.showGenerateReportPanel=false;">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+          </a>
+        </div>
+        <div class="p-0 m-auto">
+          <label class="rclabel editformlabel" title="Item type insight">
+            <strong>Item Type Reports</strong>
+          </label>
+        </div>
+      </div>
+      <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10">
+          <div class="m-auto updatepanel">
+            <div data-ng-include="'./application/modules/item/export.svg'"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 rc-alert rc-alert-info flex-column m-b-10">
+        <div class="col-xs-12 d-flex p-0">
+          <div class="rc-alert-icon m-r-10">
+            <span class="text-info zmdi zmdi-info-outline" style="font-size:35px;color: #3b5ca3;">
+            </span>
+          </div>
+          <div style="flex:1;">
+            <div>
+              <div class="f-15 f-700 text-info">Process of Generating Report for "
+                <span ng-bind-html="itemTypeCtrl.selectedItemTypeData.itemTypePath"></span>"
+              </div>
+              <div>
+                <ul class="p-5 c-black f-14">
+                  <li class="p-5">
+                    On click of export, job will be created to export all the SKUs and UDDs into xlsx file.
+                  </li>
+                  <li class="p-5">
+                    SKUs and its corresponding user defined data for the selected item type will be exported into file:
+                    <strong>{{itemTypeCtrl.selectedItemTypeData.divisionDepartmentClass[0]}}.{{itemTypeCtrl.selectedItemTypeData.divisionDepartmentClass[1]}}.{{itemTypeCtrl.selectedItemTypeData.divisionDepartmentClass[2]?itemTypeCtrl.selectedItemTypeData.divisionDepartmentClass[2]:'NA'}}.xlsx</strong>.
+                  </li>
+                  <li class="p-5">
+                    Once the export is completed, you will be notified about the export complete via email.
+                  </li>
+                  <li class="p-5">
+                    Generated reports can be found in the documents section of the selected item type.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 p-5">
+      <button type="button" class="btn btn-success btn-block waves-effect f-500" style="display: flex;justify-content: center;flex: 10;"
+        ng-disabled="itemTypeCtrl.isButtonDisabled" ng-click="itemTypeCtrl.exportDataForType(itemTypeCtrl.selectedItemTypeData.id);">
+        <span>Export</span>
+      </button>
+    </div>
+    <div class="col-xs-12 m-t-5">
+      <div data-ng-show="itemTypeCtrl.message" class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-ng-click="itemTypeCtrl.message = null" aria-hidden="true">&times;</button> {{itemTypeCtrl.message}}
+      </div>
+      <div data-ng-show="itemTypeCtrl.errorMessage" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-ng-click="itemTypeCtrl.errorMessage = null" aria-hidden="true">&times;</button> {{itemTypeCtrl.errorMessage}}
+      </div>
+    </div>
+  </div>
+</div>

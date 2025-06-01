@@ -1,0 +1,383 @@
+<div class="container col-lg-12 p-0" data-ng-controller="TypeController as typeCtrl">
+    <!--list panel-->
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="typeCtrl.OpenPanelNewAdvisorType()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="typeCtrl.Exit();typeCtrl.isColumnSettingsVisible = false;" />
+        </li>
+        <li>
+            <keybinding on="ctrl+f" invoke="typeCtrl.focusSearchField()" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="typeCtrl.FetchOrderAdvisorTypes('refresh')" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="typeCtrl.isColumnSettingsVisible = true;" />
+        </li>
+    </ul>
+    <div>
+        <div class="rc-module-header d-flex">
+            <div class="col-xs-12 p-0 d-flex align-items-center" style="justify-content: space-between;">
+                <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                    <div class="p-relative">
+                        <div class="image-module p-absolute top-10">
+                            <img src="./img/sidebar-icons/order-advisor.svg" />
+                        </div>
+                        <div class="label-module top-10">
+                            <a class="p-l-40" href="javascript:void(0)">Sale Order Advisor Types</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex" style="flex: 5;" data-ng-if = "permissionsMap.view">
+                    <div class="d-flex d-flex-v-center p-l-20">
+                        <div class="tableheader-btn">
+                            <span data-ng-if="!typeCtrl.search" class="f-12"> {{typeCtrl.rowsInfo}} </span>
+                            <span data-ng-if="typeCtrl.search" class="f-12"> Displaying
+                                {{(typeCtrl.OrderAdvisorTypes|filterBy:['id','status','description','buyer']:typeCtrl.search).length}}
+                                of {{typeCtrl.OrderAdvisorTypes.length}} Records </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="d-flex nav navbar-nav navbar-right">
+                            <li data-ng-if = "permissionsMap.view">
+                                <a>
+                                    <div class="search-section-location-type tableheader-btn pull-right"
+                                        ng-if="typeCtrl.OrderAdvisorTypes.length > 0">
+                                        <input class="form-control input-sm " type="text " id="inlineSearch"
+                                             name="inlineSearch" data-ng-init="typeCtrl.focusSearchField()"
+                                            ng-model="typeCtrl.search" indicate-quick-search placeholder="Quick Search "
+                                            data-ng-disabled="!typeCtrl.isLoaded" />
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="non-collapsed-link" ng-if="typeCtrl.OrderAdvisorTypes.length > 0">
+                                <a>
+                                    <button type="button" ng-click="typeCtrl.isColumnSettingsVisible = true"
+                                        class="btn-primal btn-block waves-effect btn-brd-none"
+                                        data-ng-disabled="!typeCtrl.isLoaded">
+                                        <span class="f-700 ng-binding">Columns</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="non-collapsed-link" ng-if="typeCtrl.OrderAdvisorTypes.length > 0">
+                                <a>
+                                    <button type="button" ng-click="typeCtrl.RefreshData(true);"
+                                        class="btn-primal btn-block waves-effect btn-brd-none"
+                                        data-ng-disabled="!typeCtrl.isLoaded">
+                                        <span class="f-700 ng-binding">Refresh</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="non-collapsed-link">
+                                <a>
+                                    <button type="button" ng-click="typeCtrl.ViewTypeUDDs()"
+                                        class="btn-primal btn-block waves-effect btn-brd-none"
+                                        data-ng-disabled="!typeCtrl.isDisabled">
+                                        <span class="f-700 ng-binding">Maintain UDDs</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="add-btn">
+                                <a>
+                                    <button type="button" class="btn btn-success waves-effect f-700"
+                                        data-ng-click="typeCtrl.OpenPanelNewAdvisorType();"
+                                        data-ng-disabled="!permissionsMap.create">
+                                        <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Sale Order
+                                            Advisor
+                                            Type</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="dropdown collapsed-link" uib-dropdown>
+                                <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                    <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                </button>
+                                <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                    <li class="add-btn cursor-pointer">
+                                        <button data-ng-click="typeCtrl.OpenPanelNewAdvisorType();"
+                                            style="padding: 8px 20px" class="restricted-btn"
+                                            title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                            data-ng-disabled="!permissionsMap.create"
+                                            data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                            <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Order Advisor
+                                            Type
+                                        </button>
+                                    </li>
+                                    <li ng-if="typeCtrl.OrderAdvisorTypes.length > 0" class="cursor-pointer">
+                                    <button class="DropButton btn-block"
+                                        ng-click="typeCtrl.isLoaded ? typeCtrl.isColumnSettingsVisible = true : '' "
+                                        data-ng-class="{'cursor-not-allowed': !typeCtrl.isLoaded}">
+                                        <div class="d-flex"><i
+                                            class="zmdi zmdi-view-week text-info m-r-10 f-17"></i> Columns
+                                        </div>
+                                    </button>
+                                    </li>
+                                    <li ng-if="typeCtrl.OrderAdvisorTypes.length > 0" class="cursor-pointer">
+                                        <button class="DropButton btn-block"
+                                            ng-click="typeCtrl.FetchOrderAdvisorTypes(true)"
+                                            data-ng-class="{'cursor-not-allowed': !typeCtrl.isLoaded}">
+                                            <div class="d-flex"><i
+                                                class="zmdi zmdi-refresh text-warning m-r-10 f-17"></i> Refresh
+                                            </div>
+                                        </button>    
+                                    </li>
+                                    <li class="cursor-pointer">
+                                        <button class="DropButton btn-block"
+                                            ng-click="typeCtrl.isDisabled ? typeCtrl.ViewTypeUDDs() : '' "
+                                            data-ng-class="{'opacity50': !typeCtrl.isDisabled}">
+                                            <div class="d-flex"><i
+                                                class="zmdi zmdi-refresh text-warning m-r-10 f-17"></i> Maintain UDD
+                                            </div>
+                                        </button>  
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!typeCtrl.isLoaded">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div data-ng-if="typeCtrl.rowsCount > 0 && typeCtrl.isLoaded">
+            <div class="rcp-table-container" data-ng-if="permissionsMap && permissionsMap.view">
+                <div class="col-xs-12 p-0">
+                    <script type="text/javascript">
+                        $(function () {
+                            var pressed = false;
+                            var start = undefined;
+                            var startX, startWidth;
+
+                            $("table th").dblclick(function (e) {
+                                start = $(this);
+                                pressed = true;
+                                startX = e.pageX;
+                                startWidth = $(this).width();
+                                $(start).addClass("resizing");
+                            });
+
+                            $(document).mousemove(function (e) {
+                                if (pressed) {
+                                    $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                                }
+                            });
+
+                            $(document).mouseup(function () {
+                                if (pressed) {
+                                    $(start).removeClass("resizing");
+                                    pressed = false;
+                                }
+                            });
+                        });
+                    </script>
+                    <div data-ng-include="'./application/modules/order.advisor/type/panel.show.hide.columns.html'">
+                    </div>
+                    <div class="table-responsive module-content-configuration" style="margin-top: 80px">
+                        <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                            <table
+                                class="no-icon-table table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table ">
+                                <thead data-ng-show="typeCtrl.isLoaded">
+                                    <tr>
+                                        <th class="text-center iconcolumnwidth"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.select.visible == 0">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="typeCtrl.checkAll"
+                                                        ng-true-value="1" ng-false-value="0"
+                                                        ng-disabled="typeCtrl.disableCheckboxes"
+                                                        ng-click="typeCtrl.SelectAllTypesForMaintainUDD(typeCtrl.checkAll)">
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                            ng-click="typeCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.id.visible == 0">
+                                            <span class="handle">ID</span>
+                                            <span ng-show="typeCtrl.sortType == 'id' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="typeCtrl.sortType == 'id' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="status_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="typeCtrl.sortType = 'status_id'; sortReverse = !sortReverse"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.status.visible == 0">
+                                            <span class="handle">Status</span>
+                                            <span ng-show="typeCtrl.sortType == 'status_id' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="typeCtrl.sortType == 'status_id' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="description_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="typeCtrl.sortType = 'description'; sortReverse = !sortReverse"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.type.visible == 0">
+                                            <span class="handle">Sale Order Advisor Type</span>
+                                            <span ng-show="typeCtrl.sortType == 'description' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="typeCtrl.sortType == 'description' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="buyer_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="typeCtrl.sortType = 'buyer'; sortReverse = !sortReverse"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.buyer.visible == 0">
+                                            <span class="handle">Buyer</span>
+                                            <span ng-show="typeCtrl.sortType == 'buyer' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="typeCtrl.sortType == 'buyer' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="add_sku_automatically_col_head" drag-me drop-me
+                                            data-handle=".handle"
+                                            ng-click="typeCtrl.sortType = 'add_sku_automatically_value'; sortReverse = !sortReverse"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.addSKUAutomatically.visible == 0">
+                                            <span class="handle">Add SKU Automatically</span>
+                                            <span
+                                                ng-show="typeCtrl.sortType == 'add_sku_automatically_value' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span
+                                                ng-show="typeCtrl.sortType == 'add_sku_automatically_value' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" id="no_package_col_head" drag-me drop-me data-handle=".handle"
+                                            ng-click="typeCtrl.sortType = 'no_package_value'; sortReverse = !sortReverse"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.noPackage.visible == 0">
+                                            <span class="handle">Display No Package on Product Explorer</span>
+                                            <span ng-show="typeCtrl.sortType == 'no_package_value' && !sortReverse"
+                                                  class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span ng-show="typeCtrl.sortType == 'no_package_value' && sortReverse"
+                                                  class="zmdi zmdi-caret-up pull-right"></span>
+                                       </th>
+                                        <th class="text-center" id="view_col_head" drag-me drop-me data-handle=".handle"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.view.visible == 0">
+                                            <span class="handle">View</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="type in typeCtrl.OrderAdvisorTypes|filterBy:['id','status','description','buyer']:typeCtrl.search|orderBy:typeCtrl.sortType:sortReverse|itemsPerPage:typeCtrl.pageSize"
+                                        ng-init="type.status = typeCtrl.statusMap[type.status_id].description"
+                                        ng-class="{'background-hover':$index === selectedRow}"
+                                        data-ng-click="typeCtrl.setClickedRow($index);" selectedrow="{{type}}">
+                                        <td class="text-center"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.select.visible == 0">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="type.check" ng-true-value="1"
+                                                        ng-false-value="0" ng-disabled="typeCtrl.disableCheckboxes"
+                                                        ng-click="typeCtrl.ViewMaintaineUDDButton();">
+                                                    <i class="input-helper"></i>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td class="id_col" style="width:10%"
+                                            ios-dblclick="typeCtrl.OpenPanelUpdateAdvisorType(type);"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.id.visible == 0">
+                                            {{type.id}}
+                                        </td>
+                                        <td class="status_col" style="width:10%"
+                                            ios-dblclick="typeCtrl.OpenPanelUpdateAdvisorType(type);"
+                                            ng-class="{'text-success f-500':typeCtrl.statusMap[type.status_id].description.toLowerCase()==='active' , 'text-warning f-300': typeCtrl.statusMap[type.status_id].description.toLowerCase() ==='pending active', 'text-primary f-300':typeCtrl.statusMap[type.status_id].description.toLowerCase() ==='inactive','text-info f-300': typeCtrl.statusMap[type.status_id].description.toLowerCase()==='pending inactive'}"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.status.visible == 0">
+                                            {{typeCtrl.statusMap[type.status_id].description}}
+                                        </td>
+                                        <td class="description_col"
+                                            ios-dblclick="typeCtrl.OpenPanelUpdateAdvisorType(type);"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.type.visible == 0">
+                                            {{type.description}}
+                                        </td>
+                                        <td class="buyer_col"
+                                            ios-dblclick="typeCtrl.OpenPanelUpdateAdvisorType(type);"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.buyer.visible == 0">
+                                            {{type.buyer}}
+                                        </td>
+                                        <td class="allow_sales_col text-center"
+                                            ios-dblclick="typeCtrl.OpenPanelUpdateAdvisorType(type);"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.addSKUAutomatically.visible == 0">
+                                            <i ng-show="type.add_sku_automatically === 1"
+                                                class="glyphicon glyphicon-ok c-green" title="Allowed"
+                                                title-direction="right" fixed-position="true"></i>
+                                            <i ng-show="type.add_sku_automatically === 0 || type.add_sku_automatically === null"
+                                                class="glyphicon glyphicon-remove c-red" title="Not allowed"
+                                                title-direction="right" fixed-position="true"></i>
+                                        </td>
+                                        <td class="no_package_col text-center"
+                                            ios-dblclick="typeCtrl.OpenPanelUpdateAdvisorType(type);"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.noPackage.visible == 0">
+                                          <i ng-show="type.no_package === 1" 
+                                              class="glyphicon glyphicon-ok c-green" title="Enabled"
+                                              title-direction="right" fixed-position="true"></i>
+                                          <i ng-show="type.no_package === 0 || type.no_package === null"
+                                              class="glyphicon glyphicon-remove c-red" title="Disabled" 
+                                              title-direction="right" fixed-position="true"></i>
+                                        </td>
+                                        <td class="view_col text-center" style="width:10%"
+                                            ios-dblclick="typeCtrl.OpenPanelUpdateAdvisorType(type);"
+                                            data-ng-hide="typeCtrl.orderTypeGrid.columns.view.visible == 0">
+                                            <a ng-click="typeCtrl.GoToPackages(type.id)">Packages</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="align-items-center col-lg-12 d-flex justify-content-between p-15">
+                            <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                                boundary-links="true" on-page-change="typeCtrl.pageChangeHandler(newPageNumber)">
+                            </dir-pagination-controls>
+                            <div class="btn-group pull-right ng-table-counts m-0">
+                                <button type="button" class="btn btn-default f-12 noboxshadow"
+                                    ng-click="typeCtrl.pageSize = 10" ng-class="{'active':typeCtrl.pageSize === 10}">10
+                                </button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow"
+                                    ng-click="typeCtrl.pageSize = 25" ng-class="{'active':typeCtrl.pageSize === 25}">25
+                                </button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow"
+                                    ng-click="typeCtrl.pageSize = 50" ng-class="{'active':typeCtrl.pageSize === 50}">50
+                                </button>
+                                <button type="button" class="btn btn-default f-12 noboxshadow"
+                                    ng-click="typeCtrl.pageSize = 100"
+                                    ng-class="{'active':typeCtrl.pageSize === 100}">100
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div data-ng-if="typeCtrl.isViewAuthorized">
+                <div data-ng-include="'./application/modules/location/type/panel.location.type.dependency.html'"></div>
+                <meta-data-panel></meta-data-panel>
+            </div>
+        </div>
+        <div data-ng-if="typeCtrl.rowsCount === 0 && typeCtrl.isLoaded">
+            <div class="col-xs-12 text-center text-info module-content-configuration">
+                <span class="f-15 f-300">No Sale order advisor type exists. Please add Sale order advisor type.</span>
+            </div>
+        </div>
+        <div ng-if="permissionsMap && !permissionsMap.view && typeCtrl.isLoaded"
+            data-ng-include="'./application/templates/restricted.access.html'"></div>
+        <div ui-view></div>
+    </div>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':typeCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{typeCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="typeCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{typeCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{typeCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="typeCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

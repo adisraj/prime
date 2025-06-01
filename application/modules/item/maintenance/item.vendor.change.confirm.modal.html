@@ -1,0 +1,52 @@
+<style>
+        #itemSelectionModel .modal-dialog {
+            width: 700px !important;
+            margin: 30px auto;
+        }
+    
+        .sku-types-header {
+            background: url(http://domnakipre.com/images/stories/kipr/banner-pic.jpg) center center;
+            background-size: cover;
+            height: 10rem;
+            /* position: absolute; */
+            top: 10;
+            left: 0;
+            right: 0;
+            transition: transform .5s, opacity .3s;
+            z-index: 0;
+            margin-bottom: 10px;
+        }
+    </style>
+    <div id="primaryVendorChange" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="col-xs-12 p-0 modal-content ">
+                <div class="col-xs-12" style="background: linear-gradient(#ffffff,#d4d4d4);color: #191919;">
+                    <div class="p-t-10 p-b-10">
+                        <span class="f-17 f-700">Item Primary Vendor</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 modal-body bgm-white p-10">
+                    <div class="f-700 f-16 p-b-10">Do you want to change the Alternative Vendor as Primary Vendor ?</div>
+                    <div class="col-xs-12 f-12 d-flex" style="line-height:2;">
+                        <div class="f-400">If you click
+                            <strong>
+                                <i class="text-danger">"NO"</i>,
+                            </strong> Vendor before this change will be retained
+                        </div>
+                        <div class="f-400 f-12 p-l-10">If you click
+                            <strong>
+                                <i class="text-success">"YES"</i></strong>,
+                           Selected Alternative Vendor will be changed as Primary Vendor,meanwhile it will be unlinked from Alternative Vendor List
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="col-xs-12 p-t-10 p-b-10 p-r-0 d-flex" style="justify-content:flex-end;border-top: 1px solid #d3d3d3">
+                        <button class="btn btn-danger f-700 m-l-10 p-l-20 p-r-20 waves-effect" data-ng-click="itemMaintCtrl.assignPrimaryVendorOnChange(0)">No</button>
+                        <button class="btn btn-success f-700 m-l-10 p-l-20 p-r-20 waves-effect" ng-click="itemMaintCtrl.assignPrimaryVendorOnChange(1)">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

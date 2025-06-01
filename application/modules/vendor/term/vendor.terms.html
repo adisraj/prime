@@ -1,0 +1,210 @@
+<div class="container col-lg-12 p-0" data-ng-controller="VendorTermsController as venTermCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/submenu_vendor_purchase.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Vendor Terms</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!venTermCtrl.search"> {{venTermCtrl.rowsInfo}} </span>
+                        <span data-ng-if="venTermCtrl.search"> Displaying {{(venTermCtrl.vendorTermsList|filterBy:['id','status','description']:venTermCtrl.search).length}} of {{venTermCtrl.vendorTermsList.length}}
+                            Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="venTermCtrl.vendorTermsList.length > 0">
+                                    <input class="form-control input-sm" type="text" ng-model="venTermCtrl.search" id="inlineSearch" 
+                                    name="inlineSearch" data-ng-init="venTermCtrl.focusSearchField()"
+                                    indicate-quick-search placeholder="Quick Search" data-ng-disabled="!venTermCtrl.isLoaded"
+                                    />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="venTermCtrl.vendorTermsList.length > 0">
+                            <a>
+                                <button type="button" ng-click="venTermCtrl.ShowHideColumnSettings()" class="btn-primal btn-block  waves-effect" data-ng-disabled="!venTermCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="venTermCtrl.vendorTermsList.length > 0">
+                            <a>
+                                <button type="button" ng-click="venTermCtrl.reload(true);" class="btn-primal btn-block  waves-effect" data-ng-disabled="!venTermCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="venTermCtrl.openForm();"
+                                data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Vendor Term</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="venTermCtrl.openForm();"
+                                    style="padding: 8px 20px" class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}" data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Vendor Term 
+                                    </button>
+                                </li>
+                                <li ng-if="venTermCtrl.vendorTermsList.length > 0">
+                                    <a data-ng-click="venTermCtrl.isLoaded ? venTermCtrl.ShowHideColumnSettings() : '' " data-ng-class="{'cursor-not-allowed': !venTermCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="venTermCtrl.vendorTermsList.length > 0">
+                                    <a data-ng-click="venTermCtrl.isLoaded ? venTermCtrl.reload(true) : '' " data-ng-class="{'cursor-not-allowed': !venTermCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!venTermCtrl.rowsCount && !venTermCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="venTermCtrl.rowsCount && venTermCtrl.rowsCount !== 0 && venTermCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="permissionsMap.view && venTermCtrl.isLoaded">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/vendor/term/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="venTermCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="venTermCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                    data-ng-hide="venTermCtrl.vendorTermGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="venTermCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="venTermCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle" ng-click="venTermCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                    data-ng-hide="venTermCtrl.vendorTermGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="venTermCtrl.sortType == 'status' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="venTermCtrl.sortType == 'status' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="description_col_head" drag-me drop-me data-handle=".handle" ng-click="venTermCtrl.sortType = 'description'; sortReverse = !sortReverse"
+                                    data-ng-hide="venTermCtrl.vendorTermGrid.columns.description.visible == 0">
+                                        <span class="handle">Description</span>
+                                        <span ng-show="venTermCtrl.sortType == 'description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="venTermCtrl.sortType == 'description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center iconcolumnwidth" id="datalake_col_head" drag-me drop-me data-handle=".handle"
+                                    data-ng-hide="venTermCtrl.vendorTermGrid.columns.document.visible == 0">
+                                        <span class="handle">Documents</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="term in venTermCtrl.vendorTermsList|filterBy:['id','status','description']:venTermCtrl.search|orderBy:venTermCtrl.sortType:sortReverse|itemsPerPage:venTermCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}" data-ng-click="venTermCtrl.setClickedRow($index);"
+                                    ios-dblclick="venTermCtrl.dblClickAction(term);" selectedrow="{{term}}">
+                                    <td class="id_col iconcolumnWidth" data-ng-hide="venTermCtrl.vendorTermGrid.columns.id.visible == 0">{{term.id}}</td>
+                                    <td class="status_col" ng-class="{'text-success f-500': term.status==='Active' , 'text-warning f-300': term.status ==='Pending Active', 'text-primary f-300': term.status ==='Inactive','text-info f-300': term.status==='Pending Inactive'}" data-ng-hide="venTermCtrl.vendorTermGrid.columns.status.visible == 0">{{term.status}}</td>
+                                    <td class="description_col" data-ng-hide="venTermCtrl.vendorTermGrid.columns.description.visible == 0">{{term.description}}</td>
+                                    <td class="datalake_col iconcolumnwidth text-center p-l-5" data-ng-hide="venTermCtrl.vendorTermGrid.columns.document.visible == 0">
+                                        <button type="button" class="p-l-5 header-button datalake-button" ng-click="showMetaData(venTermCtrl.entityInformation,term, permissionsMap);"
+                                        data-ng-disabled="!permissionsMap.drop">
+                                            <span class="zmdi zmdi-cloud zmdi-hc-fw" data-ng-if="permissionsMap.drop" title="Click here to manage documents" title-direction="left" fixed-position="true"></span>
+                                            <span class="zmdi zmdi-cloud-off zmdi-hc-fw" data-ng-if="!permissionsMap.drop" title="Access denied" title-direction="right" fixed-position="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-between align-items-center">
+                        <dir-pagination-controls template-url="rc-pagination.html" boundary-links="true" on-page-change="venTermCtrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group ng-table-counts">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="venTermCtrl.pageSize = 10" ng-class="{'active':venTermCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="venTermCtrl.pageSize = 25" ng-class="{'active':venTermCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="venTermCtrl.pageSize = 50" ng-class="{'active':venTermCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="venTermCtrl.pageSize = 100" ng-class="{'active':venTermCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--Details section for each vendor purchase data -->
+        <div data-ng-include="'./application/modules/vendor/term/panel.vendor.terms.dependency.html'"></div>
+        <meta-data-panel></meta-data-panel>
+        <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+            <div id="refresh-table" class="p-15" data-ng-class="{'toggled':venTermCtrl.isRefreshTable}">
+                <div class="col-xs-6 p-0">
+                    <span class="f-15 f-300 pull-left">{{venTermCtrl.refreshTableText}}</span>
+                </div>
+                <div class="col-xs-6 p-0" data-ng-if="venTermCtrl.totalTimeText">
+                    <span class="pull-right f-300">
+                        <strong>{{venTermCtrl.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{venTermCtrl.totalRecordsText}}</span>
+                        <span ng-bind-html="venTermCtrl.totalTimeText"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    <div ng-if="!permissionsMap.view && venTermCtrl.isLoaded && !venTermCtrl.rowsCount" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="venTermCtrl.rowsCount === 0 && venTermCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No vendor term exists. Please add vendor term.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/vendor/term/panel.vendor.terms.form.html'"></div>
+</div>

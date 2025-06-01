@@ -1,0 +1,53 @@
+
+    <div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':skuHeadCtrl.showDependencyDetailsData === true}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="skuHeadCtrl.closeDependencyDetails();" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="dependencyMargin">
+                <div class="col-xs-12 p-0 m-b-20">
+                    <h4>SKU Option Details</h4>
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Name</td>
+                            <td class="highlight-text-success" title="{{skuHeadCtrl.skuHeader_details.name}}">{{skuHeadCtrl.skuHeader_details.name | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{skuHeadCtrl.skuHeader_details.status}}">{{skuHeadCtrl.skuHeader_details.status}}</td>
+                        </tr>
+                    </table>
+                    <h4>SKU Dependent Details</h4>
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>SKU Description</td>
+                            <td class="highlight-text-success" title="{{skuHeadCtrl.errorDependentData.description}}">{{skuHeadCtrl.errorDependentData.description | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Number</td>
+                            <td title="{{skuHeadCtrl.errorDependentData.vendor_item_number}}">{{skuHeadCtrl.errorDependentData.vendor_item_number}}</td>
+                        </tr>
+                        <tr>
+                            <td>Next Effective Date</td>
+                            <td ng-show="skuHeadCtrl.errorDependentData.next_status !== 'None'" title="{{skuHeadCtrl.errorDependentData.next_effective_date | FormatDate}}">{{skuHeadCtrl.errorDependentData.next_effective_date | FormatDate}}</td>
+                            <td ng-show="skuHeadCtrl.errorDependentData.next_status === 'None'" title="{{skuHeadCtrl.errorDependentData.next_effective_date}}">N/A</td>
+                        </tr>
+                        <tr>
+                            <td>Item Description</td>
+                            <td title="{{skuHeadCtrl.errorDependentData.item_description}}">{{skuHeadCtrl.errorDependentData.item_description | truncate:20}}</td>
+                        </tr>
+                    </table>
+                    </br>
+                    <div class="dependency-notifyMessage"> <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i><span>{{skuHeadCtrl.errorDependentData.message}}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,79 @@
+<div id="rcrightsidebar" class="c-overflow" data-ng-class="{'toggled':invqCtrl.isShowDetails === true || invqCtrl.isShowDetails === 1,'changeposition': showhistory === true}" ng-keyup="$event.keyCode === invqCtrl.common.ShortCuts.global.close.key && invqCtrl.closeForm()">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="invqCtrl.closeForm(); closeShowHistory();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" ng-if="(!invqCtrl.isDeleteSuccess && !invqCtrl.isConfirmDelete && invqCtrl.isShowAdd)"
+                title="{{invqCtrl.entityInformation.name}}">Create
+                <strong>Inventory Quality</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(!invqCtrl.isDeleteSuccess && !invqCtrl.isConfirmDelete && !invqCtrl.isShowAdd)"
+                title="{{invqCtrl.entityInformation.name}}">Update
+                <strong>Inventory Quality</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(invqCtrl.isDeleteSuccess || invqCtrl.isConfirmDelete && !invqCtrl.isShowAdd)" title="{{invqCtrl.entityInformation.name}}">Delete
+                <strong>Inventory Quality</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!invqCtrl.isUnauthorized">
+        <div class="d-flex" ng-if="!(invqCtrl.isUpdateSuccess || invqCtrl.isSaveSuccess || invqCtrl.isConfirmDelete || invqCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/inventory-quality.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div ng-if="!(invqCtrl.isUpdateSuccess || invqCtrl.isSaveSuccess || invqCtrl.isConfirmDelete || invqCtrl.isDeleteSuccess)">
+                <ng-form name="invqCtrl.inventoryQualityForm" role="form " novalidate="novalidate" valdr-type="RULES-116">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="invqCtrl.inventoryQualityForm.quality.$invalid">* </span>
+                        <span class="c-green" ng-show="invqCtrl.inventoryQualityForm.quality.$valid">* </span>
+                        <label>Quality</label>
+                        <input id="quality" name="quality" type="text" class="form-control input-sm" ng-model="invqCtrl.inventoryQualityDetails.quality"
+                            placeholder="Enter quality" errorvalue="invqCtrl.inventoryQualityDetails.quality_error"
+                            ng-model-options="{ updateOn: 'blur' }" required>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="invqCtrl.inventoryQualityForm.code.$invalid">* </span>
+                        <span class="c-green" ng-show="invqCtrl.inventoryQualityForm.code.$valid">* </span>
+                        <label>Code</label>
+                        <input id="code" name="code" type="text" class="form-control input-sm" ng-model="invqCtrl.inventoryQualityDetails.code"
+                        placeholder="Enter Code" errorvalue="invqCtrl.inventoryQualityDetails.code_error"
+                        ng-model-options="{ updateOn: 'blur' }" data-ng-disabled="invqCtrl.isShowDetails && !invqCtrl.isShowAdd">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="invqCtrl.inventoryQualityForm.description.$invalid">* </span>
+                        <span class="c-green" ng-show="invqCtrl.inventoryQualityForm.description.$valid">* </span>
+                        <label>Description</label>
+                        <input id="description" name="description" type="text" class="form-control input-sm" ng-model="invqCtrl.inventoryQualityDetails.description"
+                        placeholder="Enter Description" errorvalue="invqCtrl.inventoryQualityDetails.description_error" 
+                        ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <rcp-edit-form-btns new-form="invqCtrl.isShowAdd" save-fn="invqCtrl.save(invqCtrl.inventoryQualityDetails);" save-btn-text="invqCtrl.saveBtnText"
+                        save-btn-error="invqCtrl.saveBtnError" update-fn="invqCtrl.update(invqCtrl.inventoryQualityDetails);" update-btn-text="invqCtrl.updateBtnText"
+                        update-btn-error="invqCtrl.updateBtnError" confirm-fn="invqCtrl.showconfirm(); closeShowHistory();" confirm-delete="invqCtrl.isConfirmDelete"
+                        update-success="invqCtrl.isUpdateSuccess" entity-id="invqCtrl.inventoryQualityDetails.id" enable-button="invqCtrl.inventoryQualityForm.$invalid">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="invqCtrl.isConfirmDelete" image-name="inventory-quality.svg" close-fn="invqCtrl.closeForm(); "
+                delete-fn="invqCtrl.delete(invqCtrl.inventoryQualityDetails);" confirm-delete="invqCtrl.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="invqCtrl.createAnotherForm();" close-fn="invqCtrl.closeForm();"
+                update-success="invqCtrl.isUpdateSuccess" save-success="invqCtrl.isSaveSuccess" delete-success="invqCtrl.isDeleteSuccess">
+            </rcp-success-form>
+            <div class="col-xs-12" ng-if="!invqCtrl.isShowAdd && invqCtrl.isShowHistory" data-ng-include="'./application/templates/history.html'">
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="invqCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="invqCtrl.message = null" aria-hidden="true">&times;</button>{{invqCtrl.message}}
+            </div>
+        </div>
+    </div>
+    <div ng-if="invqCtrl.isUnauthorized && (invqCtrl.isShowAdd || !invqCtrl.isShowAdd || invqCtrl.isConfirmDelete)" data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>

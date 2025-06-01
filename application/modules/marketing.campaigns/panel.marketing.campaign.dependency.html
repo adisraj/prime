@@ -1,0 +1,67 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory"
+    data-ng-class="{'toggled':marketingCampaignsCtrl.showErrorDetailsData === true}">
+    <div class="col-xs-12 m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="marketingCampaignsCtrl.closeDependencyDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Marketing Campaign Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success"
+                            title="{{marketingCampaignsCtrl.marketing_campaign_details.description}}">
+                            {{marketingCampaignsCtrl.marketing_campaign_details.description | truncate:20}}
+                        </td>
+                    </tr>
+                </table>
+                <h4>{{ marketingCampaignsCtrl.errorDependentData.dependent_entity }} - Dependent Details</h4>
+
+                <div ng-if="marketingCampaignsCtrl.errorDependentData.dependent_entity == 'Promotions'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Description</td>
+                            <td class="highlight-text-success"
+                                title="{{marketingCampaignsCtrl.errorDependentData.description}}">
+                                {{ marketingCampaignsCtrl.errorDependentData.description | truncate:30 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td class="highlight-text-success"
+                                title="{{marketingCampaignsCtrl.errorDependentData.status}}">
+                                {{ marketingCampaignsCtrl.errorDependentData.status | truncate:20 }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div ng-if="marketingCampaignsCtrl.errorDependentData.dependent_entity == 'Cart Items'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Description</td>
+                            <td class="highlight-text-success"
+                                title="{{marketingCampaignsCtrl.errorDependentData.description}}">
+                                {{ marketingCampaignsCtrl.errorDependentData.description | truncate:30 }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                </br>
+                <div class="dependency-notifyMessage">
+                    <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i>
+                    <span>{{ marketingCampaignsCtrl.errorDependentData.message }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

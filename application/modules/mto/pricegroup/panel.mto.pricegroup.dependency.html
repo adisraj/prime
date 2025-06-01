@@ -1,0 +1,62 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':mtopricectrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="mtopricectrl.closeDependencyDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>MTO Price Group Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success" title="{{mtopricectrl.mtoPrice_details.short_description}}">{{mtopricectrl.mtoPrice_details.short_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtopricectrl.mtoPrice_details.status}}">{{mtopricectrl.mtoPrice_details.status}}</td>
+                    </tr>
+                </table>
+                <h4>{{mtopricectrl.errorDependentData.dependent_entity}} - Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Choice Description</td>
+                        <td class="highlight-text-success" title="{{mtopricectrl.errorDependentData.choice_description}}">{{mtopricectrl.errorDependentData.choice_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtopricectrl.errorDependentData.status}}">{{mtopricectrl.errorDependentData.status | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>MTO Description</td>
+                        <td title="{{mtopricectrl.errorDependentData.option}}">{{mtopricectrl.errorDependentData.option | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Collection</td>
+                        <td data-ng-show="mtopricectrl.errorDependentData.collection" title="{{mtopricectrl.errorDependentData.collection}}">{{mtopricectrl.errorDependentData.collection}}</td>
+                        <td data-ng-show="!mtopricectrl.errorDependentData.collection" title="{{mtopricectrl.errorDependentData.collection}}">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Price Group</td>
+                        <td data-ng-show="mtopricectrl.errorDependentData.price_group" title="{{mtopricectrl.errorDependentData.price_group}}">{{mtopricectrl.errorDependentData.price_group}}</td>
+                        <td data-ng-show="!mtopricectrl.errorDependentData.price_group" title="{{mtopricectrl.errorDependentData.price_group}}">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Next Effective Date</td>
+                        <td ng-show="mtopricectrl.errorDependentData.next_status_value !== 'None'" title="{{mtopricectrl.errorDependentData.next_effective_date | FormatDate}}">{{mtopricectrl.errorDependentData.next_effective_date | FormatDate}}</td>
+                        <td ng-show="mtopricectrl.errorDependentData.next_status_value === 'None'" title="{{mtopricectrl.errorDependentData.next_effective_date}}">N/A</td>
+                    </tr>
+                </table>
+                </br>
+                <div class="dependency-notifyMessage"><span>{{mtopricectrl.errorDependentData.message}}</span></div>
+                <!-- <button type="button" class="btn btn-view-values m-5 pull-right m-t-10" ng-click=""><bold>Delete MTO Choice</bold></button>-->
+            </div>
+        </div>
+    </div>
+</div>

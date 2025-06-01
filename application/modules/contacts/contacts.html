@@ -1,0 +1,233 @@
+<div class="container col-lg-12 p-0" data-ng-controller="ContactController as contCtrl">
+
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/submenu_contact.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Contacts</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!contCtrl.search"> {{contCtrl.rowsInfo}} </span>
+                        <span data-ng-if="contCtrl.search"> Displaying {{(contCtrl.allContacts|filter:contCtrl.search).length}} of {{contCtrl.allContacts.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="contCtrl.allContacts.length > 0">
+                                    <input class="form-control input-sm " type="text " ng-model="contCtrl.search" indicate-quick-search placeholder="Quick Search " data-ng-disabled="!contCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="contCtrl.allContacts.length > 0">
+                            <a>
+                                <button type="button" ng-click="contCtrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect" data-ng-disabled="!contCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="contCtrl.allContacts.length > 0">
+                            <a>
+                                <button type="button" ng-click="contCtrl.reload(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="!contCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="contCtrl.openForm();">Create Contact</button>
+                            </a>
+
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right">
+                                <li class="add-btn cursor-pointer">
+                                    <a data-ng-click="contCtrl.openForm();">
+                                        <i class="zmdi zmdi-plus text-success"></i> Create Contact
+                                    </a>
+                                </li>
+                                <li ng-if="contCtrl.allContacts.length > 0">
+                                    <a data-ng-click="contCtrl.isLoaded ? contCtrl.ShowHideColumnSettings() : '' " data-ng-class="{'cursor-not-allowed': !contCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="contCtrl.allContacts.length > 0">
+                                    <a data-ng-click="contCtrl.isLoaded ? contCtrl.reload(true) : '' " data-ng-class="{'cursor-not-allowed': !contCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!contCtrl.rowsCount && !contCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="contCtrl.rowsCount !== 0 && contCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="contCtrl.isLoaded">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+
+                <div data-ng-include="'./application/modules/contacts/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration" data-ng-init="contCtrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="contCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center iconcolumnwidth" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="contCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="contCtrl.contactGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="contCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="contCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle" ng-click="contCtrl.sortType = 'status_id'; sortReverse = !sortReverse"
+                                        data-ng-hide="contCtrl.contactGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="contCtrl.sortType == 'status_id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="contCtrl.sortType == 'status_id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="country_col_head" drag-me drop-me data-handle=".handle" ng-click="contCtrl.sortType = 'country'; sortReverse = !sortReverse"
+                                        data-ng-hide="contCtrl.contactGrid.columns.country.visible == 0">
+                                        <span class="handle">Country</span>
+                                        <span ng-show="contCtrl.sortType == 'country' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="contCtrl.sortType == 'country' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="type_col_head" drag-me drop-me data-handle=".handle" ng-click="contCtrl.sortType = 'type'; sortReverse = !sortReverse"
+                                        data-ng-hide="contCtrl.contactGrid.columns.type.visible == 0">
+                                        <span class="handle">Type</span>
+                                        <span ng-show="contCtrl.sortType == 'type' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="contCtrl.sortType == 'type' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="information_col_head" drag-me drop-me data-handle=".handle" ng-click="contCtrl.sortType = 'information'; sortReverse = !sortReverse"
+                                        data-ng-hide="contCtrl.contactGrid.columns.information.visible == 0">
+                                        <span class="handle">Information</span>
+                                        <span ng-show="contCtrl.sortType == 'information' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="contCtrl.sortType == 'information' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="hygiene_col_head" drag-me drop-me data-handle=".handle" ng-click="contCtrl.sortType = 'hygiene'; sortReverse = !sortReverse"
+                                        data-ng-hide="contCtrl.contactGrid.columns.hygiene.visible == 0">
+                                        <span class="handle">Hygiene</span>
+                                        <span ng-show="contCtrl.sortType == 'hygiene' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="contCtrl.sortType == 'hygiene' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="opt_marketing_col_head" drag-me drop-me data-handle=".handle" ng-click="contCtrl.sortType = 'opt_marketing'; sortReverse = !sortReverse"
+                                        data-ng-hide="contCtrl.contactGrid.columns.optin.visible == 0">
+                                        <span class="handle">Marketing Option-in/out</span>
+                                        <span ng-show="contCtrl.sortType == 'opt_marketing' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="contCtrl.sortType == 'opt_marketing' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <th class="text-center iconcolumnwidth" id="datalake_col_head" drag-me drop-me data-handle=".handle" data-ng-hide="contCtrl.contactGrid.columns.datalake.visible == 0">
+                                        <span class="handle">Documents</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="contact in contCtrl.allContacts|filter:contCtrl.search|orderBy:contCtrl.sortType:sortReverse|itemsPerPage:contCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}" data-ng-click="contCtrl.setClickedRow($index);"
+                                    ng-dblclick="contCtrl.dblClickAction(contact);" selectedrow="{{contact}}">
+                                    <td class="id_col iconcolumnWidth" data-ng-hide="contCtrl.contactGrid.columns.id.visible == 0">{{contact.id}}</td>
+                                    <td class="status_col" ng-class="{'text-success f-500': contact.status==='Active' , 'text-warning f-300': contact.status ==='Pending Active', 'text-primary f-300': contact.status ==='Inactive','text-info f-300': contact.status==='Pending Inactive'}"
+                                        data-ng-hide="contCtrl.contactGrid.columns.status.visible == 0">{{contact.status}}</td>
+                                    <td class="country_col" data-ng-hide="contCtrl.contactGrid.columns.country.visible == 0">{{contact.country}}</td>
+                                    <td class="type_col" data-ng-hide="contCtrl.contactGrid.columns.type.visible == 0">{{contact.type}}</td>
+                                    <td class="information_col" data-ng-hide="contCtrl.contactGrid.columns.information.visible == 0">{{contact.information}}</td>
+                                    <td class="hygiene_col" data-ng-hide="contCtrl.contactGrid.columns.hygiene.visible == 0">{{contact.hygiene}}</td>
+                                    <td class="opt_marketing_col" data-ng-hide="contCtrl.contactGrid.columns.optin.visible == 0">{{contact.opt_marketing}}</td>
+                                    <td class="datalake_col iconcolumnWidth text-center p-l-5" data-ng-hide="contCtrl.contactGrid.columns.datalake.visible == 0">
+                                        <button type="button" class="p-l-5 header-button datalake-button" ng-click="showMetaData(contCtrl.entityInformation,contact);">
+                                            <span class="zmdi zmdi-cloud zmdi-hc-fw"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="contCtrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="contCtrl.pageSize = 10" ng-class="{'active':contCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="contCtrl.pageSize = 25" ng-class="{'active':contCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="contCtrl.pageSize = 50" ng-class="{'active':contCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="contCtrl.pageSize = 100" ng-class="{'active':contCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--Details section for each title data -->
+        <div ng-if="!contCtrl.isViewAuthorized" data-ng-include="'./application/templates/restricted.access.html'"></div>
+        <meta-data-panel></meta-data-panel>
+        <div class="col-lg-12 p-0">
+            <div id="refresh-table" class="p-15" data-ng-class="{'toggled':contCtrl.isRefreshTable}">
+                <div class="col-xs-6 p-0">
+                    <span class="f-15 f-300 pull-left">{{contCtrl.refreshTableText}}</span>
+                </div>
+                <div class="col-xs-6 p-0" data-ng-if="contCtrl.totalTimeText">
+                    <span class="pull-right f-300">
+                        <strong>{{contCtrl.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{contCtrl.totalRecordsText}}</span>
+                        <span ng-bind-html="contCtrl.totalTimeText"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="contCtrl.rowsCount === 0 && contCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No contact exists. Please add contact.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/contacts/panel.contact.form.html'"></div>
+</div>

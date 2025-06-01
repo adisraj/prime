@@ -1,0 +1,92 @@
+<div id="rightsidebar" class="toggled" data-ng-init="offerController.fetchOffer()">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a class="cursor-pointer" name="exit_sidebar_link" ui-sref="common.prime.offers">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel">Update <strong>Offer</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/offers.svg'"></div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group col-xs-12 p-0" data-ng-if="offerController.isOfferLoaded">
+                <div>
+                    <ng-form role="form" novalidate="novalidate" name="offerController.offerForm">
+                        <div class="form-group" valdr-form-group>
+                            <span style="color:red;" ng-show="offerController.offerForm.name.$invalid">* </span>
+                            <span style="color:green;" ng-show="offerController.offerForm.name.$valid">* </span>
+                            <label>Name</label>
+                            <input id="name" ng-bind="datas" name="name" type="text" class="form-control input-sm" ng-model="offerController.Offer.name" placeholder="Enter Description" ng-model-options="{ updateOn: 'blur',debounce:{default: 100, blur:200}}" ng-minlength="3"
+                                required>
+                            <span class="text-danger" data-ng-if="offerController.offerForm.name.$error.minlength && !offerController.offerForm.name.$pristine">
+                                        Should contain minimum of 3 characters.                                    
+                            </span>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span style="color:red;" ng-show="offerController.offerForm.description.$invalid">* </span>
+                            <span style="color:green;" ng-show="offerController.offerForm.description.$valid">* </span>
+                            <label>Description</label>
+                            <input id="description" name="description" type="text" class="form-control input-sm" ng-model="offerController.Offer.description" placeholder="Enter Description" ng-minlength="3" ng-maxlength="40" required ng-model-options="{ updateOn: 'blur',debounce:{default: 100, blur:200} }"
+                            />
+                            <span class="text-danger" data-ng-if="offerController.offerForm.description.$error.minlength && !offerController.offerForm.short_description.$pristine">
+                                        Should contain minimum of 3 characters.                                    
+                            </span>
+                            <span class="text-danger" data-ng-if="offerController.offerForm.description.$error.maxlength && !offerController.offerForm.short_description.$pristine">
+                                    Can contain maximum of 45 characters.                                    
+                                </span>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label> Coupon Required
+                                    <input id="coupon_required" name="coupon_required" type="checkbox" hidden="hidden" ng-model="offerController.Offer.coupon_required" ng-true-value="1" ng-false-value="0">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label> Co Exist
+                                    <input id="co_exist" name="co_exist" type="checkbox" hidden="hidden" ng-model="offerController.Offer.co_exist" ng-true-value="1" ng-false-value="0">
+                                    <i class="input-helper"></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-init="offerController.Offer.begin_dt = getDateBasedOnFormat(offerController.Offer.begin_dt);" valdr-form-group>
+                            <span style="color:red;" ng-show="offerController.offerForm.begin_dt.$invalid">* </span>
+                            <span style="color:green;" ng-show="offerController.offerForm.begin_dt.$valid">* </span>
+                            <label>Begin Date</label>
+                            <input type="text" id="begin_dt" name="begin_dt" required class="form-control input-sm rcp-mydatepicker" ng-model="offerController.Offer.begin_dt" ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true">
+                        </div>
+                        <div class="form-group" ng-init="offerController.Offer.end_dt = getDateBasedOnFormat(offerController.Offer.end_dt);" valdr-form-group>
+                            <span style="color:red;" ng-show="offerController.offerForm.end_dt.$invalid">* </span>
+                            <span style="color:green;" ng-show="offerController.offerForm.end_dt.$valid">* </span>
+                            <label>End Date</label>
+                            <input type="text" id="end_dt" name="end_dt" required class="form-control input-sm rcp-mydatepicker" ng-model="offerController.Offer.end_dt" ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true">
+                        </div>
+                        <button type="button" data-ng-disabled="offerController.offerForm.$invalid || offerController.ValidationError || offerController.isProcessing" class="btn-primal btn-lg btn-block waves-effect f-700" aria-hidden="true" data-ng-click="offerController.updateOffer()">Update</button>
+                        <button type="button" data-ng-disabled="offerController.offerForm.$invalid || offerController.ValidationError || offerController.isProcessing" class="btn-primal btn-lg btn-block waves-effect f-700" aria-hidden="true" data-ng-click="offerController.PanelDeleteOffer(offerController.Offer)">Delete</button>
+                    </ng-form>
+                </div>
+            </div>
+            <div class="col-xs-12" data-ng-if="offerController.message">
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-ng-click="offerController.message = null" aria-hidden="true">&times;</button> {{offerController.message}}
+                </div>
+            </div>
+            <div class="col-xs-12" data-ng-if="offerController.error">
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="offerController.error = null" aria-hidden="true">&times;</button> {{offerController.error}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="offerController.isUnauthorized" data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>

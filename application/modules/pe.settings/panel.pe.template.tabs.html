@@ -1,0 +1,142 @@
+<div id="rcrightsidebar" data-ng-class="{'toggled':templateController.isShowTemplateItemForm === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a class="cursor-pointer" ng-click="templateController.closeTemplateTabPanel();">
+                <i class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="editformlabel"><strong>Toolbar Tabs</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-t-10 m-b-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/toolbar-quick-access.svg'"></div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <label class="f-20 f-300">{{templateController.template_name}}</label>
+        </div>
+        <div class="col-xs-12 create-tab-section">
+            <ng-form name="templateController.toolbarTabForm" role="form" novalidate="novalidate">
+                <div class="form-group">
+                    <span class="c-red" ng-show="templateController.toolbarTabForm.display_name.$invalid">* </span>
+                    <span class="c-green" ng-show="templateController.toolbarTabForm.display_name.$valid">* </span>
+                    <label>Display Name</label>
+                    <input type="text" name="display_name" id="display_name" class="form-control input-sm" ng-model="templateController.template_tab_details.display_name" ng-minlength="2" ng-maxlength="50"  placeholder="Enter Display Name" required>
+                    <p ng-if="templateController.toolbarTabForm.display_name.$error.minlength || templateController.toolbarTabForm.display_name.$error.maxlength" style="font-size: 11px; color: #e41708; font-family: 'lato','Roboto';"> Length (Min:2 & Max:50) chars</p>
+                </div>
+                <div class="form-group pull-right" data-ng-if="!templateController.isTabUpdate">
+                    <button class="btn-block btn-primal" ng-click="templateController.addTabToTemplate(templateController.template_tab_details.display_name);" ng-disabled="templateController.toolbarTabForm.$invalid || templateController.isProcessing">
+                        <span>Add<b> Tab</b></span>
+                    </button>
+                </div>
+
+                <div class="form-group pull-right d-flex" data-ng-if="templateController.isTabUpdate">
+                    <button class="btn-primal m-r-5" ng-click="templateController.updateToolbarTab(templateController.template_tab_details);" ng-disabled="templateController.toolbarTabForm.$invalid || templateController.isProcessing">
+                        <span>Update</span>
+                    </button>
+                    <button class="btn-secondary" ng-click="templateController.template_tab_details = {}; templateController.isTabUpdate = false;" ng-disabled="!templateController.template_tab_details.display_name">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+            </ng-form>
+        </div>
+        <!-- Product Explorer Hierarchy Values End-->
+        <div class="col-xs-12 p-0 m-t-10">
+            <div class="alert alert-success alert-dismissable" data-ng-show="templateController.successmessage">
+                {{templateController.successmessage}}
+                <button type="button" class="close" data-ng-click="templateController.successmessage = null" aria-hidden="true">&times;</button>
+            </div>
+            <div class="alert alert-danger alert-dismissable" data-ng-show="templateController.errormessage">
+                {{templateController.errormessage}}
+                <button type="button" class="close" data-ng-click="templateController.errormessage = null" aria-hidden="true">&times;</button>
+            </div>
+        </div>
+        <!-- Toolbar Items Table Start -->
+        <div class="col-xs-12 d-flex d-flex-h-center" ng-if="templateController.templateTabs.length === 0 && !templateController.isLoadingTabs">
+            <span class="f-15 f-300 pull-left">No tab exists for selected toolbar.</span>
+        </div>
+        <div data-ng-if="templateController.isLoadingTabs" class="text-center">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div class="col-xs-12 p-0" ng-if="templateController.template_id && templateController.templateTabs.length > 0 && !templateController.isLoadingTabs">
+            <div>
+                <div class="col-xs-12 form-group p-0 m-t-5">
+                    <div class="col-xs-4 p-t-5 p-0">
+                        <span> <strong>{{templateTabs.length}}</strong> record[s] found</span>
+                    </div>
+                    <div class="col-lg-8 p-0">
+                        <input class="form-control input-sm " type="text" ng-model="searchTemplateItem" placeholder="Search Toolbar Tabs"/>
+                    </div>
+                </div>
+                <div class="col-lg-12 table-responsive hunt-location-table p-0">
+                    <div class="table-container o-auto">
+                        <div class="floatleft">
+                            <table class="table table-bordered table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%">
+                                            <span class="handle">Sequence</span>
+                                        </th>
+                                        <th style="width:5%" data-ng-if="templateController.showmoveupdown && templateController.templateTabs.length > 1">
+                                            <span class="handle">Up/Down</span>
+                                        </th>
+                                        <th>
+                                            <span class="handle">Display Name</span>
+                                        </th>
+                                        <th style="width:5%">Remove</th>
+                                        <th class="text-center">
+                                            <span class="handle">Configure</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-model="templateController.templateTabs" class="list">
+                                    <tr ng-repeat="template_tab in templateTabs = (templateController.templateTabs|filter:searchTemplateItem)" class="cursor-pointer">
+                                        <td class="name_col text-center">{{template_tab.display_sequence}}</td>
+                                        <td class="name_col text-center" data-ng-if="templateController.showmoveupdown && templateController.templateTabs.length > 1">
+                                            <move-up-down-rows load-column-fn="templateController.toggleColumn(flag)" filter-values="templateController.templateTabs" instance-id="template_tab.id" display-sequence="template_tab.display_sequence" api-instance-display-values="apiInstanceDisplayValues" 
+                                            length="templateController.templateTabs.length" update="update" update-info-fn="getDisplaySequnceUpdateInformation(data);"></move-up-down-rows>
+                                        </td>
+                                        <td class="name_col" ng-dblclick="templateController.dblClickAction(template_tab,'Toolbar Tab')" title="Double click to update"><span>{{template_tab.display_name}} </span></td>
+                                        <td class="text-center text-danger">
+                                            <span class="zmdi zmdi-delete optimus-f-color cursor-pointer" ng-click="templateController.removeTabFromTemplate(template_tab.id);"></span>
+                                        </td>
+                                        <td class="name_col text-center"><a ng-click="templateController.showTabNodePanel(template_tab.id);"> Configure</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- 
+                    *** Code is commented to not show the preview link for now ***
+                    *** If we are removing then we have to remove the depending JS and CSS code also ***
+                -->
+                <!-- <div class="col-xs-12 p-5" data-ng-if="!templateController.showPreview">
+                    <div class="pull-right">
+                        <a class="cursor-pointer" data-ng-click="templateController.showPreview = !templateController.showPreview">
+                            <span>Show Preview</span>
+                        </a>
+                    </div>
+                </div> 
+                <div class="col-xs-12 p-0 m-t-10" data-ng-if="templateController.showPreview">
+                    <div class="d-flex justify-content-between p-5">
+                        <div class="text-info">Showing tabs preview</div>
+                        <div class="zmdi zmdi-close text-danger f-15 cursor-pointer" data-ng-click="templateController.showPreview = !templateController.showPreview"></div>
+                    </div>
+                    <div class="col-xs-12 p-5 toolbar-tabs-list" style="box-shadow: 0px 0px 5px #d8d8d8;">
+                        <div class="d-flex align-items-center toolbar-tab-box" data-ng-repeat="template_tab in templateTabs = (templateController.templateTabs|filter:searchTemplateItem)">
+                            <div class="p-r-10 p-l-5"><a class="cursor-pointer" ng-click="templateController.showTabNodePanel(template_tab.id);">{{template_tab.display_name}}</a></div>
+                        </div>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+        <!-- Toolbar Items Table End -->
+    </div>
+    <div data-ng-include="'./application/modules/pe.settings/panel.pe.template.tab.items.html'"></div>
+</div>

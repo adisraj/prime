@@ -1,0 +1,109 @@
+<style>
+    .dependencyListHeight {
+        max-height: 60vh;
+    }
+
+    .dependencyListHeightWithError {
+        max-height: 35vh;
+    }
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar" class="toggled" data-ng-init="itemColCtrl.loadVendorCollectionLinks(itemcollection.id)"
+    data-ng-class="{'changeposition':itemColCtrl.isShowLinkedDetails === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="itemColCtrl.closeForm();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="{{itemColCtrl.moduleNameCol}}">
+                Link <strong>Vendors</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-12 d-flex d-flex-v-center" style="justify-content: space-around;">
+            <div data-ng-include="'./application/modules/item/item.collection/item.collections.link.svg.html'"></div>
+            <div data-ng-include="'./application/modules/mto/link_svg.html'"></div>
+            <div data-ng-include="'./application/modules/vendor/vendor.configuration.link.svg.html'"></div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div>
+                <ng-form name="itemColCtrl.itemcol_form" role="form" novalidate="novalidate"
+                    valdr-type="ITEM_COLLECTIONS">
+                    <div class="col-xs-12 text-center m-t-10"
+                        data-ng-if="itemColCtrl.isReset || (itemColCtrl.loadingLinks && !itemColCtrl.collectionVendors.length > 0)">
+                        Loading Vendors...</div>
+                    <div class="list-group panel m-b-0" valdr-form-group data-ng-if="!itemColCtrl.loadingLinks">
+                        <div class="col-xs-12 d-flex d-flex-v-center">
+                            <div class="flex-fill p-0" data-ng-init="itemColCtrl.searchText=''">
+                                <input type="text" ng-model="itemColCtrl.searchText" placeholder="Search"
+                                    class="input-sm form-control m-t-10 m-b-10 bgm-none"
+                                    data-ng-change="itemColCtrl.hasLinkError = '';"
+                                    rc-on-enter="itemColCtrl.searchCollectionVendors(itemColCtrl.searchText)" />
+                            </div>
+                            <div class="p-0">
+                                <button class="btn btn-sm btn-primal m-l-5"
+                                    data-ng-disabled="!itemColCtrl.searchText||itemColCtrl.searchText.length===0"
+                                    data-ng-click="itemColCtrl.searchCollectionVendors(itemColCtrl.searchText);"><strong>Search</strong></button>
+                                <button class="btn pull-right m-l-5"
+                                    data-ng-click="itemColCtrl.resetSearch();">Reset</button>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 p-0 p-b-10" style="border-bottom: 1px solid #e0e0e0"
+                            data-ng-if="itemColCtrl.collectionVendors.length > 0">
+                            <div class="p-l-15 p-r-15 rcpscrollbar  o-auto dependencyListHeight"
+                                data-ng-class="{'dependencyListHeightWithError':itemColCtrl.dependencyDetails.length>0 && itemColCtrl.hasLinkError}">
+                                <div data-ng-disabled="itemColCtrl.disablePanel || itemColCtrl.isLinkingVendor"
+                                    data-ng-repeat="vendor in itemColCtrl.collectionVendors | filter : itemColCtrl.searchText | orderBy : ['-isselected','name']"
+                                    data-ng-init="vendor.isselected=vendor.selected">
+                                    <div class="checkbox m-5">
+                                        <label>
+                                            <input id="view" type="checkbox" hidden="hidden"
+                                                ng-click="itemColCtrl.vendorCollection(vendor);itemColCtrl.selectedVendorId=vendor.id"
+                                                ng-model="vendor.selected" ng-true-value=true ng-false-value=false>
+                                            <i class="input-helper"></i>
+                                            <span class="p-l-15 filter-label">
+                                                <span>{{vendor.name}}</span>
+                                                <span class="f-12 text-muted">( {{vendor.vendor_type}} ) </span>
+                                                <span ng-if="itemColCtrl.selectedVendorId==vendor.id"
+                                                    ng-bind="itemColCtrl.message" class="dependency-linkSuccess"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 text-center"
+                                    data-ng-if="(itemColCtrl.collectionVendors | filter: {name: itemColCtrl.searchCollection}).length === 0">
+                                    <span class="text-muted f-14">No search results found!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-10 text-center"
+                        data-ng-if="itemColCtrl.collectionVendors.length === 0 && !itemColCtrl.loadingLinks && !itemColCtrl.isReset">
+                        <span class="f-14 text-muted text-info">No vendors available!</span>
+                    </div>
+                </ng-form>
+            </div>
+            <div class="col-xs-12 m-t-10 p-0" ng-show="itemColCtrl.hasLinkError">
+                <div class="aligncenter dependency-errorMessage">
+                    <span ng-bind="itemColCtrl.hasLinkError"></span>
+                </div>
+                <div ng-show="itemColCtrl.showDependencyPanel">
+                    <h4> Dependent Entities in Items</h4>
+                    <div class="col-xs-12 p-0" ng-repeat="dependency in itemColCtrl.dependencyDetails">
+                        <div class="rcpscrollbar dependency-entityBox">
+                            <div class="dependency-entityList"
+                                ng-click="itemColCtrl.showLinkedVendorDependencyDetails(dependency);">
+                                <span>{{dependency.description | truncate:50}}</span>
+                                <span
+                                    class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

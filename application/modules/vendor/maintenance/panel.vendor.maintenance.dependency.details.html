@@ -1,0 +1,53 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':venMaintCtrl.$showErrorDetails === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a class="cursor-pointer" data-ng-click="venMaintCtrl.$showErrorDetails = false">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Vendor Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Name</td>
+                        <td class="highlight-text-success" title="{{head.name}}">{{head.name | truncate:50}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{head.status}}">{{head.status}}</td>
+                    </tr>
+                </table>
+                <h4>Item Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success" title="{{venMaintCtrl.$errorDependentData.description}}">{{venMaintCtrl.$errorDependentData.description | truncate:50}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{venMaintCtrl.$errorDependentData.status}}">{{venMaintCtrl.$errorDependentData.status | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Collection</td>
+                        <td data-ng-show="venMaintCtrl.$errorDependentData.collection !== 'NA'" title="{{venMaintCtrl.$errorDependentData.collection}}">{{venMaintCtrl.$errorDependentData.collection}}</td>
+                        <td data-ng-show="venMaintCtrl.$errorDependentData.collection === 'NA'" title="{{venMaintCtrl.$errorDependentData.collection}}">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Next Effective Date</td>
+                        <td ng-show="venMaintCtrl.$errorDependentData.next_status !== 'None'" title="{{venMaintCtrl.$errorDependentData.next_effective_date | FormatDate}}">{{venMaintCtrl.$errorDependentData.next_effective_date | FormatDate}}</td>
+                        <td ng-show="venMaintCtrl.$errorDependentData.next_status === 'None'" title="{{venMaintCtrl.$errorDependentData.next_effective_date}}">N/A</td>
+                    </tr>
+                </table>
+                </br>
+                <div class="dependency-notifyMessage"><span>{{venMaintCtrl.$errorDependentData.message}}</span></div>
+                <!--<button type="button" class="btn btn-view-values m-5 pull-right m-t-10" ng-click=""><bold>Delete Item</bold></button>-->
+            </div>
+        </div>
+    </div>
+</div>

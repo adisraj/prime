@@ -1,0 +1,312 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+</style>
+<div id="rcrightsidebar" class="toggled" data-ng-init="itemTypeCtrl.typesMap?itemTypeCtrl.gotoUpdateStateIfIdExist():''"
+    data-ng-class="{'changeposition': showhistory === true ||  itemTypeCtrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0"
+            data-ng-click="itemTypeCtrl.closeForm();closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!itemTypeCtrl.isDeleteSuccess && !itemTypeCtrl.isConfirmDelete)"
+                title="{{itemTypeCtrl.entityInformation.name}}">Update
+                <strong>{{itemTypeCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(itemTypeCtrl.isDeleteSuccess || itemTypeCtrl.isConfirmDelete)"
+                title="{{itemTypeCtrl.entityInformation.name}}">Delete
+                <strong>{{itemTypeCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!itemTypeCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="
+                itemTypeCtrl.showDependencyDetails ||
+                !(itemTypeCtrl.isUpdateSuccess ||  itemTypeCtrl.isConfirmDelete || itemTypeCtrl.isDeleteSuccess) ||
+                itemTypeCtrl.isDefaultFieldUpdated
+            ">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/entity-config-item.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0"
+            ng-if="!itemTypeCtrl.showDependencyDetails && itemTypeCtrl.productExplorerId && !itemTypeCtrl.isDefaultFieldUpdated">
+            <div
+                ng-if="!(itemTypeCtrl.isUpdateSuccess ||  itemTypeCtrl.isConfirmDelete || itemTypeCtrl.isDeleteSuccess)">
+                <ng-form name="type_form" novalidate="novalidate" role="form" valdr-type="RULES-30">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="type_form.item_type_id.$invalid">* </span>
+                        <span class="c-green" ng-show="type_form.item_type_id.$valid">* </span>
+                        <label class="maintenance-field-label">Item Type</label>
+                        <hierarchy-tree-view primary-hierarchy-id="itemTypeCtrl.productExplorerId"
+                            path="head.primary_item_hierarchy_value_path"
+                            primary-hierarchy-value-id="itemTypeCtrl.new_type.item_type_id"
+                            directive-end-fn='end(directiveData)' enable-valdr-validation enable-valdr-message
+                            form-data="head" form-header="Item Type"
+                            tree-view-fn="itemTypeCtrl.toggleTreeViewPanel(flagData)"
+                            clear-path="itemMaintCtrl.clearPath"></hierarchy-tree-view>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="type_form.status_id.$invalid">* </span>
+                        <span class="c-green" ng-show="type_form.status_id.$valid">* </span>
+                        <label>Status</label>
+                        <select id="status_id" name="status_id" class="form-control select-component input-sm tabfocus"
+                            ng-model="itemTypeCtrl.new_type.status_id"
+                            ng-options="each.code as each.description disable when (each.code === itemTypeCtrl.statusCodes.Pending.ID && itemTypeCtrl.oldItemTypeDetails.status_id !== itemTypeCtrl.statusCodes.Pending.ID) for each in statuses"
+                            errorvaluechosen="itemTypeCtrl.new_type.status_id_error" required="" autofocus="true">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div>
+                    <!-- DEFAULTS SECTION START-->
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="type_form.default_pricing_choice_id.$invalid">* </span>
+                        <span class="c-green" ng-show="type_form.default_pricing_choice_id.$valid">* </span>
+                        <label>Default SKU Pricing Choice</label>
+                        <select id="default_pricing_choice_id" name="default_pricing_choice_id"
+                            class="form-control select-component input-sm tabfocus"
+                            ng-model="itemTypeCtrl.new_type.default_pricing_choice_id"
+                            ng-options="each.id as each.description disable when (each.status === 100 || each.status === 300 || each.status === 500) for each in itemTypeCtrl.skuPricingChoices"
+                            errorvaluechosen="itemTypeCtrl.new_type.default_pricing_choice_id_error" required="">
+                            <option value="" disabled>Select SKU Pricing Choice</option>
+                        </select>
+                    </div>
+                    <div class="form-group" valdr-form-group data-ng-if="itemTypeCtrl.buyer_hierarchy_id">
+                        <span class="c-green">* </span>
+                        <label>Default Buyer</label>
+                        <hierarchy-tree-view primary-hierarchy-id="itemTypeCtrl.buyer_hierarchy_id"
+                            path="itemTypeCtrl.buyer_hierarchy_path" primary-hierarchy-value-id="itemTypeCtrl.buyer_id"
+                            directive-end-fn='getBuyerHierarchyPath(directiveData)' enable-valdr-validation
+                            enable-valdr-message form-data="head" form-header="{{itemTypeCtrl.buyer_hierarchy_desc}}"
+                            clear-path="itemTypeCtrl.clearPath"
+                            data-ng-class="{'error-field-validation': (itemTypeCtrl.buyer_id == null || itemTypeCtrl.buyer_id == undefined) && itemTypeCtrl.isInvalidForm}">
+                        </hierarchy-tree-view>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-green">* </span>
+                        <label>Default Inventory Methods</label>
+                        <div class="resetbtn fa fa-times-circle f-16 m-t-20" title="Reset value" title-direction="top-left" style="width:3%;float:right;" data-ng-click="itemTypeCtrl.new_type.default_inventory_method_id = null;">
+                        </div>
+                        <select id="inventory_method_id" name="inventory_method_id"
+                            class="form-control select-component input-sm tabfocus" style="width:95%"
+                            ng-model="itemTypeCtrl.new_type.default_inventory_method_id"
+                            ng-options="each.id as each.name for each in itemTypeCtrl.inventoryMethods"
+                            errorvaluechosen="itemTypeCtrl.new_type.inventory_method_id_error"
+                            ng-change="itemTypeCtrl.isSkuHuntPathAlowed(itemTypeCtrl.new_type.default_inventory_method_id)">
+                            <option value="" disabled>Select Inventory Methods</option>
+                        </select>
+                        <div data-ng-init="itemTypeCtrl.isSkuHuntPathAlowed(itemTypeCtrl.new_type.default_inventory_method_id)"
+                            ng-if="itemTypeCtrl.new_type.default_inventory_method_id && itemTypeCtrl.new_type.default_inventory_method_id != 5 && itemTypeCtrl.inventoryMethods.length > 0">
+                            <label class="m-t-10 p-0" ng-if="itemTypeCtrl.isHuntPath === true">Inventory Availability Calculation</label>
+                            <div class="d-flex" ng-if="itemTypeCtrl.isHuntPath === true">
+                                <div>
+                                    <label class="c-black" class="d-flex align-items-center">
+                                        <input type="radio" name="calculateinventory"
+                                            ng-model="itemTypeCtrl.new_type.inventory_calculation" value="1" data-ng-change="itemTypeCtrl.new_type.default_rule_id = null"
+                                            ng-value="1">
+                                        <i class="input-helper"></i> Hunt Path Based
+                                    </label>
+                                </div>
+                                <div class="m-l-30">
+                                    <label class="c-black" class="d-flex align-items-center">
+                                        <input type="radio" name="calculateinventory"
+                                            ng-model="itemTypeCtrl.new_type.inventory_calculation" value="0" data-ng-change="itemTypeCtrl.new_type.default_hunt_path_id = null"
+                                            ng-value="0">
+                                        <i class="input-helper"></i> Rule Based
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="m-t-10 p-0"
+                                data-ng-if="itemTypeCtrl.new_type.inventory_calculation===1 && itemTypeCtrl.isHuntPath === true">
+                                <div class="form-group" valdr-form-group>
+                                    <span class="c-red" ng-show="type_form.hunt_path_type_id.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="type_form.hunt_path_type_id.$valid">*
+                                    </span>
+                                    <label>Hunt Path Type</label>
+                                    <div class="form-group" valdr-form-group>
+                                        <select data-ng-if="itemTypeCtrl.hunt_path_types.length>0"
+                                            name="hunt_path_type_id" class="form-control select-component input-sm"
+                                            ng-options="each.id as each.type for each in itemTypeCtrl.hunt_path_types"
+                                            ng-model="itemTypeCtrl.new_type.default_hunt_path_id"
+                                            data-ng-change="itemTypeCtrl.changeHuntPathType()"
+                                            data-ng-class="{'error-field-validation': type_form.hunt_path_type_id.$invalid && itemTypeCtrl.isInvalidForm}"
+                                            required>
+                                            <option value="" disabled>Select Hunt Path Type</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group m-b-10 m-t-10" 
+                                data-ng-if="(itemTypeCtrl.new_type.inventory_calculation===0||itemTypeCtrl.isHuntPath === false)">
+                                <div class="form-group" valdr-form-group>
+                                    <span class="c-red" ng-show="type_form.rule_type_id.$invalid">*
+                                    </span>
+                                    <span class="c-green" ng-show="type_form.rule_type_id.$valid">*
+                                    </span>
+                                    <label>Rule Type</label>
+                                    <div class=" form-group" valdr-form-group>
+                                        <select
+                                            data-ng-init="itemTypeCtrl.rule_types&&itemTypeCtrl.rule_types.length===1 ? itemTypeCtrl.new_type.default_rule_id = itemTypeCtrl.rule_types[0].id : null"
+                                            data-ng-if="itemTypeCtrl.rule_types && itemTypeCtrl.rule_types.length > 0"
+                                            id="rule_type_id" name="rule_type_id"
+                                            class="form-control select-component input-sm"
+                                            ng-options="each.id as each.rulename for each in itemTypeCtrl.rule_types"
+                                            ng-model="itemTypeCtrl.new_type.default_rule_id" required
+                                            data-ng-class="{'error-field-validation': type_form.rule_type_id.$invalid && itemTypeCtrl.isInvalidForm}">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DEFAULTS SECTION END-->
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>Allow Sales
+                                <input hidden="hidden" id="sale_allowed" name="allow_sales_id" ng-false-value="0"
+                                    ng-model="itemTypeCtrl.new_type.allow_sales_id" ng-true-value="1" type="checkbox"
+                                    ng-click="applyBusiness(itemTypeCtrl.new_type)">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>Allow MTO
+                                <input hidden="hidden" id="allow_MTOs" name="allow_MTOs_id" ng-false-value="0"
+                                    ng-model="itemTypeCtrl.new_type.allow_MTOs_id" ng-true-value="1" type="checkbox"
+                                    ng-click="applyBusiness(itemTypeCtrl.new_type)">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>Inventory Control
+                                <input hidden="hidden" id="inventory_control" name="inventory_control_id"
+                                    ng-false-value="0" ng-model="itemTypeCtrl.new_type.inventory_control_id"
+                                    ng-true-value="1" type="checkbox">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>Allow Purchasing
+                                <input hidden="hidden" id="allow_purchasing" name="allow_purchasing_id"
+                                    ng-false-value="0" ng-model="itemTypeCtrl.new_type.allow_purchasing_id"
+                                    ng-true-value="1" type="checkbox">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" data-ng-if="itemTypeCtrl.allowCollectionDetails.yes_or_no">
+                        <div class="checkbox">
+                            <label>Allow Collection
+                                <input hidden="hidden" id="allow_collection" name="allow_collection_id"
+                                    ng-false-value="0" ng-model="itemTypeCtrl.new_type.allow_collection_id"
+                                    ng-true-value="1" type="checkbox">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>Multiple SKUs
+                                <input hidden="hidden" id="multiple_skus" name="multiple_skus_id" ng-false-value="0"
+                                    ng-model="itemTypeCtrl.new_type.multiple_skus_id" ng-true-value="1" type="checkbox"
+                                    ng-disabled="itemTypeCtrl.new_type.multiple_skus_id_disable">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>No Inventory Check
+                                <input hidden="hidden" id="no_inventory_check" name="no_inventory_check"
+                                    ng-false-value="0" ng-model="itemTypeCtrl.new_type.no_inventory_check"
+                                    ng-true-value="1" type="checkbox">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <rcp-edit-form-btns new-form="false" update-fn="itemTypeCtrl.update(itemTypeCtrl.new_type)"
+                        update-btn-text="itemTypeCtrl.updateBtnText" update-btn-error="itemTypeCtrl.updateBtnError"
+                        confirm-fn="itemTypeCtrl.showconfirm();closeShowHistory()"
+                        confirm-delete="itemTypeCtrl.isConfirmDelete" update-success="itemTypeCtrl.isUpdateSuccess"
+                        entity-id="itemTypeCtrl.new_type.id"
+                        enable-button="type_form.$invalid || !itemTypeCtrl.isBtnEnable"
+                        access-permissions="permissionsMap"></rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="itemTypeCtrl.isConfirmDelete" image-name="entity-config-item.svg"
+                close-fn="itemTypeCtrl.gotoUpdateStateIfIdExist();"
+                delete-fn="itemTypeCtrl.delete(itemTypeCtrl.new_type);" confirm-delete="itemTypeCtrl.isConfirmDelete">
+            </rcp-delete-form>
+            <div
+                ng-if="isMaintenance !== true && !itemTypeCtrl.isConfirmDelete && !itemTypeCtrl.isUpdateSuccess && !itemTypeCtrl.isDeleteSuccess">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn" data-ng-click="loadHistory();"
+                    data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View History
+                </button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading history...
+                </div>
+            </div>
+            <rcp-success-form success-tick="success_tick.svg" close-fn="itemTypeCtrl.closeForm(); "
+                update-success="itemTypeCtrl.isUpdateSuccess" delete-success="itemTypeCtrl.isDeleteSuccess">
+            </rcp-success-form>
+        </div>
+        <div class="col-lg-12" ng-if="itemTypeCtrl.showDependencyDetails">
+            <div>
+                <h4 ng-if="itemTypeCtrl.isDeleteDependencyError" class="aligncenter dependency-errorMessage">Cannot be
+                    deleted!
+                </h4>
+                <h4 data-ng-if="itemTypeCtrl.isUpdateDependencyError" class="aligncenter dependency-errorMessage">Cannot
+                    be updated!</h4>
+                <h4 ng-if="itemTypeCtrl.isUpdateDependencyError&&itemTypeCtrl.dependencyList.dependent_entity.toLowerCase()==='item'"
+                    class="aligncenter dependency-errorMessage">Cannot update
+                    <b> 'Allow Collection'</b> field!</h4>
+                <h4 ng-if="itemTypeCtrl.isUpdateDependencyError&&itemTypeCtrl.dependencyList.dependent_entity.toLowerCase()==='item udd'"
+                    class="aligncenter dependency-errorMessage">Cannot update
+                    <b> 'Allow Collection'</b> field!</h4>
+            </div>
+            <div
+                ng-repeat="($groupName,$dependencyMain) in ( itemTypeCtrl.dependencyList | groupBy : 'dependent_entity')">
+                <div class="col-xs-12 p-0 rcpscrollbar dependency-entityBox">
+                    <h4> Dependent Entities - {{$groupName}} </h4>
+                    <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                        <div class="dependency-entityList"
+                            ng-click="itemTypeCtrl.showDependencyListDetails(dependency);">
+                            <span ng-if="dependency.description"
+                                title="{{dependency.description}}">{{dependency.description | truncate:40}}</span>
+                            <span ng-if="dependency.maintenance_description"
+                                title="{{dependency.maintenance_description}}">{{dependency.maintenance_description | truncate:40}}</span>
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="itemTypeCtrl.closeDependencyList()">
+                    <span>
+                        <b>Cancel</b>
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="itemTypeCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="itemTypeCtrl.message = null"
+                    aria-hidden="true">&times;</button> {{itemTypeCtrl.message}}
+            </div>
+        </div>
+        <div data-ng-include="'./application/modules/item/type/default.fields.update.options.html'"></div>
+    </div>
+    <div ng-include="application/modules/item/type/panel.item.type.dependency.html"></div>
+</div>
+<show-history-panel showhistory="showhistory" showhistoryloading="showhistoryloading" history-list="historyList"
+    close-show-history="closeShowHistory();" ng-if="itemTypeCtrl.isShowHistory">
+</show-history-panel>

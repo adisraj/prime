@@ -1,0 +1,221 @@
+<link rel="stylesheet" href="./application/modules/customer/customers.css">
+
+<div class="container col-lg-12 p-0" data-ng-controller="CustomerController as customerCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/customers.svg"/>
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Customers</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn"
+                         data-ng-if="customerCtrl.customers && customerCtrl.customers.length">
+                        <span> Loaded {{customerCtrl.customers.length}} of {{customerCtrl.customersCount}} Records </span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex m-r-0 nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section-customer tableheader-btn pull-right"
+                                     ng-if="customerCtrl.customers.length > 0">
+                                    <input class="form-control input-sm " type="text " id="inlineSearch"
+                                           ng-model="customerCtrl.search" indicate-quick-search placeholder="Quick Search "
+                                           data-ng-disabled="!customerCtrl.isLoaded"
+                                    />
+                                </div>
+                            </a>
+                        </li>
+                        <li ng-if="customerCtrl.customers.length > 0">
+                            <a class="d-flex">
+                                <div class="group-by-section tableheader-btn"
+                                     ng-init="" style="width: 180px;">
+                                    <select class="form-control select-component input-sm"
+                                            ng-options="each.value as each.field for each in customerCtrl.sortableFields"
+                                            ng-model="customerCtrl.sortByField"
+                                            ng-change="customerCtrl.sortCustomers();"
+                                            data-ng-disabled="!customerCtrl.isLoaded">
+                                    </select>
+                                </div>
+                                <div class="tableheader-btn"
+                                     ng-if="customerCtrl.sortByOrder==='desc' && customerCtrl.sortByField !== 'id' && customerCtrl.isLoaded"
+                                     data-ng-click="customerCtrl.sortCustomers('asc');">
+                                    <span>
+                                        <i class="m-t-5 zmdi zmdi-long-arrow-up zmdi-hc-fw f-700 f-20"
+                                           style="color: firebrick;"></i>
+                                    </span>
+                                </div>
+                                <div class="tableheader-btn"
+                                     ng-if="customerCtrl.sortByOrder==='asc' && customerCtrl.sortByField !== 'id' && customerCtrl.isLoaded"
+                                     data-ng-click="customerCtrl.sortCustomers('desc');">
+                                    <span>
+                                        <i class="m-t-5 zmdi zmdi-long-arrow-down zmdi-hc-fw f-700 f-20"
+                                           style="color: firebrick;"></i>
+                                    </span>
+                                </div>
+                                <!-- ng-if consists condition for recordsCount is true - couse, when recordsCount is false there is another loading symbol -->
+                                <span class="cursor-not-allowed"
+                                      ng-if="!customerCtrl.isLoaded && customerCtrl.recordsCount">
+                                    <img src="./img/loading-circle.gif" style="height: 30px;width: 30px;"/>
+                                </span>
+                            </a>
+                        </li>
+                        <!-- <li ng-if="customerCtrl.customers.length > 0">
+                            <a>
+                                <div class="group-by-section tableheader-btn">
+                                    <select class="form-control select-component input-sm"
+                                            ng-model="customerCtrl.groupByField"
+                                            ng-change="customerCtrl.groupByData(customerCtrl.groupByField);"
+                                            data-ng-disabled="!customerCtrl.isLoaded"
+                                            ng-options="each.prefix as each.name for each in customerCtrl.customerGroupByDropdown">
+                                    </select>
+                                </div>
+                            </a>
+                        </li> -->
+                        <li class="non-collapsed-link" ng-if="customerCtrl.customers.length > 0">
+                            <a>
+                                <button type="button"
+                                        ng-click="customerCtrl.getAllCustomers(customerCtrl.initialPageNumber,customerCtrl.initialPageSize,true);"
+                                        class="btn-primal btn-block waves-effect"
+                                        data-ng-disabled="!customerCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right">
+                                <li ng-if="customerCtrl.customers.length > 0">
+                                    <a ng-click="customerCtrl.getAllCustomers(customerCtrl.initialPageNumber,customerCtrl.initialPageSize,true);"
+                                       class="btn-block waves-effect"
+                                       data-ng-disabled="!customerCtrl.isLoaded">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 p-0 module-content-configuration">
+        <div class="col-xs-12 f-14"
+             data-ng-repeat="customer in customerCtrl.customers | filter : customerCtrl.search | orderBy : customerCtrl.sortByField : customerCtrl.reverse"
+             data-ng-init="customer.showDetails = false; customerCtrl.initCustomer(customer);">
+            <div class="col-xs-12 customer-card" data-ng-class="{'selected': customer.customer_id === customerCtrl.selectedCustomer.customer_id}">
+                <div class="customer-name">
+                    <div class="cursor-pointer" data-ng-if="customer.individuals.length > 0"
+                         data-ng-click="customer.showDetails = !customer.showDetails;">
+                        <span class="fa fa-user m-r-5"></span>
+                        <a style="font-weight: 500;text-shadow: 0 0 1px #87a5ff;color: #1f40a5;">{{customer.individuals[0].first_name}} {{customer.individuals[0].last_name}}</a>
+                    </div>
+                    <div class="business-name cursor-pointer"
+                         data-ng-if="customer.individuals.length === 0 && customer.business_name"
+                         data-ng-click="customer.showDetails = !customer.showDetails;">
+                        <span class="fa fa-briefcase m-r-5"></span>
+                        <a style="font-weight: 500;text-shadow: 0 0 1px #87a5ff;color: #1f40a5;">{{customer.business_name}}</a>
+                    </div>
+                </div>
+                <!-- <div class="customer-address">
+                    <div data-ng-repeat="address in customer.addresses" data-ng-if="customer.addresses.length>0">
+                        <div data-ng-if="address.address_type === 'Billing Address'">
+                            <span class="fa fa-map-marker-alt m-r-5"></span>{{address.address}}
+                        </div>
+                    </div>
+                    <div data-ng-if="customer.addresses.length === 0">
+                        <span>No address infomation</span>
+                    </div>
+                </div> -->
+                <div class="customer-contact">
+                    <div data-ng-repeat="contact in customer.contacts" data-ng-if="customer.contacts.length>0" style="font-family: lato;font-weight: 400;font-size: 12px;color: #13010a;">
+                        <!-- To show the preferred contact when there are multiple contacts start -->
+                        <div data-ng-if="customer.contacts.length>1 && contact.is_preferred_contact">
+                            <span class="zmdi zmdi-phone m-r-5"
+                                  data-ng-if="contact.type.toLowerCase() === 'phone'"></span>
+                            <span class="zmdi zmdi-email m-r-5"
+                                  data-ng-if="contact.type.toLowerCase() === 'email'"></span>
+                            {{contact.sub_type}}: {{contact.information}}
+                        </div>
+                        <!-- To show the preferred contact when there are multiple contacts end -->
+                        <!-- To show the contact when there is only one contact start -->
+                        <div data-ng-if="customer.contacts.length === 1">
+                            <span class="zmdi zmdi-phone m-r-5"
+                                  data-ng-if="contact.type.toLowerCase() === 'phone'"></span>
+                            <span class="zmdi zmdi-email m-r-5"
+                                  data-ng-if="contact.type.toLowerCase() === 'email'"></span>
+                            {{contact.sub_type}}: {{contact.information}}
+                        </div>
+                        <!-- To show the contact when there is only one contact end -->
+                    </div>
+                    <div data-ng-if="customer.contacts.length === 0">
+                        <span style="color:lightgrey">No contact information</span>
+                    </div>
+                </div>
+                <div class="other-details">
+                    <div>
+                        <button class="btn btn-link" data-ng-click="customerCtrl.toggleCustomerDetailsPanel(customer);">
+                            <span class="fa fa-angle-double-right f-12 m-r-5"></span>Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12" data-ng-if="customer.showDetails"
+                 data-ng-class="{'customer-exist': customer.individuals.length > 1,'no-customer-exist':customer.individuals.length <= 1}">
+                <div class="m-b-10 text-muted" data-ng-if="customer.individuals.length > 1">
+                    <span>Secondary customer[s]</span>
+                </div>
+                <div data-ng-if="customer.individuals.length > 1" data-ng-repeat="individual in customer.individuals"
+                     data-ng-hide="$first">
+                    <span class="fa fa-user m-r-5"></span>
+                    {{individual.first_name}} {{individual.last_name}}
+                </div>
+                <div data-ng-if="customer.individuals.length <= 1" class="text-muted">
+                    Secondary customer[s] not available
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 text-center m-t-25 m-b-20" data-ng-if="!customerCtrl.rowsCount && !customerCtrl.isLoaded">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div class="col-xs-12 text-center m-b-20 m-t-15"
+             data-ng-if="customerCtrl.customers.length < customerCtrl.customersCount && !customerCtrl.search && customerCtrl.isLoaded">
+            <button class="btn btn-inverse btn-sm" data-ng-disabled="customerCtrl.isLoadingMore" data-ng-click="customerCtrl.loadMoreCustomers();">
+                <span data-ng-if="!customerCtrl.isLoadingMore">Load more</span>
+                <span data-ng-if="customerCtrl.isLoadingMore">Loading...</span>
+            </button>
+        </div>
+        <div data-ng-if="customerCtrl.rowsCount === 0 && customerCtrl.isLoaded" class="module-content-configuration">
+            <div class="col-xs-12 text-center text-info">
+                <span class="f-15 f-300">No customers exists.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0" data-ng-if="customerCtrl.isRefreshTable">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':customerCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{customerCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="customerCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{customerCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{customerCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="customerCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="customerCtrl.showCustomerDetailsPanel" data-ng-include="'./customer/panel.customers.details.html'"></div>
+</div>

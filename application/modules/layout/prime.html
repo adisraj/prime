@@ -1,0 +1,68 @@
+<div>
+    <div id="profile-main" data-ng-controller="ProfileController">
+        <div class="col-md-12 pull-right">
+
+        </div>
+        <!-- <div class="pm-overview c-overflow col-lg-5">
+                <div id="profile-main">
+                    <div class="pm-overview c-overflow">
+                        <div class="pmo-pic">
+                            <div class="p-relative">
+                                <div class="dropdown pmop-message" uib-dropdown>
+                                    <div class="dropdown-menu stop-propagate">
+                                        <textarea placeholder="Write something..."></textarea>
+                                        <button class="btn bgm-green btn-float"><i class="zmdi zmdi-mail-send"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pmo-stat">
+                                <h2 class="m-0 c-white">{{pagename}}</h2>                  
+                            </div>
+                        </div>
+                        <div class="pmo-block pmo-contact hidden-xs" ng-show="log.created_by">
+
+                      
+
+                            <h2>Audit Log</h2>
+                            <div class="media">
+                                            <a href="" class="pull-left">
+                                                <img src="./img/profile-pics/8.jpg" alt="" class="lv-img-sm">
+                                            </a>
+                     
+                                            <div class="media-body">
+                                                <a href="" class="a-title">{{log.created_by | titleCase }}</a> <small class="c-gray m-l-10">Created</small>
+                                                <p class="m-t-5 m-b-0">{{log.created_dt | formatDate}}</p>
+                                            </div>
+                                        </div>
+
+
+                                          <div class="media">
+                                            <a href="" class="pull-left">
+                                                <img src="./img/profile-pics/2.jpg" alt="" class="lv-img-sm">
+                                            </a>
+                     
+                                            <div class="media-body">
+                                                <a href="" class="a-title">{{log.updated_by | titleCase }}</a> <small class="c-gray m-l-10">Updated</small>
+                                                <p class="m-t-5 m-b-0">{{log.updated_dt}}</p>
+                                            </div>
+                                        </div>
+                        </div> 
+                        <div class="pmo-block pmo-contact hidden-xs">
+                            <h2>Meta Information</h2>
+                                <li style="list-style: none;"><b>Count</b> {{meta[0].COUNT}}</li>
+                        </div> 
+                    </div>
+                </div>
+        </div> -->
+        <!-- <div style="margin-left:-265px;">
+            <ui-breadcrumbs displayname-property="data.displayName"></ui-breadcrumbs>
+        </div> -->
+        <!--<div class="date-picker input-group" ng-class="{ 'is-opened': opened == true }">
+                <span class="input-group-addon"><i class="zmdi zmdi-calendar ma-icon"></i></span>
+                <div ng-class="{ 'fg-toggled': opened == true }">
+                    <input ng-click="open($event, 'opened')" type="text" class="form-control" uib-datepicker-popup="{{format}}" show-weeks="false" ng-model="dtPopup" is-open="opened" min-date="minDate" datepicker-options="dateOptions" ng-required="true" close-text="Close" placeholder="Select Date" />
+                </div>
+            </div> -->
+        <data ui-view></data>
+    </div>
+</div>

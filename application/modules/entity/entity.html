@@ -1,0 +1,153 @@
+<div class="container col-lg-12 p-0" data-ng-controller="EntityController as entityCtrl">
+    <!-- <div class="parentheader">
+            <div class="moduleheader">
+                <img class="moduleimage" src="./img/sidebar-icons/submenu_entity.svg" />
+            </div>
+            <p class="rclabel modulename">Entities</p>
+        </div>-->
+    <nav class="navbar navbar-toolbar navbar-default fixed-top">
+        <div class="bgm-white header-module">
+            <div class="navbar-header p-relative" style="min-height: inherit;">
+                <div class="image-module p-absolute">
+                    <img src="./img/sidebar-icons/submenu_entity.svg" />
+                </div>
+                <div class="label-module p-absolute">
+                    <a class="navbar-brand" href="javascript:void(0)">Entities</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="rcp-table-container">
+        <div class="col-sm-12 m-b-10 p-l-0 p-r-0 d-flex">
+            <div class="entitygroupheader">
+                <rcp-table-group-header rcp-table="entity_table_dynamic" rcp-table-name="entity_table_dynamic" return-value="entityCtrl.returnValue" rcp-group-by-dropdown-list="entityGroupByDropdown" load-ng-table-data="loadNgTableData" columns="encols" image-name="submenu_entity.svg"
+                    reload-fn="entityCtrl.reload('Entity',true);"></rcp-table-group-header>
+            </div>
+            <div>
+                <button type="button" data-ng-click="entityCtrl.showAllEntities();" class="btn btn-secondary pull-left waves-effect"><span class="f-700 ng-binding">{{entityCtrl.showAllButtonText}}</span></button>
+            </div>
+        </div>
+        <div class="lv-body">
+            <div class="table-responsive" ng-if="!entityCtrl.$grid">
+                <table ng-table-dynamic="entity_table_dynamic with encols" class="table table-hover table-vmiddle table-condensed table-bordered " ng-class="{'table-condensed': entityCtrl.$compact}" ng-table-columns-binding11="entityCtrl.cols" arrow-selector ng-init="selectedEntity='Entity'">
+                    <tbody>
+                        <tr class="ng-table-group" ng-show="entityCtrl.returnValue" ng-repeat-start="entityMain in $data | filter : searchText | groupBy : entityCtrl.returnValue">
+                            <td colspan="{{$columns.length}}">
+                                <a href="" ng-click="showHideFollowingArray(entityMain)">
+                                    <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': entityMain[0].hideRows, 'glyphicon-chevron-down': !entityMain[0].hideRows }"></span>
+                                    <strong>
+                                        <input type="text" ng-model="mainValue" ng-init="mainValue = entityMain[0]" ng-hide="true"/>
+                                        <span display-group-header values="mainValue" selectedvalue="entityCtrl.returnValue" ></span>
+                                    </strong>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="entity in entityMain | filter : searchText | orderBy : orderType" ng-class="{ 'active': entity.$edit, 'background-hover':$index == selectedRow }" ng-hide="entity.hideRows" selectedrow="{{entity}}" ng-dblclick="entityCtrl.dblClickAction1(selectedEntity,entity,$index); entityCtrl.showDetails = accessRules.PER1.update.value;entityCtrl.savedToMasterList = true"
+                            ng-click="setClickedRow($index);" ng-repeat-end>
+
+                            <td table-name="entity_table_dynamic" ng-repeat="c in encols" sortable="{{c.sortable}}" ng-class="{{c.class}}" view-value="{{c.view_value}}" alt-title="{{c.alt_title}}">
+
+
+                                <div ng-if="c.ui_component =='text'">
+                                    <span>{{ entity[c.field] }}</span>
+                                </div>
+                                <div ng-if="c.ui_component =='input-text'">
+                                    <span>{{ entity[c.field] }}</span>
+
+                                </div>
+                                <div ng-if="c.ui_component == 'options'">
+                                    <span>{{ entity[c.view_value] }}</span>
+                                </div>
+                                <div ng-if="c.ui_component == 'input-checkbox'">
+                                    <div class="text-center" class="text-center" ng-if="!entity.$edit || !c.edit">
+
+                                        <i ng-show="entity[c.view_value] == 1" class="glyphicon glyphicon-ok c-green"></i>
+                                        <i ng-show="entity[c.view_value] == 0" class="glyphicon glyphicon-remove c-red"></i>
+
+                                    </div>
+                                </div>
+                                <div ng-if="c.field == 'drillToMetaData'" class="iconcolumnWidth text-center p-l-5">
+                                    <button type="button" class="p-l-5 header-button datalake-button" ng-click="showMetaData(entityCtrl.entityInformation,entity);"> <span class="zmdi zmdi-cloud zmdi-hc-fw"></span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--Details section for each master data -->
+        <div id="rightsidebar" class=" c-overflow" data-ng-class="{'toggled':entityCtrl.$showDetails === true || entityCtrl.$showDetails === 1,'changehistorytoggle':showHistory === true}">
+            <div class="col-xs-12 row rightsidebarHeaderHeight">
+                <div class="col-xs-2 inheritheight">
+                    <a data-ng-click="entityCtrl.closeForm();" class="inheritheight">
+                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                    </a>
+                </div>
+                <div class="inheritheight">
+                    <label class="rclabel editformlabel" ng-if="entityCtrl.$showAdd" title="{{entityCtrl.moduleName}}">Create <strong>{{entityCtrl.moduleName | truncate :16}}</strong></label>
+                    <label class="rclabel editformlabel" ng-if="!entityCtrl.$showAdd" title="{{entityCtrl.moduleName}}">Update <strong>{{entityCtrl.moduleName | truncate :16}}</strong></label>
+                </div>
+            </div>
+            <div class="col-xs-12 row ">
+                <div ng-if="!(entityCtrl.$updatesuccess || entityCtrl.$savesuccess)">
+                    <div ng-include=" 'application/modules/entity/entity_svg.html'"></div>
+                </div>
+                <div class="rightsidebarFieldsMargin">
+                    <div class="row">
+                        <div class="form-group col-xs-12 p-r-0">
+                            <div ng-if="!(entityCtrl.$updatesuccess || entityCtrl.$savesuccess)">
+                                <ng-form role="form" novalidate="novalidate" name="entityCtrl.entity_form" valdr-type="ENTITY">
+                                    <div class="form-group" valdr-form-group>
+                                        <span class="c-red" ng-show="entityCtrl.entity_form.prefix.$invalid">* </span>
+                                        <span class="c-green" ng-show="entityCtrl.entity_form.prefix.$valid">* </span>
+                                        <label>Prefix</label>
+                                        <input id="prefix" name="prefix" type="text" class="form-control input-sm" ng-model="entity_details.prefix" placeholder="Prefix" errorvalue="entity_details.prefix_error" ng-model-options="{ updateOn: 'blur' }" />
+                                    </div>
+                                    <div class="form-group" valdr-form-group>
+                                        <span class="c-red" ng-show="entityCtrl.entity_form.entity.$invalid">* </span>
+                                        <span class="c-green" ng-show="entityCtrl.entity_form.entity.$valid">* </span>
+                                        <label>Entity Description</label>
+                                        <input id="entity" name="entity" type="text" class="form-control input-sm" ng-model="entity_details.entity" placeholder="Entity Description" errorvalue="entity_details.entity_error" ng-model-options="{ updateOn: 'blur' }" />
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                            <input type="checkbox" hidden="hidden" ng-model="entity_details.master_data" placeholder="UDD" ng-true-value="'Yes'" ng-false-value="'No'">
+                                            <i class="input-helper"></i>
+                                            User Defined Data
+                                        </label>
+                                        </div>
+                                    </div>
+                                    <rcp-edit-form-btns new-form="entityCtrl.$showAdd" save-fn="entityCtrl.save('Entity',entity_details);" save-btn-text="entityCtrl.$saveBtnText" save-btn-error="entityCtrl.$savebtnerror" update-fn="entityCtrl.update('Entity',entity_details)" update-btn-text="entityCtrl.$updateBtnText"
+                                        update-btn-error="entityCtrl.$updatebtnerror" update-success="entityCtrl.$updatesuccess" enable-button="true"></rcp-edit-form-btns>
+                                </ng-form>
+                            </div>
+                            <rcp-success-form success-tick="success_tick.svg" close-fn="entityCtrl.closeForm();" update-success="entityCtrl.$updatesuccess" save-success="entityCtrl.$savesuccess"> </rcp-success-form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div growl></div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!entityCtrl.isViewAuthorized" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <meta-data-panel image-name="entity/entity_svg.html"></meta-data-panel>
+    <div class="col-lg-12 p-0">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':entityCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{entityCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="entityCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                <strong>{{entityCtrl.totalRecords}}</strong>
+                <span class="f-14 c-gray">{{entityCtrl.totalRecordsText}}</span>
+                <span ng-bind-html="entityCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

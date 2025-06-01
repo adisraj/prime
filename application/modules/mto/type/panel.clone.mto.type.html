@@ -1,0 +1,143 @@
+<style>
+    .styled-checkbox {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .styled-checkbox+label {
+        position: relative;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .styled-checkbox+label:before {
+        content: '';
+        margin-right: 10px;
+        display: inline-block;
+        vertical-align: bottom;
+        width: 20px;
+        height: 20px;
+        background: #e2e2e2;
+    }
+
+    .styled-checkbox:hover+label:before {
+        background: #5f99f3;
+    }
+
+    .styled-checkbox:checked+label:before {
+        background: #5f99f3;
+    }
+
+    .styled-checkbox:disabled+label {
+        color: #b8b8b8;
+        cursor: auto;
+    }
+
+    .styled-checkbox:disabled+label:before {
+        box-shadow: none;
+        background: #ddd;
+    }
+
+    .styled-checkbox:checked+label:after {
+        content: '';
+        position: absolute;
+        left: 4px;
+        top: 9px;
+        background: white;
+        width: 2px;
+        height: 2px;
+        box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+</style>
+<div>
+    <div id="rcrightsidebar" class="toggled" data-ng-if="!mtoTypeCtrl.showLockedScreen">
+        <div>
+            <div class="m-t-25" style="display:flex">
+                <div class="p-0 p-absolute cursor-pointer">
+                    <a class="cursor-pointer" data-ng-click="mtoTypeCtrl.isShowClonePanel=false;mtoTypeCtrl.isSaveSuccess=false">
+                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                    </a>
+                </div>
+                <div class="p-0 m-auto">
+                    <label class="rclabel editformlabel" title="UPC">Clone
+                        <strong>MTO Type</strong>
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-12" data-ng-if="!mtoTypeCtrl.isSaveSuccess">
+                <div class="d-flex m-b-10 m-t-10">
+                    <div class="m-auto updatepanel">
+                        <div data-ng-include="'./application/modules/item/type/module.svg'"></div>
+                    </div>
+                </div>
+                 <!-- container -->
+                <div class="m-5" data-ng-init="mtoTypeCtrl.showDetails=true;mtoTypeCtrl.showAdvanced=false;"
+                    style="display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;">
+                    <span class="f-700 c-orange text-center" ng-bind-html="mtoTypeCtrl.type.short_description"></span>
+                </div>
+                <div>
+                </div>
+                <ng-form name="clone_form" novalidate="novalidate" role="form" valdr-type="RULES-30">
+                <div class="form-group m-t-10" valdr-form-group>
+                        <span class="c-red" ng-show="clone_form.short_description.$invalid">* </span>
+                        <span class="c-green" ng-show="clone_form.short_description.$valid">* </span>
+                        <label class="maintenance-field-label">MTO Type</label>
+                        <input auto-focus id="short_description" name="short_description" type="text" class="form-control input-sm" ng-model="mtoTypeCtrl.new_type.description" errorvalue="mtoTypeCtrl.new_type.short_description_error"
+                        placeholder="Enter MTO Type" required>
+                </div>
+                <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="clone_form.status_id.$invalid">* </span>
+                        <span class="c-green" ng-show="clone_form.status_id.$valid">* </span>
+                        <label>Status</label>
+                        <select id="status_id" name="status_id" class="form-control select-component input-sm"
+                            ng-model="mtoTypeCtrl.new_type.status_id" ng-options="each.code as each.description for each in statuses"
+                            errorvaluechosen="mtoTypeCtrl.new_type.status_id_error" required="">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div>
+                <div class="m-t-10 p-5">
+                    <div>
+                        <input class="styled-checkbox" type="checkbox" ng-model="mtoTypeCtrl.isCloneUdds"
+                            data-ng-init="mtoTypeCtrl.isCloneUdds=true" id="clone_drops_checkbox">
+                        <label for="clone_drops_checkbox">Include MTO Type UDDs</label>
+                    </div>
+                </div>
+                <div data-ng-init="mtoTypeCtrl.showCloningForm=true">
+                    <hr>
+                    <div class="m-10" style="display: flex;justify-content: space-around;align-items: baseline;justify-items: center;flex-direction: row-reverse;">
+                        <button type="button" class="btn btn-success btn-block waves-effect" style="display: flex;justify-content: center;flex: 10;"
+                            data-ng-disabled="!mtoTypeCtrl.new_type.description||!mtoTypeCtrl.new_type.status_id||mtoTypeCtrl.isCloning" ng-click="mtoTypeCtrl.cloneMTOType();">
+                            <span> Clone </span>
+                        </button>
+                    </div>
+                    <div class="f-12 text-muted">
+                        Cloning item type will create a copy of MTO type details and clone all user defined data linked to it.
+                    </div>
+                    <hr>
+                </div>
+                </ng-form>
+                <div class="col-xs-12 p-0">
+                    <div data-ng-if="mtoTypeCtrl.cloneMessage" class="alert alert-success">
+                        <button type="button" class="close" data-ng-click="mtoTypeCtrl.cloneMessage = null" aria-hidden="true">&times;</button>
+                        {{mtoTypeCtrl.cloneMessage}}
+                    </div>
+                    <div data-ng-if="mtoTypeCtrl.cloneError" class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-ng-click="mtoTypeCtrl.cloneError = null" aria-hidden="true">&times;</button>
+                        {{mtoTypeCtrl.cloneError}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <rcp-success-form  success-tick="success_tick.svg"
+                clone-success="mtoTypeCtrl.isSaveSuccess" close-fn="mtoTypeCtrl.closeForm();"></rcp-success-form>
+            </div>
+        </div>
+    </div>
+    <secondary-authentication feature-code="'mto-type-clone'" show-locked-screen="mtoTypeCtrl.showLockedScreen"
+        close-fn="mtoTypeCtrl.isShowClonePanel=false;" data-ng-if="mtoTypeCtrl.showLockedScreen">
+    </secondary-authentication>
+</div>

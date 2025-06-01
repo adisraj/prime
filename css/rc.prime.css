@@ -1,0 +1,66 @@
+.rc-alert {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 2px;
+  border: 1px solid;
+  padding: 8px 12px;
+  font-family: "lato", "roboto", sans-serif;
+}
+
+.rc-alert-icon-section {
+  font-size: 35px;
+  margin-right: 10px;
+}
+
+.rc-alert-content-section {
+  flex: 1;
+}
+
+.rc-alert-header {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.rc-alert-body {
+  color: #777777;
+}
+
+.rc-alert-info {
+  /* border-color: #cad9e0;
+  background-color: #f5fcff; */
+  border: 1px solid #a5c3cf;
+  background-color: #fbfbfb;
+}
+
+.rc-alert-info .rc-alert-icon-section,
+.rc-alert-info .rc-alert-header {
+  color: #31708f;
+}
+
+.rc-alert-error {
+  background: #fff5f5;
+  border-color: #ffdcdc;
+}
+
+.rc-alert-error .rc-alert-icon-section,
+.rc-alert-error .rc-alert-header {
+  color: #f6675d;
+}
+
+.alert-button-section {
+  justify-content: space-around;
+  border: 1px solid #c9d9e0;
+  border-top: none;
+  background: #ffffff;
+}
+
+.alert-button-section>div{
+  justify-content: space-evenly;
+}
+
+multiselect > div > button {
+  overflow: hidden !important;
+}
+

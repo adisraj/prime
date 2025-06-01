@@ -1,0 +1,221 @@
+<div class="container col-lg-12 p-0" data-ng-controller="PricingChoicesController as pricingChoicesCtrl">
+
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/retail_price_type.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-50" href="javascript:void(0)">Pricing Choices</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" ng-if="permissionsMap && permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!pricingChoicesCtrl.search"> {{pricingChoicesCtrl.rowsInfo}} </span>
+                        <span data-ng-if="pricingChoicesCtrl.search"> Displaying {{(pricingChoicesCtrl.allPricingChoices|filter:pricingChoicesCtrl.search).length}} of
+                            {{pricingChoicesCtrl.allPricingChoices.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap && permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="pricingChoicesCtrl.allPricingChoices.length > 0">
+                                    <input class="form-control input-sm " type="text" id="inlineSearch" name="inlineSearch" data-ng-init="pricingChoicesCtrl.focusSearchField()"
+                                        ng-model="pricingChoicesCtrl.search" indicate-quick-search placeholder="Quick Search "
+                                        data-ng-disabled="!pricingChoicesCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="pricingChoicesCtrl.allPricingChoices.length > 0">
+                            <a>
+                                <button type="button" ng-click="pricingChoicesCtrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect" data-ng-disabled="!pricingChoicesCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="pricingChoicesCtrl.allPricingChoices.length > 0">
+                            <a>
+                                <button type="button" ng-click="pricingChoicesCtrl.reload(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="!pricingChoicesCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="pricingChoicesCtrl.openForm();" data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Pricing Choice
+                                    </span>
+                                </button>
+                            </a>
+
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" href="" style="border-left:3px solid #e8e8e8">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width: 200px;">
+                                <li class="cursor-pointer">
+                                    <button type="button" data-ng-click="pricingChoicesCtrl.openForm();" style="padding: 8px 20px" class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Pricing Choice
+                                    </button>
+                                </li>
+                                <li ng-if="pricingChoicesCtrl.allPricingChoices.length > 0">
+                                    <button type="button" data-ng-click="pricingChoicesCtrl.isLoaded ? pricingChoicesCtrl.ShowHideColumnSettings() : '' " style="padding: 8px 20px"
+                                        class="restricted-btn" data-ng-class="{'cursor-not-allowed': !pricingChoicesCtrl.isLoaded}"
+                                        href="">
+                                        <i class="zmdi zmdi-view-week text-info f-17 m-r-15"></i> Columns </button>
+                                </li>
+                                <li ng-if="pricingChoicesCtrl.allPricingChoices.length > 0">
+                                    <button type="button" data-ng-click="pricingChoicesCtrl.isLoaded ? pricingChoicesCtrl.reload(true) : '' " style="padding: 8px 20px"
+                                        class="restricted-btn" data-ng-class="{'cursor-not-allowed': !pricingChoicesCtrl.isLoaded}"
+                                        href="">
+                                        <i class="zmdi zmdi-refresh text-warning f-17 m-r-15"></i> Refresh</button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!pricingChoicesCtrl.rowsCount && !pricingChoicesCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="pricingChoicesCtrl.rowsCount !== 0 && pricingChoicesCtrl.isLoaded">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="permissionsMap.view && pricingChoicesCtrl.isLoaded">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+
+                <div data-ng-include="'./application/modules/pricing.choices/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="pricingChoicesCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="pricingChoicesCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="pricingChoicesCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingChoicesCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" style="width:10%" drag-me drop-me data-handle=".handle" ng-click="pricingChoicesCtrl.sortType = 'status_id'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="pricingChoicesCtrl.sortType == 'status_id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingChoicesCtrl.sortType == 'status_id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="description_col_head" drag-me drop-me data-handle=".handle" ng-click="pricingChoicesCtrl.sortType = 'description'; sortReverse = !sortReverse"
+                                        data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.description.visible == 0">
+                                        <span class="handle">Description</span>
+                                        <span ng-show="pricingChoicesCtrl.sortType == 'description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="pricingChoicesCtrl.sortType == 'description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="eligible_for_finance_col_head" style="width:10%" data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.eligible_for_finance.visible == 0"
+                                        drag-me drop-me data-handle=".handle">
+                                        <span class="handle">Is Eligible For Finance</span>
+                                    </th>
+                                    <th class="text-center" id="price_flag_col_head" style="width:10%" data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.price_flag.visible == 0"
+                                        drag-me drop-me data-handle=".handle">
+                                        <span class="handle">Can Adjust Price Flag</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="pricingChoice in pricingChoicesCtrl.allPricingChoices|filterBy:['id','description','show_is_eligible_for_finance','status','show_can_adjust_price_flag']:pricingChoicesCtrl.search|
+                                orderBy:pricingChoicesCtrl.sortType:sortReverse|itemsPerPage:pricingChoicesCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}" data-ng-click="pricingChoicesCtrl.setClickedRow($index);"
+                                    ios-dblclick="pricingChoicesCtrl.dblClickAction(pricingChoice);" selectedrow="{{pricingChoice}}">
+                                    <td class="id_col iconcolumnWidth" data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.id.visible == 0">{{pricingChoice.id}}</td>
+                                    <td class="status_col" data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.status.visible == 0" ng-class="{'text-success f-500':  pricingChoice.status_description ==='Active' , 'text-warning f-300':  pricingChoice.status_description ==='Pending Active', 'text-primary f-300':  pricingChoice.status_description ==='Inactive','text-info f-300':  pricingChoice.status_description==='Pending Inactive'}">{{pricingChoice.status_description}}
+                                    </td>
+                                    <td class="title_col" data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.description.visible == 0">
+                                        {{pricingChoice.description}}</td>
+                                    <td class="title_col" data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.eligible_for_finance.visible == 0">
+                                        {{pricingChoice.show_is_eligible_for_finance}}</td>
+                                    <td class="title_col" data-ng-hide="pricingChoicesCtrl.pricingChoiceGrid.columns.price_flag.visible == 0">
+                                        {{pricingChoice.show_can_adjust_price_flag}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-between p-15">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="pricingChoicesCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="pricingChoicesCtrl.pageSize = 10" ng-class="{'active':pricingChoicesCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="pricingChoicesCtrl.pageSize = 25" ng-class="{'active':pricingChoicesCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="pricingChoicesCtrl.pageSize = 50" ng-class="{'active':pricingChoicesCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="pricingChoicesCtrl.pageSize = 100" ng-class="{'active':pricingChoicesCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Details section for each pricing choice data -->
+    </div>
+    <div data-ng-include="'./application/modules/pricing.choices/panel.pricingchoices.dependency.html'"></div>
+    <meta-data-panel></meta-data-panel>
+    <div class="col-lg-12 p-0" data-ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':pricingChoicesCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{pricingChoicesCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="pricingChoicesCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{pricingChoicesCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{pricingChoicesCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="pricingChoicesCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!permissionsMap.view && pricingChoicesCtrl.isLoaded && pricingChoicesCtrl.rowsCount" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="pricingChoicesCtrl.rowsCount === 0 && pricingChoicesCtrl.isLoaded && permissionsMap.view" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No pricing choice exists. Please add pricing choice.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/pricing.choices/panel.pricing.choices.form.html'"></div>
+</div>

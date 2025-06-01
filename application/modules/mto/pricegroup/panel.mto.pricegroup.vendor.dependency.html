@@ -1,0 +1,98 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':mtopricectrl.isShowLinkedDetails === true || mtopricectrl.isShowLinkedDetails === 1}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="mtopricectrl.closeVendorLinkDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>MTO Choice</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Choice Description</td>
+                        <td title="{{mtopricectrl.choiceLinkDetails.choice_description}}">{{mtopricectrl.choiceLinkDetails.choice_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Collection</td>
+                        <td title="{{mtopricectrl.choiceLinkDetails.collection}}">{{mtopricectrl.choiceLinkDetails.collection}}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Status</td>
+                        <td title="{{mtopricectrl.choiceLinkDetails.status}}">{{mtopricectrl.choiceLinkDetails.status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Next Status</td>
+                        <td title="{{mtopricectrl.choiceLinkDetails.next_status_value}}">{{mtopricectrl.choiceLinkDetails.next_status_value}}</td>
+                    </tr>
+                    <tr>
+                        <td>Next Effective Date</td>
+                        <td title="{{mtopricectrl.choiceLinkDetails.next_effective_date | FormatDate}}">{{mtopricectrl.choiceLinkDetails.next_effective_date | FormatDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Family</td>
+                        <td title="{{mtopricectrl.choiceLinkDetails.family}}">{{mtopricectrl.choiceLinkDetails.family}}</td>
+                    </tr>
+                    <tr>
+                        <td>Price Group</td>
+                        <td class="highlight-text-success" title="{{mtopricectrl.choiceLinkDetails.price_group}}">{{mtopricectrl.choiceLinkDetails.price_group}}</td>
+                    </tr>
+                </table>
+                <h4>MTO Option</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td title="{{mtopricectrl.linkedOptionDetails.description}}">{{mtopricectrl.linkedOptionDetails.description | truncate:15}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtopricectrl.linkedOptionDetails.status}}">{{mtopricectrl.linkedOptionDetails.status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Pricing Method</td>
+                        <td title="{{mtopricectrl.linkedOptionDetails.pricing_method}}">{{mtopricectrl.linkedOptionDetails.pricing_method}}</td>
+                    </tr>
+                    <tr>
+                        <td>Individual/Company</td>
+                        <td title="{{mtopricectrl.linkedOptionDetails.individual_or_company}}">{{mtopricectrl.linkedOptionDetails.individual_or_company}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vendor</td>
+                        <td class="highlight-text-success" title="{{mtopricectrl.linkedOptionDetails.vendor}}">{{mtopricectrl.linkedOptionDetails.vendor}}</td>
+                    </tr>
+                </table>
+                <div class="m-t-10 dependency-link-info">
+                    <div>
+                        <div>&#8594;
+                            <span>Price Group </span>
+                            <span class="dependency-link-info-background">{{mtopricectrl.choiceLinkDetails.price_group}}</span>
+                            <span>is linked to Choice </span>
+                            <span class="dependency-link-info-background">{{mtopricectrl.choiceLinkDetails.choice_description}}</span>
+                        </div>
+                        <div class="m-t-5 m-b-5 m-0">&#8594;
+                            <span>MTO Choice </span>
+                            <span class="dependency-link-info-background">{{mtopricectrl.choiceLinkDetails.choice_description}}</span>
+                            <span>is linked to Option </span>
+                            <span class="dependency-link-info-background">{{mtopricectrl.linkedOptionDetails.description}}</span>
+                        </div>
+                        <div>&#8594;
+                            <span>MTO Option </span>
+                            <span class="dependency-link-info-background">{{mtopricectrl.linkedOptionDetails.description}}</span>
+                            <span> is linked to Vendor :</span>
+                            <span class="dependency-link-info-background">{{mtopricectrl.linkedOptionDetails.vendor}}</span>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="dependency-notifyMessage"> <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i>To Unlink Vendor({{mtopricectrl.linkedOptionDetails.vendor}}) from PriceGroup({{mtopricectrl.choiceLinkDetails.price_group}}) , you need to change Vendor
+                    for MTO Option ({{mtopricectrl.linkedOptionDetails.description}})</div>
+                <button type="button" class="btn-secondary waves-effect pull-right m-t-10" ng-click=""><span><b>Unlink Vendor</b></span></button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,162 @@
+<link rel="stylesheet" href="./application/modules/discount/discount.type.css">
+<div class="container col-lg-12 p-0" data-ng-controller="DiscountTypeController as discountTypeCtrl">
+    <!-- <script type="text/ng-template"  id="subNodeTree.html">
+            
+        </script> -->
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/discount-type.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Discount Types</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" ng-if="permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span> Displaying {{discountTypeCtrl.discountTypes.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li class="non-collapsed-link" ng-if="discountTypeCtrl.discountTypes.length > 0">
+                            <a>
+                                <button type="button" ng-click="discountTypeCtrl.getAllDiscountTypes(true); && permissionsMap.view" class="btn-primal btn-block waves-effect"
+                                    data-ng-disabled="!discountTypeCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn non-collapsed-link">
+                            <button data-ng-click="discountTypeCtrl.openForm();"
+                            style="padding: 8px 20px" class="restricted-btn"
+                            title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                            data-ng-disabled="!permissionsMap.create"
+                            data-ng-class="{'opacity50' : !permissionsMap.create}">
+                            <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Discount Type
+                        </button>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="discountTypeCtrl.openForm();"
+                                        style="padding: 8px 20px" class="restricted-btn"
+                                        title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Discount Type
+                                    </button>
+                                </li>
+                                <li ng-if="discountTypeCtrl.discountTypes.length > 0 && permissionsMap.view">
+                                    <a ng-click="discountTypeCtrl.getAllDiscountTypes(true);" data-ng-class="{'cursor-not-allowed': !discountTypeCtrl.isLoaded}"
+                                        href="" data-ng-disabled="!discountTypeCtrl.isLoaded">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!discountTypeCtrl.rowsCount && !discountTypeCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="discountTypeCtrl.rowsCount !== 0 && discountTypeCtrl.isLoaded">
+        <!--Details section for each discountType data -->
+        <div ng-if="!discountTypeCtrl.isViewAuthorized" data-ng-include="'./application/templates/restricted.access.html'"></div>
+        <meta-data-panel></meta-data-panel>
+        <div class="col-lg-12 p-0">
+            <div id="refresh-table" class="p-15" data-ng-class="{'toggled':discountTypeCtrl.isRefreshTable}">
+                <div class="col-xs-6 p-0">
+                    <span class="f-15 f-300 pull-left">{{discountTypeCtrl.refreshTableText}}</span>
+                </div>
+                <div class="col-xs-6 p-0" data-ng-if="discountTypeCtrl.totalTimeText">
+                    <span class="pull-right f-300">
+                        <strong>{{discountTypeCtrl.totalRecords}}</strong>
+                        <span class="f-14 c-gray">{{discountTypeCtrl.totalRecordsText}}</span>
+                        <span ng-bind-html="discountTypeCtrl.totalTimeText"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="discountTypeCtrl.rowsCount === 0 && discountTypeCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No discount type exists. Please add discount type.</span>
+        </div>
+    </div>
+    <div ui-view></div>
+    <div class="col-xs-12 module-content-configuration" data-ng-if="discountTypeCtrl.discountTypes.length > 0 && discountTypeCtrl.isLoaded">
+        <!-- Section for the tree structure start -->
+        <div class="col-xs-12 p-0">
+            <div class="col-xs-12 p-0 treeview" ng-if="permissionsMap && permissionsMap.view">
+                <!-- Discount Types List - START -->
+                <div class="col-xs-12 discount-type-header d-flex justify-content-between d-flex-v-center">
+                    <span>Discount types</span>
+                    <div class="text-center" style="width:220px">
+                        <span>Actions</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 p-10">
+                    <div class="list-lake-type-container" data-ng-repeat="discountType in discountTypeCtrl.discountTypes|orderBy:'description' track by $index">
+                        <ul class="list-lake-types">
+                            <li>
+                                <input type="checkbox" id="discountType{{$index}}" data-ng-model="discountType.checked"
+                                    data-ng-checked="true" data-ng-click="discountTypeCtrl.getNodes(discountType,true)">
+                                <label class="d-flex justify-content-between" for="discountType{{$index}}">
+                                    <div>
+                                        <span class="d-flex d-flex-v-center f-14">
+                                            {{discountType.description}}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <button class="m-l-10 btn btn-sm btn-link" data-ng-click="discountTypeCtrl.openNewValueForm(discountType);" 
+                                        data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                            <span title="{{!permissionsMap.create ? 'Access denied' : ''}}"><span class="fa fa-plus fa-fw"></span> New Discount Type</span>
+                                        </button>
+                                        <button class="m-l-10 btn btn-sm btn-link" data-ng-click="discountTypeCtrl.dblClickAction(discountType);">
+                                            <span class="fa fa-pen fa-fw"></span> Edit
+                                        </button>
+                                    </div>
+                                </label>
+                                <ul>
+                                    <div data-ng-if="(!discountType.nodes || discountType.nodes.length === 0) && !discountType.isLoaded">
+                                        <span>Loading...</span>
+                                    </div>
+                                    <div data-ng-if="discountType.nodes.length === 0  && discountType.isLoaded">
+                                        <span class="text-muted">No values exists!</span>
+                                    </div>
+                                </ul>
+                                <!-- Values for selected discount type - START -->
+                                <ul class="list-lakes" data-ng-repeat="subType in discountType.nodes | orderBy:'description' track by $index">
+                                    <div data-ng-include="'./application/modules/discount/subNodeTree.html'"></div>
+                                </ul>
+                                <!-- Values for selected discount type - END -->
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Discount Types list - END -->
+            </div>
+            <!-- <div data-ng-include="'./application/modules/discount/discount.type.value.new.html'"></div> -->
+            <div data-ng-include="'./application/modules/discount/panel.discount.type.dependency.html'"></div>
+        </div>
+        <!-- Section for the tree structure end -->
+    </div>
+    <div ng-if="!permissionsMap.view && discountTypeCtrl.isLoaded"
+            ng-include="'./application/templates/restricted.access.html'"></div>
+</div>

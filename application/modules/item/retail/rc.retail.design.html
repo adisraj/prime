@@ -1,0 +1,259 @@
+<link rel="stylesheet" href="./application/modules/item/retail/retail.css">
+<div data-ng-init="retailCtrl.initialize()">
+    <div>
+        <div class="rc-module-header-wrapper" style="height: auto;">
+            <div class="rc-module-header" style="height: auto;">
+                <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+                    <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                        <div class="p-relative">
+                            <div class="image-module p-absolute top-10">
+                                <img src="./img/sidebar-icons/retail.svg" />
+                            </div>
+                            <div class="label-module top-10">
+                                <a class="p-l-40" href="javascript:void(0)">{{retailCtrl.selected_item.description}} - Retails</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div id="navbar" class="navbar-collapse collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="m-r-10">
+                                    <a>
+                                        <button type="button" class="btn btn-cancel waves-effect f-700" ng-click="retailCtrl.goToListSkusPage();">Go Back</button>
+                                    </a>
+                                </li>
+                                <li class="m-r-10">
+                                    <a>
+                                        <button type="button" class="btn btn-success f-700 waves-effect" ng-click="retailCtrl.toggleRetailSidePanel(true)">Set Retail</button>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="retailCtrl.isRetailScreen && retailCtrl.isPriceGroups && retailCtrl.isLoaded">
+            <div class="col-lg-12" style="margin-top: 80px;" ng-if="retailCtrl.isRetails === false">
+                <label style="font-size: 20px;font-family:'Roboto Condensed';color: #3d2b44;" class="center-align">No Retails Exist for SKUs. Create First Retails.</label>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 80px;">
+                <div class="col-lg-12 inheritheight o-auto">
+                    <div class="col-lg-12 p-0 m-b-10" style="max-height: calc(100% - 15px);" data-ng-if="retailCtrl.isRetails===true">
+                        <div class="col-lg-5 p-0">
+                            <div class="col-lg-12 p-10 top-header-container">
+                                <div class="col-lg-8 p-0 inheritheight align-center">
+                                    <label class="top-header-label">Description</label>
+                                </div>
+                                <div class="col-lg-4 p-0 inheritheight align-center">
+                                    <label class="retails-reason-header-label">Pricing Classification</label>
+                                </div>
+                            </div>
+                            <!--STOCK DIV START-->
+                            <div class="col-lg-12 p-0 m-b-10" data-ng-if="retailCtrl.meta.stockSKUs.length>0">
+                                <div class="col-lg-12 p-5 sku-type-header-container">
+                                    <div class="col-lg-12 p-0">
+                                        <span class="sku-type-header-label">Stock</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-0 sku-description-container" ng-repeat="sku in retailCtrl.meta.stockSKUs">
+                                    <div class="col-lg-8 p-10 inheritheight">
+                                        <label class="sku-description-label">{{sku.description}}</label>
+                                    </div>
+                                    <div class="col-lg-4 p-10 pricing-class-container">
+                                        <div class="testlabel" ng-repeat="price_group in sku.priceGroups|orderBy:'pricing_class_udd_id'">
+                                            <label class="pricing-class-text"> {{price_group.value_short_description}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--STOCK DIV END-->
+                            <!--STOCK PLUS START-->
+                            <div class="col-lg-12 p-0" data-ng-if="retailCtrl.meta.stockPlusSKUs.length>0">
+                                <div class="col-lg-12 p-5 sku-type-header-container">
+                                    <div class="col-lg-12 p-0">
+                                        <span class="sku-type-header-label">Stock Plus</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-0 sku-description-container" ng-repeat="stock_sku in retailCtrl.meta.stockPlusSKUs">
+                                    <div class="col-lg-8 p-10 inheritheight">
+                                        <label class="sku-description-label">{{stock_sku.description}}</label>
+                                    </div>
+                                    <div class="col-lg-4 p-10 pricing-class-container">
+                                        <div class="testlabel" ng-repeat="price_group in stock_sku.priceGroups|orderBy:'pricing_class_udd_line_id'">
+                                            <label class="pricing-class-text"> {{price_group.value_short_description}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--STOCK PLUS END-->
+                            <!--MADE TO ORDER DIV START-->
+                            <div class="col-lg-12 p-0" data-ng-if="retailCtrl.mtoSKUs.length>0">
+                                <div class="col-lg-12 p-5 sku-type-header-container">
+                                    <div class="col-lg-12 p-0">
+                                        <span class="sku-type-header-label">Made to Order</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-0 sku-description-container" ng-repeat="row in retailCtrl.mtoSKUs">
+                                    <div class="col-lg-12 p-0">
+                                        <div class="col-lg-8 p-10 inheritheight">
+                                            <label class="sku-description-label">{{row.description}}</label>
+                                        </div>
+                                        <div class="col-lg-4 p-10 pricing-class-container">
+                                            <div class="testlabel" ng-repeat="price_group in row.priceGroups|orderBy:'pricing_class_udd_line_id'">
+                                                <label class="pricing-class-text"> {{price_group.value_short_description}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 p-0">
+                                        <div class="col-lg-12 p-0" ng-repeat="type in row.types">
+                                            <div class="col-lg-12 mto-type-header-container">
+                                                <span class="mto-type-header-text" title="{{type.type_desc}}">{{type.type_desc | truncate:50}}
+                                                    <span style="color:#000000"> - (Add-On Price)</span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-12 p-0 mto-option-container" ng-repeat="sub in type.subPriceGroups">
+                                                <div class="col-lg-8 p-10 inheritheight retail-item-label">
+                                                    <label class="sku-description-label">{{sub.price_group_desc}}</label>
+                                                </div>
+                                                <div class="col-lg-4 p-10 pricing-class-container">
+                                                    <div class="testlabel" ng-repeat="price_group in sub.priceGroups">
+                                                        <label class="pricing-class-text"> {{price_group.value_short_description}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0 mto-option-container" ng-repeat="sub in type.subByChoices">
+                                                <div class="col-lg-8 p-10 inheritheight retail-item-label">
+                                                    <label class="sku-description-label"> {{sub.choice_desc}}</label>
+                                                </div>
+                                                <div class="col-lg-4 p-10 pricing-class-container">
+                                                    <div class="testlabel" ng-repeat="price_group in sub.priceGroups">
+                                                        <label class="pricing-class-text"> {{price_group.value_short_description}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--MADE TO ORDER DIV END-->
+                        </div>
+
+                        <!--STOCK DIV START-->
+                        <div class="col-lg-7 p-0">
+                            <div class="d-flex p-0" data-ng-if="retailCtrl.isRetailScreen" style="flex-direction: row-reverse;float: left;">
+                                <div class="m-r-5 p-0 retail-section-container" ng-repeat="retail in retailCtrl.retails  track by $index">
+                                    <div class="col-lg-12 p-10 retails-reason-header-container">
+                                        <label class="retails-reason-header-label"> {{retailCtrl.retailReasonsMap[retail.retail_reason_id]['name'] | propercasing}} Sale-{{retailCtrl.priceTypeMap[retail.price_type_id]['name']}}
+                                            Price
+                                        </label>
+                                    </div>
+                                    <div data-ng-if="retail.retails.stockSKUs.length>0">
+                                        <div class="col-lg-12 p-5 effective-date-header-container ">
+                                            <span class="effective-date-header-text ">{{retail.effective_date | FormatDate}}</span>
+                                        </div>
+                                        <div class="col-lg-12 p-0 m-b-10">
+                                            <div class="col-lg-12 p-10 form" ng-repeat="stock in retail.retails.stockSKUs" style="   border-top: 4px solid #efefef;    background: #fbfaf6;">
+                                                <div class="col-lg-12 form" style="margin-top:2px" ng-repeat="priceGroup in stock.priceGroups | orderBy:'pricing_class_udd_line_id'">
+                                                    <input type="text" ng-readonly="{{!retail.isUpdate}}" currency currency="2" currency-point="." class="form-control retail-text"
+                                                        ng-model="priceGroup.retail" ng-init="priceGroup.oldValue=0" ng-focus="priceGroup.oldValue=priceGroup.retail"
+                                                        data-ng-blur="(!isCurrentRetail&& retailCtrl.getLinkedSKU(stock,priceGroup,$index))
+                                                    || (retail.isUpdate &&  !retail.isNewRetail) && priceGroup.oldValue!==priceGroup.retail && retailCtrl.saveRetailItem(retail,priceGroup,stock)"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div data-ng-if="retail.retails.stockPlusSKUs.length>0">
+                                        <div class="col-lg-12 p-5 effective-date-header-container">
+                                            <span class="effective-date-header-text">{{retail.effective_date | FormatDate}}</span>
+                                        </div>
+                                        <div class="test-stockplus">
+                                            <div class="col-lg-12 p-10 form retail-container" ng-repeat="stockPlus in retail.retails.stockPlusSKUs">
+                                                <div class="col-lg-12 form" style="margin-top:2px" ng-repeat="priceGroup in stockPlus.priceGroups | orderBy:'pricing_class_udd_line_id'">
+                                                    <input type="text" ng-readonly="{{!retail.isUpdate}}" currency currency="2" currency-point="." class="form-control retail-text"
+                                                        ng-model="priceGroup.retail" ng-init="priceGroup.oldValue=0" ng-focus="priceGroup.oldValue=priceGroup.retail"
+                                                        data-ng-blur="(retail.isUpdate &&  !retail.isNewRetail) && priceGroup.oldValue!==priceGroup.retail && retailCtrl.saveRetailItem(retail,priceGroup,stockPlus)"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div data-ng-if="retail.retails.mtoSKUs.length>0">
+                                        <div class="col-lg-12 p-5 effective-date-header-container">
+                                            <span class="effective-date-header-text">{{retail.effective_date | FormatDate}}</span>
+                                        </div>
+                                        <div class="col-lg-12 form p-0" ng-repeat="mtoSKU in retail.retails.mtoSKUs" style="   border-top: 4px solid #efefef;    background: #fbfaf6;">
+                                            <div class="col-lg-12 p-10 form">
+                                                <div class="col-lg-12 form" style="margin-top:2px" ng-repeat="priceGroup in mtoSKU.priceGroups | orderBy:'pricing_class_udd_line_id'">
+                                                    <input type="text" ng-readonly="{{!retail.isUpdate}}" currency currency="2" currency-point="." class="form-control retail-text"
+                                                        ng-model="priceGroup.retail" ng-init="priceGroup.oldValue=0" ng-focus="priceGroup.oldValue=priceGroup.retail"
+                                                        data-ng-blur="(retail.isUpdate &&  !retail.isNewRetail) && priceGroup.oldValue!==priceGroup.retail && retailCtrl.saveMTORetailItem({is_price_group:2,priceGroup:priceGroup,retail:retail,sku:mtoSKU})"
+                                                    />
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 p-0 form">
+                                                <div class="form col-lg-12 p-0" ng-repeat="type in mtoSKU.types">
+                                                    <div class="col-lg-12 mto-type-header-container">
+                                                        <span class="mto-type-header-text" title="{{type.type_desc}}">
+                                                            <span style="color:#000000"> [Add-On Price ]</span>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="test-subPriceGroups">
+                                                        <div class="col-lg-12 p-10 form" ng-repeat="price_group in type.subPriceGroups" style="   border-top: 4px solid #eae3c5;    background: #fbfaf6;">
+                                                            <div class="col-lg-12 form" style="margin-top:2px" ng-repeat="priceGroup in price_group.priceGroups">
+                                                                <input type="text" ng-readonly="{{!retail.isUpdate}}" currency currency="2" currency-point="." class="form-control retail-text"
+                                                                    ng-model="priceGroup.retail" ng-init="priceGroup.oldValue=0"
+                                                                    ng-focus="priceGroup.oldValue=priceGroup.retail" data-ng-blur="(retail.isUpdate && !retail.isNewRetail) && priceGroup.oldValue!==priceGroup.retail && retailCtrl.saveMTORetailItem({is_price_group:1,priceGroup:priceGroup,retail:retail,sku:mtoSKU,price_group:price_group})"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="test-subByChoice">
+                                                        <div class="col-lg-12 p-10 form " ng-repeat="choice in type.subByChoices" style="   border-top: 4px solid #eae3c5;    background: #fbfaf6;">
+                                                            <div class="col-lg-12 form" style="margin-top:2px" ng-repeat="priceGroup in choice.priceGroups">
+                                                                <input type="text" ng-readonly="{{!retail.isUpdate}}" currency currency="2" currency-point="." class="form-control retail-text"
+                                                                    ng-model="priceGroup.retail" ng-init="priceGroup.oldValue=0"
+                                                                    ng-focus="priceGroup.oldValue=priceGroup.retail" data-ng-blur="(retail.isUpdate &&  !retail.isNewRetail) && priceGroup.oldValue!==priceGroup.retail && retailCtrl.saveMTORetailItem({is_price_group:0,priceGroup:priceGroup,retail:retail,sku:mtoSKU,choice:choice})"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--STOCK DIV END-->
+                </div>
+                <div data-ng-include="'./application/modules/item/retail/panel.retail.maintenance.form.html'">
+                </div>
+            </div>
+        </div>
+        <div class="d-flex full-height" data-ng-if="!retailCtrl.isLoaded">
+            <img class="m-auto" ng-src="http://www.downgraf.com/wp-content/uploads/2014/09/01-progress.gif" width="250">
+        </div>
+        <div data-ng-if="!retailCtrl.isRetailScreen || !retailCtrl.isPriceGroups ">
+            <div class="empty_state">
+                <!-- <i class="ion-sad-outline"></i> -->
+                <i>
+                    <img src="https://app.optimizely.com/static/img/p13n/page-list-empty-state.svg" class="anchor--middle push--ends" width="250">
+                </i>
+                <div ng-if="!retailCtrl.isPriceGroups">
+                    <h3 class=""> No Pricing Classification !</h3>
+                    <p> Create pricing Classification for item type - {{retailCtrl.selected_item.item_type}} </p>
+                    <p>
+                        <button class="btn btn-secondary f-700 btn-block  waves-effect m-t-10" style="width:300px" ui-sref="common.prime.itemMaintenance">Go Back</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

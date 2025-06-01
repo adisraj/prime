@@ -1,0 +1,168 @@
+<style>
+    span[title] {
+        white-space: nowrap
+    }
+</style>
+<div id="rcrightsidebar-large" data-ng-class="{'toggled':itemTypeUDDCtrl.isgroupHeaderShow === true}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-2 p-0">
+            <a class="cursor-pointer" ng-click="itemTypeUDDCtrl.isgroupHeaderShow = false;">
+                <i class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-xs-10 p-0 text-center">
+            <label class="rclabel editformlabel">Group
+                <strong> Headers</strong>
+            </label>
+        </div>
+        <div class="text-center m-auto updatepanel">
+            <img src="img/group-header.svg" style="height:130px;" class="m-b-10 m-t-10">
+        </div>
+    </div>
+    <div class="col-xs-12 p-10">
+        <div class="col-xs-12 rc-alert rc-alert-info flex-column">
+            <div class="col-xs-12 d-flex p-0">
+                <div class="rc-alert-icon m-r-10">
+                    <span class="text-info zmdi zmdi-info-outline" style="font-size:35px;color: #3b5ca3;">
+                    </span>
+                </div>
+                <div style="flex:1;">
+                    <div>
+                        <div class="f-15 f-700 text-info">Configuring Group Headers</div>
+                        <div class="m-t-5 m-b-5">
+                            The list of group headers which are associated with the item type user defined fields.
+                        </div>
+                        <div>
+                            <div class="c-black f-13">
+                                <div>
+                                    <strong><i class="fa fa-eye p-r-5"></i>Visibility - </strong>
+                                    The visibility of the group header control whether to show or hide the header for
+                                    selected item type.
+                                </div>
+                                <div>
+                                    <strong><i class="fa fa-expand p-r-5"></i>Collapsed - </strong>
+                                    The collapsed value control whether to show or hide the header in a collapsed or
+                                    expanded manner.
+                                </div>
+                                <div>
+                                    <strong><i class="fa fa-list p-r-5"></i>Sequence - </strong>
+                                    The sequence value control the order in which the headers need to be shown in
+                                    product explorer.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-t-5">
+                            <i>By removing the Header all the user defined fields(In all item types) which is associated
+                                with the header
+                                will be reset.</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 m-t-15 m-b-30" data-ng-if="itemTypeUDDCtrl.groupHeaderPropertyList.length > 0">
+        <div class="col-xs-12 m-b-10">
+            <span> Displaying
+                {{(itemTypeUDDCtrl.groupHeaderPropertyList |filterBy: ['group_header'] : itemTypeUDDCtrl.searchHeader).length}}
+                of {{itemTypeUDDCtrl.groupHeaderPropertyList.length}}
+                Records </span>
+        </div>
+        <div class="col-xs-12 p-0">
+            <div class="tableheader-btn m-b-10" ng-if="itemTypeUDDCtrl.groupHeaderPropertyList.length > 0">
+                <input class="form-control input-sm" type="text" ng-model="itemTypeUDDCtrl.searchHeader"
+                    id="searchGroupHeader" indicate-quick-search placeholder="Quick Search"
+                    autocomplete="off" data-ng-disabled="!itemTypeUDDCtrl.isLoaded" />
+            </div>
+        </div>
+
+        <table
+            class="table table-hover table-vmiddle table-condensed table-bordered table-responsive grid sticky-head-table table-without-documents-icon">
+            <thead data-ng-show="itemTypeUDDCtrl.isLoaded">
+                <tr>
+                    <th style="background: navy;color: white;">Header Name</th>
+                    <th style="background: navy;color: white;">Visible</th>
+                    <th style="background: navy;color: white;">Collapsed</th>
+                    <th style="background: navy;color: white;">Sequence</th>
+                    <th style="background: navy;color: white;">UDD Count</th>
+                    <th style="background: navy;color: white;">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="
+                    groupHeader in itemTypeUDDCtrl.groupHeaderPropertyList 
+                    | filter: itemTypeUDDCtrl.searchHeader 
+                    | orderBy : 'sequence'
+                ">
+                    <td
+                        ios-dblclick="groupHeader.showMessageInput = true;itemTypeUDDCtrl.setFocus(groupHeader.header_id)">
+                        <div ng-if="groupHeader.showMessageInput"
+                            ng-init="groupHeader.newHeader = groupHeader.group_header"
+                            rc-on-enter="groupHeader.showMessageInput = false; itemTypeUDDCtrl.updateHeader(groupHeader, 'group_header');">
+                            <input id="groupHeader-{{groupHeader.header_id}}"
+                                name="groupHeader-{{groupHeader.header_id}}" type="text" maxlength="200"
+                                ng-model="groupHeader.newHeader" style="width: 100%"
+                                ng-blur="itemTypeUDDCtrl.updateHeader(groupHeader, 'group_header'); groupHeader.showMessageInput = false;">
+                        </div>
+                        <span ng-if="!groupHeader.showMessageInput" class="text-overflow-desc-auto d-block"
+                            style="width:200px;" title="{{groupHeader.group_header}}" title-direction="top">
+                            <i class="fa fa-edit text-info" 
+                                data-ng-click="groupHeader.showMessageInput = true;itemTypeUDDCtrl.setFocus(groupHeader.header_id)"></i>
+                            {{groupHeader.group_header}}
+                        </span>
+                        <span class="pull-right text-success" ng-if="groupHeader.message">{{groupHeader.message}}</span>
+                    </td>
+
+                    <td style="width: 5%" class="text-center">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-true-value="1" ng-false-value="0"
+                                    ng-model="groupHeader.visible"
+                                    ng-click="itemTypeUDDCtrl.updateGroupHeaderPropertyField(groupHeader, 'visible');">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </td>
+                    <td style="width: 5%">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-true-value="1" ng-false-value="0"
+                                    ng-model="groupHeader.collapsed"
+                                    ng-click="itemTypeUDDCtrl.updateGroupHeaderPropertyField(groupHeader, 'collapsed');">
+                                <i class="input-helper"></i>
+                            </label>
+                        </div>
+                    </td>
+                    <td style="width: 5%" class="text-center"
+                        ios-dblclick="groupHeader.showSequenceInput = true;itemTypeUDDCtrl.setFocus(groupHeader.header_id)">
+                        <div ng-if="groupHeader.showSequenceInput"
+                            ng-init="groupHeader.newSequence = groupHeader.sequence"
+                            rc-on-enter="itemTypeUDDCtrl.updateSequence(groupHeader, 'sequence'); groupHeader.showSequenceInput = false;">
+                            <input id="groupHeader-{{groupHeader.header_id}}"
+                                name="groupHeader-{{groupHeader.header_id}}" type="number"
+                                ng-model="groupHeader.newSequence" style="width: 100%"
+                                ng-blur="itemTypeUDDCtrl.updateSequence(groupHeader, 'sequence'); groupHeader.showSequenceInput = false;">
+                        </div>
+                        <span ng-if="!groupHeader.showSequenceInput"> {{groupHeader.sequence}} </span>
+                    </td>
+                    <td style="width: 5%" class="text-center">
+                        {{groupHeader.udd_count}}
+                    </td>
+                    <td style="width: 5%" class="text-center" ng-init="groupHeader.id = groupHeader.header_id">
+                        <button class="btn btn-xs btn-danger" ng-if="!groupHeader.showRemoveConfirmation"
+                            data-ng-click="groupHeader.showRemoveConfirmation = true">Remove</button>
+                        <span ng-if="groupHeader.showRemoveConfirmation">
+                            <i class="zmdi zmdi-check m-r-5" data-ng-click="itemTypeUDDCtrl.deleteGroupHeader(groupHeader)"
+                                style="background-color: #008e00; color: white; padding: 1px 5px 2px 5px; font-size: 15px; margin-top: 3px;"></i>
+                            <i class="zmdi zmdi-close" data-ng-click="groupHeader.showRemoveConfirmation = false"
+                                style="background-color: #f44336; color: white; padding: 1px 6px 2px 6px; font-size: 15px; margin-top: 3px;"></i>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="col-xs-12 m-t-15 text-center text-info" data-ng-if="!itemTypeUDDCtrl.groupHeaderPropertyList.length">
+        <span class="f-15 f-300">No group header exists for selected item type[s].</span></div>
+</div>

@@ -1,0 +1,99 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':mtofamctrl.isShowLinkedDetails === true || mtofamctrl.isShowLinkedDetails === 1}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="mtofamctrl.closeVendorLinkDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>MTO Choice</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Choice Description</td>
+                        <td title="{{mtofamctrl.choiceLinkDetails.choice_description}}">{{mtofamctrl.choiceLinkDetails.choice_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Collection</td>
+                        <td title="{{mtofamctrl.choiceLinkDetails.collection}}">{{mtofamctrl.choiceLinkDetails.collection}}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Status</td>
+                        <td title="{{mtofamctrl.choiceLinkDetails.status}}">{{mtofamctrl.choiceLinkDetails.status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Next Status</td>
+                        <td title="{{mtofamctrl.choiceLinkDetails.next_status_value}}">{{mtofamctrl.choiceLinkDetails.next_status_value}}</td>
+                    </tr>
+                    <tr>
+                        <td>Next Effective Date</td>
+                        <td title="{{mtofamctrl.choiceLinkDetails.next_effective_date | FormatDate}}">{{mtofamctrl.choiceLinkDetails.next_effective_date | FormatDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Family</td>
+                        <td class="highlight-text-success" title="{{mtofamctrl.choiceLinkDetails.family}}">{{mtofamctrl.choiceLinkDetails.family}}</td>
+                    </tr>
+                    <tr>
+                        <td>Price Group</td>
+                        <td title="{{mtofamctrl.choiceLinkDetails.price_group}}">{{mtofamctrl.choiceLinkDetails.price_group}}</td>
+                    </tr>
+                </table>
+                <h4>MTO Option</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td title="{{mtofamctrl.linkedOptionDetails.description}}">{{mtofamctrl.linkedOptionDetails.description | truncate:15}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtofamctrl.linkedOptionDetails.status}}">{{mtofamctrl.linkedOptionDetails.status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Pricing Method</td>
+                        <td title="{{mtofamctrl.linkedOptionDetails.pricing_method}}">{{mtofamctrl.linkedOptionDetails.pricing_method}}</td>
+                    </tr>
+                    <tr>
+                        <td>Individual/Company</td>
+                        <td title="{{mtofamctrl.linkedOptionDetails.individual_or_company}}">{{mtofamctrl.linkedOptionDetails.individual_or_company}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vendor</td>
+                        <td class="highlight-text-success" title="{{mtofamctrl.linkedOptionDetails.vendor}}">{{mtofamctrl.linkedOptionDetails.vendor}}</td>
+                    </tr>
+                </table>
+                <div class="m-t-10 dependency-link-info">
+                    <div>
+                        <div>&#8594;
+                            <span>Family </span>
+                            <span class="dependency-link-info-background">{{mtofamctrl.choiceLinkDetails.family}}</span>
+                            <span>is linked to Choice </span>
+                            <span class="dependency-link-info-background">{{mtofamctrl.choiceLinkDetails.choice_description}}</span>
+                        </div>
+                        <div class="m-t-5 m-b-5 m-0">&#8594;
+                            <span>MTO Choice </span>
+                            <span class="dependency-link-info-background">{{mtofamctrl.choiceLinkDetails.choice_description}}</span>
+                            <span>is linked to Option </span>
+                            <span class="dependency-link-info-background">{{mtofamctrl.linkedOptionDetails.description}}</span>
+                        </div>
+                        <div>&#8594;
+                            <span>MTO Option </span>
+                            <span class="dependency-link-info-background">{{mtofamctrl.linkedOptionDetails.description}}</span>
+                            <span> is linked to Vendor :</span>
+                            <span class="dependency-link-info-background">{{mtofamctrl.linkedOptionDetails.vendor}}</span>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="dependency-notifyMessage"> <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i>To Unlink Vendor({{mtofamctrl.linkedOptionDetails.vendor}}) from Family({{mtofamctrl.choiceLinkDetails.family}}) , you need to change Vendor for MTO Option
+                    ({{mtofamctrl.linkedOptionDetails.description}})
+                </div>
+                <button type="button" class="btn-secondary waves-effect pull-right m-t-10" ng-click=""><span><b>Unlink Vendor</b></span></button>
+            </div>
+        </div>
+    </div>
+</div>

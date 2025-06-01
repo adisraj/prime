@@ -1,0 +1,380 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar" class="c-overflow toggled"
+    data-ng-init="locTypeUDDCtrl.typesMap?locTypeUDDCtrl.gotoUpdateStateIfIdExist():''"
+    data-ng-class="{'changeposition':showhistory === true}"
+    ng-keyup="$event.keyCode === locTypeUDDCtrl.common.ShortCuts.global.close.key && locTypeUDDCtrl.closeForm()">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="locTypeUDDCtrl.closeForm();closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!locTypeUDDCtrl.isDeleteSuccess && !locTypeUDDCtrl.isConfirmDelete && !locTypeUDDCtrl.isShowAdd && !locTypeUDDCtrl.isDependent)"
+                title="{{locTypeUDDCtrl.entityInformation.name}}">Update
+                <strong>{{locTypeUDDCtrl.entityInformation.name}}</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(locTypeUDDCtrl.isDeleteSuccess || locTypeUDDCtrl.isConfirmDelete || locTypeUDDCtrl.isDependent && !locTypeUDDCtrl.isShowAdd)"
+                title="{{locTypeUDDCtrl.entityInformation.name}}">Delete
+                <strong>{{locTypeUDDCtrl.entityInformation.name}}</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!locTypeUDDCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="!(locTypeUDDCtrl.isUpdateSuccess || locTypeUDDCtrl.isConfirmDelete || locTypeUDDCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/entity-config-location.svg'"></div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group col-xs-12 p-0">
+                <div
+                    ng-if="!(locTypeUDDCtrl.isUpdateSuccess || locTypeUDDCtrl.isConfirmDelete || locTypeUDDCtrl.isDeleteSuccess || locTypeUDDCtrl.isDependent || locTypeUDDCtrl.isShowUDDDependencyPanel)">
+                    <ng-form role="form" novalidate="novalidate" name="location_type_udd_form" valdr-type="RULES-11">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="location_type_udd_form.maintenance_description.$invalid">*
+                            </span>
+                            <span class="c-green" ng-show="location_type_udd_form.maintenance_description.$valid">*
+                            </span>
+                            <label>Description</label>
+                            <input id="maintenance_description" name="maintenance_description"
+                                type="text" class="form-control input-sm"
+                                ng-model="locTypeUDDCtrl.new_location_udd.maintenance_description"
+                                errorvalue="locTypeUDDCtrl.new_location_udd.maintenance_description_error"
+                                ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Description">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="location_type_udd_form.status_id.$invalid">* </span>
+                            <span class="c-green" ng-show="location_type_udd_form.status_id.$valid">* </span>
+                            <label>Status</label>
+                            <select id="status_id" name="status_id"
+                                ng-model="locTypeUDDCtrl.new_location_udd.status_id"
+                                errorvaluechosen="locTypeUDDCtrl.new_location_udd.status_id_error"
+                                class="form-control select-component input-sm"
+                                ng-options="each.code as each.description disable when (each.code === locTypeUDDCtrl.statusCodes.Pending.ID&&locTypeUDDCtrl.oldLocationUDDDetails.status_id !== locTypeUDDCtrl.statusCodes.Pending.ID) for each in statuses">
+                                <option value="" disabled>Select Status</option>
+                            </select>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="location_type_udd_form.user_defined_data_type.$invalid">*
+                            </span>
+                            <span class="c-green" ng-show="location_type_udd_form.user_defined_data_type.$valid">*
+                            </span>
+                            <label>User Defined Data Type</label>
+                            <select id="user_defined_data_type" name="user_defined_data_type"
+                                ng-model="locTypeUDDCtrl.new_location_udd.user_defined_data_type"
+                                errorvaluechosen="locTypeUDDCtrl.new_location_udd.user_defined_data_type_error"
+                                class="form-control select-component input-sm"
+                                ng-change="locTypeUDDCtrl.loadRespectiveEntity(locTypeUDDCtrl.new_location_udd); locTypeUDDCtrl.attributeHierarchyModel={};locTypeUDDCtrl.closeDependencyForm();locTypeUDDCtrl.new_location_udd.user_defined_data_id=undefined;">
+                                <option value="" disabled>Select User Defined Data Type</option>
+                                <option value="Attribute">Attribute</option>
+                                <option value="Hierarchy">Hierarchy</option>
+                            </select>
+                        </div>
+                        <div class="form-group"
+                            ng-if="locTypeUDDCtrl.new_location_udd.user_defined_data_type && locTypeUDDCtrl.loadedselecize"
+                            valdr-form-group>
+                            <span class="c-red" ng-show="location_type_udd_form.user_defined_data_id.$invalid">* </span>
+                            <span class="c-green" ng-show="location_type_udd_form.user_defined_data_id.$valid">* </span>
+                            <label ng-bind="locTypeUDDCtrl.new_location_udd.user_defined_data_type">Attributes, Facts,
+                                Groups and Hierarchies</label>
+                            <select name="user_defined_data_id" selectize="selectAttributeHierarchy"
+                                items="locTypeUDDCtrl.attributeHierarchyModel"
+                                class="form-control select-component input-sm"
+                                options="locTypeUDDCtrl.attributeHierarchyoptionArray"
+                                ng-model="locTypeUDDCtrl.attributeHierarchyModel.id" required
+                                ng-change="locTypeUDDCtrl.checkForAttributeHierarchyValues(locTypeUDDCtrl.new_location_udd.required,locTypeUDDCtrl.attributeHierarchyModel.id);
+                                    locTypeUDDCtrl.closeDependencyForm();
+                                    locTypeUDDCtrl.getUserDefinedDataValues(locTypeUDDCtrl.new_location_udd, locTypeUDDCtrl.attributeHierarchyModel.id);
+                                    locTypeUDDCtrl.attributeHierarchyModel.id == locTypeUDDCtrl.oldLocationUDDDetails.user_defined_data_id ? '':  locTypeUDDCtrl.resetDefaultValue(locTypeUDDCtrl.new_location_udd);">
+                            </select>
+                            <span class="text-danger f-11 f-400"
+                                ng-if="locTypeUDDCtrl.showUddValueMessage !== ''">{{locTypeUDDCtrl.showUddValueMessage}}</span>
+                        </div>
+                        <div class="form-group" ng-if="locTypeUDDCtrl.new_location_udd.user_defined_data_id"
+                            valdr-form-group>
+                            <span class="c-red"
+                                ng-show="location_type_udd_form.default_value.$invalid || location_type_udd_form.url_default_value.$invalid || location_type_udd_form.text_default_value.$error.pattern">*
+                            </span>
+                            <span class="c-green"
+                                ng-show="location_type_udd_form.default_value.$valid || (location_type_udd_form.url_default_value.$valid && location_type_udd_form.text_default_value.$valid)">*
+                            </span>
+                            <label>Default Value</label>
+                            <span class="form-group"
+                                data-ng-if="locTypeUDDCtrl.new_location_udd.user_defined_data_type.toLowerCase() === 'attribute' && locTypeUDDCtrl.attributeHierarchyModel.id && locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.attributeHierarchyModel.id] && locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.attributeHierarchyModel.id].format.toLowerCase() === 'dimension'">
+                                <span>({{locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.attributeHierarchyModel.id].dimension_class}}
+                                    in
+                                    {{locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.attributeHierarchyModel.id].dimension_unit}})</span>
+                            </span>
+                            <div class="d-flex align-items-center">
+                                <input
+                                    data-ng-if="!locTypeUDDCtrl.isUrlField&&!locTypeUDDCtrl.isTextField && !locTypeUDDCtrl.isValueList && !locTypeUDDCtrl.isMultiselect && !locTypeUDDCtrl.isDateSelect && locTypeUDDCtrl.new_location_udd.user_defined_data_type.toLowerCase() === 'attribute' &&  locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.new_location_udd.user_defined_data_id].format.toLowerCase() !== 'yes/no'"
+                                    id="default_value" name="default_value"
+                                    class="form-control input-sm"
+                                    ng-model="locTypeUDDCtrl.new_location_udd.default_value" type="text"
+                                    ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value">
+                                <textarea
+                                    data-ng-if="locTypeUDDCtrl.isTextField && !locTypeUDDCtrl.isValueList && !locTypeUDDCtrl.isMultiselect && !locTypeUDDCtrl.isDateSelect && locTypeUDDCtrl.new_location_udd.user_defined_data_type.toLowerCase() === 'attribute' &&  locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.new_location_udd.user_defined_data_id].format.toLowerCase() !== 'yes/no'"
+                                    id="default_value" name="default_value"
+                                    class="form-control input-sm"
+                                    ng-model="locTypeUDDCtrl.new_location_udd.default_value"
+                                    ng-model-options="{ updateOn: 'blur' }" placeholder="Enter default value"
+                                    style="height:30px"></textarea>
+                                <input
+                                    data-ng-if="!locTypeUDDCtrl.isTextField && !locTypeUDDCtrl.isValueList && !locTypeUDDCtrl.isMultiselect && locTypeUDDCtrl.isDateSelect && locTypeUDDCtrl.new_location_udd.user_defined_data_type.toLowerCase() === 'attribute' &&  locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.new_location_udd.user_defined_data_id].format.toLowerCase() !== 'yes/no'"
+                                    type="text" id="default_value" name="default_value"
+                                    class="form-control input-sm rcp-mydatepicker"
+                                    ng-model="locTypeUDDCtrl.new_location_udd.default_value" ui-mask="{{ui_date_mask}}"
+                                    mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true">
+                                <select
+                                    data-ng-if="!locTypeUDDCtrl.isTextField && !locTypeUDDCtrl.isReloadingList && locTypeUDDCtrl.isValueList && !locTypeUDDCtrl.isMultiselect && !locTypeUDDCtrl.isDateSelect && locTypeUDDCtrl.selectAttributeHierarchyValue && locTypeUDDCtrl.new_location_udd.user_defined_data_type.toLowerCase() !== 'hierarchy'"
+                                    name="default_value" id="default_value"
+                                    selectize="locTypeUDDCtrl.selectAttributeHierarchyValue"
+                                    items="locTypeUDDCtrl.attributeHierarchyValueModel"
+                                    class="form-control select-component input-sm"
+                                    options="locTypeUDDCtrl.attributeHierarchyOptionValuesArray"
+                                    ng-model="locTypeUDDCtrl.attributeHierarchyValueModel.value"
+                                    data-ng-change="locTypeUDDCtrl.new_location_udd.default_value = locTypeUDDCtrl.attributeHierarchyValueModel.value">
+                                </select>
+                                <hierarchy-tree-view class="flex-fill"
+                                    data-ng-if="!locTypeUDDCtrl.isResetValue && !locTypeUDDCtrl.isValueList && !locTypeUDDCtrl.isMultiselect && !locTypeUDDCtrl.isDateSelect && locTypeUDDCtrl.new_location_udd.user_defined_data_type.toLowerCase() === 'hierarchy' && locTypeUDDCtrl.primaryHierarchyId"
+                                    primary-hierarchy-id="locTypeUDDCtrl.primaryHierarchyId"
+                                    path="head.primary_item_hierarchy_value_path"
+                                    primary-hierarchy-value-id="locTypeUDDCtrl.primaryHierarchyValueId"
+                                    directive-end-fn='end(directiveData)' form-data="locTypeUDDCtrl.new_location_udd"
+                                    form-header="Location Type UDD"
+                                    tree-view-fn="locTypeUDDCtrl.toggleTreeViewPanel(flagData)"
+                                    clear-path="locTypeUDDCtrl.clearPath">
+                                </hierarchy-tree-view>
+                                <div class="d-flex align-items-center"
+                                    data-ng-if="locTypeUDDCtrl.new_location_udd.user_defined_data_type.toLowerCase() === 'attribute' && locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.new_location_udd.user_defined_data_id].format.toLowerCase() === 'yes/no'">
+                                    <label class="align-items-center d-flex m-r-20">
+                                        <input id="default_value" name="default_value" class="m-t-0"
+                                            type="radio" ng-model="locTypeUDDCtrl.new_location_udd.default_value"
+                                            value="1"
+                                            data-ng-click="locTypeUDDCtrl.new_location_udd.default_value_view = 'Yes'">
+                                        <i class="input-helper"></i>Yes
+                                    </label>
+                                    <label class="align-items-center d-flex m-r-20">
+                                        <input id="default_value" name="default_value" class="m-t-0"
+                                            type="radio" ng-model="locTypeUDDCtrl.new_location_udd.default_value"
+                                            value="0"
+                                            data-ng-click="locTypeUDDCtrl.new_location_udd.default_value_view = 'No'">
+                                        <i class="input-helper"></i>No
+                                    </label>
+                                </div>
+                                <!--URL Attribute UDD Start-->
+                                <div class="col-lg-12 p-0"
+                                    ng-if="locTypeUDDCtrl.isUrlField && locTypeUDDCtrl.attributeListMap[locTypeUDDCtrl.new_location_udd.user_defined_data_id].format.toLowerCase() === 'url'">
+                                    <div>
+                                        <div class="d-flex flex-1 input-group">
+                                            <span
+                                                class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0"
+                                                style="border-left: 1px solid #ececec;">
+                                                <span class="f-13 c-bluegray">Text</span>
+                                            </span>
+                                            <div class="col-lg-12 p-0">
+                                                <input class="form-control input-sm" name="text_default_value"
+                                                    id="default_value" placeholder="Enter default Text value"
+                                                    ng-pattern="locTypeUDDCtrl.globalRegularExpression"
+                                                    ng-model-options="{ updateOn: 'blur' }"
+                                                    ng-model="locTypeUDDCtrl.new_location_udd.text_default_value"
+                                                    data-ng-change="locTypeUDDCtrl.new_location_udd.default_value=locTypeUDDCtrl.new_location_udd.text_default_value+'::'+locTypeUDDCtrl.new_location_udd.url_default_value"
+                                                    type="text" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-t-5">
+                                            <div class="d-flex flex-1 input-group">
+                                                <span
+                                                    class="d-flex align-items-center justify-content-center input-group-addon maintenance-entrylevel-label p-0">
+                                                    <span class="f-13 c-bluegray">URL</span>
+                                                </span>
+                                                <input class="form-control input-sm" name="url_default_value"
+                                                    id="url_default_value"
+                                                    ng-required="locTypeUDDCtrl.new_location_udd.text_default_value.length>0"
+                                                    ng-model="locTypeUDDCtrl.new_location_udd.url_default_value"
+                                                    ng-model-options="{ updateOn: 'blur' }"
+                                                    placeholder="Enter default URL value"
+                                                    data-ng-change="locTypeUDDCtrl.new_location_udd.default_value=locTypeUDDCtrl.new_location_udd.text_default_value+'::'+locTypeUDDCtrl.new_location_udd.url_default_value"
+                                                    type="text" style="height: 30px" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="m-t-10"
+                                        style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                        data-ng-if="location_type_udd_form.url_default_value.$error.required">
+                                        URL is mandatory with link text.
+                                    </span>
+                                    <span class="m-t-10"
+                                        style="display: block; font-size: 11px; color: #e41708; font-family: 'lato', 'Roboto'; margin: 3px 1px 1px 1px;"
+                                        data-ng-if="location_type_udd_form.text_default_value.$error.pattern">
+                                        Link text should contain only alphanumeric characters.
+                                    </span>
+                                </div>
+                                <!--URL Attribute UDD End-->
+                                <multiselect class="flex-fill"
+                                    data-ng-if="locTypeUDDCtrl.isMultiselect && !locTypeUDDCtrl.isValueList && !locTypeUDDCtrl.isDateSelect"
+                                    id="default_value" ng-model="locTypeUDDCtrl.new_location_udd.default_value_ids"
+                                    options="option.id as option.short_description for option in locTypeUDDCtrl.attributeHierarchyOptionValuesArray"
+                                    select-limit="20" header="Select value" selected-header="Values selected"
+                                    multiple="true" enable-filter="true"
+                                    data-ng-change="locTypeUDDCtrl.new_location_udd.default_value = locTypeUDDCtrl.new_location_udd.default_value_ids.join(','); locTypeUDDCtrl.addOptionsDescriptionOnMultiselect(locTypeUDDCtrl.new_location_udd.default_value_ids)"
+                                    filter-placeholder="Quick Search"></multiselect>
+                                <div class="m-l-5" data-ng-class="{'m-t-15':locTypeUDDCtrl.isUrlField}"
+                                    data-ng-if="!locTypeUDDCtrl.isReloadingList"
+                                    data-ng-click="locTypeUDDCtrl.resetDefaultValue(locTypeUDDCtrl.new_location_udd);">
+                                    <span class="resetbtn fa fa-times-circle f-16"></span></div>
+                            </div>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="location_type_udd_form.display_sequence.$invalid">* </span>
+                            <span class="c-green" ng-show="location_type_udd_form.display_sequence.$valid">* </span>
+                            <label>Sequence</label>
+                            <input id="display_sequence" name="display_sequence"
+                                class="form-control input-sm"
+                                ng-model="locTypeUDDCtrl.new_location_udd.display_sequence"
+                                errorvalue="locTypeUDDCtrl.new_location_udd.display_sequence_error" type="number"
+                                ng-model-options="{ updateOn: 'blur' }" placeholder="Enter Sequence" required>
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="location_type_udd_form.required.$invalid">* </span>
+                            <span class="c-green" ng-show="location_type_udd_form.required.$valid">* </span>
+                            <label>Required</label>
+                            <select id="required" name="required"
+                                ng-model="locTypeUDDCtrl.new_location_udd.required"
+                                class="form-control select-component input-sm"
+                                ng-options="each.code as each.code for each in allRequired"
+                                errorvaluechosen="locTypeUDDCtrl.new_location_udd.required_error"
+                                ng-change="locTypeUDDCtrl.checkForAttributeHierarchyValues(locTypeUDDCtrl.new_location_udd.required,locTypeUDDCtrl.attributeHierarchyModel.id);">
+                                <option value="" disabled>Select Required</option>
+                            </select>
+                        </div>
+                        <rcp-edit-form-btns new-form="false"
+                            update-fn="locTypeUDDCtrl.update(locTypeUDDCtrl.new_location_udd)"
+                            update-btn-text="locTypeUDDCtrl.updateBtnText"
+                            update-btn-error="locTypeUDDCtrl.updateBtnError"
+                            confirm-fn="locTypeUDDCtrl.showconfirm();closeShowHistory()"
+                            confirm-delete="locTypeUDDCtrl.isConfirmDelete"
+                            update-success="locTypeUDDCtrl.isUpdateSuccess"
+                            entity-id="locTypeUDDCtrl.new_location_udd.id"
+                            enable-button="location_type_udd_form.$invalid || !locTypeUDDCtrl.isBtnEnable || locTypeUDDCtrl.isShowUDDDependencyPanel"
+                            access-permissions="permissionsMap">
+                        </rcp-edit-form-btns>
+                    </ng-form>
+                </div>
+                <rcp-delete-form data-ng-if="locTypeUDDCtrl.isConfirmDelete" image-name="entity-config-location.svg"
+                    close-fn="locTypeUDDCtrl.gotoUpdateStateIfIdExist();"
+                    delete-fn="locTypeUDDCtrl.delete(locTypeUDDCtrl.new_location_udd);"
+                    confirm-delete="locTypeUDDCtrl.isConfirmDelete"></rcp-delete-form>
+                <rcp-success-form success-tick="success_tick.svg" close-fn="locTypeUDDCtrl.closeForm(); "
+                    update-success="locTypeUDDCtrl.isUpdateSuccess" delete-success="locTypeUDDCtrl.isDeleteSuccess">
+                </rcp-success-form>
+                <div
+                    ng-if="isMaintenance !== true && !locTypeUDDCtrl.isUpdateSuccess && !locTypeUDDCtrl.isConfirmDelete && !locTypeUDDCtrl.isDeleteSuccess && !locTypeUDDCtrl.isDependent">
+                    <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn"
+                        data-ng-click="loadHistory();" data-ng-if="!showhistoryloading"
+                        data-ng-disabled="showhistory">View
+                        History</button>
+                    <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading
+                        history...</div>
+                </div>
+            </div>
+
+        </div>
+        <div data-ng-include="'./application/modules/location/type.udd/location.udd.type.exists.messages.html'"></div>
+        <div class="col-xs-12">
+            <div data-ng-show="locTypeUDDCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="locTypeUDDCtrl.message = null"
+                    aria-hidden="true">&times;</button> {{locTypeUDDCtrl.message}}
+            </div>
+        </div>
+        <!--Delete UDD notification message START-->
+        <div data-ng-if="locTypeUDDCtrl.isDependent" class="col-xs-12 rc-alert rc-alert-info flex-column">
+            <div class="col-xs-12 d-flex m-b-5 p-0">
+                <div class="rc-alert-icon m-r-10">
+                    <span class="zmdi zmdi-alert-polygon" style="font-size:35px;color: #ff6c3c;">
+                    </span>
+                </div>
+                <div style="flex:1;">
+                    <div>
+                        <div class="f-15 f-700 text-info m-b-5">UDD is being used!</div>
+                        <div>
+                            <span class="f-14">
+                                Deleting the user defined data will
+                                <strong>remove all user defined values</strong> configured for location[s] in
+                                <span
+                                    class="text-info f-700">{{locTypeUDDCtrl.new_location_udd.short_description}}</span>.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-0 m-t-10 d-flex">
+                        <button type="button" class="btn btn-success btn-block m-r-20" id="update_title_btn"
+                            data-ng-disabled="locTypeUDDCtrl.isProcessing"
+                            data-ng-click="locTypeUDDCtrl.deleteUDDDependencies(locTypeUDDCtrl.new_location_udd);">
+                            <strong>Proceed</strong>
+                        </button>
+                        <button type="button" class="btn btn-cancel btn-block m-t-0" id="cancel-dependency-button"
+                            data-ng-disabled="locTypeUDDCtrl.isProcessing"
+                            data-ng-click="locTypeUDDCtrl.isDependent=false;locTypeUDDCtrl.isShowHistory=true;">
+                            <strong>Cancel</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-5 d-flex justify-content-center align-items-center"
+            data-ng-if="locTypeUDDCtrl.isDependent && locTypeUDDCtrl.isProcessing">
+            <img class="p-r-5" src="./img/loader.gif" alt="Loading" height="25px" />Deleting Location UDD ...
+        </div>
+        <!--Delete UDD notification message END-->
+        <!-- Dependency notification message START -->
+        <div data-ng-if="locTypeUDDCtrl.isShowUDDDependencyPanel" class="col-xs-12 rc-alert rc-alert-info flex-column">
+            <div class="col-xs-12 d-flex m-b-5 p-0">
+                <div class="rc-alert-icon m-r-10">
+                    <span class="zmdi zmdi-alert-polygon" style="font-size:35px;color: #ff6c3c;">
+                    </span>
+                </div>
+                <div style="flex:1;">
+                    <div>
+                        <div class="f-15 f-700 text-info m-b-5">Location Type UDD Dependency!</div>
+                        <div>
+                            <span class="f-14">
+                                Updating the user defined data type for selected type will
+                                <strong>remove all user defined values</strong> configured for {This UDD is being used}
+                                in {{locTypeUDDCtrl.locationUddError.data.error.ids.length}}
+                                Location[s].
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-0 m-t-10 d-flex">
+                        <button type="button" class="btn btn-success btn-block m-r-20" id="update_title_btn"
+                            data-ng-disabled="locTypeUDDCtrl.isProcessing"
+                            data-ng-click="locTypeUDDCtrl.update(locTypeUDDCtrl.new_location_udd, true);">
+                            <strong>Proceed</strong>
+                        </button>
+                        <button type="button" class="btn btn-cancel btn-block m-t-0" id="cancel-dependency-button"
+                            data-ng-disabled="locTypeUDDCtrl.isProcessing"
+                            data-ng-click="locTypeUDDCtrl.closeDependencyForm();">
+                            <strong>Cancel</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-5 d-flex justify-content-center align-items-center"
+            data-ng-if="locTypeUDDCtrl.isShowUDDDependencyPanel && locTypeUDDCtrl.isProcessing">
+            <img class="p-r-5" src="./img/loader.gif" alt="Loading" height="25px" />Updating Location UDD ...
+        </div>
+        <!-- Dependency notification message END -->
+    </div>
+    <div ng-if="locTypeUDDCtrl.isUnauthorized"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-xs-12 p-0" ng-if="locTypeUDDCtrl.isShowHistory && !locTypeUDDCtrl.isShowUDDDependencyPanel"
+    data-ng-include="'./application/templates/history.html'"></div>

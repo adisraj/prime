@@ -1,0 +1,99 @@
+<div id="rightsidebar" data-ng-class="{'toggled':locTypeCtrl.isColumnSettingsVisible === true}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-2 p-0">
+            <a class="cursor-pointer" ng-click="locTypeCtrl.isColumnSettingsVisible = false;">
+                <i class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-xs-10 p-0 text-center">
+            <label class="editformlabel">Hide/Show<strong> Columns</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12 updatepanel">
+        <svg height="130" width="200">
+            <svg version="1.1" id="Capa_1"  class="sidebar-svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="60px" y="20px"
+	 viewBox="0 0 19 19" style="enable-background:new 0 0 19 19;" xml:space="preserve" height="80" width="150">
+                <g>
+                    <circle cx="2.5" cy="16.5" r="2.5"/>
+                    <circle cx="2.5" cy="9.5" r="2.5"/>
+                    <circle cx="2.5" cy="2.5" r="2.5"/>
+                    <circle cx="9.5" cy="16.5" r="2.5"/>
+                    <circle cx="9.5" cy="9.5" r="2.5"/>
+                    <circle cx="9.5" cy="2.5" r="2.5"/>
+                    <circle cx="16.5" cy="16.5" r="2.5"/>
+                    <circle cx="16.5" cy="9.5" r="2.5"/>
+                    <circle cx="16.5" cy="2.5" r="2.5"/>
+                </g>
+            </svg>
+        </svg>
+    </div>
+    <div class="col-lg-12">
+        <div class="col-lg-12 p-0">
+                <div class="checkbox col-xs-12 form-group">
+                        <label for="select_col">
+                            <input id="select_col" type="checkbox" value="show" ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.select.visible" >
+                            Select
+                            <i class="input-helper"></i>
+                        </label>
+                    </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="id_cols">
+                    <input id="id_cols" type="checkbox" value="show" ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.type_id.visible" >
+                    Id
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="status_col">
+                    <input id="status_col" type="checkbox" value="hide"  ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.status.visible">
+                    Status
+                    <i class="input-helper"></i>
+                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="short_description_col">
+                            <input id="short_description_col" type="checkbox" value="hide"  ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.locationType.visible">
+                            Location Type
+                            <i class="input-helper"></i>
+                        </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="inventory_control_col">
+                        <input id="inventory_control_col" type="checkbox" value="hide"  ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.inventoryControl.visible">
+                        Inventory Control
+                        <i class="input-helper"></i>
+                    </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="allow_sales_col">
+                                    <input id="allow_sales_col" type="checkbox" value="hide"  ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.allowSales.visible">
+                                    Allow Sales
+                                    <i class="input-helper"></i>
+                                </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="license_plating_col"> 
+                                        <input id="license_plating_col" type="checkbox" value="hide"  ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.licencePlating.visible">
+                                        License Plating
+                                        <i class="input-helper"></i>
+                                    </label>
+            </div>
+            <div class="checkbox col-xs-12 form-group">
+                <label for="allow_purchasing_col">
+                                            <input id="allow_purchasing_col" type="checkbox" value="hide"  ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.allowPurchasing.visible">
+                                            Allow Purchasing
+                                            <i class="input-helper"></i>
+                                        </label>
+            </div>
+
+
+            <div class="checkbox col-xs-12 form-group">
+                <label for="datalake_col">
+                    <input id="datalake_col" type="checkbox" value="hide"  ng-true-value=true ng-false-value=false data-ng-model="locTypeCtrl.locationTypesGrid.columns.datalake.visible">
+                    Documents
+                            <i class="input-helper"></i>
+                        </label>
+            </div>
+        </div>
+    </div>
+</div>

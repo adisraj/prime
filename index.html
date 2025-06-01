@@ -1,0 +1,656 @@
+<html data-ng-app="calculus" ng-strict-di data-ng-controller="MaterialAdminController as mactrl" style="overflow-x: hidden">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prime - Retail Calculus</title>
+
+    <!-- Vendor CSS -->
+    <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css"
+        rel="stylesheet">
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css'>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.0/jquery.mCustomScrollbar.min.css" />
+    <!--     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.min.css" /> -->
+    <link href="vendors/bower_components/angular-growl-v2/build/angular-growl.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/json-tree/json-tree.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-prettyjson/0.2.0/ng-prettyjson.min.css" />
+    <link href="vendors/datetimepicker/build/jquery.datetimepicker.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/nouislider/jquery.nouislider.css" rel="stylesheet">
+    <link href="vendors/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="vendors/bower_components/selectize/dist/css/selectize.css">
+    <link rel="stylesheet" href="vendors/bower_components/selectize/dist/css/selectize.bootstrap3.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+
+
+    <!-- Application css -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/trix/0.9.2/trix.css">
+    <link href='css/textAngular.css' rel='stylesheet'>
+    <link href="css/rc.prime.css" rel="stylesheet">
+    <link href="css/prime.css" rel="stylesheet">
+    <link href="css/workbench.css" rel="stylesheet">
+    </link>
+    <link href="css/app.min.1.css" rel="stylesheet" id="app-level">
+    <link href="css/app.min.basic.css" rel="stylesheet">
+    <link href="css/app.prime.css" rel="stylesheet">
+    <link href="css/angulartree.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="vendors/bower_components/angular-google-places-autocomplete/src/autocomplete.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.6.0/css/ngDialog.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.6.0/css/ngDialog-theme-default.min.css" />
+    <link rel="stylesheet" href="vendors/bower_components/angular-tree-dnd/dist/ng-tree-dnd.min.css">
+    <link rel="stylesheet" href="vendors/bower_components/jquery-ui/themes/smoothness/jquery-ui.css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato|Gugi|Francois+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+        integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="./img/favicons/manifest.json">
+    <link rel="mask-icon" href="./img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="./img/favicons/favicon.ico">
+    <link rel="stylesheet" href="vendors/bower_components/angular-tooltips/dist/angular-tooltips.css" />
+    <meta name="msapplication-config" content="./img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- ui-select -->
+    <link rel="stylesheet" href="vendors/bower_components/angular-ui-select/dist/select.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+</head>
+
+<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1'}">
+
+
+    <data ui-view></data>
+    <!-- Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <!-- Angular -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular-animate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.8.3/angular-resource.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.8.3/angular-sanitize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.0/mousetrap.min.js"></script>
+    <script src="vendors/non_bower_components/Blob.js"></script>
+    <script src="vendors/non_bower_components/FileSaver.js"></script>
+    <script src="vendors/bower_components/js-xlsx/shim.js"></script>
+    <script src="vendors/bower_components/js-xlsx/jszip.js"></script>
+    <script src="vendors/bower_components/js-xlsx/xlsx.js"></script>
+    <script src="vendors/bower_components/selectize/dist/js/standalone/selectize.min.js"></script>
+    <script src="vendors/bower_components/ng-selectize/ng-selectize.min.js"></script>
+    <script src='vendors/bower_components/textAngular/dist/textAngular-rangy.min.js'></script>
+    <script src='vendors/bower_components/textAngular/dist/textAngular-sanitize.min.js'></script>
+    <script src='vendors/bower_components/textAngular/dist/textAngular.min.js'></script>
+    <script src="./application/directives/trix.js"></script>
+    <script src="vendors/bower_components/angular-trix/dist/angular-trix.min.js"></script>
+    <script src="vendors/bower_components/angular-tooltips/dist/angular-tooltips.js"></script>
+
+    <!-- Angular Modules -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.14/angular-filter.min.js"></script>
+    <script src="vendors/bower_components/angular-cache/dist/angular-cache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/oclazyload/1.0.9/ocLazyLoad.min.js"></script>
+    <script src="vendors/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+
+    <script src="vendors/bower_components/angular-underscore/angular-underscore.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script src="vendors/bower_components/json-tree/json-tree.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-prettyjson/0.2.0/ng-prettyjson.min.js"></script>
+    <script src="vendors/bower_components/ng-prettyjson/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <!-- Common Vendors and non bower component-->
+
+    <!-- <script src="vendors/bower_components/ng-table/dist/ng-table.js"></script> -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.0/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+    <script src="vendors/bower_components/angular-growl-v2/build/angular-growl.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.6.0/js/ngDialog.min.js"></script>
+    <script src="vendors/bower_components/angular-tree-dnd/dist/ng-tree-dnd.js"></script>
+    <script src="vendors/bower_components/mousetrap/mousetrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular-cookies.min.js"></script>
+    <!-- <script type="text/javascript" src="vendors/bower_components/selectize-ng/dist/standalone/selectize-ng.min.js"></script> -->
+    <script src="vendors/bower_components/angular-google-places-autocomplete/src/autocomplete.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <script src="vendors/bower_components/nouislider/jquery.nouislider.js"></script>
+    <script src="vendors/bower_components/nouislider/Link.js"></script>
+    <script src="vendors/bower_components/angular-nouislider/src/nouislider.min.js"></script>
+    <script src="vendors/bower_components/angularUtils-pagination/dirPagination.js"></script>
+    <script src="vendors/bower_components/angular-dragtable/angular-dragtable.js"></script>
+    <script src="vendors/bower_components/angular-ui-multiselect/src/multiselect.js"></script>
+    <script src="vendors/bower_components/select2/dist/js/select2.js"></script>
+
+    <!-- ui-select -->
+    <script src="vendors/bower_components/angular-ui-select/dist/select.js"></script>
+
+    <script type="text/javascript" src="vendors/bower_components/jquery-ui/jquery-ui.js"></script>
+    <script type="text/javascript" src="vendors/bower_components/angular-ui-date/dist/date.js"></script>
+    <script type="text/javascript" src="vendors/bower_components/valdr/valdr.js"></script>
+    <script type="text/javascript" src="vendors/bower_components/valdr/valdr-message.js"></script>
+
+
+    <!-- Angular File Upload -->
+    <script type="text/javascript" src="vendors/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+    <script type="text/javascript" src="vendors/collapsible/CollapsibleLists.js"></script>
+    <script type="text/javascript"
+        src="vendors/bower_components/angular-environment/dist/angular-environment.min.js"></script>
+
+    <!--Excel File Upload-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.13/ng-file-upload.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+
+
+    <!-- NG Mask -->
+
+    <!--<script src='vendors/bower_components/ngMask/dist/ngMask.min.js'></script>-->
+    <!--UI Mask Directives -->
+    <script src='vendors/bower_components/angular-ui-mask/dist/mask.js'></script>
+    <!--UI Mask Directives -->
+
+    <!-- directives -->
+    <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBho_BOJcll9FRxje0MbSqBi1wAcKKjtVs&libraries=places&types=geocode"></script>
+    <!-- directives -->
+
+    <!--Spinner-->
+    <script type="text/javascript" src="vendors/spin/spin.min.js"></script>
+    <script type="text/javascript" src="vendors/datetimepicker/build/jquery.datetimepicker.full.js"></script>
+
+    <!--Chart Start-->
+    <script type="text/javascript" src="vendors/bower_components/chart.js/dist/Chart.min.js"></script>
+    <script type="text/javascript" src="vendors/bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
+    <!--Chart End-->
+
+    <!-- Elastic Search Start -->
+    <script type="text/javascript" src="vendors/bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
+    <!-- Elastic Search End -->
+
+
+    <!-- App level -->
+
+    <script src="./application/app.js"></script>
+    <script src="./application/modules/common/common.module.js"></script>
+    <script src="./application/run.js"></script>
+    <!--Logging-->
+    <script src="./application/modules/common/logger.js"></script>
+    <!--Logging-->
+
+    <!--Application Utitlies-->
+    <script src="./application/modules/common/application.context.js"></script>
+    <script src="./application/modules/common/application.permissions.js"></script>
+    <script src="./application/modules/common/application.cache.js"></script>
+    <script src="./application/modules/common/_custom.validation.factory.js"></script>
+    <!--Application Utitlies-->
+
+    <!-- Common services -->
+    <script src="./application/modules/api/services.js"></script>
+    <!-- Common services -->
+
+    <script src="./application/modules/dashboard/module.js"></script>
+    <script src="./application/modules/dashboard/factory.js"></script>
+    <script src="./application/modules/dashboard/controller.js"></script>
+
+    <script src="./application/modules/user/_module.js"></script>
+    <script src="./application/modules/user/_factory.js"></script>
+    <script src="./application/modules/user/_service.js"></script>
+    <!-- Application common/shared -->
+    <!--Configuration-->
+    <script src="./application/configuration/interceptors.js"></script>
+    <script src="./application/configuration/logging.js"></script>
+    <!--Configuration-->
+    <script src="./application/constants/constants.js"></script>
+    <script src="./application/filters/filters.js"></script>
+    <script src="./application/directives/directives.js"></script>
+    <script src="./application/directives/highlight.js"></script>
+
+
+
+    <script src="./application/directives/xdn-date-time-picker.js"></script>
+
+    <!--  <script src="./application/modules/address/addressContactdirectives.js"></script> -->
+    <script src="./application/modules/address/addressContact.factory.js"></script>
+    <script src="./application/directives/angulartreeview.js"></script>
+    <script src="./application/directives/angular-export.js"></script>
+    <script src="./application/services.js"></script>
+    <script src="./application/controllers/main.js"></script>
+    <script src="./application/modules/notifications/vendor.portal.factory.js"></script>
+    <script src="./application/modules/notifications/controller.js"></script>
+    <script src="./application/configuration/configuration.js"></script>
+    <script src="vendors/query-builder/angular-query-builder.js"></script>
+    <!-- Elastic Seaerch Start -->
+    <script src="./application/controllers/es-search.js"></script>
+    <!-- Elastic Search End -->
+
+    <!--- Application Controllers -->
+    <!--Login-->
+    <script src="./application/modules/login/module.js"></script>
+    <script src="./application/modules/login/controller.js"></script>
+    <script src="./application/modules/login/factory.js"></script>
+    <!--Login-->
+    <script src="./application/modules/auth/factory.js"></script>
+    <script src="./application/modules/api/factory.js"></script>
+    <script src="./application/modules/api/data_lake_service.js"></script>
+    <script src="./application/modules/api/change_history_service.js"></script>
+    <script src="./application/modules/api/validation.factory.js"></script>
+    <script src="./application/modules/api/notification.factory.js"></script>
+    <script src="./application/modules/_shared/_components.directives.js"></script>
+    <script src="./application/modules/entity/_module.js"></script>
+    <script src="./application/modules/entity/_factory.js"></script>
+    <script src="./application/modules/entity/entity.factory.js"></script>
+    <script src="./application/modules/entity/_service.js"></script>
+    <script src="./application/modules/entity/entitydetails.factory.js"></script>
+
+    <script src="./application/templates/jobs.factory.js"></script>
+    <script src="./application/templates/cloudcart.factory.js"></script>
+    <script src="./application/modules/entity/factory.js"></script>
+
+    <script src="./application/modules/codelist/_module.js"></script>
+    <script src="./application/modules/codelist/codelist.factory.js"></script>
+
+    <!--Order Help Text file inclusion start-->
+    <script src="./application/modules/order.help.text/order.help.text.module.js"></script>
+    <script src="./application/modules/order.help.text/order.help.text.factory.js"></script>
+    <!--Order Help Text file inclusion end-->
+
+    <!--Invoice Terms and Conditions file inclusion start-->
+    <script src="./application/modules/invoice.terms.conditions/invoice.terms.module.js"></script>
+    <script src="./application/modules/invoice.terms.conditions/invoice.terms.factory.js"></script>
+
+    <!-- Corporate Controller -->
+    <script src="./application/modules/corporate.control/corporate.control.module.js"></script>
+    <script src="./application/modules/corporate.control/corporate.control.factory.js"></script>
+
+    <script src="./application/modules/financingchoices/_module.js"></script>
+    <script src="./application/modules/financingchoices/financingchoices.factory.js"></script>
+
+    <script src="./application/modules/financingpriceadjustments/_module.js"></script>
+    <script src="./application/modules/financingpriceadjustments/financingpriceadjustments.factory.js"></script>
+
+    <script src="./application/modules/upcconfiguration/_module.js"></script>
+    <script src="./application/modules/upcconfiguration/upc-configuration.factory.js"></script>
+
+    <script src="./application/modules/pe-export/module.js"></script>
+    <script src="./application/modules/pe-export/factory.js"></script>
+
+    <script src="./application/modules/attributes/module.js"></script>
+    <!-- <script src="./application/modules/attributes/controller.js"></script> -->
+    <script src="./application/modules/attributes/factory.js"></script>
+
+    <script src="./application/modules/bulk_update_interface/_module.js"></script>
+    <script src="./application/modules/bulk_update_interface/bulk-update-interface.factory.js"></script>
+
+    <script src="./application/modules/attributes/values/module.js"></script>
+    <!-- <script src="./application/modules/attributes/values/controller.js"></script> -->
+    <script src="./application/modules/attributes/values/factory.js"></script>
+    <script src="./application/modules/attributes/attribute.factory.js"></script>
+    <script src="./application/modules/attributes/attribute.value.factory.js"></script>
+
+    <script src="./application/modules/title/_module.js"></script>
+    <script src="./application/modules/title/title.factory.js"></script>
+
+    <script src="./application/modules/country/_module.js"></script>
+    <script src="./application/modules/country/country.factory.js"></script>
+
+    <script src="./application/modules/company/company.module.js"></script>
+    <script src="./application/modules/company/department/company.department.module.js"></script>
+    <script src="./application/modules/company/associate/company.associate.module.js"></script>
+    <script src="./application/modules/company/company.factory.js"></script>
+    <script src="./application/modules/company/department/company.department.factory.js"></script>
+    <script src="./application/modules/company/associate/company.associate.factory.js"></script>
+
+
+    <script src="./application/modules/country/states/country.states.module.js"></script>
+    <script src="./application/modules/country/states/country.states.factory.js"></script>
+
+    <script src="./application/modules/country/cities/country.cities.module.js"></script>
+    <script src="./application/modules/country/cities/country.cities.factory.js"></script>
+
+    <script src="./application/modules/contacts/_module.js"></script>
+    <script src="./application/modules/contacts/contact.factory.js"></script>
+
+    <script src="./application/modules/hierarchy/module.js"></script>
+    <script src="./application/modules/hierarchy/hierarchy.value.module.js"></script>
+    <script src="./application/modules/hierarchy/hierarchy.factory.js"></script>
+    <script src="./application/modules/hierarchy/hierarchy.value.factory.js"></script>
+    <script src="./application/modules/hierarchy/_filter.js"></script>
+
+    <script src="./application/modules/individual/_module.js"></script>
+    <script src="./application/modules/individual/individual.factory.js"></script>
+
+    <script src="./application/modules/hangtag/module.js"></script>
+    <script src="./application/modules/hangtag/factory.js"></script>
+
+    <script src="./application/modules/pe.settings/module.js"></script>
+    <script src="./application/modules/pe.settings/factory.js"></script>
+
+    <script src="./application/modules/tax/module.js"></script>
+    <script src="./application/modules/tax/factory.js"></script>
+
+    <script src="./application/modules/customer/module.js"></script>
+    <script src="./application/modules/customer/factory.js"></script>
+
+    <script src="./application/modules/discount/module.js"></script>
+    <script src="./application/modules/discount/factory.js"></script>
+
+    <script src="./application/modules/marketing.campaigns/module.js"></script>
+    <script src="./application/modules/marketing.campaigns/marketing.capmaigns.factory.js"></script>
+
+    <script src="./application/modules/template/module.js"></script>
+    <script src="./application/modules/template/factory.js"></script>
+
+    <script src="./application/modules/inventory.method/module.js"></script>
+    <script src="./application/modules/inventory.method/factory.js"></script>
+
+    <script src="./application/modules/inventory.type/module.js"></script>
+    <script src="./application/modules/inventory.type/factory.js"></script>
+    <script src="./application/modules/inventory.quality/module.js"></script>
+    <script src="./application/modules/inventory.quality/factory.js"></script>
+    <script src="./application/modules/contact.subtypes/module.js"></script>
+    <script src="./application/modules/contact.subtypes/contactsubtype.factory.js"></script>
+
+    <script src="./application/modules/pricing.choices/_module.js"></script>
+    <script src="./application/modules/pricing.choices/pricing.choices.factory.js"></script>
+
+    <script src="./application/modules/location/module.js"></script>
+
+    <script src="./application/modules/location/type/location.type.module.js"></script>
+    <script src="./application/modules/location/type.udd/location.type.udd.module.js"></script>
+    <script src="./application/modules/location/parameter/location.parameter.factory.js"></script>
+    <script src="./application/modules/location/type/location.type.factory.js"></script>
+    <script src="./application/modules/location/type.udd/location.type.udd.factory.js"></script>
+    <script src="./application/modules/location/type.udd.value/location.udd.value.factory.js"></script>
+
+    <script src="./application/modules/location/maintenance/factory.js"></script>
+    <script src="./application/modules/location/maintenance/module.js"></script>
+    <script src="./application/modules/location/maintenance/location-userdefined-data-directive.js"></script>
+    <script src="./application/modules/location/maintenance/services.js"></script>
+
+    <script src="./application/modules/location/clone/module.js"></script>
+    <script src="./application/modules/location/clone/factory.js"></script>
+
+    <script src="./application/modules/vendor/maintenance/module.js"></script>
+    <script src="./application/modules/vendor/term/vendor.terms.module.js"></script>
+    <script src="./application/modules/vendor/financingterms/vendor.financingterms.module.js"></script>
+    <script src="./application/modules/vendor/pricingterms/vendor.pricingterms.module.js"></script>
+    <script src="./application/modules/vendor/type/vendor.type.module.js"></script>
+    <script src="./application/modules/vendor/type.udd/vendor.type.udd.module.js"></script>
+    <script src="./application/modules/vendor/parameter/vendor.parameter.factory.js"></script>
+    <script src="./application/modules/vendor/type/vendor.type.factory.js"></script>
+    <script src="./application/modules/vendor/type.udd/vendor.type.udd.factory.js"></script>
+    <script src="./application/modules/vendor/type.udd.value/vendor.type.udd.value.factory.js"></script>
+    <script src="./application/modules/vendor/maintenance/vendor.maintenance.factory.js"></script>
+    <script src="./application/modules/vendor/maintenance/vendor-userdefined-data-directive.js"></script>
+    <script src="./application/modules/vendor/maintenance/vendor-address-contact-directive.js"></script>
+    <script src="./application/modules/vendor/term/vendor.terms.factory.js"></script>
+    <script src="./application/modules/vendor/financingterms/vendor.financingterms.factory.js"></script>
+    <script src="./application/modules/vendor/pricingterms/vendor.pricingterms.factory.js"></script>
+
+    <script src="./application/modules/vendor/clone/module.js"></script>
+    <script src="./application/modules/vendor/clone/factory.js"></script>
+
+    <script src="./application/modules/item/_module.js"></script>
+    <script src="./application/modules/item/sku/sku.maintenance.module.js"></script>
+    <script src="./application/modules/item/type/item.type.module.js"></script>
+    <script src="./application/modules/item/rounding.rules/rounding.rules.module.js"></script>
+    <script src="./application/modules/item/type.udd/item.type.udd.module.js"></script>
+    <script src="./application/modules/item/pricegroup/item.pricegroup.module.js"></script>
+    <script src="./application/modules/item/parameter/item.parameter.factory.js"></script>
+    <script src="./application/modules/item/type/item.type.factory.js"></script>
+    <script src="./application/modules/item/type.udd/item.type.udd.factory.js"></script>
+    <script src="./application/modules/item/type.udd.value/item.type.udd.value.factory.js"></script>
+    <script src="./application/modules/item/pricegroup/item.pricegroup.factory.js"></script>
+
+    <!--Order Advisors file inclusion start-->
+    <script src="./application/modules/order.advisor/module.js"></script>
+    <script src="./application/modules/order.advisor/services.js"></script>
+    <script src="./application/modules/order.advisor/type/module.js"></script>
+    <script src="./application/modules/order.advisor/type.udd/module.js"></script>
+    <script src="./application/modules/order.advisor/maintenance/udd.directive.js"></script>
+    <script src="./application/modules/order.advisor/type/packages/module.js"></script>
+    <!--Order Advisors file inclusion end-->
+
+    <script src="./application/modules/item/maintenance/module.js"></script>
+    <script src="./application/modules/item/maintenance/item-userdefined-data-directive.js"></script>
+    <script src="./application/modules/item/set/item.set.factory.js"></script>
+    <script src="./application/modules/item/set/item-set-directive.js"></script>
+    <script src="./application/modules/item/sku/sku-option-udd-directive.js"></script>
+    <script src="./application/modules/item/sku/set/sku.set.factory.js"></script>
+    <script src="./application/modules/item/sku/set/sku-set-directive.js"></script>
+    <script src="./application/modules/item/sku/template/sku.template.factory.js"></script>
+    <script src="./application/modules/item/sku/template/sku-template-directive.js"></script>
+
+    <script src="./application/modules/item/sku/clone/module.js"></script>
+    <script src="./application/modules/item/sku/clone/factory.js"></script>
+
+    <script src="./application/modules/item/sku/retails/module.js"></script>
+    <script src="./application/modules/item/sku/retails/factory.js"></script>
+
+    <script src="./application/modules/item/retail.price.type/retail.price.type.factory.js"></script>
+    <script src="./application/modules/item/maintenance/item.maintenance.factory.js"></script>
+    <script src="./application/modules/item/sku/sku.maintenance.factory.js"></script>
+    <script src="./application/modules/item/retail/retail.maintenance.factory.js"></script>
+
+    <script src="./application/modules/item/sku/inventory-availability/module.js"></script>
+    <script src="./application/modules/item/sku/inventory-availability/controller.js"></script>
+
+    <script src="./application/modules/item/sku/installation.retail/module.js"></script>
+    <script src="./application/modules/item/sku/installation.retail/controller.js"></script>
+
+    <script src="./application/modules/sku.setting/module.js"></script>
+    <script src="./application/modules/sku.setting/factory.js"></script>
+
+    <script src="./application/modules/item/item.collection/item.collection.module.js"></script>
+    <script src="./application/modules/item/item.collection/item.collection.factory.js"></script>
+
+    <script src="./application/modules/item/rounding.rules/rounding.rules.factory.js"></script>
+
+    <script src="./application/modules/item/sku.option.header/sku.option.header.factory.js"></script>
+    <script src="./application/modules/item/sku.option.header/sku.option.detail.factory.js"></script>
+
+    <script src="./application/modules/mto/module.js"></script>
+    <script src="./application/modules/mto/choice/mto.choice.module.js"></script>
+    <script src="./application/modules/mto/family/mto.family.module.js"></script>
+    <script src="./application/modules/mto/collection/mto.collection.module.js"></script>
+    <script src="./application/modules/mto/pricegroup/mto.pricegroup.module.js"></script>
+    <script src="./application/modules/mto/type/mto.type.module.js"></script>
+    <script src="./application/modules/mto/type.udd/mto.type.udd.module.js"></script>
+    <script src="./application/modules/mto/parameter/mto.parameter.factory.js"></script>
+    <script src="./application/modules/mto/type/mto.type.factory.js"></script>
+    <script src="./application/modules/mto/type.udd/mto.type.udd.factory.js"></script>
+
+    <script src="./application/modules/mto/choice/mto-choice-userdefined-data-directive.js"></script>
+    <script src="./application/modules/mto/collection/mto.collection.factory.js"></script>
+
+    <script src="./application/modules/mto/family/mto.family.factory.js"></script>
+
+    <script src="./application/modules/mto/pricegroup/mto.pricegroup.factory.js"></script>
+
+    <script src="./application/modules/mto/option/mto.maintenance.factory.js"></script>
+    <script src="./application/modules/mto/choice/mto.choice.factory.js"></script>
+    <script src="./application/modules/mto/type.udd.value/mto.type.udd.value.factory.js"></script>
+
+    <script src="./application/modules/mto/clone/module.js"></script>
+    <script src="./application/modules/mto/clone/factory.js"></script>
+
+    <script src="./application/modules/AS400.interfaces/module.js"></script>
+    <script src="./application/modules/AS400.interfaces/factory.js"></script>
+
+    <script src="./application/modules/reactivate.skus/module.js"></script>
+    <script src="./application/modules/reactivate.skus/factory.js"></script>
+
+    <script src="./application/modules/offers/module.js"></script>
+    <script src="./application/modules/offers/factory.js"></script>
+
+    <script src="./application/modules/offers/benefits/module.js"></script>
+    <script src="./application/modules/offers/benefits/factory.js"></script>
+
+    <script src="./application/modules/offers/rules/module.js"></script>
+    <script src="./application/modules/offers/rules/factory.js"></script>
+
+    <!-- Tickets -->
+    <script src="./application/modules/tickets/_module.js"></script>
+    <script src="./application/modules/tickets/tickets.factory.js"></script>
+    <script src="./application/modules/tickets/tickets.controller.js"></script>
+    <script src="./application/modules/item/rounding.rules/rounding.rules.controller.js"></script>
+
+    <!--   <script src="./application/modules/sellingstrategies/module.js"></script>
+    <script src="./application/modules/sellingstrategies/factory.js"></script>
+
+    <script src="./application/modules/sellingstrategies/configuration/module.js"></script>
+
+    <script src="./application/modules/sellingstrategies/coupon/module.js"></script>
+
+    <script src="./application/modules/sellingstrategies/crossselling/module.js"></script>
+
+    <script src="./application/modules/sellingstrategies/offers/module.js"></script>
+
+    <script src="./application/modules/sellingstrategies/upselling/module.js"></script> -->
+
+    <!-- Mass Maintenenace -->
+    <script src="./application/modules/mass-maintenance/module.js"></script>
+    <script src="./application/modules/mass-maintenance/factory.js"></script>
+
+    <!-- Retail Report -->
+    <script src="./application/modules/retail-report/module.js"></script>
+    <script src="./application/modules/retail-report/factory.js"></script>
+
+    <!-- Import -->
+    <script src="./application/modules/import/_module.js"></script>
+    <script src="./application/modules/import/_service.js"></script>
+    <!-- Reports -->
+    <script src="./application/modules/reports/_module.js"></script>
+    <script src="./application/modules/reports/_factory.js"></script>
+    <script src="./application/modules/reports/_service.js"></script>
+    <!--DataLake-->
+    <script src="./application/modules/datalake/module.js"></script>
+    <script src="./application/modules/datalake/factory.js"></script>
+    <script src="./application/modules/datalake/services.js"></script>
+    <script src="./application/modules/datalake/controller.js"></script>
+
+    <script src="./application/modules/authorization/_module.js"></script>
+    <script src="./application/modules/authorization/factory.js"></script>
+    <script src="./application/modules/authorization/uam.mfa.factory.js"></script>
+    <script src="./application/modules/authorization/user.factory.js"></script>
+    <script src="./application/modules/authorization/role.factory.js"></script>
+    <script src="./application/modules/authorization/permission.factory.js"></script>
+
+    <script src="./application/modules/preferences/preference.factory.js"></script>
+
+    <!-- Template Modules -->
+    <script src="./application/modules/template.js"></script>
+    <script src="./application/modules/ui.js"></script>
+    <script src="./application/modules/charts/flot.js"></script>
+    <script src="./application/modules/charts/other-charts.js"></script>
+    <script src="./application/modules/form.js"></script>
+    <script src="./application/modules/media.js"></script>
+    <script src="./application/modules/components.js"></script>
+    <script src="./application/modules/calendar.js"></script>
+    <!--<script src="./application/modules/demo.js"></script>-->
+    <!--Widget for dashboard-->
+    <script src="./application/directives/dashboard/dashboarddirective.js"></script>
+    <script src="./application/directives/dashboard/notificationdirective.js"></script>
+
+    <script src="./application/directives/datalake/metadatadirectve.js"></script>
+    <script src="./application/directives/secondaryAuthentication/secondaryAuthDirective.js"></script>
+    <script src="./application/directives/configureUdd/configureUdd.js"></script>
+    <script src="./application/directives/previewudddirective.js"></script>
+    <script src="./application/directives/numericfield.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.19/fabric.min.js"></script>
+
+    <script type="text/ng-template" id="sidebar-left.html">
+        <div class="col-xs-12 navbar-header" style="padding:3px;background: #1c2747;">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#profile-navbar" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            <a class="hidden-lg pull-left cursor-pointer p-t-5" data-target="sidebar" data-toggle-sidebar data-model-left="mactrl.sidebarToggle.left"
+                data-ng-class="{ 'open': mactrl.sidebarToggle.left === true }">
+                <div class="line-wrap">
+                    <div class="line top"></div>
+                    <div class="line center"></div>
+                    <div class="line bottom"></div>
+                </div>
+            </a>
+            <a class="cursor-pointer pull-left" data-ui-sref="common.dashboard"><img class="rc-logo" src="./img/logo-mono.png" alt="" /></a>
+        </div>
+        <div ng-controller="SidebarController as sideCtrl">
+            <div class="sidebar-inner">
+                <div ng-if="mactrl.selected_workbench.toLowerCase() ==='administrator'">
+                    <div data-ui-view="admin"></div>
+                </div>
+                <div ng-if="mactrl.selected_workbench.toLowerCase() ==='business'">
+                    <div data-ui-view="business"></div>
+                </div>
+                <div class="c-gray f-16 p-10 d-flex align-items-center justify-content-center" ng-if="mactrl.isProccessing && !mactrl.selected_workbench">
+                    <img class="m-r-5" src="./img/loading.gif" alt="" style="width:50px;height:50px;"> Loading
+                </div>
+                <div class="c-gray f-16 p-10 text-center" ng-if="!mactrl.isProccessing && mactrl.selected_workbench.toLowerCase() !== 'administrator' && mactrl.selected_workbench.toLowerCase() !== 'business'">
+                    No access to workspace. Please contact administrator!
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template " id="requiredFieldNotation ">
+        <span class="text-danger glyphicon glyphicon-arrow-right"></span>
+    </script>
+    <script type="text/ng-template " id="optionalFieldNotation ">
+        <span class="text-info glyphicon glyphicon-arrow-right"></span>
+    </script>
+    <script type="text/ng-template " id="FieldNotation ">
+        <span class="text-success glyphicon glyphicon-arrow-right"></span>
+    </script>
+
+    <!-- Localforage Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+
+    <!-- The code below will initate login page carousel -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var mCarouselTO = setTimeout(function () {
+                $('#carouselFade').carousel();
+            }, 1000);
+
+        });
+    </script>
+    <script type="text/ng-template " id="rc-pagination.html">
+        <ul class="pagination" ng-if="1 < pages.length || !autoHide">
+            <li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }">
+                <a href="" title="First page" title-direction="bottom" ng-click="setCurrent(1)">&laquo;</a>
+            </li>
+            <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }">
+                <a href="" title="Previous page" title-direction="bottom" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a>
+            </li>
+            <li ng-repeat="pageNumber in pages track by tracker(pageNumber, $index)" ng-class="{ 'active' : pagination.current === pageNumber, 'disabled' : pageNumber == '...' || ( ! autoHide && pages.length === 1 ) }">
+                <a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a>
+            </li>
+            <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }">
+                <a href="" title="Next page" title-direction="bottom" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a>
+            </li>
+            <li ng-if="boundaryLinks"  ng-class="{ disabled : pagination.current == pagination.last }">
+                <a href="" title="Last page" title-direction="bottom" ng-click="setCurrent(pagination.last)">&raquo;</a>
+            </li>
+        </ul>
+    </script>
+</body>
+
+</html>

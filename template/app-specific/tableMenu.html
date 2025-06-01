@@ -1,0 +1,24 @@
+<div class=" lv-header-alt clearfix " style="cursor:pointer; ">
+    <!--<h4 class="c-blue f-700 ">Entities</h4>
+                <h2 class="lvh-label hidden-xs ">
+                    {{entity_table.total()}} Records found</h2>-->
+    <ul class="lv-actions actions " ng-if="showForm">
+        <li>
+            <input type="text " ng-model="fullData " ng-hide="true " />
+            <input type="text " ng-model="returnValue " ng-init="returnValue='' " ng-hide="true " />
+            <div group-by-drop-down ng-if="rcpTable.data.length> 0" full-data-from-view="rcpTable" return-data-from-directive="returnValue" table-name="'entity_table'" style="display: inline;"></div>
+            {{returnValue}} ===========
+
+
+
+        </li>
+        <li>
+            <a href="" ng-click="showAllFn()" tooltip="Full list">
+                <i class="zmdi zmdi-view-list-alt zmdi-hc-fw c-brown f-400"></i>
+            </a>
+        </li>
+        <li>
+            <div class="alignHideShowCol" hide-show-columns hide-show-input="columns" access-permission-input="{{accessPermissions}}"></div>
+        </li>
+    </ul>
+</div>

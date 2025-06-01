@@ -1,0 +1,45 @@
+<div id="rcrightsidebar" class="c-overflow toggled" ng-init="ruleController.fetchCollections();">
+    <div class="m-t-25 d-flex">
+        <div class="p-0 cursor-pointer p-absolute" ui-sref="common.prime.offerrules">
+            <a>
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="p-0 m-auto">
+            <label class="rclabel editformlabel" title="Item Collections"><strong>Item Collections</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-t-10 m-b-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/offers.svg'"></div>
+            </div>
+        </div>
+        <div class="col-xs-12 p-0">
+            <div data-ng-show="ruleController.message" class="alert alert-success">
+                <button type="button" class="close" data-ng-click="ruleController.message = null" aria-hidden="true">&times;</button> {{ruleController.message}}
+            </div>
+            <div data-ng-show="ruleController.errorMessage" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="ruleController.errorMessage = null" aria-hidden="true">&times;</button> {{ruleController.errorMessage}}
+            </div>
+        </div>
+        <div class="col-xs-12 p-0 m-b-10">
+            <table class="table table-hover table-vmiddle table-condensed table-bordered grid">
+                <thead>
+                    <th class="text-center" style="width:15%">Id</th>
+                    <th class="text-center">Short Desciption</th>
+                    <th class="text-center">Action</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="collection in ruleController.collections">
+                        <td class="text-center">{{collection.id}}</td>
+                        <td title="{{collection.short_description}}">{{collection.short_description | truncate:50}}</td>
+                        <td class="text-center text-capitalize">
+                            <a ng-class="{'c-red':collection.action ==='remove', 'c-green':collection.action ==='add'}" data-ng-click="ruleController.addOrRemove('Collection',collection);">{{collection.action}}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

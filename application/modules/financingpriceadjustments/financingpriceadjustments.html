@@ -1,0 +1,291 @@
+<div class="container col-lg-12 p-0" data-ng-controller="FinancingPriceAdjustmentsController as financingPriceAdjustmentCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/finance-price-adjustment.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Financing Price Adjustments</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20" data-ng-if="permissionsMap.view">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!financingPriceAdjustmentCtrl.search">
+                            {{financingPriceAdjustmentCtrl.rowsInfo}} </span>
+                        <span data-ng-if="financingPriceAdjustmentCtrl.search"> Displaying {{(financingPriceAdjustmentCtrl.allFinancingPriceAdjustments|filter:financingPriceAdjustmentCtrl.search).length}}
+                            of {{financingPriceAdjustmentCtrl.allFinancingPriceAdjustments.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right" ng-if="financingPriceAdjustmentCtrl.allFinancingPriceAdjustments.length > 0 && permissionsMap.view">
+                                    <input class="form-control input-sm " type="text " ng-model="financingPriceAdjustmentCtrl.search" id="inlineSearch" name="inlineSearch"
+                                        data-ng-init="financingPriceAdjustmentCtrl.focusSearchField()" indicate-quick-search
+                                        placeholder="Quick Search " data-ng-disabled="financingPriceAdjustmentCtrl.isLoading"
+                                    />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="financingPriceAdjustmentCtrl.allFinancingPriceAdjustments.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="financingPriceAdjustmentCtrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect"
+                                    data-ng-disabled="financingPriceAdjustmentCtrl.isLoading">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="financingPriceAdjustmentCtrl.allFinancingPriceAdjustments.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="financingPriceAdjustmentCtrl.reload(true);" class="btn-primal btn-block waves-effect" data-ng-disabled="financingPriceAdjustmentCtrl.isLoading">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="financingPriceAdjustmentCtrl.openForm();"
+                                    data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">
+                                        Create Financing Price Adjustment
+                                    </span>
+                                </button>
+                            </a>
+
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width: 200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="financingPriceAdjustmentCtrl.openForm();" style="padding: 8px 20px" title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success"></i> Create Financing Price Adjustment
+                                    </button>
+                                </li>
+                                <li ng-if="financingPriceAdjustmentCtrl.allFinancingPriceAdjustments.length > 0 && permissionsMap.view">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn" data-ng-click="!financingPriceAdjustmentCtrl.isLoading ? financingPriceAdjustmentCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': financingPriceAdjustmentCtrl.isLoading}" href="">
+                                        <i class="zmdi zmdi-view-week text-info f-17 m-r-15"></i> Columns </button>
+                                </li>
+                                <li ng-if="financingPriceAdjustmentCtrl.allFinancingPriceAdjustments.length > 0 && permissionsMap.view">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn" ng-click="!financingPriceAdjustmentCtrl.isLoading ? financingPriceAdjustmentCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': financingPriceAdjustmentCtrl.isLoading}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning f-17 m-r-15"></i> Refresh</button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!financingPriceAdjustmentCtrl.rowsCount && financingPriceAdjustmentCtrl.isLoading">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+
+    <div data-ng-if="permissionsMap.view && financingPriceAdjustmentCtrl.rowsCount !== 0 && !financingPriceAdjustmentCtrl.isLoading">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="!financingPriceAdjustmentCtrl.isLoading">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+
+                <div data-ng-include="'./application/modules/financingpriceadjustments/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration" data-ng-init="financingPriceAdjustmentCtrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="!financingPriceAdjustmentCtrl.isLoading">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'status' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'status' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="financing_choice_description_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'financing_choice_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.financing_choice_description.visible == 0">
+                                        <span class="handle">Financing Choice</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'financing_choice_description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'financing_choice_description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="financing_choice_is_eligible_for_finance_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'financing_choice_is_eligible_for_finance'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.financing_choice_is_eligible_for_finance.visible == 0">
+                                        <span class="handle">Financing Choice - Is Eligible For Finance</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'financing_choice_is_eligible_for_finance' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'financing_choice_is_eligible_for_finance' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <!-- <th class="text-center" id="term_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'term'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.term.visible == 0">
+                                        <span class="handle">Term(Months)</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'term' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'term' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th> -->
+                                    <!-- <th class="text-center" id="pricing_factor_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'pricing_factor'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.pricing_factor.visible == 0">
+                                        <span class="handle">Payment Factor</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'pricing_factor' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'pricing_factor' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th> -->
+                                    <th class="text-center" id="pricing_choice_description_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'pricing_choice_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.pricing_choice_description.visible == 0">
+                                        <span class="handle">Pricing Choice</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'pricing_choice_description' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'pricing_choice_description' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="pricing_choice_is_eligible_for_finance_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'pricing_choice_is_eligible_for_finance'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.pricing_choice_is_eligible_for_finance.visible == 0">
+                                        <span class="handle">Pricing Choice - Is Eligible For Finance</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'pricing_choice_is_eligible_for_finance' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'pricing_choice_is_eligible_for_finance' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="can_adjust_price_flag_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'can_adjust_price_flag'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.can_adjust_price_flag.visible == 0">
+                                        <span class="handle">Can Adjust Price</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'can_adjust_price_flag' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'can_adjust_price_flag' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="price_adjustment_percentage_col_head" drag-me drop-me data-handle=".handle" ng-click="financingPriceAdjustmentCtrl.sortType = 'price_adjustment_percentage'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.price_adjustment_percentage.visible == 0">
+                                        <span class="handle">Price Adjustment %</span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'price_adjustment_percentage' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingPriceAdjustmentCtrl.sortType == 'price_adjustment_percentage' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="financingPriceAdjustment in financingPriceAdjustmentCtrl.allFinancingPriceAdjustments|filterBy:['id','pricing_choice_description','financing_choice_description','term','pricing_factor','status','display_can_adjust_price_flag','display_pricing_choice_is_eligible_for_finance','display_financing_choice_is_eligible_for_finance']:financingPriceAdjustmentCtrl.search|orderBy:financingPriceAdjustmentCtrl.sortType:sortReverse|itemsPerPage:financingPriceAdjustmentCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}" data-ng-click="financingPriceAdjustmentCtrl.setClickedRow($index);"
+                                    ios-dblclick="financingPriceAdjustmentCtrl.dblClickAction(financingPriceAdjustment);" selectedrow="{{financingPriceAdjustment}}">
+                                    <td class="id_col iconcolumnWidth" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.id.visible == 0">
+                                        {{financingPriceAdjustment.id}}
+                                    </td>
+                                    <td class="status_col" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.status.visible == 0"
+                                        ng-class="{'text-success f-500': financingPriceAdjustment.status === 'Active', 'text-warning f-300': financingPriceAdjustment.status === 'Pending Active', 'text-primary f-300': financingPriceAdjustment.status === 'Inactive', 'text-info f-300': financingPriceAdjustment.status === 'Pending Inactive'}">
+                                        {{financingPriceAdjustment.status}}
+                                    </td>
+                                    <td class="financing_choice_description_col" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.financing_choice_description.visible == 0">
+                                        {{financingPriceAdjustment.financing_choice_description}}
+                                    </td>
+                                    <td class="financing_choice_is_eligible_for_finance_col" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.financing_choice_is_eligible_for_finance.visible == 0">
+                                        {{financingPriceAdjustment.display_financing_choice_is_eligible_for_finance}}
+                                    </td>
+                                    <!-- <td class="term_col" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.term.visible == 0">
+                                        <span data-ng-if="financingPriceAdjustment.term_month|| financingPriceAdjustment.term== 0">
+                                            {{financingPriceAdjustment.term_month}}
+                                        </span>
+                                        <span class="text-muted" data-ng-if="!financingPriceAdjustment.term_month && financingPriceAdjustment.term_month != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="payment_factor_col" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.pricing_factor.visible == 0">
+                                        <span data-ng-if="financingPriceAdjustment.payment_factor || financingPriceAdjustment.payment_factor == 0">
+                                            {{financingPriceAdjustment.payment_factor}}
+                                        </span>
+                                        <span class="text-muted" data-ng-if="!financingPriceAdjustment.payment_factor && financingPriceAdjustment.payment_factor != 0">
+                                            Null
+                                        </span>
+                                    </td> -->
+                                    <td class="pricing_choice_description_col" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.pricing_choice_description.visible == 0">
+                                        {{financingPriceAdjustment.pricing_choice_description}}
+                                    </td>
+                                    <td class="pricing_choice_is_eligible_for_finance_col" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.pricing_choice_is_eligible_for_finance.visible == 0">
+                                        {{financingPriceAdjustment.display_pricing_choice_is_eligible_for_finance}}
+                                    </td>
+                                    <td class="can_adjust_price_flag" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.can_adjust_price_flag.visible == 0">
+                                        {{financingPriceAdjustment.display_can_adjust_price_flag}}
+                                    </td>
+                                    
+                                    <td class="price_adjustment_percentage" data-ng-hide="financingPriceAdjustmentCtrl.financingPriceAdjustmentGrid.columns.price_adjustment_percentage.visible == 0">
+                                        {{financingPriceAdjustment.price_adjustment_percentage}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left" boundary-links="true" on-page-change="financingPriceAdjustmentCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="financingPriceAdjustmentCtrl.pageSize = 10" ng-class="{'active':financingPriceAdjustmentCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="financingPriceAdjustmentCtrl.pageSize = 25" ng-class="{'active':financingPriceAdjustmentCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="financingPriceAdjustmentCtrl.pageSize = 50" ng-class="{'active':financingPriceAdjustmentCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="financingPriceAdjustmentCtrl.pageSize = 100" ng-class="{'active':financingPriceAdjustmentCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0" ng-if="permissionsMap && permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':financingPriceAdjustmentCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{financingPriceAdjustmentCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="financingPriceAdjustmentCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{financingPriceAdjustmentCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{financingPriceAdjustmentCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="financingPriceAdjustmentCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ng-if="permissionsMap && !permissionsMap.view && !financingPriceAdjustmentCtrl.isLoading" data-ng-include="'./application/templates/restricted.access.html'">
+    </div>
+    <div data-ng-if="permissionsMap && permissionsMap.view && financingPriceAdjustmentCtrl.rowsCount === 0 && !financingPriceAdjustmentCtrl.isLoading"
+        class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No financing price adjustments exists. Please add adjustments.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/financingpriceadjustments/panel.financingpriceadjustments.form.html'">
+    </div>
+</div>

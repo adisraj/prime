@@ -1,0 +1,81 @@
+<div class="box p-5 m-b-5 stagesection" ng-show="(isConfigureScreen && !showSetScreen && !showLocationScreen)">
+    <div class="col-lg-4 col-md-4 col-sm-4 setstagediv" ng-class="{passed:createForm || configureScreen || previewAndPublish}" ng-init="createForm=true;configureScreen=false;previewAndPublish=false;">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:createForm ||configureScreen || previewAndPublish}" style="font-size: 14px;font-family:'Roboto';font-weight:700;">
+                                <span ng-if="!isUpdate"><b>1.Create {{entity}} </b></span>
+                                <span ng-if="isUpdate"><b>1. Update {{entity}}</b></span>
+                            </label>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 setstagediv" ng-class="{passed:configureScreen || previewAndPublish}">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:configureScreen || previewAndPublish}" style="font-size: 14px;font-family:'Roboto';font-weight:700;"><b>2.Configure {{entity}}</b></label>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 setstagediv" ng-class="{passed:previewAndPublish}">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:previewAndPublish}" style="font-size: 14px;font-family:'Roboto';font-weight:700;"><b>3.Preview & Publish</b></label>
+        </div>
+    </div>
+</div>
+<div class="box p-5 m-b-5 stagesection" ng-show="(isConfigureScreen && showSetScreen && !showLocationScreen)">
+    <div class="col-lg-3 col-md-3 col-sm-3 setstagediv" ng-class="{passed:createForm || configureScreen || previewAndPublish || isSetScreen}" ng-init="createForm=true;previewAndPublish=false;isSetScreen=false;configureScreen=false;">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:createForm || configureScreen || previewAndPublish || isSetScreen}" style="font-size: 14px;font-family:'Roboto';font-weight:700;">
+            <span ng-if="!isUpdate"><b>1.Create {{entity}}  </b></span>
+            <span ng-if="isUpdate"><b>1. Update {{entity}}</b></span>
+            </label>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 setstagediv" ng-class="{passed:configureScreen || previewAndPublish || isSetScreen}">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:configureScreen || previewAndPublish || isSetScreen}" style="font-size: 14px;font-family:'Roboto';font-weight:700;"><b>2.Configure {{entity}}</b></label>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 setstagediv" ng-class="{passed:previewAndPublish || isSetScreen}">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:previewAndPublish || isSetScreen}" style="font-size: 14px;font-family:'Roboto';font-weight:700;"><b>3.{{entity}} Set</b></label>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 setstagediv" ng-class="{passed:previewAndPublish}">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:previewAndPublish}" style="font-size: 14px;font-family:'Roboto';font-weight:700;"><b>4.Preview & Publish</b></label>
+        </div>
+    </div>
+</div>
+<div class="box p-5 m-b-5 stagesection" ng-show="(isConfigureScreen && showLocationScreen && !showSetScreen)">
+    <div class="col-lg-3 col-md-3 col-sm-3 setstagediv" ng-class="{passed:createForm || configureScreen || previewAndPublish || isAddressScreen}" ng-init="createForm=true;previewAndPublish=false;isSetScreen=false;configureScreen=false;">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:createForm || configureScreen || previewAndPublish || isAddressScreen}" style="font-size: 14px;font-family:'Roboto';font-weight:700;">
+            <span ng-if="!isUpdate"><b>1.Create {{entity}}  </b></span>
+            <span ng-if="isUpdate"><b>1. Update {{entity}}</b></span>
+            </label>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 setstagediv" ng-class="{passed:configureScreen || previewAndPublish || isAddressScreen}">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:configureScreen || previewAndPublish || isAddressScreen}" style="font-size: 14px;font-family:'Roboto';font-weight:700;"><b>2.Configure {{entity}}</b></label>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 setstagediv" ng-class="{passed:previewAndPublish || isAddressScreen}">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:previewAndPublish || isAddressScreen}" style="font-size: 14px;font-family:'Roboto';font-weight:700;"><b>3.{{entity}} Address</b></label>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 setstagediv" ng-class="{passed:previewAndPublish}">
+        <div class="aligncenter p-t-15">
+            <div ng-include=" '../../../template/app-specific/stageindication_svg.html'"></div>
+            <label class="rclabel p-t-10 setstagelabel" ng-class="{passed:previewAndPublish}" style="font-size: 14px;font-family:'Roboto';font-weight:700;"><b>4.Preview & Publish</b></label>
+        </div>
+    </div>
+</div>

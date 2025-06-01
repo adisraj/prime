@@ -1,0 +1,61 @@
+<style>
+    #formCancellationModal .modal-dialog {
+        margin: auto;
+        top: 30%;
+    }
+
+    #formCancellationModal.modal.fade .modal-dialog {
+        -webkit-transform: scale(0.1);
+        -moz-transform: scale(0.1);
+        -ms-transform: scale(0.1);
+        transform: scale(0.1);
+        top: 30%;
+        opacity: 0;
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        transition: all 0.5s;
+    }
+
+    #formCancellationModal.modal.fade.in .modal-dialog {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+        -webkit-transform: translate3d(0, -20%, 0);
+        transform: translate3d(0, -20%, 0);
+        opacity: 1;
+    }
+</style>
+<div id="formCancellationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="col-xs-12 p-0 modal-content ">
+            <div class="col-xs-12" style="background: linear-gradient(#ffffff,#d4d4d4);color: #191919;">
+                <div class="p-t-10 p-b-10">
+                    <span class="f-17 f-700">Are you sure!</span>
+                </div>
+            </div>
+            <div class="col-xs-12 modal-body bgm-white p-10">
+                <div class="d-flex d-flex-v-center" style1="justify-content:space-evenly;">
+                    <div class="d-flex d-flex-h-center" style="width:100px">
+                        <img src="./img/cancel-image.png" alt="" style="height:75px;opacity:0.7;">
+                    </div>
+                    <div class="d-flex d-flex-v-center" style="flex-direction:column;">
+                        <div class="f-700 f-16 p-b-10">You have unpublished changes, Do you want to cancel and exit?
+                        </div>
+                        <div class="f-500 f-15 p-b-10 text-info">You cannot undo this action!</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="col-xs-12 p-t-10 p-b-10 p-r-0 d-flex"
+                    style="justify-content:flex-end;border-top: 1px solid #d3d3d3">
+                    <button class="btn btn-cancel f-700 m-l-10 p-l-20 p-r-20 waves-effect"
+                        ng-click="locationController.hideCancelPopUp(0);">Cancel</button>
+                    <button class="btn btn-primary f-700 m-l-10 p-l-20 p-r-20 waves-effect"
+                        ng-click="locationController.hideCancelPopUp(1);" style="width:75px;">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

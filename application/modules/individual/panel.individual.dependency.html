@@ -1,0 +1,73 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':indCtrl.showErrorDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="indCtrl.closeDependencyDetails();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>Individual Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Name</td>
+                        <td class="highlight-text-success" title="{{indCtrl.individual_details.name}}">{{indCtrl.individual_details.name | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{indCtrl.individual_details.status}}">{{indCtrl.individual_details.status}}</td>
+                    </tr>
+                </table>
+                <h4>{{indCtrl.errorDependentData.dependent_entity}} - Dependent Details</h4>
+                <div ng-if="indCtrl.errorDependentData.dependent_entity === 'Vendor'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Name</td>
+                            <td class="highlight-text-success" title="{{indCtrl.errorDependentData.name}}">{{indCtrl.errorDependentData.name | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{indCtrl.errorDependentData.status}}">{{indCtrl.errorDependentData.status}}</td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Type</td>
+                            <td title="{{indCtrl.errorDependentData.VendorType}}">{{indCtrl.errorDependentData.VendorType}}</td>
+                        </tr>
+                        <tr>
+                            <td>Next Effective Date</td>
+                            <td ng-show="indCtrl.errorDependentData.next_status !== 'None'" title="{{indCtrl.errorDependentData.next_effective_date | FormatDate}}">{{indCtrl.errorDependentData.next_effective_date | FormatDate}}</td>
+                            <td ng-show="indCtrl.errorDependentData.next_status === 'None'" title="{{indCtrl.errorDependentData.next_effective_date}}"> N/A</td>
+                        </tr>
+                    </table>
+                </div>
+                <div ng-if="indCtrl.errorDependentData.dependent_entity !== 'Vendor'">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Associate Name</td>
+                            <td class="highlight-text-success" title="{{indCtrl.errorDependentData.individual}}">{{indCtrl.errorDependentData.individual | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td title="{{indCtrl.errorDependentData.status}}">{{indCtrl.errorDependentData.status}}</td>
+                        </tr>
+                        <tr>
+                            <td>Department</td>
+                            <td title="{{indCtrl.errorDependentData.name}}">{{indCtrl.errorDependentData.name}}</td>
+                        </tr>
+                        <tr>
+                            <td>Company</td>
+                            <td title="{{indCtrl.errorDependentData.company}}">{{indCtrl.errorDependentData.company}}</td>
+                        </tr>
+                    </table>
+                </div>
+                </br>
+                <div class="dependency-notifyMessage"> <i class="zmdi zmdi-lamp zmdi-hc-fw zmdi-hc-rotate-180 dependency-notifyIcon"></i><span>{{indCtrl.errorDependentData.message}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>

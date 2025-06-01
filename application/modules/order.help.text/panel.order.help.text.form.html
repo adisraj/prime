@@ -1,0 +1,121 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+</style>
+<div id="rcrightsidebar"
+    data-ng-class="{'toggled':orderHelpCtrl.isShowDetails === true || orderHelpCtrl.isShowDetails === 1,'changeposition':showhistory === true || orderHelpCtrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button class="close-icon bg-none border-none btn-link p-0"
+            data-ng-click="orderHelpCtrl.closeForm();closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!orderHelpCtrl.isDeleteSuccess && orderHelpCtrl.isShowAdd && !orderHelpCtrl.isConfirmDelete)">Create
+                <strong>{{orderHelpCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(!orderHelpCtrl.isDeleteSuccess && !orderHelpCtrl.isShowAdd && !orderHelpCtrl.isConfirmDelete)">Update
+                <strong>{{orderHelpCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(orderHelpCtrl.isDeleteSuccess || orderHelpCtrl.isConfirmDelete && !orderHelpCtrl.isShowAdd)">Delete
+                <strong>{{orderHelpCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="orderHelpCtrl.showErrorDetails || !(orderHelpCtrl.isUpdateSuccess || orderHelpCtrl.isSaveSuccess || orderHelpCtrl.isConfirmDelete || orderHelpCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div title="{{orderHelpCtrl.entityInformation.name | truncate :30}}" title-direction="right"
+                    data-ng-include="'./img/sidebar-icons/type.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-if="!orderHelpCtrl.showErrorDetails">
+            <div
+                ng-if="!(orderHelpCtrl.isUpdateSuccess || orderHelpCtrl.isSaveSuccess || orderHelpCtrl.isConfirmDelete || orderHelpCtrl.isDeleteSuccess)">
+                <ng-form role="form" novalidate="novalidate" name="orderHelpCtrl.orderhelptext_form"
+                    valdr-type="RULES-51">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="orderHelpCtrl.orderhelptext_form.title.$invalid">* </span>
+                        <span class="c-green" ng-show="orderHelpCtrl.orderhelptext_form.title.$valid">* </span>
+                        <label>Title</label>
+                        <input name="title" id="title" type="text" class="form-control input-sm"
+                            ng-model="orderHelpCtrl.orderHelpText_details.title" placeholder="Enter Title"
+                            errorvalue="orderHelpCtrl.orderHelpText_details.title_error"
+                            ng-model-options="{ updateOn: 'blur' }" required>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="orderHelpCtrl.orderhelptext_form.description.$invalid">* </span>
+                        <span class="c-green" ng-show="orderHelpCtrl.orderhelptext_form.description.$valid">* </span>
+                        <label>Order Help Text</label>
+                        <trix-editor angular-trix ng-model="orderHelpCtrl.orderHelpText_details.description"
+                            name="description" id="description" required class="trix-content">
+                        </trix-editor>
+                    </div>
+                    <rcp-edit-form-btns new-form="orderHelpCtrl.isShowAdd"
+                        save-fn="orderHelpCtrl.save(orderHelpCtrl.orderHelpText_details);"
+                        save-btn-text="orderHelpCtrl.saveBtnText" save-btn-error="orderHelpCtrl.saveBtnError"
+                        update-fn="orderHelpCtrl.update(orderHelpCtrl.orderHelpText_details);"
+                        update-btn-text="orderHelpCtrl.updateBtnText" update-btn-error="orderHelpCtrl.updateBtnError"
+                        confirm-fn="orderHelpCtrl.showconfirm(); closeShowHistory();"
+                        confirm-delete="orderHelpCtrl.isConfirmDelete" update-success="orderHelpCtrl.isUpdateSuccess"
+                        entity-id="orderHelpCtrl.orderHelpText_details.id" access-permissions="permissionsMap"
+                        enable-button="orderHelpCtrl.orderhelptext_form.$invalid">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="orderHelpCtrl.isConfirmDelete" image-name="type.svg"
+                close-fn="orderHelpCtrl.closeForm();"
+                delete-fn="orderHelpCtrl.delete(orderHelpCtrl.orderHelpText_details);"
+                confirm-delete="orderHelpCtrl.isConfirmDelete"></rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="orderHelpCtrl.createAnotherForm();"
+                close-fn="orderHelpCtrl.closeForm();" update-success="orderHelpCtrl.isUpdateSuccess"
+                save-success="orderHelpCtrl.isSaveSuccess" delete-success="orderHelpCtrl.isDeleteSuccess">
+            </rcp-success-form>
+            <div class="col-xs-12 p-0">
+                <div data-ng-show="orderHelpCtrl.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="orderHelpCtrl.message = null"
+                        aria-hidden="true">&times;</button> {{orderHelpCtrl.message}}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" ng-if="orderHelpCtrl.showErrorDetails">
+            <div class="rc-alert rc-alert-error" aria-hidden="false" role="alert">
+                <div class="rc-alert-icon-section">
+                    <span class="zmdi zmdi-alert-polygon">
+                    </span>
+                </div>
+                <div class="rc-alert-content-section">
+                    <div class="rc-alert-header">Dependency Check - Action can not be completed</div>
+                    <div class="rc-alert-body">
+                        <span>
+                            Before deleting we checked and found Order Help Text still linked to SKUs.
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 rcpscrollbar dependency-entityBox">
+                <h4> Dependent Entity - SKU </h4>
+                <div class="col-xs-12 p-0" data-ng-repeat="dependency in orderHelpCtrl.dependentSkus">
+                    <div class="dependency-entityList">
+                        <span ng-if="dependency.description" title="{{dependency.description}}">{{dependency.description
+                            | truncate:50}} (
+                            <strong>{{dependency.sku}}</strong>
+                            )</span>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="orderHelpCtrl.closeDependencyList();">
+                    <span>
+                        <b>Cancel</b>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

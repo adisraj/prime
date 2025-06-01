@@ -1,0 +1,397 @@
+<style>
+    .table>thead>tr>th {
+        background: #1b5d79 !important;
+        color: white !important;
+        border-style: hidden !important;
+    }
+
+    .table>tbody>tr>td {
+        border-left: none;
+        border-right: none;
+    }
+
+    .boldbody {
+        font-weight: bold !important;
+    }
+
+    .sku-availability-details-container {
+        border: 1px solid #fbfbfb;
+        position: relative;
+        box-shadow: 0px 0px 0px 1px #dadada;
+    }
+
+    .sku-availability-details-container .sku-availabilty-header {
+        left: 10px;
+        top: -10px;
+        background: white;
+    }
+
+    .sku-availability-details-container .sku-availabilty-header span {
+        color: #ca795c;
+        font-size: 15px;
+        font-family: 'Lato';
+    }
+
+    .not_available {
+        margin-left: 200px;
+    }
+
+    .set-sku-tbl tbody>tr:hover {
+        border: none;
+        outline: solid 2px green !important;
+    }
+
+    .highlightsubsku {
+        border: 2px solid green;
+    }
+</style>
+<div data-ng-controller="InventoryAvailabilty as availabilityController">
+    <div id="rcrightsidebar" data-ng-class="{'toggled':true,'changeposition': showSetsubSKU}">
+        <style>
+            .panel-heading .accordion-toggle:after {
+                font-family: 'Glyphicons Halflings';
+                content: "\e114";
+                float: right;
+                color: grey;
+            }
+
+            .panel-heading .accordion-toggle.collapsed:after {
+                content: "\e080";
+            }
+
+            .panel-body {
+                border: 1px solid #eaeaea;
+            }
+
+            .bgm-aliceblue {
+                background: #e5ffe5 !important;
+            }
+
+            .sku-availability-section {
+                margin-bottom: 12px;
+                box-shadow: 0px 0px 3px 1px #cacaca;
+            }
+
+            .sku-availability-section .section-header {
+                border-bottom: 2px dotted #d6d6d6;
+                color: #2774a5;
+                font-weight: 500;
+                background: #f7f7f7;
+            }
+
+            .sku-availability-section .section-body {
+                padding: 10px;
+            }
+
+            .sku-availability-section .section-body.parent-sku {
+                background: #f6faff;
+                color: #ff0143;
+                border-bottom: 2px dotted #d6d6d6;
+            }
+        </style>
+        <div class="d-flex" style="background: #1b5d79;padding-top: 10px;">
+            <button type="button" id="check_avail_close" style="color: white;"
+                class="cursor-pointer p-0 p-absolute bg-none border-none btn-link"
+                data-ng-click="availabilityController.goBack()">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </button>
+            <div class="p-0 m-auto">
+                <label data-ng-if="availabilityController.sku_details.sku_sub_type.toLowerCase()!=='set'"
+                    class="c-white rclabel editformlabel" title="Availability">SKU
+                    <strong>Availability</strong>
+                </label>
+                <label data-ng-if="availabilityController.sku_details.sku_sub_type.toLowerCase()=='set'"
+                    class="c-white rclabel editformlabel" title="Availability">Set
+                    <strong>Availability</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-lg-12 m-t-20 m-b-20">
+            <div class="sku-availability-details-container">
+                <div class="d-flex p-absolute sku-availabilty-header">
+                    <span>SKU Details</span>
+                </div>
+                <table class="table-bordered-sm table-condensed m-t-20">
+                    <tbody>
+                        <!-- <tr>
+                    <span class="text-success">
+                            <b> {{availabilityController.skuAvailability}}</b>
+                    </span>
+                </tr> -->
+                        <tr class="c-gray">
+                            <td
+                                style="width: 30% !important;white-space: normal !important;overflow-wrap: break-word !important;font-weight: bolder;">
+                                {{availabilityController.sku_details.vendorName ?
+                                availabilityController.sku_details.vendorName
+                                :
+                                'N/A'}}
+                            </td>
+                            <td class="c-gray f-500" style="float: right;"
+                                data-ng-class="{'not_available':(!availabilityController.sku_details.vendorName || availabilityController.sku_details.vendorName.length <=20 || availabilityController.sub_sku_details.description.length <=20)}">
+                                <strong> Reorder =
+                                    {{availabilityController.sku_details.vendor_reorder ==1 ?
+                                    'Yes': 'No' }} </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color:#2196f3;" colspan="2">
+                                <strong style="width: 75% !important;white-space: normal !important;overflow-wrap: break-word !important;word-break: break-all;
+                                display: block;">{{availabilityController.sku_details.description}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a class="cloudcart-admin-sku-number">{{availabilityController.sku_details.sku }}</a>
+                            </td>
+                            <td class="c-green f-500" style="padding-left: 10%;">
+                                {{availabilityController.sku_details.status}}</td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Item#</td>
+                            <td style="text-transform: capitalize;padding-left: 10%;">
+                                {{availabilityController.sku_details.vendor_item_number?availabilityController.sku_details.vendor_item_number:'N/A'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>UPC </td>
+                            <td style="padding-left: 10%;">
+                                {{availabilityController.sku_details.upc_number?availabilityController.sku_details.upc_number:'N/A'}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <span data-ng-if="availabilityController.loadinglocations && !showSetsubSKU"
+            style="display: block;text-align: center;">
+            <i class="fa fa-spinner fa-spin m-r-5"></i>
+        </span>
+        <div class="col-lg-12"
+            ng-if="(availabilityController.sku_details.sku_sub_type.toLowerCase()!=='set' || (availabilityController.sku_inventory_method !== 6 || availabilityController.sku_inventory_method !== 8)) && availabilityController.skuavailabilityList.length && !availabilityController.notstocked && !showSetsubSKU && availabilityController.sku_total_available">
+
+            <div class="" id="accordion" data-ng-if="!availabilityController.loadinglocations"
+                style="border: 1px solid;">
+                <div class="c-white f-15 f-700 text-center col-lg-12"
+                    style="text-align: center;background-color: #1b5d79;">
+                    <label class="c-white rclabel" title="Availability">Available
+                        <strong>First Quality Inventory</strong>
+                    </label>
+                </div>
+                <table class="table table-condensed table-vmiddle table-striped">
+                    <thead>
+                        <tr role="row">
+                            <th>Location</th>
+                            <th>Available</th>
+                            <th style="border-left: 1px solid;">On Hand</th>
+                            <th>In Transit</th>
+                            <th>On Order</th>
+                            <th>Reserved</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="details in availabilityController.skuavailabilityList"
+                            data-ng-if="details.display_availble" style="border-bottom: 1px solid rgb(53, 49, 49);">
+                            <td class="f-14" style="white-space: normal;">{{ details.location_name}}</td>
+                            <td class="f-14" style="text-align: center;">{{ details.available =
+                                (details.onhand+details.transit+details.onorder -
+                                details.reserved)}}</td>
+                            <td class="f-14" style="border-left: 1px solid !important;text-align: center;">
+                                {{details.onhand =
+                                details.BIQOH}}</td>
+                            <td class="f-14" style="text-align: center;">{{ details.transit = details.BIQIT}}</td>
+                            <td class="f-14" style="text-align: center;">{{ details.onorder =(details.BIQOO -
+                                details.BIQAL)}}</td>
+                            <td class="f-14" style="text-align: center;">{{ details.reserved =( details.BIROH +
+                                details.BIRIT + details.BIROO)}}
+                            </td>
+                            <!-- <td class="f-14">{{ details.BIROO}}</td> -->
+                        </tr>
+                        <tr style="color:#2196f3;font-weight: bold;">
+                            <td>Total</td>
+                            <td class="f-14" style="text-align: center;">{{ availabilityController.sku_total_available}}
+                            </td>
+                            <td class="f-14" style="border-left: 1px solid black !important; text-align: center;">{{
+                                availabilityController.sku_total_onhandQty}}</td>
+                            <td class="f-14" style="text-align: center;">{{
+                                availabilityController.sku_total_intransQty}}
+                            </td>
+                            <td class="f-14" style="text-align: center;">{{ availabilityController.sku_total_onorder}}
+                            </td>
+                            <td class="f-14" style="text-align: center;">{{ availabilityController.sku_total_reserved}}
+                            </td>
+                            <!-- <td class="f-14">{{ availabilityController.sku_total_onorderRes}}</td> -->
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <div class="panel panel-default" ng-repeat="availability in availabilityController.availability">
+                    <div class="panel-heading col-xs-12 m-b-10"
+                        data-ng-class="{'bgm-aliceblue':availability.selected && availabilityController.isShowInventoryUpdate}">
+                        <h4 class="panel-title" style="height : 15px;">
+                            <button type="button"
+                                class="p-10 accordion-toggle cursor-pointer col-xs-12 p-0 bg-none border-none text-left"
+                                id="check_availability_toggle" name="check_availability_toggle" data-toggle1="collapse"
+                                data-ng-class="{'collapsed':!availability.isExpanded}" data-parent="#accordion"
+                                data-target="{{ '#' + availability.id }} "
+                                ng-click="availabilityController.loadAvailability(availability,availabilityController.sku_details.id);">
+                                <span class="f-13">
+                                    <a>{{ availability.name }}</a>
+                                </span>
+                            </button>
+                        </h4>
+                    </div>
+                    <div id="{{availability.id}}" data-ng-class="{'in':availability.isExpanded === true}"
+                        class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="col-lg-12 " ng-if="availability.isSkuAvailable === true">
+                                <table class="table table-condensed table-bordered table-bordered-sm table-vmiddle">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Type</th>
+                                            <th>Quality</th>
+                                            <th style="width:10% ">Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="details in availability.skuavailabilityList ">
+                                            <td class="f-14">{{ details.inventory_type}}</td>
+                                            <td class="f-14">{{ details.inventory_quality}}</td>
+                                            <td class="f-14 text-center f-700 c-firebrick">
+                                                {{ details.inventory_quantity}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <div class="col-lg-12"
+            ng-if="(availabilityController.sku_details.sku_sub_type.toLowerCase()!=='set' || (availabilityController.sku_inventory_method !== 6 || availabilityController.sku_inventory_method !== 8)) && availabilityController.skuVendorPOList.length && !availabilityController.notstocked && !showSetsubSKU">
+            <div class="m-b-20" id="accordion"
+                data-ng-if="!availabilityController.loadinglocations && availabilityController.loadTotalresv"
+                style="border: 1px solid;">
+                <div class="c-white f-15 f-700 text-center col-lg-12"
+                    style="text-align: center;background-color: #1b5d79;">
+                    <label class="c-white rclabel" title="Availability">Available
+                        <strong>Vendor Purchase Orders</strong>
+                    </label>
+                </div>
+                <table class="table table-condensed table-vmiddle table-striped" style="margin-bottom: 0px;">
+                    <thead>
+                        <tr role="row">
+                            <th>Location</th>
+                            <th>Available</th>
+                            <th style="width: 20%;">Open PO</th>
+                            <th>Reserved</th>
+                            <th style="text-align: center;">PO#</th>
+                            <th style="text-align: center;">Expected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="details in availabilityController.skuVendorPOList"
+                            style="border-bottom: 1px solid rgb(53, 49, 49);">
+                            <td class="f-14" style="white-space: normal;">{{ details.location_name}}</td>
+                            <td style="text-align: center;">{{details.available = details.PDQVO - details.PDRS}}</td>
+                            <td class="f-14" style="border-left: 1px solid black !important;text-align: center;">{{
+                                details.PDQVO}}</td>
+                            <td class="f-14" style="text-align: center;">{{ details.PDRS}}</td>
+                            <td class="f-14">{{ details.PDPO}}</td>
+                            <td class="f-14 text-center">
+                                {{ details.PDDM}}/{{details.PDDD}}/{{details.PDDY}}
+                            </td>
+                        </tr>
+                        <tr style="color:#2196f3;font-weight: bold;">
+                            <td>Total</td>
+                            <td class="f-14 text-center">{{ availabilityController.total_avail}}</td>
+                            <td class="f-14 text-center" style="border-left: 1px solid black !important">{{
+                                availabilityController.total_poqty}}</td>
+                            <td class="f-14 text-center">{{availabilityController.total_poresv}}</td>
+                            <td colspan="3"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div class="col-lg-12 text-info d-flex d-flex-v-center"
+                data-ng-if="availabilityController.tryagain === true"
+                style="justify-content: center; font-weight: bolder;">
+                <span class="f-12 f-300">SKU not Processed Please try again!
+                </span>
+            </div>
+        </div>
+        <div>
+            <div class="col-lg-12 text-info d-flex d-flex-v-center" ng-if="!availabilityController.loadinglocations && !availabilityController.notstocked && !showSetsubSKU && ((availabilityController.sku_details.sku_sub_type.toLowerCase()=='set' && (availabilityController.sku_inventory_method == 6 || availabilityController.sku_inventory_method == 8) && availabilityController.setSkuAvailability.length == 0) 
+                || (availabilityController.mainsku && (availabilityController.skuavailabilityList.length==0 || (!availabilityController.sku_total_available && availabilityController.skuVendorPOList.length==0))))"
+                style="justify-content: center; font-weight: bolder;">
+                <span class="f-12 f-300">There is no inventory or purchase orders for this SKU.
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-12 text-info d-flex d-flex-v-center" ng-if="availabilityController.notstocked"
+            style="justify-content: center; font-weight: bolder;">
+            <span class="f-14 f-400">Not Stocked!
+            </span>
+        </div>
+        <!-- Sku Availability For SET SKU Start -->
+        <div class="col-lg-12 m-b-20">
+            <div
+                ng-if="(availabilityController.sku_details.sku_sub_type.toLowerCase()=='set' && (availabilityController.sku_inventory_method == 6 || availabilityController.sku_inventory_method == 8)) && availabilityController.setskufilteredar.length">
+                <span data-ng-if="availabilityController.isloaded" style="display: block;text-align: center;">
+                    <i class="fa fa-spinner fa-spin m-r-5"></i>
+                </span>
+                <div class="" id="accordion" data-ng-if="!availabilityController.isloaded" style="border: 1px solid;">
+                    <div class="c-white f-15 f-700 text-center col-lg-12"
+                        style="text-align: center;background-color: #1b5d79;">
+                        <label class="c-white rclabel" title="Availability">Available
+                            <strong>First Quality Inventory</strong>
+                        </label>
+                    </div>
+                    <table class="table sku-availability table-condensed table-vmiddle table-striped set-sku-tbl"
+                        style="margin-bottom: 0px;table-layout: fixed;">
+                        <thead>
+                            <tr role="row">
+                                <th style="width: 40%;">SKUs in the Set</th>
+                                <th style="width: 15%;"></th>
+                                <th style="width: 15%;word-break: break-word;white-space: normal;">Quantity in Set</th>
+                                <th style="width: 15%;text-align: center;">DC</th>
+                                <th style="width: 17%;text-align: center">Stores</th>
+                                <th style="width: 15%;">PO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="details in availabilityController.setskufilteredar"
+                                data-ng-click="availabilityController.showsetsubsku(details)"
+                                data-ng-class="{'highlightsubsku':details.selectedsubsku}" style="cursor: pointer;">
+                                <td
+                                    style="white-space: normal !important;overflow-wrap: break-word !important;word-break: break-word;display: block;">
+                                    <span class="f-10" style="font-weight: bold;">{{
+                                        details.vendor}}</span><br>
+                                    <span class="f-14" style="color:#2196f3;">{{details.sku_name}}</span>
+                                </td>
+                                <td class="f-14 text-center"><span class="c-green f-12" style="white-space: normal;">{{
+                                        details.status}}</span><br>
+                                    <span style="color:#2196f3;">{{details.sku}}</span>
+                                </td>
+                                <td class="f-14 text-center" data-ng-if="!details.no_inventory">{{details.quantity}}
+                                </td>
+                                <td class="f-14 text-center" colspan="{{details.colspan}}"
+                                    style="font-weight: bold;white-space: normal;">{{details.dc_quantity}}</td>
+                                <td data-ng-if="!details.no_inventory" class="f-14 text-center">
+                                    {{details.stores_quantity}}</td>
+                                <td data-ng-if="!details.no_inventory" class="f-14 text-center">{{details.po_setqty}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Sku Availability For SET SKU End -->
+    </div>
+    <div ng-if="showSetsubSKU"
+        data-ng-include="'./application/modules/item/sku/inventory-availability/panel.skuset.availability.form.html'">
+    </div>
+</div>

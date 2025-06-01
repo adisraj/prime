@@ -1,0 +1,525 @@
+<div class="container col-lg-12 p-0" data-ng-controller="FinancingChoicesController as financingChoiceCtrl">
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/finance-choice.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">Financing Choices</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;" data-ng-if="permissionsMap.view">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="record-count-section tableheader-btn">
+                        <span data-ng-if="!financingChoiceCtrl.search"> {{financingChoiceCtrl.rowsInfo}} </span>
+                        <span data-ng-if="financingChoiceCtrl.search"> Displaying
+                            {{(financingChoiceCtrl.allFinancingChoices|filter:financingChoiceCtrl.search).length}}
+                            of {{financingChoiceCtrl.allFinancingChoices.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section tableheader-btn pull-right"
+                                    ng-if="financingChoiceCtrl.allFinancingChoices.length > 0 && permissionsMap.view">
+                                    <input class="form-control input-sm " type="text "
+                                        ng-model="financingChoiceCtrl.search" id="inlineSearch" name="inlineSearch"
+                                        data-ng-init="financingChoiceCtrl.focusSearchField()" indicate-quick-search
+                                        placeholder="Quick Search " data-ng-disabled="financingChoiceCtrl.isLoading" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link"
+                            ng-if="financingChoiceCtrl.allFinancingChoices.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="financingChoiceCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block waves-effect"
+                                    data-ng-disabled="financingChoiceCtrl.isLoading">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link"
+                            ng-if="financingChoiceCtrl.allFinancingChoices.length > 0 && permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="financingChoiceCtrl.reload(true);"
+                                    class="btn-primal btn-block waves-effect"
+                                    data-ng-disabled="financingChoiceCtrl.isLoading">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect"
+                                    data-ng-click="financingChoiceCtrl.openForm();"
+                                    data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">
+                                        Create Financing Choice</span>
+                                </button>
+                            </a>
+
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15"
+                                style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width: 200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="financingChoiceCtrl.openForm();" style="padding: 8px 18px"
+                                        title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success"></i> Create Financing Choice
+                                    </button>
+                                </li>
+                                <li ng-if="financingChoiceCtrl.allFinancingChoices.length > 0 && permissionsMap.view">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn"
+                                        data-ng-click="!financingChoiceCtrl.isLoading ? financingChoiceCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': financingChoiceCtrl.isLoading}" href="">
+                                        <i class="zmdi zmdi-view-week text-info f-17 m-r-15"></i> Columns
+                                    </button>
+                                </li>
+                                <li ng-if="financingChoiceCtrl.allFinancingChoices.length > 0 && permissionsMap.view">
+                                    <button type="button" style="padding: 8px 20px" class="restricted-btn"
+                                        ng-click="!financingChoiceCtrl.isLoading ? financingChoiceCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': financingChoiceCtrl.isLoading}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning f-17 m-r-15"></i> Refresh
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 text-center module-content-configuration"
+        data-ng-if="!financingChoiceCtrl.rowsCount && financingChoiceCtrl.isLoading">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+
+    <div data-ng-if="permissionsMap.view && financingChoiceCtrl.rowsCount !== 0 && !financingChoiceCtrl.isLoading">
+        <div class="rcp-table-container">
+            <div class="col-xs-12 p-0" data-ng-if="!financingChoiceCtrl.isLoading">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+
+                <div data-ng-include="'./application/modules/financingchoices/hideShowColumns.html'"></div>
+
+                <div class="table-responsive module-content-configuration"
+                    data-ng-init="financingChoiceCtrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="!financingChoiceCtrl.isLoading">
+                                <tr>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'status' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'status' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="description_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'description'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.description.visible == 0">
+                                        <span class="handle">Description</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'description' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="is_eligible_for_finance_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'is_eligible_for_finance'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.is_eligible_for_finance.visible == 0">
+                                        <span class="handle">Is Eligible For Finance</span>
+                                        <span
+                                            ng-show="financingChoiceCtrl.sortType == 'is_eligible_for_finance' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span
+                                            ng-show="financingChoiceCtrl.sortType == 'is_eligible_for_finance' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="term_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'term_month'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.term.visible == 0">
+                                        <span class="handle">First Term(Months)</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'term_month' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'term_month' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="annual_interest_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'annual_interest'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.annual_interest.visible == 0">
+                                        <span class="handle">First Annual Interest Rate</span>
+                                        <span
+                                            ng-show="financingChoiceCtrl.sortType == 'annual_interest' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'annual_interest' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="annual_interest_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'annual_interest'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.annual_interest.visible == 0">
+                                        <span class="handle">First Minimum Monthly Payment Percentage</span>
+                                        <span
+                                            ng-show="financingChoiceCtrl.sortType == 'annual_interest' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'annual_interest' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="pricing_factor_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'pricing_factor'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.pricing_factor.visible == 0">
+                                        <span class="handle">First Payment Factor</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'pricing_factor' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'pricing_factor' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="pricing_factor_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'pricing_factor'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.pricing_factor.visible == 0">
+                                        <span class="handle">First Balloon Payment Percentage</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'pricing_factor' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'pricing_factor' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="term_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'term_month'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.term.visible == 0">
+                                        <span class="handle">Second Term(Months)</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'term_month' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'term_month' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="annual_interest_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'annual_interest'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.annual_interest.visible == 0">
+                                        <span class="handle">Second Annual Interest Rate</span>
+                                        <span
+                                            ng-show="financingChoiceCtrl.sortType == 'annual_interest' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'annual_interest' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="annual_interest_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'annual_interest'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.annual_interest.visible == 0">
+                                        <span class="handle">Second Minimum Monthly Payment Percentage</span>
+                                        <span
+                                            ng-show="financingChoiceCtrl.sortType == 'annual_interest' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'annual_interest' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="pricing_factor_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'pricing_factor'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.pricing_factor.visible == 0">
+                                        <span class="handle">Second Payment Factor</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'pricing_factor' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'pricing_factor' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="pricing_factor_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'pricing_factor'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.pricing_factor.visible == 0">
+                                        <span class="handle">Second Balloon Payment Percentage</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'pricing_factor' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'pricing_factor' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="plan_number_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'plan_number'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.plan_number.visible == 0">
+                                        <span class="handle">Plan Number</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'plan_number' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'plan_number' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <th class="text-center" id="display_criteria_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="financingChoiceCtrl.sortType = 'display'; sortReverse = !sortReverse"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.display_criteria.visible == 0">
+                                        <span class="handle">Display Criteria</span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'display' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="financingChoiceCtrl.sortType == 'display' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="financingChoice in financingChoiceCtrl.allFinancingChoices|filterBy:['id','description', 'second_term_month','second_annual_interest', 'second_payment_factor','second_minimum_monthly', 'second_balloon_payment','first_term_month','first_annual_interest', 'first_payment_factor',
+                                'first_minimum_monthly','first_balloon_payment','status','display_is_eligible_for_finance','plan_number', 'display']:financingChoiceCtrl.search|orderBy:financingChoiceCtrl.sortType:sortReverse|itemsPerPage:financingChoiceCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="financingChoiceCtrl.setClickedRow($index);"
+                                    ios-dblclick="financingChoiceCtrl.dblClickAction(financingChoice);"
+                                    selectedrow="{{financingChoice}}">
+                                    <td class="id_col" style="text-align: left;"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.id.visible == 0">
+                                        {{financingChoice.id}}
+                                    </td>
+                                    <td class="status_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.status.visible == 0"
+                                        ng-class="{'text-success f-500': financingChoice.status === 'Active', 'text-warning f-300': financingChoice.status === 'Pending Active', 'text-primary f-300': financingChoice.status === 'Inactive', 'text-info f-300': financingChoice.status === 'Pending Inactive'}">
+                                        {{financingChoice.status}}
+                                    </td>
+                                    <td class="description_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.description.visible == 0">
+                                        {{financingChoice.description}}
+                                    </td>
+                                    <td class="is_eligible_for_finance_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.is_eligible_for_finance.visible == 0">
+                                        {{financingChoice.display_is_eligible_for_finance}}
+                                    </td>
+                                    <td class="first_term_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.first_term_month.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.first_term_month || financingChoice.first_term_month == 0">
+                                            {{financingChoice.first_term_month}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.first_term_month && financingChoice.first_term_month != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="first_annual_interest_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.first_annual_interest.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.first_annual_interest || financingChoice.first_annual_interest == 0">
+                                            {{financingChoice.first_annual_interest}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.first_annual_interest && financingChoice.first_annual_interest != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="first_minimum_monthly_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.first_minimum_monthly.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.first_minimum_monthly || financingChoice.first_minimum_monthly == 0">
+                                            {{financingChoice.first_minimum_monthly}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.first_minimum_monthly && financingChoice.first_minimum_monthly != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="first_payment_factor_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.first_payment_factor.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.first_payment_factor || financingChoice.first_payment_factor == 0">
+                                            {{financingChoice.first_payment_factor}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.first_payment_factor && financingChoice.first_payment_factor != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="first_balloon_payment_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.first_balloon_payment.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.first_balloon_payment || financingChoice.first_balloon_payment == 0">
+                                            {{financingChoice.first_balloon_payment}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.first_balloon_payment && financingChoice.first_balloon_payment != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="second_term_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.second_term_month.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.second_term_month || financingChoice.second_term_month == 0">
+                                            {{financingChoice.second_term_month}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.second_term_month && financingChoice.second_term_month != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="second_annual_interest_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.second_annual_interest.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.second_annual_interest || financingChoice.second_annual_interest == 0">
+                                            {{financingChoice.second_annual_interest}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.second_annual_interest && financingChoice.second_annual_interest != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="second_minimum_monthly_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.second_minimum_monthly.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.second_minimum_monthly || financingChoice.second_minimum_monthly == 0">
+                                            {{financingChoice.second_minimum_monthly}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.second_minimum_monthly && financingChoice.second_minimum_monthly != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="second_payment_factor_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.second_payment_factor.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.second_payment_factor || financingChoice.second_payment_factor == 0">
+                                            {{financingChoice.second_payment_factor}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.second_payment_factor && financingChoice.second_payment_factor != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="second_balloon_payment_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.second_balloon_payment.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.second_balloon_payment || financingChoice.second_balloon_payment == 0">
+                                            {{financingChoice.second_balloon_payment}}
+                                        </span>
+                                        <span class="text-muted"
+                                            data-ng-if="!financingChoice.second_balloon_payment && financingChoice.second_balloon_payment != 0">
+                                            Null
+                                        </span>
+                                    </td>
+                                    <td class="plan_number_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.plan_number.visible == 0">
+                                        <span
+                                            data-ng-if="financingChoice.plan_number || financingChoice.plan_number == 0">
+                                            {{financingChoice.plan_number}}
+                                        </span>
+                                        <!-- <span>{{financingChoice.plan_number}}</span> -->
+                                    </td>
+                                    <td class="display_col"
+                                        data-ng-hide="financingChoiceCtrl.financingChoiceGrid.columns.display_criteria.visible == 0">
+                                        <span data-ng-if="financingChoice.display || financingChoice.display == 0">
+                                            {{financingChoice.display}}
+                                        </span>
+                                        <!-- <span>{{financingChoice.plan_number}}</span> -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center justify-content-between d-flex">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                            boundary-links="true" on-page-change="financingChoiceCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="financingChoiceCtrl.pageSize = 10"
+                                ng-class="{'active':financingChoiceCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="financingChoiceCtrl.pageSize = 25"
+                                ng-class="{'active':financingChoiceCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="financingChoiceCtrl.pageSize = 50"
+                                ng-class="{'active':financingChoiceCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="financingChoiceCtrl.pageSize = 100"
+                                ng-class="{'active':financingChoiceCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Details section for each financing choice data -->
+    <div data-ng-include="'./application/modules/financingchoices/panel.financingchoices.dependency.html'"></div>
+    <div class="col-lg-12 p-0" ng-if="permissionsMap && permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':financingChoiceCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{financingChoiceCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="financingChoiceCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{financingChoiceCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{financingChoiceCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="financingChoiceCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ng-if="permissionsMap && !permissionsMap.view && !financingChoiceCtrl.isLoading"
+        data-ng-include="'./application/templates/restricted.access.html'">
+    </div>
+    <div data-ng-if="permissionsMap && permissionsMap.view && financingChoiceCtrl.rowsCount === 0 && !financingChoiceCtrl.isLoading"
+        class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No financing choices exists. Please add choice.</span>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/financingchoices/panel.financingchoices.form.html'"></div>
+</div>

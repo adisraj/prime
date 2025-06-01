@@ -1,0 +1,167 @@
+<div ng-controller="MFAController as mfaCtrl">
+    <data ui-view>
+      <style>
+         /*Panel tabs*/
+         .panel-tabs > li {
+         float: left;
+         }
+      </style>
+      <!--NAV START-->
+      <nav class="navbar navbar-toolbar navbar-default fixed-top">
+         <div class="bgm-white header-module">
+            <div class="navbar-header p-relative" style="min-height: inherit;">
+               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+               <span class="sr-only">Toggle navigation</span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               </button>
+               <div class="image-module p-absolute">
+                  <img src="./img/sidebar-icons/package.svg">
+               </div>
+               <div class="label-module p-absolute">
+                  <a class="navbar-brand" href="javascript:void(0)">Multi Factor Authentication</a>
+               </div>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+               <ul class="nav navbar-nav navbar-right">
+                  <!--<li><a ui-sref="authorization.master"><button type="button" class="btn-secondary text-info f-700">Go Back</button></a></li>-->
+                  <li><a data-ng-click="mfaCtrl.goBack()"><button type="button" class="btn-secondary text-info f-700">Go Back</button></a></li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <!--NAV END-->
+      <!--TAB START-->
+      <div class="col-lg-12">
+         <div class="col-lg-12 m-b-20">
+            <div class="panel m-t-20" ng-init="mfaCtrl.loadSummary();">
+                <div class="panel-heading panel-default" style="font-size: 14px;font-family: 'Roboto';">
+                    <span>
+                        <!-- Tabs -->
+                        <ul class="nav panel-tabs">
+                            <li ng-class="{'tab-selected' : mfaCtrl.isSummary}">
+                                <a data-target="#tab1" data-toggle="tab" ng-click="mfaCtrl.loadSummary();" aria-expanded="false">Summary</a>
+                            </li>
+                            <li ng-class="{'tab-selected' : mfaCtrl.isConfigureMFA}">
+                                <a data-target="#tab2" data-toggle="tab" ng-click="mfaCtrl.configureMfa();" aria-expanded="false" ng-click="mfaCtrl.getMFACode();mfaCtrl.isVerified()">Configure MFA</a>
+                            </li>
+                            <li ng-class="{'tab-selected' : mfaCtrl.isVerifyMFA}">
+                                <a data-target="#tab3" data-toggle="tab" ng-click="mfaCtrl.verifyMfa();" aria-expanded="false" ng-if="mfaCtrl.is_verified === false" >Verify MFA</a>
+                            </li>
+                            <li class="pull-right">
+                                <div class="alert alert-success m-0" data-ng-if="mfaCtrl.message">
+                                    <a class="close p-l-10" data-dismiss="alert">&times;</a>
+                                    <span> {{::mfaCtrl.message}}</span>
+                                </div>
+                                <div class="alert alert-danger m-0" data-ng-if="mfaCtrl.login_mfa_error && !mfaCtrl.message">
+                                    <a class="close p-l-10" data-dismiss="alert">&times;</a>
+                                    <span>{{::mfaCtrl.error}}</span>
+                                </div>
+                            </li>
+                            <!--<div class="alert-login col-lg-2 pull-right" data-ng-if="mfaCtrl.error && !mfaCtrl.message">
+                                <span> {{::mfaCtrl.error}}</span>
+                            </div>-->
+                        </ul>
+                    </span>
+                </div>
+                <div class="panel-body" style="border: 1px solid #f5f4f4">
+                    <div class="tab-content" style="padding:0px">
+                        <!--tab one start-->
+                        <div class="tab-pane active" id="tab1" ng-if="mfaCtrl.isSummary">
+                            <div class="col-lg-12" style="font-family: 'Roboto';">
+                            <p>
+                                For increased security, we recommend that you configure multi-factor authentication (MFA) to help protect your Calculus resources. MFA adds extra security because it requires users to enter a unique authentication code from an approved authentication device when they access Calculus services.
+                                Security token-based MFA requires you to assign an MFA device (hardware or virtual) to the user. A virtual device is a software application running on a phone or other mobile device that emulates a physical device. Either way, the device generates a six digit numeric code based upon a time-synchronized one-time password algorithm. The user must enter a valid code from the device on a second web page during sign-in. Each MFA device assigned to a user must be unique; a user cannot enter a code from another user's device to authenticate.
+                            </p>
+                            <div>
+                                <fieldset class="form-group">
+                                    <h5 style="color: #7b3a7b;font-family: 'Roboto';">Device Type</h5>
+                                    <hr>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                                            <span>A Virtual MFA Device</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check" >
+                                        <label class="form-check-label">
+                                        <input type="radio" ng-model="mfaCtrl.changetab" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
+                                            <span>Hardware MFA Device</span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <p>
+                                To activate a virtual MFA device, you must first install an MFA-compatible application on the user's smartphone, PC, or other device. After the application is installed, click Next Step to configure the virtual MFA.
+                            </p>
+                            <button data-target="#tab2" data-toggle="tab" ng-click="mfaCtrl.getMFACode();mfaCtrl.isVerified();" class="btn btn-primal f-700 pull-right">Next </button>
+                            </div>
+                        </div>
+                        <!--tab one end-->
+                        
+                        <!--tab two start-->
+                        <div class="tab-pane" id="tab2" ng-if="mfaCtrl.isConfigureMFA">
+                            <div class="col-lg-12" style="font-family: 'Roboto';">
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-lg-5 p-0 form-group">
+                                        <span>If your virtual MFA application supports scanning QR codes, scan the following image with your smartphone's camera.</span>
+                                    </div>
+                                    <div class="col-lg-12 p-0 form-group">
+                                        <img ng-src="{{mfaCtrl.qr_code}}" style="height: 200px;width: 200px;" class="pull-left">
+                                    </div>
+                                    <div class="col-lg-12 p-0 form-group">
+                                        <span>Type the secret configuration key below when prompted by your virtual MFA application.</span>
+                                        <div class="m-t-10 text-danger f-400">{{mfaCtrl.secret}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6" ng-if="mfaCtrl.is_verified === true">
+                                    <button ng-click="mfaCtrl.refreshMFA();" class="btn btn-primal f-700 pull-right">Reset MFA </button>
+                                </div>
+                                <div class="col-lg-6">
+                                    <button data-target="#tab3" data-toggle="tab" ng-click="mfaCtrl.isVerified();mfaCtrl.verifyMfa();" class="btn btn-primal f-700 pull-right">Next </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--tab two end-->
+
+                        <!--tab three start-->
+                        <div class="tab-pane" id="tab3" ng-if="mfaCtrl.isVerifyMFA">
+                            <div class="col-lg-12" style="font-family: 'Roboto';">
+                            <div class="col-lg-12 p-0">
+                                     <div class="col-lg-7 p-0">
+                                        <p>After the application is configured, enter <span class="text-info"> authentication code</span> in the box below and click Activate Virtual MFA.</p>
+                                        <div class="col-lg-12 p-0 form-group">
+                                            <div class="col-lg-12 p-0 form-group">
+                                                <label><strong>MultiFactor Authorization Code</strong></label>
+                                            </div>
+                                            <div class="col-lg-12 p-0">
+                                                <div class="col-lg-6 p-0">
+                                                        <div>
+                                                            <input class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0" data-ng-model="mfaCtrl.authorization_code.a" type="text" size="1" maxlength="1" required> <span>-</span>
+                                                            <input class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0" data-ng-model="mfaCtrl.authorization_code.b" type="text" size="1" maxlength="1" required> <span>-</span>
+                                                            <input class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0" data-ng-model="mfaCtrl.authorization_code.c" type="text" size="1" maxlength="1" required> <span>-</span>
+                                                            <input class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0" data-ng-model="mfaCtrl.authorization_code.d" type="text" size="1" maxlength="1" required> <span>-</span>
+                                                            <input class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0" data-ng-model="mfaCtrl.authorization_code.e" type="text" size="1" maxlength="1" required> <span>-</span>
+                                                            <input class="aligncenter login-inputbox f-21 f-300 mfa-authorization input-sm p-0" data-ng-model="mfaCtrl.authorization_code.f" type="text" size="1" maxlength="1" required>
+                                                        </div>
+                                                </div>
+                                                <div class="col-lg-2 p-0">
+                                                <button class="btn btn-primal f-700 pull-right" ng-click="mfaCtrl.verifyQRCode(mfaCtrl.authorization_code)">Activate </button>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--tab three end-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <!--TAB END-->
+   </data>
+</div>

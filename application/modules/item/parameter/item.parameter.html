@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-lg-12 m-b-20">
+        <div data-ng-controller="ItemParameterController as itemParamCtrl">
+            <div>
+                <div class="col-lg-6">
+                    <div class="hr-text hr-text-left m-t-0 m-b-0">
+                        <h5 style="color: #7b3a7b;font-family: 'Roboto';">Configuration Parameters</h5>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0 margin-bottom">
+                        <div class="configuration-status justify-content-end">
+                            <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-right p-0"></div>
+                            <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12 status-label text-center">
+                                <span>Configuration Status</span>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 status-value" ng-dblclick="itemParamCtrl.dblClickAction(itemParamCtrl.itemParams,1);" ng-class="{'c-white f-500 bgm-green':itemParamCtrl.itemParams.status === 'Active',' c-white bgm-orange f-500':itemParamCtrl.itemParams.status === 'Pending','c-white f-500 bgm-red':itemParamCtrl.itemParams.status === 'Inactive','c-white f-500 bgm-lightskin':itemParamCtrl.itemParams.status === 'Discontinued'}">
+                                <span>{{itemParamCtrl.itemParams.status}}</span>
+                                <span class="zmdi zmdi-edit zmdi-hc-fw pull-right c-white" ng-click="itemParamCtrl.dblClickAction(itemParamCtrl.itemParams,1);"></span>
+                            </div> -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-0  margin-bottom">
+                                <div class="configuration-status justify-content-end">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-right p-0"></div>
+                                    <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12 status-label text-center">
+                                        <span>SKU Assignment</span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 status-label">
+                                        <span>{{itemParamCtrl.itemParams.type}}</span>
+                                        <span class="zmdi zmdi-edit zmdi-hc-fw pull-right c-black cursor-pointer"
+                                            ng-click="itemParamCtrl.dblClickAction(itemParamCtrl.itemParams.sku_assignment_format,2);"
+                                            data-ng-class="{'disable-pointer': true}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-ng-include="'./application/modules/item/parameter/panel.item.parameter.form.html'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- START Important UDDs -->
+            <div class="col-lg-6 col-md-12 col-sm-12" ng-show="itemParamCtrl.important_udds.length>0">
+                <div class="hr-text hr-text-left m-t-0 m-b-0">
+                    <h5 style="color: #7b3a7b;font-family: 'Roboto';">Most Used UDDs</h5>
+                </div>
+                <div class="rcp-scrollbar table-responsive" style="height: 160px;">
+                    <table class="table table-bordered table-bordered-sm table-condensed table-hover">
+                        <thead>
+                            <tr role="row">
+
+                                <th style="width:10%">Id</th>
+                                <th>Description</th>
+                                <th style="width:10%">Occurence</th>
+                                <th style="width:10%">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="important_udd in itemParamCtrl.important_udds">
+                                <td>{{ important_udd.id }}</td>
+                                <td>{{ important_udd.attribute_or_hierarchy }}</td>
+                                <td style="text-align: center;" class="text-info f-700">{{ important_udd.count }}</td>
+                                <td>{{ important_udd.user_defined_data_type }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END Important UDDs -->
+
+        </div>
+    </div>
+</div>

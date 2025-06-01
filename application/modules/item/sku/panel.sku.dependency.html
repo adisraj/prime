@@ -1,0 +1,50 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':skuMaintCtrl.$showErrorDetails === true}">
+    <div class="col-xs-12 m-t-25 ">
+        <div class="col-xs-3 p-0">
+            <a data-ng-click="skuMaintCtrl.$showErrorDetails = false" class="cusor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x cursor-pointer"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel" title="Dependency Details">
+                <strong>Dependency Details</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>SKU Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success" title="{{skuMaintCtrl.skuDetails.description}}">{{skuMaintCtrl.skuDetails.description | truncate:50}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{skuMaintCtrl.skuDetails.status}}">{{skuMaintCtrl.skuDetails.status}}</td>
+                    </tr>
+                </table>
+                <h4>{{skuMaintCtrl.$errorDependentData.description}} - Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success" title="{{skuMaintCtrl.$errorDependentData.sku_description}}">{{skuMaintCtrl.$errorDependentData.description | truncate:50}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{skuMaintCtrl.$errorDependentData.status}}">{{skuMaintCtrl.$errorDependentData.status | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Quantity</td>
+                        <td title="{{skuMaintCtrl.$errorDependentData.quantity}}">{{skuMaintCtrl.$errorDependentData.quantity}}</td>
+                    </tr>
+                </table>
+                <div class="dependency-notifyMessage m-t-10">
+                    <span>{{skuMaintCtrl.$errorDependentData.message}}</span>
+                </div>
+                <!-- <button type="button" class="btn btn-view-values m-5 pull-right m-t-10" ng-click=""><bold>Delete Item</bold></button>-->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+<div ng-controller="AccessPermissionController as permissionCtrl" ng-init="permissionCtrl.loadAvailablePermissions()">
+    <data ui-view>
+   <style>
+      .split {
+      display: flex;
+      height: 100%;
+      }
+      .split > :nth-child(1) {
+      overflow-x: scroll;
+      overflow-y: scroll;
+      }
+      .split > :nth-child(2) {
+      flex-grow: 1;
+      }
+      /* Vertical */
+      .split.vertical {
+      flex-direction: column;
+      }
+      .split.vertical > :nth-child(1) {
+      resize: vertical;
+      }
+      /* Horizontal */
+      .split.horizontal {
+      flex-direction: row;
+      }
+      .split.horizontal > :nth-child(1) {
+      resize: horizontal;
+      }
+      /*Panel tabs*/
+      .panel-tabs > li {
+      float: left;
+      }
+   </style>
+   <nav class="navbar navbar-toolbar navbar-default fixed-top">
+      <div class="bgm-white header-module">
+         <div class="navbar-header p-relative" style="min-height: inherit;">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <div class="image-module p-absolute">
+               <img src="./img/sidebar-icons/package.svg">
+            </div>
+            <div class="label-module p-absolute">
+               <a class="navbar-brand" href="javascript:void(0)">Permissions</a>
+            </div>
+         </div>
+         <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+               <li><a ui-sref="authorization.master"><button type="button" class="btn btn-secondary text-info btn-block waves-effect f-700">Go Back</button></a></li>
+               <!--<li> <a><button type="button" class="btn btn-primal btn-block waves-effect f-700">Create Permission</button></a></li>-->
+            </ul>
+         </div>
+      </div>
+   </nav>
+   <div class="col-lg-12">
+       <div class="col-lg-12 p-0">
+            <div class="col-lg-12 rcp-table-container">
+                <div class="col-lg-12 p-0 m-b-10">                 
+                    <input type="text" data-ng-model="search.entity" class="form-control input-sm" placeholder="Search by entity...">
+                </div>
+              <div class="col-lg-12 p-0 rcp-scrollbar table-responsive" style="height: 300px">
+                <table class="table table-condensed table-bordered-sm table-vmiddle table-striped">
+                     <thead>
+                         <tr role="row">
+                            <th>Entity</th>
+                            <th>Permission</th>
+                            <th>Code</th>
+                         </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="access_permission in permissionCtrl.availablePermissions | filter:search" ng-dblclick="permissionCtrl.dblClickAction(access_permission);">
+                           <td>{{ access_permission.entity }}</td>
+                           <td>{{ access_permission.permission }}</td>
+                           <td>{{ access_permission.code }}</td>
+                        </tr>
+                      </tbody>
+                  </table>
+                 </div>
+              </div>
+        </div>
+   </div>
+   </div>
+</data>
+</div>

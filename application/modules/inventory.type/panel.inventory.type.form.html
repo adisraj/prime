@@ -1,0 +1,81 @@
+<div id="rcrightsidebar" class="c-overflow" data-ng-class="{'toggled': invtypeCtrl.isShowDetails, 'changeposition': invtypeCtrl.showErrorDetailsData || showhistory}"  ng-keyup="$event.keyCode === invtypeCtrl.common.ShortCuts.global.close.key && invtypeCtrl.closeForm()">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="invtypeCtrl.closeForm(); closeShowHistory();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" ng-if="(!invtypeCtrl.isDeleteSuccess && !invtypeCtrl.isConfirmDelete && invtypeCtrl.isShowAdd)"
+                title="{{invtypeCtrl.inventoryTypeDetails.inventory_type}}">Create <strong>Inventory Type</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(!invtypeCtrl.isDeleteSuccess && !invtypeCtrl.isConfirmDelete && !invtypeCtrl.isShowAdd)"
+                title="{{invtypeCtrl.inventoryTypeDetails.inventory_type}}">Update
+                <strong>{{invtypeCtrl.inventoryTypeDetails.inventory_type | truncate :30}}</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(invtypeCtrl.isDeleteSuccess || invtypeCtrl.isConfirmDelete && !invtypeCtrl.isShowAdd)"
+                title="{{invtypeCtrl.inventoryTypeDetails.inventory_type}}">Delete
+                <strong>{{invtypeCtrl.inventoryTypeDetails.inventory_type | truncate :30}}</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!invtypeCtrl.isUnauthorized">
+        <div class="d-flex" ng-if="invtypeCtrl.showErrorDetails || !(invtypeCtrl.isUpdateSuccess || invtypeCtrl.isSaveSuccess || invtypeCtrl.isConfirmDelete || invtypeCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/inventory-type.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-if="!invtypeCtrl.showErrorDetails">
+            <div ng-if="!(invtypeCtrl.isUpdateSuccess || invtypeCtrl.isSaveSuccess || invtypeCtrl.isConfirmDelete || invtypeCtrl.isDeleteSuccess)">
+                <ng-form name="invtypeCtrl.inventoryTypeForm" role="form " novalidate="novalidate" valdr-type="RULES-114">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="invtypeCtrl.inventoryTypeForm.type.$invalid">* </span>
+                        <span class="c-green" ng-show="invtypeCtrl.inventoryTypeForm.type.$valid">* </span>
+                        <label>Inventory Type</label>
+                        <input id="type" name="type" type="text" class="form-control input-sm"
+                            ng-model="invtypeCtrl.inventoryTypeDetails.inventory_type" placeholder="Enter Type"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="invtypeCtrl.inventoryTypeForm.code.$invalid">* </span>
+                        <span class="c-green" ng-show="invtypeCtrl.inventoryTypeForm.code.$valid">* </span>
+                        <label>Code</label>
+                        <input id="code" name="code" type="text" class="form-control input-sm"
+                            ng-model="invtypeCtrl.inventoryTypeDetails.code" placeholder="Enter Code" ng-model-options="{ updateOn: 'blur' }" data-ng-disabled="invtypeCtrl.isShowDetails && !invtypeCtrl.isShowAdd">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="invtypeCtrl.inventoryTypeForm.description.$invalid">* </span>
+                        <span class="c-green" ng-show="invtypeCtrl.inventoryTypeForm.description.$valid">* </span>
+                        <label>Description</label>
+                        <input id="description" name="description" type="text" class="form-control input-sm" ng-model="invtypeCtrl.inventoryTypeDetails.description"
+                        placeholder="Enter Description" errorvalue="invtypeCtrl.inventoryTypeDetails.description_error" 
+                        ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <rcp-edit-form-btns new-form="invtypeCtrl.isShowAdd" save-fn="invtypeCtrl.save(invtypeCtrl.inventoryTypeDetails);"
+                        save-btn-text="invtypeCtrl.saveBtnText" save-btn-error="invtypeCtrl.saveBtnError" update-fn="invtypeCtrl.update(invtypeCtrl.inventoryTypeDetails);"
+                        update-btn-text="invtypeCtrl.updateBtnText" update-btn-error="invtypeCtrl.updateBtnError"
+                        confirm-fn="invtypeCtrl.showconfirm(); closeShowHistory();" confirm-delete="invtypeCtrl.isConfirmDelete"
+                        update-success="invtypeCtrl.isUpdateSuccess" entity-id="invtypeCtrl.inventoryTypeDetails.id"
+                        enable-button="invtypeCtrl.inventoryTypeForm.$invalid || invtypeCtrl.isProcessing">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="invtypeCtrl.isConfirmDelete" image-name="inventory-type.svg" close-fn="invtypeCtrl.closeForm(); "
+                delete-fn="invtypeCtrl.delete(invtypeCtrl.inventoryTypeDetails);" confirm-delete="invtypeCtrl.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="invtypeCtrl.openForm();" close-fn="invtypeCtrl.closeForm();"
+                update-success="invtypeCtrl.isUpdateSuccess" save-success="invtypeCtrl.isSaveSuccess" delete-success="invtypeCtrl.isDeleteSuccess">
+            </rcp-success-form>
+            <div class="col-xs-12" ng-if="!invtypeCtrl.isShowAdd && invtypeCtrl.isShowHistory" data-ng-include="'./application/templates/history.html'">
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="invtypeCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="invtypeCtrl.message = null" aria-hidden="true">&times;</button>{{invtypeCtrl.message}}
+            </div>
+        </div>
+    </div>
+    <div ng-if="invtypeCtrl.isUnauthorized && (invtypeCtrl.isShowAdd || !invtypeCtrl.isShowAdd || invtypeCtrl.isConfirmDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>

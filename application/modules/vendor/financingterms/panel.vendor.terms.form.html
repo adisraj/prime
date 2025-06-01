@@ -1,0 +1,139 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+</style>
+<div id="rcrightsidebar" class="c-overflow"
+    data-ng-class="{'toggled':termCtrl.isShowDetails === true || termCtrl.isShowDetails === 1,'changeposition': termCtrl.showDependencyDetailsData === true || showhistory === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button class="close-icon bg-none border-none btn-link p-0"
+            data-ng-click="termCtrl.closeForm(); closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!termCtrl.isDeleteSuccess && !termCtrl.isConfirmDelete && termCtrl.isShowAdd)"
+                title="{{termCtrl.entityInformation.name}}">Create <strong>{{termCtrl.entityInformation.name | truncate
+                    :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(!termCtrl.isDeleteSuccess && !termCtrl.isConfirmDelete && !termCtrl.isShowAdd)"
+                title="{{termCtrl.entityInformation.name}}">Update <strong>{{termCtrl.entityInformation.name | truncate
+                    :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(termCtrl.isDeleteSuccess || termCtrl.isConfirmDelete && !termCtrl.isShowAdd)"
+                title="{{termCtrl.entityInformation.name}}">Delete <strong>{{termCtrl.entityInformation.name | truncate
+                    :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!termCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="termCtrl.showConfigured_error || !(termCtrl.isUpdateSuccess || termCtrl.isSaveSuccess || termCtrl.isConfirmDelete || termCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <i class="fas fa-money-check-alt fa-8x" style="color: #e2e2e2;" title="{{termCtrl.entityInformation.name | truncate :30}}" title-direction="right"></i>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0"  ng-if="!termCtrl.showConfigured_error">
+            <div
+                ng-if="!(termCtrl.isUpdateSuccess || termCtrl.isSaveSuccess || termCtrl.isConfirmDelete || termCtrl.isDeleteSuccess)">
+                <ng-form name="termCtrl.term_form" role="form" novalidate="novalidate" valdr-type="RULES-15">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red"
+                            ng-show="((termCtrl.term_details.term == ''||termCtrl.term_details.term == null) && termCtrl.term_details.initial) ||termCtrl.valid_error">*
+                        </span>
+                        <span class="c-green" ng-show="termCtrl.term_details.term && !termCtrl.valid_error">*
+                        </span>
+                        <label>Term(Months)</label>
+                        <input id="term" name="term" type="text" class="form-control input-sm"
+                            ng-model="termCtrl.term_details.term" placeholder="Enter Term(Months)"
+                            data-ng-change="termCtrl.onChangeFinancingterm()"
+                            errorvalue="termCtrl.term_details.description_error"
+                            ng-model-options="{ updateOn: 'blur' }">
+                        <span class="c-red f-12" ng-show="termCtrl.term_details.term == ''">* The Term(Months) is required !</span>
+                        <!-- <span class="c-red f-12" ng-show="termCtrl.showConfigured_error">* Can't Delete
+                            Configured Financing Term</span> -->
+                        <span class="c-red f-12" ng-show="termCtrl.valid_error">* Financing Term will accept only numbers(0-9) with limit of 3 digits </span>
+                    </div>
+                    <!-- <div class="form-group" valdr-form-group data-ng-if="termCtrl.isShowAdd===true">
+                        <span class="c-red" ng-show="termCtrl.term_form.status_id.$invalid">* </span>
+                        <span class="c-green" ng-show="termCtrl.term_form.status_id.$valid">* </span>
+                        <label>Status</label>
+                        <select name="status_id" class="form-control select-component input-sm tabfocus" id="status_id" ng-options="item.code as item.description for item in statuses" ng-model="termCtrl.term_details.status_id" errorvaluechosen="termCtrl.term_details.status_id_error">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div> -->
+                    <!-- <div class="form-group" valdr-form-group data-ng-if="termCtrl.isShowAdd===false">
+                        <span class="c-red" ng-show="termCtrl.term_form.status_id.$invalid">* </span>
+                        <span class="c-green" ng-show="termCtrl.term_form.status_id.$valid">* </span>
+                        <label>Status</label>
+                        <select name="status_id" class="form-control select-component input-sm tabfocus" id="on_update_status_id" ng-options="item.code as item.description disable when (item.code === termCtrl.statusCodes.Pending.ID) for item in statuses" ng-model="termCtrl.term_details.status_id" errorvaluechosen="termCtrl.term_details.status_id_error">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div> -->
+                    <rcp-edit-form-btns new-form="termCtrl.isShowAdd" save-fn="termCtrl.save(termCtrl.term_details);"
+                        save-btn-text="termCtrl.saveBtnText" save-btn-error="termCtrl.saveBtnError"
+                        update-fn="termCtrl.update(termCtrl.term_details);" update-btn-text="termCtrl.updateBtnText"
+                        update-btn-error="termCtrl.updateBtnError"
+                        confirm-fn="termCtrl.showconfirm(); closeShowHistory();"
+                        confirm-delete="termCtrl.isConfirmDelete" update-success="termCtrl.isUpdateSuccess"
+                        entity-id="termCtrl.term_details.id"
+                        enable-button="((termCtrl.term_details.term == ''||termCtrl.term_details.term == null) && termCtrl.term_details.initial) || termCtrl.valid_error"
+                        access-permissions="permissionsMap">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="termCtrl.isConfirmDelete" image-name="financing_term.svg"
+                close-fn="termCtrl.closeForm();" delete-fn="termCtrl.delete(termCtrl.term_details);"
+                confirm-delete="termCtrl.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="termCtrl.createAnotherForm();"
+                close-fn="termCtrl.closeForm();" update-success="termCtrl.isUpdateSuccess"
+                save-success="termCtrl.isSaveSuccess" delete-success="termCtrl.isDeleteSuccess">
+            </rcp-success-form>
+            <div
+                ng-if="isMaintenance !== true && !termCtrl.isConfirmDelete && !termCtrl.isUpdateSuccess && !termCtrl.isSaveSuccess && !termCtrl.isDeleteSuccess && !termCtrl.isShowAdd">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn" data-ng-click="loadHistory();"
+                    data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View
+                    History</button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading history...
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" ng-if="termCtrl.showConfigured_error">
+            <div>
+                <h4 class="aligncenter dependency-errorMessage">Financing Term {{termCtrl.oldVendorTermDetails.term}} is being used. Cannot be deleted!</h4>
+            </div>
+            <!-- <div class="col-xs-12 p-0"
+                ng-repeat="($groupName,$dependencyMain) in ( termCtrl.dependencyList | groupBy : 'dependent_entity')">
+                <div class="rcpscrollbar dependency-entityBox">
+                    <h4> Dependent Entities - {{$groupName}} </h4>
+                    <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                        <div class="dependency-entityList" ng-click="termCtrl.showDependencyListDetails(dependency);">
+                            <span title="{{dependency.name}}">{{dependency.name | truncate:40}}</span>
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="termCtrl.closeDependencyList();">
+                    <span>
+                        <b>Cancel</b>
+                    </span>
+                </button>
+            </div>
+            <!-- <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="termCtrl.closeForm();">
+                    <span><b>Close</b></span>
+                </button>
+            </div> -->
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="termCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="termCtrl.message = null"
+                    aria-hidden="true">&times;</button> {{termCtrl.message}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xs-12" ng-if="!termCtrl.isShowAdd && termCtrl.isShowHistory"
+    data-ng-include="'./application/templates/history.html'"></div>

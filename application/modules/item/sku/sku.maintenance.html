@@ -1,0 +1,864 @@
+<style>
+    .sku-advance-search multiselect .btn-group button.btn.btn-default.dropdown-toggle.waves-effect:focus {
+        border-left: 3px solid #f9c10c !important;
+        background: white!important;
+        outline: none!important;
+        margin-left: -3px;
+    }
+
+    button:focus {
+        outline: 5px auto #6ecaf6!important
+    }
+
+    .dropdown-menu>li>a:hover,
+    .dropdown-menu>li>a:focus {
+        background-color: transparent;
+    }
+</style>
+<link rel="stylesheet" href="./application/modules/item/sku/sku.css">
+<div class="container col-lg-12 p-0 p-b-30" data-ng-controller="SKUMaintenanceController as skuMaintCtrl" data-auto-scroll>
+    <ul style="display:none">
+        <li>
+            <keybinding on="ctrl+f" invoke="skuMaintCtrl.focusSearchField()" />
+        </li>
+    </ul>
+    <div id="skulist">
+        <div ui-view>
+            <div data-ng-init="skuMaintCtrl.setInitialHeight();">
+                <!-- Section to show the module header section -->
+                <div class="col-lg-12 p-0 rc-module-header-wrapper" style="height: auto;">
+                    <div class="rc-module-header" style="height: auto;">
+                        <div class="col-xs-12 p-0 d-flex align-items-center justify-content-between">
+                            <div class="sub-title-box">
+                                <div class="d-flex p-l-5 align-items-center">
+                                    <span class="image-module align-items-center d-grid">
+                                        <img src="./img/sidebar-icons/sku.svg" />
+                                    </span>
+                                    <span class="align-items-center label-module sub-title-desc-truncate" title="{{selected_item.description}}" title-direction="top">
+                                        <a href="javascript:void(0)">{{selected_item.description}} - SKU</a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="d-flex" style="flex: 5;" data-ng-if="skuMaintCtrl.skuPermissions.view">
+                                <div class="d-flex d-flex-v-center p-l-20">
+
+                                    <span data-ng-show="!skuMaintCtrl.groupByField" class="f-12">Loaded
+                                        <i class="zmdi zmdi-hourglass-alt" ng-if="!skuMaintCtrl.skus.length && skuMaintCtrl.skus.length != 0"></i>{{skuMaintCtrl.skus.length}} of
+                                        <i class="zmdi zmdi-hourglass-alt" ng-if="!skuMaintCtrl.totalRecordCount && skuMaintCtrl.totalRecordCount != 0"></i>{{skuMaintCtrl.totalRecordCount}} Records
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="d-flex p-0" data-ng-if="skuMaintCtrl.isFilterApplied && skuMaintCtrl.appliedFilterCount">
+                                <button type="button" id="filter_applied" name="filter_applied" class="hidden-sm visible-md visible-lg bg-none border-none"
+                                    data-toggle="collapse" data-target="#advanced-search" data-ng-disabled="(
+                                        (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                        (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                    )" data-ng-click="skuMaintCtrl.InitialFilterForm(true); skuMaintCtrl.focusSearchFieldAdvance();">
+                                    <span class="c-red m-t-10">
+                                        <i class="fa fa-filter p-r-5"></i>{{skuMaintCtrl.appliedFilterCount}} Filter(s) Applied
+                                    </span>
+                                </button>
+                                <button type="button" class="hidden-lg hidden-md visible-sm bg-none border-none" data-toggle="collapse" data-target="#advanced-search"
+                                    data-ng-disabled="(
+                                        (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                        (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                    )" data-ng-click="skuMaintCtrl.InitialFilterForm(true); skuMaintCtrl.focusSearchFieldAdvance();">
+                                    <span class="c-red m-t-10">
+                                        <i class="fa fa-filter p-r-5"></i>{{skuMaintCtrl.appliedFilterCount}}
+                                    </span>
+                                </button>
+                                <button type="button" id="reset_btn" name="reset_btn" class="hidden-sm bg-none border-none" data-ng-click="skuMaintCtrl.resetFilters();"
+                                    data-ng-disabled="(
+                                        (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                        (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                    )">
+                                    <span class="text-primary m-t-10 m-l-10">
+                                        <i class="fa fa-undo f-12 p-r-5" aria-hidden="true"></i>Reset Filters
+                                    </span>
+                            </div>
+                            <div class="d-flex">
+                                <div id="navbar" class="navbar-collapse collapse">
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li ng-if="skuMaintCtrl.skus.length > 0 && skuMaintCtrl.skuPermissions.view">
+                                            <a class="d-flex">
+                                                <div class="group-by-section-sku-maintain tableheader-btn" ng-init="skuMaintCtrl.sortBy = skuMaintCtrl.sortByField !== 'none' ? skuMaintCtrl.sortByField : sortableFields[0].value"
+                                                    style="width: 180px;">
+                                                    <select class="form-control select-component input-sm" id="inlineSearch" name="inlineSearch" data-ng-init="skuMaintCtrl.focusSearchField();"
+                                                        ng-options="each.value as each.field for each in sortableFields" ng-model="skuMaintCtrl.sortBy"
+                                                        ng-change="skuMaintCtrl.sortByField=skuMaintCtrl.sortBy;skuMaintCtrl.sortByOrder='asc'; skuMaintCtrl.isGroupByApplied ? skuMaintCtrl.showLocationData(skuMaintCtrl.groupByField) : skuMaintCtrl.GetSKUs();skuMaintCtrl.scrollToPosition(0, 0);"
+                                                        data-ng-disabled="(
+                                                            (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                                            (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                                        )">
+                                                    </select>
+                                                </div>
+                                                <div class="tableheader-btn" ng-if="skuMaintCtrl.sortByOrder==='desc' && skuMaintCtrl.sortBy !== '' && skuMaintCtrl.sortBy !== 'none' && skuMaintCtrl.isLoaded"
+                                                    data-ng-click="skuMaintCtrl.sortByField = skuMaintCtrl.sortByField;skuMaintCtrl.sortByOrder='asc'; skuMaintCtrl.isGroupByApplied ? skuMaintCtrl.groupByData(skuMaintCtrl.groupByField) : skuMaintCtrl.GetSKUs();skuMaintCtrl.scrollToPosition(0, 0);">
+                                                    <span>
+                                                        <i class="m-t-5 zmdi zmdi-long-arrow-up zmdi-hc-fw f-700 f-20" style="color: firebrick;"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="tableheader-btn" ng-if="skuMaintCtrl.sortByOrder==='asc' && skuMaintCtrl.sortBy !== '' && skuMaintCtrl.sortBy !== 'none' && skuMaintCtrl.isLoaded"
+                                                    data-ng-click="skuMaintCtrl.sortByField=skuMaintCtrl.sortByField;skuMaintCtrl.sortByOrder='desc'; skuMaintCtrl.isGroupByApplied ? skuMaintCtrl.groupByData(skuMaintCtrl.groupByField) : skuMaintCtrl.GetSKUs();skuMaintCtrl.scrollToPosition(0, 0);">
+                                                    <span>
+                                                        <i class="m-t-5 zmdi zmdi-long-arrow-down zmdi-hc-fw f-700 f-20" style="color: firebrick;"></i>
+                                                    </span>
+                                                </div>
+                                                <!-- ng-if consists condition for recordsCount is true - couse, when recordsCount is false there is another loading symbol -->
+                                                <span class="cursor-not-allowed" ng-if="!skuMaintCtrl.isLoaded && skuMaintCtrl.recordsCount">
+                                                    <img src="./img/loading-circle.gif" style="height: 30px;width: 30px;" />
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li ng-if="skuMaintCtrl.skus.length > 0 && skuMaintCtrl.skuPermissions.view">
+                                            <a>
+                                                <div class="group-by-section-sku-maintain tableheader-btn">
+                                                    <select class="form-control select-component input-sm" ng-model="skuMaintCtrl.groupByField" ng-change="skuMaintCtrl.groupByData(skuMaintCtrl.groupByField);"
+                                                        data-ng-disabled="(
+                                                            (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                                            (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                                        )" ng-options="each.prefix as each.name for each in skuGroupByDropdown|filter:{prefix:'!description'}|filter:{prefix:'!next_effective_date'}|filter:{prefix:'!status_effective_date'}|filter:{prefix:'!upc_number'}|filter:{prefix:'!vendor_item_number'}">
+                                                    </select>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="non-collapsed-link" data-ng-if="skuMaintCtrl.skuPermissions.view">
+                                            <a>
+                                                <button class="btn search-box-advanced-btn btn-sm" title="Search will be performed at the server." data-toggle="collapse"
+                                                    data-target="#advanced-search" data-ng-disabled="(
+                                                        (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                                        (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                                    )" data-ng-click="skuMaintCtrl.InitialFilterForm(true);skuMaintCtrl.focusSearchFieldAdvance();">Search</button>
+                                            </a>
+                                        </li>
+                                        <li class="non-collapsed-link" data-ng-if="skuMaintCtrl.skuPermissions.view">
+                                            <a>
+                                                <button type="button" data-ng-click="skuMaintCtrl.reloadSKUCountAndList(true)" class="btn-primal btn-block waves-effect"
+                                                    data-ng-disabled="(
+                                                        (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                                        (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                                    )">
+                                                    <span class="f-700 ng-binding">Refresh</span>
+                                                </button>
+                                            </a>
+                                        </li>
+                                        <li class="non-collapsed-link">
+                                            <a ui-sref="common.prime.itemMaintenance">
+                                                <button type="button" class="btn btn-cancel waves-effect f-700" data-ng-click="itemMaintCtrl.reloadItemCountAndList(true)">Go Back
+                                                </button>
+                                            </a>
+                                        </li>
+                                        <li class="m-r-10 non-collapsed-link">
+                                            <a>
+                                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="skuMaintCtrl.showSKUSelectionModal();" data-ng-disabled="!skuMaintCtrl.skuPermissions.create">
+                                                    <span title="{{!skuMaintCtrl.skuPermissions.create ? 'Access denied' : ''}}">Create SKU
+                                                    </span>
+                                                </button>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown collapsed-link" uib-dropdown>
+                                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href=""
+                                                id="three_dot_menu" name="three_dot_menu" data-ng-init="skuMaintCtrl.focusThreeDotMenu();">
+                                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dm-icon pull-right">
+                                                <li class="cursor-pointer">
+                                                    <button type="button" style="padding: 8px 20px" class="restricted-btn" data-ng-disabled="disableActions || !skuMaintCtrl.skuPermissions.create"
+                                                        data-ng-click="skuMaintCtrl.showSKUSelectionModal();" data-ng-disabled="!skuMaintCtrl.skuPermissions.create">
+                                                        <span title="{{!skuMaintCtrl.skuPermissions.create ? 'Access denied' : ''}}">
+                                                            <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i>
+                                                            Create SKU</span>
+                                                    </button>
+                                                </li>
+                                                <li data-ng-if="skuMaintCtrl.skuPermissions.view">
+                                                    <button type="button" class="bg-none border-none" style="padding:8px 20px;" data-ng-click="skuMaintCtrl.reloadSKUCountAndList(true)"
+                                                        data-ng-disabled="(
+                                                            (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                                            (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                                        )">
+                                                        <i class="zmdi zmdi-refresh text-warning f-17 m-r-15"></i>
+                                                        Refresh
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button type="button" class="restricted-btn" style="padding:8px 20px;" ui-sref="common.prime.itemMaintenance" href="">
+                                                        <i class="zmdi zmdi-long-arrow-left f-17 m-r-15"></i> Go Back
+                                                    </button>
+                                                </li>
+                                                <li data-ng-if="skuMaintCtrl.skuPermissions.view">
+                                                    <button type="button" style="padding: 8px 20px" class="restricted-btn" data-toggle="collapse" data-target="#advanced-search"
+                                                        data-ng-disabled="(
+                                                            (!skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isLoaded) ||
+                                                            (skuMaintCtrl.isGroupByApplied && !skuMaintCtrl.isGroupHeader)
+                                                        )" data-ng-click="skuMaintCtrl.InitialFilterForm(true);skuMaintCtrl.focusSearchFieldAdvance();">
+                                                        <i class="zmdi zmdi-search f-17 m-r-15"></i> Search
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Advanced search panel - START -->
+                        <div class="col-xs-12 sku-advance-search collapse" style="height: auto;" id="advanced-search">
+                            <div class="col-xs-12 p-0 " style="height: auto;">
+                                <div class="col-xs-12 p-0 filter-search-body p-10">
+                                    <div class="col-xs-12 filter-search-header">
+                                        <span>Advanced Search</span>
+                                        <span class="zmdi zmdi-close c-white cursor-pointer f-19 pull-right p-r-5" data-ng-click="skuMaintCtrl.InitialFilterForm(true);"></span>
+                                    </div>
+                                    <div class="col-xs-12 filter-search-content">
+                                        <div class="col-xs-12 p-t-10">
+                                            <div class="form-group">
+                                                <div class="btn-group colors">
+                                                    <label class="btn rcp-select-btn" ng-class="{'active':skuMaintCtrl.filters.skuType === 'Stock'}">
+                                                        <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                                                        <input ng-model="skuMaintCtrl.filters.skuType" type="radio" value="Stock" class="d-none"> Stock
+                                                    </label>
+                                                    <label class="btn rcp-select-btn" ng-class="{'active':skuMaintCtrl.filters.skuType === 'Stock Plus'}">
+                                                        <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                                                        <input ng-model="skuMaintCtrl.filters.skuType" type="radio" value="Stock Plus" class="d-none"> Stock Plus
+                                                    </label>
+                                                    <label class="btn rcp-select-btn" ng-class="{'active':skuMaintCtrl.filters.skuType === 'MTO'}">
+                                                        <span class="zmdi zmdi-check zmdi-hc-fw"></span>
+                                                        <input ng-model="skuMaintCtrl.filters.skuType" type="radio" value="MTO" class="d-none"> MTO
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group" data-ng-init="skuMaintCtrl.skuNumberList();">
+                                                <label>SKU #</label>
+                                                <multiselect class="tabfocus" id="sku_drop" name="sku_drop" ng-model="skuMaintCtrl.filters.skuNumbers" options="option.sku as (option.sku ) for option in skuMaintCtrl.skuNumbersList"
+                                                    select-limit="100" header="Select SKU #" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':skuMaintCtrl.filters.skuNumbers.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group">
+                                                <label>SKU Description</label>
+                                                <input class="form-control input-sm " type="text" ng-model="skuMaintCtrl.filters.skuDescription" indicate-quick-search placeholder="Search SKU Description"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group">
+                                                <label>SKU Option</label>
+                                                <multiselect class="tabfocus" ng-model="skuMaintCtrl.filters.skuOptionIds" options="option.id as option.name for option in sku_headers"
+                                                    select-limit="100" header="Select Option" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':skuMaintCtrl.filters.skuOptionIds.length>0}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-6" data-ng-if="skuMaintCtrl.inventory_methods.length > 0">
+                                            <div class="form-group">
+                                                <label>Inventory Method</label>
+                                                <multiselect class="tabfocus" ng-model="skuMaintCtrl.filters.inventoryMethodIds" options="inventory.id as inventory.name for inventory in skuMaintCtrl.inventory_methods"
+                                                    select-limit="100" header="Select Inventory Method" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':skuMaintCtrl.filters.inventoryMethodIds.length>0}">
+                                                </multiselect>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group">
+                                                <label>Current Status</label>
+                                                <multiselect class="tabfocus" ng-model="skuMaintCtrl.filters.currentStatusIds" options="status.code as status.description for status in statuses"
+                                                    select-limit="100" header="Select Current Status" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':skuMaintCtrl.filters.currentStatusIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group">
+                                                <label>Next Status</label>
+                                                <multiselect class="tabfocus" ng-model="skuMaintCtrl.filters.nextStatusIds" options="status.code as status.description for status in next_statuses"
+                                                    select-limit="100" header="Select Next Status" selected-header="options selected"
+                                                    multiple="true" required enable-filter="true" filter-placeholder="Quick Search"
+                                                    ng-class="{'highlight-filter':skuMaintCtrl.filters.nextStatusIds.length>0}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group">
+                                                <label>Romanic copy</label>
+                                                <trix-editor class="tabfocus" angular-trix ng-model="skuMaintCtrl.filters.romanic_copy" class="trix-content">
+                                                </trix-editor>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-xs-12" style1="height:40px;align-items:flex-end;">
+                                            <div class="m-b-5">
+                                                <label>Show Errored SKUs</label>
+                                            </div>
+                                            <div class="checkbox form-group">
+                                                <div class="d-flex">
+                                                    <div>
+                                                        <label class="p-l-25">
+                                                            <input type="checkbox" ng-model="skuMaintCtrl.filters.has_error" ng-true-value="1" ng-false-value="0">
+                                                            <i class="input-helper"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 m-b-10">
+                                    <div class="pull-left text-danger" data-ng-if="skuMaintCtrl.applyFilterSuccess === false">
+                                        {{skuMaintCtrl.applyFilterMessage}}</div>
+                                    <div class="m-b-0 pull-left alert alert-success alert-dismissable p-b-5 p-t-5" data-ng-show="skuMaintCtrl.message && skuMaintCtrl.isFilterApplied">
+                                        <button type="button" class="close" data-ng-click="skuMaintCtrl.message = null" aria-hidden="true">&times;</button>{{skuMaintCtrl.message}}
+                                    </div>
+                                    <div class="m-b-0 pull-left alert alert-success alert-dismissable p-b-5 p-t-5" data-ng-show="skuMaintCtrl.resetMessage">
+                                        <button type="button" class="close" data-ng-click="skuMaintCtrl.resetMessage = null" aria-hidden="true">&times;</button>{{skuMaintCtrl.resetMessage}}
+                                    </div>
+                                    <div class="ipad-advance-search pull-right">
+                                        <span class="f-300 text-info m-r-5">[ You can expect some delay as the advanced search will be performed on the server
+                                            side. ]
+                                        </span>
+                                        <span class="c-red m-r-5" data-ng-if="skuMaintCtrl.isFilterApplied && skuMaintCtrl.appliedFilterCount">
+                                            <i class="fa fa-filter p-r-5"></i>{{skuMaintCtrl.appliedFilterCount}} Filter(s) Applied </span>
+                                        <span class="m-r-5" data-ng-if="!skuMaintCtrl.isFilterApplied || !skuMaintCtrl.appliedFilterCount">
+                                            <i class="fa fa-filter p-r-5"></i> Not applied</span>
+                                        <button type="button" class="btn-primary btn tabfocus-btn hidden-sm" id="filter_attribute_btn" ng-click="skuMaintCtrl.applyFilters();"
+                                            ng-model-options="{debounce:3000}" data-ng-disabled="skuMaintCtrl.isRefreshing || skuMaintCtrl.isProcessing || !skuMaintCtrl.isLoaded">
+                                            <strong>{{skuMaintCtrl.applyFiltersBtnLabel}}</strong>
+                                        </button>
+                                        <button type="button" class="btn btn-cancel tabfocus-btn hidden-sm" id="vendor_filter_reset_btn" ng-click="skuMaintCtrl.resetFilters(-1);"
+                                            data-ng-disabled="skuMaintCtrl.isRefreshing || skuMaintCtrl.isProcessing || !skuMaintCtrl.isLoaded">
+                                            <strong>Reset Filters</strong>
+                                        </button>
+                                        <div class="hidden-lg hidden-md m-t-10">
+                                            <button type="button" class="btn-primary btn tabfocus-btn" id="filter_attribute_btn" ng-click="skuMaintCtrl.applyFilters();"
+                                                ng-model-options="{debounce:3000}" data-ng-disabled="skuMaintCtrl.isRefreshing || skuMaintCtrl.isProcessing || !skuMaintCtrl.isLoaded">
+                                                <strong>{{skuMaintCtrl.applyFiltersBtnLabel}}</strong>
+                                            </button>
+                                            <button type="button" class="btn btn-cancel tabfocus-btn" id="vendor_filter_reset_btn" ng-click="skuMaintCtrl.resetFilters(-1);"
+                                                data-ng-disabled="skuMaintCtrl.isRefreshing || skuMaintCtrl.isProcessing || !skuMaintCtrl.isLoaded">
+                                                <strong>Reset Filters</strong>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Advanced search panel - END -->
+                    </div>
+                </div>
+                <div class="col-lg-12 text-center module-content" data-ng-if="!skuMaintCtrl.recordsCount && !skuMaintCtrl.isLoaded">
+                    <div class="m-t-25">
+                        <span class="f-17 f-700 c-black">Loading</span>
+                        <span class="f-700" style="letter-spacing: 3px;">....</span>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 p-0 module-content" data-ng-if="skuMaintCtrl.recordsCount && skuMaintCtrl.recordsCount !== 0 && skuMaintCtrl.isLoaded">
+                    <div class="col-xs-12 p-0" data-ng-if="skuMaintCtrl.skuPermissions.view">
+                        <div class="col-xs-12 p-0" data-ng-class="skuMaintCtrl.groupByField.length>0 ? 'p-r-25 col-xs-12':'col-lg-12'">
+
+                        </div>
+                        <!-- Sku list when group by is not applied -->
+                        <div class="col-xs-12 rcpscrollbar p-0 o-auto pageHeight m-t-10" data-ng-if="!skuMaintCtrl.groupByField && skuMaintCtrl.skus.length > 0">
+                            <div class="col-xs-12 p-0">
+                                <div class="col-md-6 col-sm-12 col-xs-12" data-ng-repeat="sku in skuMaintCtrl.skus" ios-dblclick="skuMaintCtrl.dblClickAction('SKUMaster',sku);"
+                                    data-ng-init="skuMaintCtrl.initSKUObject(sku)">
+                                    <div class="flip-container">
+                                        <div class="flipper">
+                                            <div class="col-xs-12 p-0 front">
+                                                <div class="d-flex update-process-overlay" data-ng-show="sku.isShowUpdateProcessing">
+                                                    <img class="m-auto" src="./img/loading.gif" alt="" style="width:100px;height:100px;">
+                                                </div>
+                                                <div class="col-xs-12 main-card box p-0">
+                                                    <div class="col-xs-12 header-section" ng-class="{'status-active f-500':sku.status==='Active','status-pending-active f-300':sku.status==='Pending Active', 'status-inactive f-300':sku.status==='Inactive','status-pending-inactive f-300':sku.status==='Pending Inactive',
+                                                    'hightlight-activehistory':sku.showhistory === true || sku.id == $stateParams.id}">
+                                                        <span class="text-overflow-desc-auto" title="{{sku.description}}">
+                                                            <span data-ng-if="sku.sku_sub_type.toLowerCase() === 'set'">
+                                                                <img src="./img/sets-icon.png" alt="" style="height:20px;width:20px;" title="Sku Set">
+                                                            </span>
+                                                            <span data-ng-if="sku.sku_sub_type.toLowerCase() === 'component'">
+                                                                <img src="./img/component.png" alt="" style="height:20px;width:20px;" title="Sku Set">
+                                                            </span>
+                                                            {{sku.description}}</span>
+
+                                                        <div class="d-flex pull-right align-items-center">
+                                                            <img class="p-r-5" data-ng-if="sku.isLoadingClone" src="./img/loader.gif" alt="Loading" height="25px" />
+                                                            <button type="button" class="cursor-pointer restricted-btn p-0" id="move_sku" name="move_sku" ng-click="skuMaintCtrl.showMoveSKUPanel(sku.id, sku.description, sku.sku_sub_type, sku.item_id, sku.sku, sku);"
+                                                                title="Transfer SKU">
+                                                                <div class="text-center m-auto updatepanel sku-card p-b-10" style="height:25px;">
+                                                                    <div data-ng-include="'./img/sidebar-icons/move-sku.svg'">
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                            <button type="button" id="sku_history" name="sku_history" class="cursor-pointer m-r-5 restricted-btn p-0" data-ng-click="skuMaintCtrl.showHistoryDetails(sku);">
+                                                                <span class="f-16 fa fa-history c-gray" title="History" title-direction="top-left" fixed-position="true"></span>
+                                                            </button>
+                                                            <button type="button" id="install_retail" name="install_retail" class="cursor-pointer restricted-btn p-0" ng-click="skuMaintCtrl.goToSetInstallationRetail(sku.id);">
+                                                                <span class="zmdi zmdi-laptop zmdi-hc-fw f-19" style="color: #82848c;" title="Installation fees" title-direction="top-left"
+                                                                    fixed-position="true"></span>
+                                                            </button>
+                                                            <button type="button" class="cursor-not-allowed clone-not-allowed m-r-5 restricted-btn p-0" data-ng-if="!skuMaintCtrl.isCloneAllowed"
+                                                                rc-popover popover-title="Cloning feature is disabled" popover-content="No access for clone. Enable access to clone SKU."
+                                                                popover-trigger="hover" popover-placement="bottom">
+                                                                <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                            </button>
+                                                            <button type="button" class="cursor-not-allowed clone-not-allowed m-r-5 restricted-btn p-0" data-ng-if="skuMaintCtrl.isCloneAllowed && (sku.description.includes('clone') || sku.description.includes('Clone'))"
+                                                                rc-popover popover-title="Cloning is disabled for this SKU" popover-content="Have same identity as the cloned parent SKU, to enable cloning change any master properties of this entity."
+                                                                popover-trigger="hover" popover-placement="bottom">
+                                                                <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                            </button>
+                                                            <button type="button" class="cursor-pointer restricted-btn p-0" id="clone_sku" name="clone_sku" data-ng-click="skuMaintCtrl.goToClonePanel(sku)"
+                                                                data-ng-if="skuMaintCtrl.isCloneAllowed && !(sku.description.includes('clone') || sku.description.includes('Clone'))">
+                                                                <span class="zmdi zmdi-copy zmdi-hc-fw f-19" style="color: #82848c;" title="Clone" title-direction="top-left" fixed-position="true"></span>
+                                                            </button>
+                                                            <button class="restricted-btn p-0" id="meta_data" name="meta_data" ng-click="showMetaData(skuMaintCtrl.entityInformation,sku,skuMaintCtrl.skuPermissions);"
+                                                                data-ng-disabled="!skuMaintCtrl.skuPermissions.drop">
+                                                                <span class="zmdi zmdi-cloud-outline zmdi-hc-fw f-19 c-gray" data-ng-if="skuMaintCtrl.skuPermissions.drop" title="Click here to manage documents"
+                                                                    title-direction="right" fixed-position="true"></span>
+                                                                <span class="zmdi zmdi-cloud-off zmdi-hc-fw f-19 c-gray" data-ng-if="!skuMaintCtrl.skuPermissions.drop" title="Access denied"
+                                                                    title-direction="right" fixed-position="true"></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 content-section">
+                                                        <div class="col-xs-12 p-0">
+                                                            <div class="col-xs-3 p-0 d-flex">
+                                                                <img check-image class="img-responsive card-image m-auto cursor-pointer" image-name="sku.svg" data-ng-click="sku.thumbnail?skuMaintCtrl.previewDatalake(sku,'cover_image'):''"
+                                                                    ng-src="{{sku.thumbnail}}" />
+                                                            </div>
+                                                            <div class="col-xs-9 p-0" style="height:100%;max-height:200px;overflow:auto;">
+                                                                <div class="col-xs-6 p-0 m-b-10">
+                                                                    <div class="col-xs-12 p-0">
+                                                                        <label class="rclabel m-l-10">SKU Type :</label>
+                                                                        <label data-ng-show="item.collection !== 'NA'" class="c-gray m-l-10 text-capitalize">{{sku.sku_type}}</label>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0">
+                                                                        <label class="rclabel m-l-10">Status :</label>
+                                                                        <label class="rclabel m-l-10" ng-class="{'text-success f-500': sku.status==='Active' , 'text-warning f-300': sku.status ==='Pending Active', 'text-primary f-300': sku.status ==='Inactive','text-info f-300': sku.status==='Pending Inactive'}">{{sku.status}}</label>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0">
+                                                                        <label class="rclabel m-l-10">Next Status :
+                                                                        </label>
+                                                                        <label class="rclabel m-l-10 c-gray">{{sku.next_status}}</label>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0">
+                                                                        <label class="rclabel m-l-10">Next Effective Date :</label>
+                                                                        <label data-ng-show="sku.next_status !== 'None'" class="c-gray m-l-10">{{sku.next_effective_date | FormatDate}}</label>
+                                                                        <label data-ng-show="sku.next_status === 'None'" class="c-gray m-l-10">N/A</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6 col-xs-6" style="border-left: 1px solid #ececec;">
+                                                                    <div class="col-xs-12 p-0 d-flex">
+                                                                        <label class="rclabel m-l-10">SKU # :</label>
+                                                                        <span class="zmdi zmdi-copy zmdi-hc-fw f-14 cursor-pointer m-l-10" style="color: #5f5f5f;padding-top: 2px;" title-direction="top-left"
+                                                                            fixed-position="true" copy-to-clipboard="{{sku.sku}}"
+                                                                            title="Copy to Clipboard"></span>
+                                                                        <label id="copyToClipboardText" class="rclabel c-gray text-overflow-desc-auto cursor-pointer">
+                                                                            <span>{{sku.sku}}</span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0">
+                                                                        <label class="rclabel m-l-10">Vendor Item # :
+                                                                        </label>
+                                                                        <label class="rclabel m-l-10 c-gray">
+                                                                            <span ng-if="sku.vendor_item_number">{{sku.vendor_item_number}}</span>
+                                                                            <span ng-if="!sku.vendor_item_number">Not Available</span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0">
+                                                                        <label class="rclabel m-l-10">SKU Option :
+                                                                        </label>
+                                                                        <label class="rclabel m-l-10 c-gray">
+                                                                            {{sku.option_list_name || 'No SKU Option'}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0">
+                                                                        <label class="rclabel m-l-10">SKU Pricing Choice :</label>
+                                                                        <label class="rclabel m-l-10 c-gray">
+                                                                            {{sku.pricing_choice}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0" data-ng-if="sku.upc_number !== null">
+                                                                        <label class="rclabel m-l-10">UPC # :</label>
+                                                                        <label class="c-gray m-l-10">{{sku.upc_number}}</label>
+                                                                    </div>
+                                                                    <div class="col-xs-12 p-0" data-ng-if="sku.stock_plus_pricing_sku">
+                                                                        <label class="rclabel m-l-10">Stock Plus Pricing SKU :</label>
+                                                                        <label class="rclabel m-l-10 c-gray">
+                                                                            {{sku.stock_plus_pricing_sku}}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 text-center d-flex" style="justify-content:space-between;align-items:center;" data-ng-if="!sku.is_deleted">
+                                                            <!-- Edit SKU Icon-->
+                                                            <div class="cursor-pointer d-flex" style="align-items:flex-end;">
+                                                                <button class="restricted-btn text-primary" data-ng-click="skuMaintCtrl.dblClickAction('SKUMaster',sku)" data-ng-disabled="!skuMaintCtrl.skuPermissions.update"
+                                                                    data-ng-class="{'opacity50' : !skuMaintCtrl.skuPermissions.update}">
+                                                                    <span class="f-13" title="{{!skuMaintCtrl.skuPermissions.update ? 'Access denied' : ''}}" title-direction="top">
+                                                                        <i class="fa fa-edit m-r-5"></i>Edit SKU</span>
+                                                                </button>
+                                                            </div>
+                                                            <!-- Edit SKU Icon-->
+                                                            <div class="d-flex" style="justify-content: flex-end;">
+                                                                <div class="p-5" ng-if="sku&&sku.status_id===200&&skuMaintCtrl.isViewSKUInPE">
+                                                                    <button type="button" class="btn btn-inverse btn-block m-t-10" ng-click="skuMaintCtrl.gotoLink(sku.id); ">
+                                                                        View in
+                                                                        <strong>Product Explorer</strong>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="p-5" ng-if="sku&&sku.sku_sub_type!=='installation_fee'">
+                                                                    <button type="button" id="check_availability" name="check_availability" class="btn btn-inverse btn-block m-t-10" ng-click="skuMaintCtrl.loadLocationsBySku(sku.id); ">
+                                                                        Check
+                                                                        <strong>Availability</strong>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="p-5">
+                                                                    <button title="{{ !skuMaintCtrl.is_resale_allowed ? 'Retails not allowed for Vendor' + ' - ' + skuMaintCtrl.vendorName :( sku.sku_type.toLowerCase() === 'stock plus' ? 'Reference SKU is the source of pricing for stock plus SKU' :'Maintain Retails')}}"
+                                                                        data-ng-disabled="!skuMaintCtrl.is_resale_allowed || sku.sku_type.toLowerCase() === 'stock plus'"
+                                                                        type="button" class="btn btn-success btn-block m-t-10"
+                                                                        ng-click="skuMaintCtrl.gotoRetailScreen(sku.id); ">
+                                                                        Maintain
+                                                                        <strong>Retails</strong>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 text-center d-flex" style="justify-content:space-between;align-items:center;" data-ng-if="sku.is_deleted">
+                                                            <div class="p-5">
+                                                                <button title="'Activate the deleted SKU'"
+                                                                    type="button" class="btn btn-warning btn-block m-t-10"
+                                                                    ng-click="skuMaintCtrl.reactivateSku(sku.id); ">
+                                                                    <strong>Reactivate SKU</strong>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-if="skuMaintCtrl.availableSKUCount > 0 && !skuMaintCtrl.isLoading">
+                                <div class="col-lg-12 col-md-12 aligncenter p-t-10 m-b-10">
+                                    <button class="btn btn-sm btn-inverse" data-ng-click="skuMaintCtrl.loadMoreSkus()">Load Remaining {{skuMaintCtrl.availableSKUCount}} Records</button>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="skuMaintCtrl.isLoading">
+                                <span class="f-17 f-700 c-black">Loading</span>
+                                <span class="f-700" style="letter-spacing: 3px;">
+                                    <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                    <span>
+                            </div>
+                        </div>
+
+                        <!-- Sku list when group by is applied -->
+                        <div class="col-xs-12 rcpscrollbar p-0 o-auto pageHeight m-t-10" data-ng-if="skuMaintCtrl.groupByField">
+                            <d-expand-collapse>
+                                <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="!skuMaintCtrl.isGroupHeader">
+                                    <span class="f-17 f-700 c-black">Loading</span>
+                                    <span class="f-700" style="letter-spacing: 3px;">
+                                        <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                        <span>
+                                </div>
+                                <div ng-repeat="skuGroup in skuMaintCtrl.groupSkus" data-ng-if="skuGroup.selected === 1">
+                                    <button type="button" class="col-xs-12 bg-none border-none" data-ng-click="skuMaintCtrl.showSKUData(skuMaintCtrl.groupByField,skuGroup)">
+                                        <div class="col-xs-12 card-group-header" data-ng-click="toggleCollapse($event);">
+                                            <span data-ng-if="skuMaintCtrl.groupByField.includes('effective_date')">
+                                                {{skuGroup[skuMaintCtrl.groupByField] | FormatDate}}
+                                                <span class="zmdi-hc-fw">({{skuGroup.count}})</span>
+                                            </span>
+                                            <span data-ng-if="!skuMaintCtrl.groupByField.includes('effective_date')">
+                                                {{skuGroup[skuMaintCtrl.groupByField]}} ({{skuGroup.count}})
+                                            </span>
+                                            <div id="{{$index}}-groupHeaderIcon" data-ng-init="initGroupHeader('{{$index}}-groupHeaderIcon',skuGroup)" class="pull-right zmdi inline-block"></div>
+                                        </div>
+                                    </button>
+                                    <div class="col-xs-12 p-0 expand-collapse-me" data-ng-class="{'d-none':!skuGroup.expanded}" data-ng-if="skuGroup.skus">
+                                        <div class="col-xs-12 m-t-5 m-b-5">
+                                            <span data-ng-show="skuMaintCtrl.groupByField">{{ skuGroup.skus.length}} of {{skuGroup.count}} Records found </span>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12 col-xs-12" data-ng-if="skuGroup.isSkusLoaded" data-ng-repeat="sku in skuGroup.skus" ios-dblclick="skuMaintCtrl.dblClickAction('SKUMaster',sku);"
+                                            data-ng-init="skuMaintCtrl.initSKUObject(sku)">
+                                            <div class="flip-container">
+                                                <div class="flipper">
+                                                    <div class="front">
+                                                        <div class="d-flex update-process-overlay" data-ng-show="sku.isShowUpdateProcessing">
+                                                            <img class="m-auto" src="./img/loading.gif" alt="" style="width:100px;height:100px;">
+                                                        </div>
+                                                        <div class="col-xs-12 main-card box p-0">
+                                                            <div class="col-xs-12 header-section" ng-class="{'status-active f-500':sku.status==='Active','status-pending-active f-300':sku.status==='Pending Active', 'status-inactive f-300':sku.status==='Inactive','status-pending-inactive f-300':sku.status==='Pending Inactive','hightlight-activehistory':sku.showhistory === true || sku.id == $stateParams.id}">
+                                                                <span title="{{sku.description}}" style="color: #393e52;font-weight: 500;">{{sku.description}}</span>
+                                                                <div class="d-flex pull-right">
+                                                                    <button type="button" class="cursor-pointer restricted-btn p-0" id="move_sku" name="move_sku" ng-click="skuMaintCtrl.showMoveSKUPanel(sku.id, sku.description, sku.sku_sub_type, sku.item_id, sku.sku, sku);"
+                                                                        title="Transfer SKU">
+                                                                        <div class="text-center m-auto updatepanel sku-card p-b-10" style="height:25px;">
+                                                                            <div data-ng-include="'./img/sidebar-icons/move-sku.svg'">
+                                                                            </div>
+                                                                        </div>
+                                                                    </button>
+                                                                    <button type="button" class="cursor-pointer m-r-5 restricted-btn p-0" id="sku_history" name="sku_history" data-ng-click="skuMaintCtrl.showHistoryDetails(sku);">
+                                                                        <span class="f-16 fa fa-history c-gray" title="History" title-direction="bottom" fixed-position="true"></span>
+                                                                    </button>
+                                                                    <button type="button" id="install_retail" name="install_retail" class="cursor-pointer restricted-btn p-0" ng-click="skuMaintCtrl.goToSetInstallationRetail(sku.id);">
+                                                                        <span class="zmdi zmdi-laptop zmdi-hc-fw f-19" style="color: #82848c;" title="Installation fees" title-direction="top-left"
+                                                                            fixed-position="true"></span>
+                                                                    </button>
+                                                                    <button type="button" class="cursor-not-allowed clone-not-allowed m-r-5 restricted-btn p-0" data-ng-if="!skuMaintCtrl.isCloneAllowed"
+                                                                        rc-popover popover-title="Cloning feature is disabled"
+                                                                        popover-content="No access for clone. Enable access to clone SKU."
+                                                                        popover-trigger="hover" popover-placement="bottom">
+                                                                        <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                                    </button>
+                                                                    <button type="button" class="cursor-not-allowed clone-not-allowed m-r-5 restricted-btn p-0" data-ng-if="skuMaintCtrl.isCloneAllowed && (sku.description.includes('clone') || sku.description.includes('Clone'))"
+                                                                        rc-popover popover-title="Cloning is disabled for this SKU"
+                                                                        popover-content="Have same identity as the cloned parent SKU, to enable cloning change any master properties of this entity."
+                                                                        popover-trigger="hover" popover-placement="bottom">
+                                                                        <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick"></span>
+                                                                    </button>
+                                                                    <button type="button" class="cursor-pointer restricted-btn p-0" id="clone_sku" name="clone_sku" data-ng-click="skuMaintCtrl.goToClonePanel(sku)"
+                                                                        data-ng-if="skuMaintCtrl.isCloneAllowed && !(sku.description.includes('clone') || sku.description.includes('Clone'))">
+                                                                        <span class="zmdi zmdi-copy zmdi-hc-fw f-19" style="color: #82848c;" title="Clone" title-direction="bottom" fixed-position="true"></span>
+                                                                    </button>
+                                                                    <button class="restricted-btn p-0" ng-click="showMetaData(skuMaintCtrl.entityInformation,sku,skuMaintCtrl.skuPermissions);"
+                                                                        id="meta_data" name="meta_data" data-ng-disabled="!skuMaintCtrl.skuPermissions.drop">
+                                                                        <span class="zmdi zmdi-cloud-outline zmdi-hc-fw f-19 c-gray" data-ng-if="skuMaintCtrl.skuPermissions.drop" title="Click here to manage documents"
+                                                                            title-direction="top" fixed-position="true"></span>
+                                                                        <span class="zmdi zmdi-cloud-off zmdi-hc-fw f-19 c-gray" data-ng-if="!skuMaintCtrl.skuPermissions.drop" title="Access denied"
+                                                                            title-direction="top" fixed-position="true"></span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 content-section">
+                                                                <div class="col-xs-12 p-0">
+                                                                    <div class="col-xs-3 p-0 d-flex">
+                                                                        <img check-image class="img-responsive card-image m-auto cursor-pointer" image-name="sku.svg" data-ng-click="sku.thumbnail?skuMaintCtrl.previewDatalake(sku,'cover_image'):''"
+                                                                            ng-src="{{sku.thumbnail}}" />
+                                                                    </div>
+                                                                    <div class="col-xs-9 p-0" style="height:100%;max-height:200px;overflow:auto;">
+                                                                        <div class="col-xs-6 p-0 m-b-10">
+                                                                            <div class="col-xs-12 p-0">
+                                                                                <label class="rclabel m-l-10">SKU Type :
+                                                                                </label>
+                                                                                <label data-ng-show="item.collection !== 'NA'" class="c-gray m-l-10">{{sku.sku_type}}</label>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0">
+                                                                                <label class="rclabel m-l-10">Status :
+                                                                                </label>
+                                                                                <label class="rclabel m-l-10" ng-class="{'text-success f-500': sku.status==='Active' , 'text-warning f-300': sku.status ==='Pending Active', 'text-primary f-300': sku.status ==='Inactive','text-info f-300': sku.status==='Pending Inactive'}">{{sku.status}}</label>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0">
+                                                                                <label class="rclabel m-l-10">Next Status :</label>
+                                                                                <label class="rclabel m-l-10 c-gray">{{sku.next_status}}</label>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0">
+                                                                                <label class="rclabel m-l-10">Next Effective Date :</label>
+                                                                                <label data-ng-show="sku.next_status !== 'None'" class="c-gray m-l-10">{{sku.next_effective_date | FormatDate}}</label>
+                                                                                <label data-ng-show="sku.next_status === 'None'" class="c-gray m-l-10">N/A</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-6 col-xs-6" style="border-left: 1px solid #ececec;">
+                                                                            <div class="col-xs-12 p-0 d-flex">
+                                                                                <label class="rclabel m-l-10">SKU # :
+                                                                                </label>
+                                                                                <span class="zmdi zmdi-copy zmdi-hc-fw f-14 cursor-pointer m-l-10" style="color: #5f5f5f;padding-top: 2px;" title-direction="top-left"
+                                                                                    fixed-position="true" copy-to-clipboard="{{sku.sku}}"
+                                                                                    title="Copy to Clipboard"></span>
+                                                                                <label id="copyToClipboardText" class="rclabel c-gray text-overflow-desc-auto cursor-pointer">
+                                                                                    <span>{{sku.sku}}</span>
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0">
+                                                                                <label class="rclabel m-l-10">Vendor Item # :
+                                                                                </label>
+                                                                                <label class="rclabel m-l-10 c-gray">
+                                                                                    <span ng-if="sku.vendor_item_number">{{sku.vendor_item_number}}</span>
+                                                                                    <span ng-if="!sku.vendor_item_number">Not Available</span>
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0">
+                                                                                <label class="rclabel m-l-10">SKU Option :
+                                                                                </label>
+                                                                                <label class="rclabel m-l-10 c-gray">
+                                                                                    {{sku.option_list_name || 'No SKU Option'}}
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0">
+                                                                                <label class="rclabel m-l-10">SKU Pricing Choice :</label>
+                                                                                <label class="rclabel m-l-10 c-gray">
+                                                                                    {{sku.pricing_choice}}
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0" data-ng-if="sku.upc_number !== null">
+                                                                                <label class="rclabel m-l-10">UPC # :
+                                                                                </label>
+                                                                                <label class="c-gray m-l-10">{{sku.upc_number}}</label>
+                                                                            </div>
+                                                                            <div class="col-xs-12 p-0" data-ng-if="sku.stock_plus_pricing_sku">
+                                                                                <label class="rclabel m-l-10">Stock Plus Pricing SKU :</label>
+                                                                                <label class="rclabel m-l-10 c-gray">
+                                                                                    {{sku.stock_plus_pricing_sku}}
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 text-center d-flex" style="justify-content:space-between;align-items:center;">
+                                                                    <!-- Edit SKU Icon-->
+                                                                    <div class="cursor-pointer d-flex" style="align-items:flex-end;">
+                                                                        <button class="f-14 restricted-btn text-primary" data-ng-click="skuMaintCtrl.dblClickAction('SKUMaster',sku)" data-ng-disabled="!skuMaintCtrl.skuPermissions.update"
+                                                                            data-ng-class="{'opacity50' : !skuMaintCtrl.skuPermissions.update}">
+                                                                            <span class="f-13" title="{{!skuMaintCtrl.skuPermissions.update ? 'Access denied' : ''}}" title-direction="top">
+                                                                                <i class="fa fa-edit m-r-5"></i>Edit SKU
+                                                                            </span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <!-- Edit SKU Icon-->
+                                                                    <div class="d-flex" style="justify-content: flex-end;">
+                                                                        <div class="p-5" data-ng-if="sku.sku_sub_type!=='installation_fee'">
+                                                                            <button type="button" id="check_availability" name="check_availability" class="btn btn-inverse btn-block m-t-10" ng-click="skuMaintCtrl.loadLocationsBySku(sku.id); ">
+                                                                                Check
+                                                                                <strong>Availability</strong>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="p-5">
+                                                                            <button type="button" class="btn btn-success btn-block m-t-10" title="{{ !skuMaintCtrl.is_resale_allowed ? 'Retails not allowed for Vendor' + ' - ' + skuMaintCtrl.vendorName :( sku.sku_type.toLowerCase() === 'stock plus' ? 'Reference SKU is the source of pricing for stock plus SKU' :'Maintain Retails')}}"
+                                                                                data-ng-disabled="!skuMaintCtrl.is_resale_allowed || sku.sku_type.toLowerCase() === 'stock plus'"
+                                                                                ng-click="skuMaintCtrl.gotoRetailScreen(sku.id); ">
+                                                                                Maintain
+                                                                                <strong>Retails</strong>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ng-if="skuGroup.availableGroupSkus > 0 && skuGroup.isSkusLoaded">
+                                            <div class="col-lg-12 col-md-12 aligncenter p-t-10 m-b-10">
+                                                <button class="btn btn-sm btn-inverse" data-ng-click="skuMaintCtrl.loadMoreSkusData(skuMaintCtrl.groupByField,skuGroup)">Load Remaining {{skuGroup.availableGroupSkus}} Records</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="skuGroup.isSkusLoaded === false || skuGroup.isMoreSkusLoaded === false">
+                                        <span class="f-17 f-700 c-black">Loading</span>
+                                        <span class="f-700" style="letter-spacing: 3px;">
+                                            <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="group-by-panel" data-ng-class="{'activate':skuMaintCtrl.showgroupByMenu}" data-ng-if="skuMaintCtrl.groupByField.length>0">
+                                    <span class="d-flex d-flex-h-center d-flex-v-center bg-primary" data-ng-if="!skuMaintCtrl.showgroupByMenu" id="open-setting"
+                                        data-ng-click="skuMaintCtrl.showgroupByMenu = !skuMaintCtrl.showgroupByMenu;">
+                                        <i class="zmdi zmdi-settings"></i>
+                                    </span>
+                                    <span class="d-flex d-flex-h-center d-flex-v-center bg-primary" data-ng-if="skuMaintCtrl.showgroupByMenu" id="close-setting"
+                                        data-ng-click="skuMaintCtrl.showgroupByMenu = !skuMaintCtrl.showgroupByMenu;">
+                                        <i class="zmdi zmdi-close"></i>
+                                    </span>
+                                    <form>
+                                        <span class="no-padding group-by-header-panel c-bluegray">Group by</span>
+                                        <div class="col-xs-12 p-0 m-b-10">
+                                            <select class="form-control select-component input-sm" ng-model="skuMaintCtrl.groupByField" ng-change="skuMaintCtrl.groupByData(skuMaintCtrl.groupByField);"
+                                                ng-options="each.prefix as each.name for each in skuGroupByDropdown|filter:{prefix:'!description'}|filter:{prefix:'!next_effective_date'}|filter:{prefix:'!status_effective_date'}">
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-12 p-0 m-b-10 f-500">
+                                            <a class="cursor-pointer">
+                                                <span data-ng-click="skuMaintCtrl.toggleAllGroups(1);">Select All</span>
+                                            </a> |
+                                            <a class="cursor-pointer">
+                                                <span data-ng-click="skuMaintCtrl.toggleAllGroups(0);">Unselect All
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-12 p-0 groupitems-container rc-scroll-bar">
+                                            <div data-ng-repeat="gc in skuMaintCtrl.groupSkus">
+                                                <div class="checkbox p-l-5">
+                                                    <label>
+                                                        <span data-ng-if="skuMaintCtrl.groupByField.includes('effective_date')">{{gc[skuMaintCtrl.groupByField]|FormatDate}}
+                                                            <span style="color:green"> [{{gc.count}}]</span>
+                                                        </span>
+                                                        <span data-ng-if="!skuMaintCtrl.groupByField.includes('effective_date')">{{gc[skuMaintCtrl.groupByField]}}
+                                                            <span style="color:green">
+                                                                <span class="f-14 f-700">( {{gc.count}} )</span>
+                                                            </span>
+                                                        </span>
+                                                        <input type="checkbox" ng-model="gc.selected" ng-true-value="1" ng-false-value="0" ng-click="skuMaintCtrl.toggleselectedGroupitem(gc,$index);toggleCollapse($event);">
+                                                        <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </d-expand-collapse>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-0" ng-if="skuMaintCtrl.isShowHistory === true;" data-ng-include="'./application/templates/history.html'"></div>
+                    <div class="col-xs-12 p-0" data-ng-include="'./application/modules/item/sku/panel.move.sku.html'">
+                    </div>
+                    <!-- <div ng-include=" 'application/modules/item/sku/panel.sku.availability.form.html' "></div> -->
+                    <div ui-view="clone"></div>
+                    <div ui-view="inventory"></div>
+                    <div ui-view="installation_retail"></div>
+                    <!-- This will call filter state keeping the main location state -->
+                    <div ui-view="filter"></div>
+                    <meta-data-panel></meta-data-panel>
+                    <div ui-view=""></div>
+                    <div class="col-lg-12 p-0">
+                        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':skuMaintCtrl.isRefreshing}">
+                            <div class="col-xs-6 p-0">
+                                <span class="f-15 f-300 pull-left">{{skuMaintCtrl.refreshTableText}}</span>
+                            </div>
+                            <div class="col-xs-6 p-0" data-ng-if="skuMaintCtrl.totalTimeText">
+                                <span class="pull-right f-300">
+                                    <strong>{{skuMaintCtrl.skus.length}}</strong>
+                                    <span class="f-14 c-gray">{{skuMaintCtrl.totalRecordsText}}</span>
+                                    <span ng-bind-html="skuMaintCtrl.totalTimeText"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="skuMaintCtrl.skuPermissions && !skuMaintCtrl.skuPermissions.view" data-ng-include="'./application/templates/restricted.access.html'"></div>
+                <div class="col-xs-12 p-0 module-content">
+                    <div class="col-xs-12 text-center text-info m-t-25" data-ng-if="!skuMaintCtrl.isDeletingItem&&!skuMaintCtrl.isFilterApplied&&skuMaintCtrl.totalRecordCount === 0 && skuMaintCtrl.isLoaded && skuMaintCtrl.totalSkuCount == 0">
+                        <span class="f-15 f-300">No SKU available for the particular item.</span>
+                    </div>
+                    <div class="col-xs-12 text-center text-info m-t-25" data-ng-if="!skuMaintCtrl.isDeletingItem&&!skuMaintCtrl.isFilterApplied&&skuMaintCtrl.totalSkuCount > 0 && skuMaintCtrl.isLoaded && skuMaintCtrl.totalRecordCount === 0">
+                        <span class="f-15 f-300">No Active SKUs present for the selected item.</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 module-content-configuration d-flex align-items-center justify-content-center" data-ng-if="skuMaintCtrl.isDeletingItem">
+                    <span class="f-15 f-700 text-center m-r-10">Deleting Item</span>
+                    <img src="./img/loading.gif" alt="" style="width:100px;height:100px;">
+                </div>
+                <div class="col-xs-12 p-0" data-ng-class="{'module-content': !skuMaintCtrl.recordsCount}" data-ng-if="
+                        skuMaintCtrl.isFilterApplied &&
+                        (
+                            (!skuMaintCtrl.isGroupByApplied && skuMaintCtrl.skus.length === 0 && skuMaintCtrl.isLoaded) ||
+                            (skuMaintCtrl.isGroupByApplied && skuMaintCtrl.groupSkus.length === 0 && skuMaintCtrl.isGroupHeader)
+                        )
+                    ">
+                    <div class="col-xs-12 text-center text-info m-t-25">
+                        <span class="f-15 f-300" ng-if="skuMaintCtrl.totalSkuCount == 0">No results matching your criteria. Please amend your search options.
+                        </span>
+                        <span class="f-15 f-300" ng-if="skuMaintCtrl.totalSkuCount > 0">No Active SKUs present for the selected item.
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-include="'./application/modules/item/sku/sku.type.selection.model.html'"></div>
+            <div data-ng-include="'./application/modules/item/sku/installation.fee.panel.html'" data-ng-if="skuMaintCtrl.showInstallationPanel"></div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@angular/upgrade": "^19.2.13",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "angular-animate": "^1.8.3",
+    "angular-route": "^1.8.3",
+    "autoprefixer": "^10.4.21",
+    "lucide-react": "^0.511.0",
+    "postcss": "^8.5.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.8",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
+  }
+}

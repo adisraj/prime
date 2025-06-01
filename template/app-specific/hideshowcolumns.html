@@ -1,0 +1,75 @@
+<!--<div class="dropdown checkbox">
+    <button class="btn btn-link waves-effect header-button" ng-init="showColumnEdit = false;" ng-click="showColumnEdit = !showColumnEdit" style="font-size:13px;">
+    	<i class="zmdi zmdi-more zmdi-hc-2x"></i>
+    </button>
+    <div class="dropdown-content dropdown-content-style slideDown" ng-if="showColumnEdit">
+        <label class="checkbox-inline" ng-repeat="col in hideShowInput" style="display:block;padding-bottom: 5px;
+    margin-left: 20px;margin-right:4px;">
+            <input type="checkbox" hidden="hidden" ng-model-options="{ getterSetter: true }" ng-model="col.show">
+            <i class="input-helper"></i> {{col.title}}
+            <br/>
+        </label>
+    </div>
+</div>-->
+<!--
+<button class="btn btn-block addItembutton waves-effect">
+    <span class="zmdi zmdi-more"></span>
+    </button>-->
+
+<button class="btn-primal btn-block  waves-effect" ng-init="$showDetailsColumns = false;" ng-click="$showDetailsColumns = true;"><span class="f-700">Columns</span></button>
+
+<div id="rightsidebar" class="rcpscrollbar" data-ng-class="{'toggled':$showDetailsColumns === true || $showDetailsColumns === 1}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a data-ng-click="$showDetailsColumns = false;" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel">Hide/Show<strong> Columns</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12 updatepanel">
+        <svg height="130" width="200">
+            <svg version="1.1" id="Capa_1"  class="sidebar-svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="60px" y="20px"
+	 viewBox="0 0 19 19" style="enable-background:new 0 0 19 19;" xml:space="preserve" height="80" width="150">
+                <g>
+                    <circle cx="2.5" cy="16.5" r="2.5"/>
+                    <circle cx="2.5" cy="9.5" r="2.5"/>
+                    <circle cx="2.5" cy="2.5" r="2.5"/>
+                    <circle cx="9.5" cy="16.5" r="2.5"/>
+                    <circle cx="9.5" cy="9.5" r="2.5"/>
+                    <circle cx="9.5" cy="2.5" r="2.5"/>
+                    <circle cx="16.5" cy="16.5" r="2.5"/>
+                    <circle cx="16.5" cy="9.5" r="2.5"/>
+                    <circle cx="16.5" cy="2.5" r="2.5"/>
+                </g>
+            </svg>
+        </svg>
+    </div>
+
+    <div class="form-group col-xs-12 p-0" valdr-form-group>
+        <div class="fg-line form-group checkbox" ng-repeat="col in hideShowInput">
+            <div class="pull-right col-xs-8">
+                <label class="checkbox-inline" style="font-size: 16px;">
+                        <input type="checkbox" hidden="hidden" ng-model-options="{ getterSetter: true }" ng-model="col.show">
+                        <i class="input-helper"></i> {{col.title}}
+                    </label>
+            </div>
+            <div class="pull-right col-xs-4">
+                <ul class="lv-actions actions">
+                    <li ng-if="($first || !$last) && !($first && $last)">
+                        <a data-ng-click="move(col,$index,'down')">
+                            <i class="plusbtn zmdi zmdi-long-arrow-down c-cyan"></i>
+                        </a>
+                    </li>
+                    <li ng-if="(!$first || $last) && !($first && $last)">
+                        <a data-ng-click="move(col,$index,'up')">
+                            <i class="plusbtn zmdi zmdi-long-arrow-up c-cyan"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

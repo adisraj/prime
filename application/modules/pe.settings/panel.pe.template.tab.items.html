@@ -1,0 +1,236 @@
+<link rel="stylesheet" href="./application/modules/pe.settings/toolbar.tree.css">
+<div id="rcrightsidebar"
+    data-ng-class="{'toggled':templateController.showTabItemsPanel === true,'changepositiontoggled':templateController.isShowTabDetails === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a class="cursor-pointer"
+                data-ng-click="templateController.showTabItemsPanel = false;templateController.isShowTabDetails = false;">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Add Department/Class">Add <strong>Tab Items</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!templateController.isUnauthorized">
+        <div class="d-flex m-t-10 m-b-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/toolbar-quick-access.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div class="col-xs-12 p-0">
+                <ng-form class="col-xs-12 p-0" name="templateController.department_class_form" role="form"
+                    novalidate="novalidate" valdr-type="RULES-103">
+                    <div class="form-group" valdr-form-group>
+                        <span style="color:red;"
+                            ng-show="templateController.department_class_form.division_id.$invalid">* </span>
+                        <span style="color:green;"
+                            ng-show="templateController.department_class_form.division_id.$valid">* </span>
+                        <label>Select Division</label>
+                        <select id="division_id" name="division_id"
+                            ng-model="templateController.department_class_details.division_id"
+                            class="input-sm form-control select-component"
+                            ng-options="division.id as division.short_description for division in templateController.nodesDetails"
+                            ng-change="templateController.departments=(templateController.nodesDetails|filter:{id:templateController.department_class_details.division_id}:true)[0].nodes; templateController.prepareDropDown('Department',templateController.department_class_details.division_id);"
+                            required>
+                            <option value="" disabled>Select Division</option>
+                        </select>
+                    </div>
+                    <div class="form-group" valdr-form-group
+                        data-ng-if="templateController.department_class_details.division_id">
+                        <span style="color:red;"
+                            ng-show="templateController.department_class_form.department_id.$invalid">* </span>
+                        <span style="color:green;"
+                            ng-show="templateController.department_class_form.department_id.$valid">* </span>
+                        <label>Select Department</label>
+                        <select id="department_id" name="department_id"
+                            ng-model="templateController.department_class_details.department_id"
+                            class="input-sm form-control select-component"
+                            ng-options="dept.id as dept.short_description for dept in templateController.departmentsMap"
+                            ng-change="templateController.classes=(templateController.departments|filter:{id:templateController.department_class_details.department_id})[0].nodes; templateController.prepareDropDown('Class');"
+                            required>
+                            <option value="" disabled>Select Department</option>
+                        </select>
+                    </div>
+                    <div
+                        data-ng-if="templateController.department_class_details.department_id && templateController.classes.length > 0">
+                        <div class="col-xs-12 p-0  m-b-10" style="border:1px solid #ececec" data-ng-init="">
+                            <div class="col-xs-12 p-10 f-700 form-group" style="border-bottom:1px solid #ececec; background-color:#f7f7f7;
+                            color: #3a7aa5;">
+                                Select Class
+                            </div>
+                            <div class="col-xs-12 m-b-10">
+                                <input class="form-control input-sm" type="text " ng-model="classSearch"
+                                    indicate-quick-search placeholder="Quick Search "/>
+                            </div>
+                            <div class="col-xs-12 p-t-10 p-b-10 form-group" style="border-bottom: 1px solid #dedede;
+                            background-color: #fbfbfb;
+                            border-top: 1px solid #dedede;">
+                                <div class="checkbox">
+                                    <label><span class="f-700">Class List</span>
+                                        <input id="select_all" type="checkbox" ng-model="templateController.select_all"
+                                            ng-init="templateController.select_all = true" ng-true-value="true"
+                                            ng-false-value="false"
+                                            ng-click="templateController.selectAllClass(templateController.select_all);">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 form-group"
+                                ng-repeat="class in templateController.classMap|filter:{ short_description:classSearch}">
+                                <div class="checkbox m-b-5">
+                                    <label class="f-300"> {{class.short_description}}
+                                        <input type="checkbox" ng-model="templateController.selectedClasses[class.id]"
+                                            data-ng-change="templateController.changeValue(class.id,templateController.selectedClasses[class.id]);"
+                                            ng-false-value="undefined" />
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 p-10"
+                        data-ng-if="templateController.department_class_details.department_id && templateController.classes.length === 0">
+                        <span class="f-15 f-300 pull-left">No Class to add for selected department.</span></div>
+                    <div class="col-xs-12 p-0 m-10" ng-if="templateController.departments.length === 0">
+                        <span class="f-15 f-300 pull-left">No Department/Class to add for selected division.</span>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-block btn-primal btn-lg" id="save_btn"
+                            ng-click="templateController.saveTabItems(templateController.department_class_details);"
+                            ng-class="{'btn-danger': templateController.saveBtnError === true}"
+                            data-ng-disabled="!templateController.department_class_details.department_id || templateController.isProcessing || !templateController.isLoaded">
+                            <strong>{{templateController.saveBtnText}}</strong>
+                        </button>
+                    </div>
+                </ng-form>
+            </div>
+            <div data-ng-if="templateController.message"
+                class="col-xs-12 alert alert-success alert-dismissable m-b-0 p-t-10 p-b-10">
+                <a class="close" data-ng-click="templateController.message = null" aria-hidden="true">&times;</a>
+                {{templateController.message}}
+            </div>
+            <div data-ng-if="templateController.errorMessage"
+                class="col-xs-12 alert alert-danger alert-dismissable m-b-0 p-t-10 p-b-10">
+                <a class="close" data-ng-click="templateController.errorMessage = null" aria-hidden="true">&times;</a>
+                {{templateController.errorMessage}}
+            </div>
+            <!-- <rcp-success-form success-tick="success_tick.svg" create-new-fn="templateController.createAnotherForm();" close-fn="templateController.showTabItemsPanel = false;" save-success="templateController.isSaveSuccess">
+            </rcp-success-form> -->
+        </div>
+        <div class="col-xs-12 p-0">
+            <div data-ng-show="templateController.errorMessage" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="templateController.errorMessage = null"
+                    aria-hidden="true">&times;</button> {{templateController.errorMessage}}
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-show="templateController.itemsMessage" class="alert alert-success">
+            <button type="button" class="close" data-ng-click="templateController.itemsMessage = null"
+                aria-hidden="true">&times;</button> {{templateController.itemsMessage}}
+        </div>
+        <div data-ng-show="templateController.itemsErrorMessage" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="templateController.itemsErrorMessage = null"
+                aria-hidden="true">&times;</button> {{templateController.itemsErrorMessage}}
+        </div>
+    </div>
+    <div ng-if="templateController.isUnauthorized && (templateController.isShowAdd || !templateController.isShowAdd)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+    <div class="col-xs-12 side-panel-name m-b-10">
+        <div class="close-icon">
+
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Tab Contents">Tab <strong>Contents</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-12 p-0 text-center" ng-if="templateController.tabItems.length === 0">
+            <span class="f-15 f-300">No item exists for selected tab.</span>
+        </div>
+        <div class="col-xs-12 p-0" ng-if="templateController.tabItems.length > 0">
+            <table class="table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th class="text-center">Description</th>
+                        <th class="text-center" style="width: 5%">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in templateController.tabItems track by $index">
+                        <td>
+                            <span
+                                data-ng-if="item.divisionId">{{templateController.hierarchyValuesMap[item.divisionId].short_description}}
+                                <span class="p-l-5 p-r-5 zmdi zmdi-long-arrow-right arrow-style c-firebrick"></span>
+                            </span>
+                            <span data-ng-if="item.departmentId"
+                                data-ng-init="item.divisionId = templateController.hierarchyValuesMap[item.departmentId].parent_id">{{templateController.hierarchyValuesMap[item.departmentId].short_description}}
+                            </span>
+                            <span
+                                data-ng-if="templateController.hierarchyValuesMap[item.node_id].level === 'department'"
+                                data-ng-init="item.divisionId = templateController.hierarchyValuesMap[item.node_id].parent_id"
+                                title="{{templateController.hierarchyValuesMap[item.node_id].short_description}}">{{templateController.hierarchyValuesMap[item.node_id].short_description | truncate : 20}}
+                            </span>
+                            <span data-ng-if="templateController.hierarchyValuesMap[item.node_id].level === 'class'"
+                                data-ng-init="item.departmentId = templateController.hierarchyValuesMap[item.node_id].parent_id"
+                                title="{{ templateController.hierarchyValuesMap[item.node_id].short_description}}">
+                                <span class="p-l-5 p-r-5 zmdi zmdi-long-arrow-right arrow-style c-firebrick"></span>
+                                {{ templateController.hierarchyValuesMap[item.node_id].short_description | truncate : 20}}</span>
+                        </td>
+                        <td class="text-center"><span data-ng-click="templateController.deleteTabItem(item);"
+                                class="zmdi zmdi-delete zmdi-hc-fw text-danger cursor-pointer"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-if="templateController.isUnauthorized && (templateController.isShowAdd || !templateController.isShowAdd)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<!-- <div id="rcrightsidebar" data-ng-class="{'toggled':templateController.isShowTabDetails === true,'changeposition':templateController.showTabItemsPanel === true}">
+    <div class="m-t-25 d-flex">
+        <div class="p-0 cursor-pointer p-absolute" data-ng-click="templateController.isShowTabDetails = false;templateController.showTabItemsPanel = false;">
+            <a>
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="p-0 m-auto">
+            <label class="rclabel editformlabel" title="Add Department/Class">Pill Items<strong></strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-show="templateController.itemsMessage" class="alert alert-success">
+            <button type="button" class="close" data-ng-click="templateController.itemsMessage = null" aria-hidden="true">&times;</button> {{templateController.itemsMessage}}
+        </div>
+        <div data-ng-show="templateController.itemsErrorMessage" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="templateController.itemsErrorMessage = null" aria-hidden="true">&times;</button> {{templateController.itemsErrorMessage}}
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-12 p-0 m-10" ng-if="templateController.tabItems.length === 0">
+            <span class="f-15 f-300 pull-left">No item exists for selected tab.</span>
+        </div>
+        <div class="col-xs-12" ng-if="templateController.tabItems.length > 0">
+            <table class="table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center" style="width: 5%">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in templateController.tabItems track by $index">
+                        <td class="text-center">{{$index + 1}}</td>
+                        <td>{{ templateController.hierarchyValuesMap[item.node_id].short_description}}</td>
+                        <td class="text-center"><span data-ng-click="templateController.deleteTabItem(item);" class="zmdi zmdi-delete zmdi-hc-fw text-danger cursor-pointer f-18"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> -->

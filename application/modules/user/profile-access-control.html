@@ -1,0 +1,171 @@
+<div class="form-page-size" data-ng-controller="UserProfileController as usrProfCtrl">
+    <div class="p-5 m-b-5 stagesection" style="height:60px;">
+        <div class="col-lg-3 col-md-3 col-sm-6 setstagediv">
+            <div class="aligncenter">
+                <label class="rclabel p-t-10 setstagelabel  profile-stage-labels"><a data-ui-sref="pages.profile.profile-about" style="color:black;"><b>Profile Details</b></a></label>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 setstagediv passed">
+            <div class="aligncenter">
+                <label class="rclabel p-t-10 setstagelabel  profile-stage-labels passed"><b>Access Control</b></label>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 setstagediv">
+            <div class="aligncenter">
+                <label class="rclabel p-t-10 setstagelabel profile-stage-labels">
+                    <a data-ui-sref="pages.profile.preferences" class="c-black"><b>Preferences</b></a></label>
+            </div>
+        </div>
+    </div>
+    <div class="p-0" style="height:100%;">
+        <div class="inheritheight">
+            <!--Div for preview and publish item stage start-->
+            <div class="col-lg-12 p-10" style="height:calc(100% - 110px);overflow:auto;">
+                <div class="c-overflow" style="height:30%">
+                    <div class="col-lg-12 p-0">
+                        <div class="col-lg-12" style="padding:5px;border-bottom: 1px solid #eaeaea;">
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <label class="p-l-5 m-0" style="font-size:16px;font-family: 'Roboto Condensed';color: #5a4c5f !important;font-weight: 700;">User Roles</label>
+                            </div>
+                        </div>
+                        <div ng-repeat="each in usrProfCtrl.userRoles">
+                            <div class="col-lg-12 p-5 previewnpublish" style="border-bottom: 1px solid #eaeaea;display: -webkit-inline-box;">
+                                <div class="col-lg-3 maintenance-field-label" style="display: -webkit-inline-box;">
+                                    <div style="background: #53D2FF;color: white;height: 32px;width: 32px;font-size: 18;text-align: center;line-height: 1.7;border-radius: 50%;">{{each.role |acronym}}</div>
+                                    <span class="m-l-20" style="line-height: 2;font-size: 1.2em;">{{each.role}}</span>
+                                </div>
+                                <div class="col-lg-7 publish-preview">
+                                    <label style="line-height: 2;font-size: 1em;">{{each.details}}</label>
+                                </div>
+                                <div class="col-lg-2">
+                                    <button type="button" class="f-700 btn-sm btn-secondary pull-right" data-ng-click="usrProfCtrl.isShowPermissions=true; usrProfCtrl.loadRolePermissionsByRoleId(each.role_id);">Show Permissions</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="usrProfCtrl.isShowPermissions" class="c-overflow" style="height:70%;">
+                    <div class="col-lg-12 p-0">
+                        <div class="col-lg-12" style="padding:5px;border-bottom: 1px solid #eaeaea;">
+                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                <label class="p-l-5 m-0" style="font-size:16px;font-family: 'Roboto Condensed';color: #5a4c5f !important;font-weight: 700;">User Permissions</label>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" style="height: 35px">
+                                <button type="button" class="f-700 btn-sm btn-secondary pull-right" data-ng-click="usrProfCtrl.isShowPermissions=false">Close</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 p-0 rclabel" style="height: 40px;background: #ECE8EE;line-height: 2.5">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                Permissions
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2">
+                                Role
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                Create
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                View
+                            </div>
+                            <!-- <div class="col-lg-1 col-md-1 col-sm-1">
+                                Edit
+                            </div>-->
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                Update
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                Delete
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                Drops
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                All
+                            </div>
+                        </div>
+                        <div class="col-lg-12 p-0 rclabel" ng-repeat="permission in usrProfCtrl.userRolePermList" style="height: 40px;line-height: 2.5;border-bottom: 1px solid #eaeaea;">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                {{permission.entity}}
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2">
+                                {{permission.role}}
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 p-10">
+                                <span>
+                                    <i ng-if="permission.create" class="glyphicon glyphicon-ok" style="color: green;"></i>
+                                   <!-- <i ng-if="!permission.create" class="glyphicon glyphicon-remove" style="color: red;"></i>-->
+                                 </span>
+                                <div class="checkbox" ng-if="!permission.create">
+                                    <label>
+                                        <input id="create" type="checkbox" ng-checked="all" hidden="hidden" ng-model="create" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 p-10">
+                                <span>
+                                    <i ng-if="permission.view" class="glyphicon glyphicon-ok" style="color: green;"></i>
+                                 </span>
+                                <div class="checkbox" ng-if="!permission.view">
+                                    <label>
+                                        <input id="view" type="checkbox" ng-checked="all" hidden="hidden" ng-model="view" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <!--  <div class="col-lg-1 col-md-1 col-sm-1 p-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="edit" type="checkbox" hidden="hidden" ng-model="edit" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>-->
+                            <div class="col-lg-1 col-md-1 col-sm-1 p-10">
+                                <span>
+                                    <i ng-if="permission.update" class="glyphicon glyphicon-ok" style="color: green;"></i>
+                                 </span>
+                                <div class="checkbox" ng-if="!permission.update">
+                                    <label>
+                                        <input id="update" type="checkbox" ng-checked="all" hidden="hidden" ng-model="update" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 p-10">
+                                <span>
+                                    <i ng-if="permission.delete" class="glyphicon glyphicon-ok" style="color: green;"></i>
+                                 </span>
+                                <div class="checkbox" ng-if="!permission.delete">
+                                    <label>
+                                        <input id="delete" type="checkbox" ng-checked="all" hidden="hidden" ng-model="delete" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 p-10">
+                                <span>
+                                    <i ng-if="permission.drop" class="glyphicon glyphicon-ok" style="color: green;"></i>
+                                 </span>
+                                <div class="checkbox" ng-if="!permission.drop">
+                                    <label>
+                                        <input id="drop" type="checkbox" ng-checked="all" hidden="hidden" ng-model="drop" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 p-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="all" type="checkbox" hidden="hidden" ng-model="all" ng-true-value="1" ng-false-value="0">
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

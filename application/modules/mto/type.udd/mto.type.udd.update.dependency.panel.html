@@ -1,0 +1,50 @@
+<div id="rcrightsidebar" ng-class="{'toggled':mtoTypeUDDCtrl.isShowUDDDependencyPanel===true}">
+    <div class="col-xs-12">
+        <div class="col-xs-12 side-panel-name m-t-25">
+            <div class="close-icon">
+                <a data-ng-click="mtoTypeUDDCtrl.closeDependencyForm();" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="panel-name-section">
+                <label class="rclabel editformlabel" title="MTO Type UDD Dependency">MTO Type UDD Dependency
+                </label>
+            </div>
+        </div>
+        <div class="rc-alert rc-alert-info m-t-10 col-xs-12" aria-hidden="false" role="alert">
+            <div class="col-xs-12 d-flex m-b-5 p-0">
+                <div class="rc-alert-icon-section">
+                    <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                    </span>
+                </div>
+                <div>
+                    <div class="f-16 f-700 text-info m-b-5">This UDD is being used in {{mtoTypeUDDCtrl.mtoUddError.data.error.ids.length}} MTO choice[s].</div>
+                    <div>
+                        <span class="f-15">
+                            Updating the user defined data type for selected type will
+                            <strong>remove all user defined values</strong> configured for {{mtoTypeUDDCtrl.mtoUddError.data.error.ids.length}}
+                            MTO choice[s].
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="mtoTypeUDDCtrl.isRequired!==true" class="col-xs-12 d-flex p-0" style="justify-content: space-around;border: 1px solid #c9d9e0;border-top: none;background: #ffffff;">
+            <div class="col-xs-12 d-flex p-10" style="flex-direction: column;">
+                <div class="d-flex" style="justify-content: space-evenly;">
+                    <div>
+                        <button type="button" class="btn btn-success" id="update_title_btn"
+                            data-ng-click="mtoTypeUDDCtrl.update(mtoTypeUDDCtrl.new_type_udd, true);">
+                            <strong>Proceed</strong>
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-cancel" id="update_title_btn" data-ng-click="mtoTypeUDDCtrl.closeDependencyForm();">
+                            <strong>Cancel</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

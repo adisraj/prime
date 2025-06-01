@@ -1,0 +1,9 @@
+<keybinding on="esc" invoke="closeFn()" />
+<div ng-if="updateSuccess || saveSuccess" class="form-group col-xs-12 p-r-0" valdr-form-group>
+    <img class="updatesuccessicon" src="./img/success_tick.svg" />
+    <label class="editformlabel" style="margin:0px 0px 10% 3%;font-size: 26px;" ng-if="updateSuccess">You have updated <strong style="font-size: 35px;">Successfully!</strong></label>
+    <label class="editformlabel" style="margin:0px 0px 10% 3%;font-size: 26px;" ng-if="saveSuccess">You have created <strong style="font-size: 35px;">Successfully!</strong></label>
+    <button type="button" class="btn-block btn-primal btn-lg tabfocus-btn" id="update_title_btn" data-ng-click="closeFn();">
+        <strong>Done</strong>
+    </button>
+</div>

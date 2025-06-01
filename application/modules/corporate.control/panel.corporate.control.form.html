@@ -1,0 +1,332 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+
+    .attribute-validation-error {
+        display: block;
+        font-size: 11px;
+        color: #e41708;
+        font-family: 'lato', 'Roboto';
+        margin: 3px 1px 1px 1px;
+    }
+
+    #corporate_img {
+        visibility: hidden;
+        display: contents;
+    }
+
+    .corporateImage {
+        display: inline-block;
+        background-color: gray;
+        color: white;
+        padding: 0.5rem;
+        font-family: sans-serif;
+        border-radius: 0.3rem;
+        cursor: pointer;
+    }
+</style>
+<div id="rcrightsidebar"
+    data-ng-class="{'toggled':orderHelpCtrl.isShowDetails === true || orderHelpCtrl.isShowDetails === 1,'changeposition':showhistory === true || orderHelpCtrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button class="close-icon bg-none border-none btn-link p-0"
+            data-ng-click="orderHelpCtrl.closeForm();closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section" title="{{orderHelpCtrl.entityInformation.name}}" title-direction="top">
+            <label class="rclabel editformlabel"
+                ng-if="(!orderHelpCtrl.isDeleteSuccess && orderHelpCtrl.isShowAdd && !orderHelpCtrl.isConfirmDelete)">Create
+                <strong>{{orderHelpCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(!orderHelpCtrl.isDeleteSuccess && !orderHelpCtrl.isShowAdd && !orderHelpCtrl.isConfirmDelete)">Update
+                <strong>{{orderHelpCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+            <label class="rclabel editformlabel"
+                ng-if="(orderHelpCtrl.isDeleteSuccess || orderHelpCtrl.isConfirmDelete && !orderHelpCtrl.isShowAdd)">Delete
+                <strong>{{orderHelpCtrl.entityInformation.name | truncate :30}}</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="orderHelpCtrl.showErrorDetails || !(orderHelpCtrl.isUpdateSuccess || orderHelpCtrl.isSaveSuccess || orderHelpCtrl.isConfirmDelete || orderHelpCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <svg title="Corporate Message" title-direction="right" class="sidebar-svg-icon"
+                    xmlns="http://www.w3.org/2000/svg" style="padding-top: 12px;
+                pointer-events: auto;
+                color: #e2e2e2 !important;
+                font-size: 100;" aria-hidden="true" role="img" width="1.25em" height="1em"
+                    preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 512">
+                    <path fill="currentColor"
+                        d="M384 320H256c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V352c0-17.67-14.33-32-32-32zM192 32c0-17.67-14.33-32-32-32H32C14.33 0 0 14.33 0 32v128c0 17.67 14.33 32 32 32h95.72l73.16 128.04C211.98 300.98 232.4 288 256 288h.28L192 175.51V128h224V64H192V32zM608 0H480c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V32c0-17.67-14.33-32-32-32z" />
+                </svg>
+
+            </div>
+        </div>
+        <div class="col-xs-12 p-0 rc-alert rc-alert-type-info m-b-10"
+            data-ng-if="!orderHelpCtrl.isConfirmDelete && !orderHelpCtrl.isUpdateSuccess && !orderHelpCtrl.isSaveSuccess && !orderHelpCtrl.isDeleteSuccess"
+            aria-hidden="false" role="alert">
+            <div class="col-xs-12 p-5 d-flex">
+                <span class="text-danger zmdi zmdi-alert-polygon" style="font-size:35px" title="Maintain Document"
+                    title-direction="right" fixed-position="true">
+                </span>
+                <div style="line-height: 1.7; margin-left: -10px;">
+                    <ul>
+                        <div class="f-14 f-700 text-info">Note</div>
+                        <li>File Accepts Images and Videos Only!</li>
+                        <li>
+                            Maximum size supported for file upload is <strong>60 MB</strong>.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-if="!orderHelpCtrl.showErrorDetails">
+            <div
+                ng-if="!(orderHelpCtrl.isUpdateSuccess || orderHelpCtrl.isSaveSuccess || orderHelpCtrl.isConfirmDelete || orderHelpCtrl.isDeleteSuccess)">
+                <ng-form role="form" novalidate="novalidate" name="orderHelpCtrl.CorporateConfig_form"
+                    valdr-type="RULES-51">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="orderHelpCtrl.CorporateConfig_form.title.$invalid">* </span>
+                        <span class="c-green" ng-show="orderHelpCtrl.CorporateConfig_form.title.$valid">* </span>
+                        <label>Title</label>
+                        <input name="title" id="title" type="text" class="form-control input-sm"
+                            ng-model="orderHelpCtrl.CorporateConfig_details.title" placeholder="Enter Title"
+                            errorvalue="orderHelpCtrl.CorporateConfig_details.title_error"
+                            ng-model-options="{ updateOn: 'blur' }" required maxlength="45">
+                        <span class="attribute-validation-error"
+                            data-ng-if="orderHelpCtrl.CorporateConfig_form.title.$invalid && orderHelpCtrl.CorporateConfig_form.title.$dirty">
+                            * Title is required!
+                        </span>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="orderHelpCtrl.CorporateConfig_form.description.$invalid">* </span>
+                        <span class="c-green" ng-show="orderHelpCtrl.CorporateConfig_form.description.$valid">* </span>
+                        <label>Corporate Message</label>
+                        <trix-editor angular-trix ng-model="orderHelpCtrl.CorporateConfig_details.description"
+                            name="description" id="description" class="trix-content">
+                        </trix-editor>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <button type="button" class="btn btn-info f-700 btn-block" name="update_title_btn"
+                            style="background-color: gray;" id="update_title_btn"
+                            ngf-select="orderHelpCtrl.readURL($files, $invalidFiles)" accept="*">
+                            <span>Choose File</span>
+                        </button>
+                        <span class="attribute-validation-error" data-ng-if="invalid_size">
+                            * File Size Exceeds <b>60 MB</b> Limit!
+                        </span>
+                    </div>
+                    <label class="c-firebrick" data-ng-if="orderHelpCtrl.file_name" style="font-weight: bold;">Uploaded
+                        Files:</label>
+                    <div class="form-group d-flex" style="justify-content: space-between;border: 2px solid #31708f;"
+                        data-ng-if="orderHelpCtrl.file_name">
+                        <b class="p-10" style="word-break: break-all;">{{orderHelpCtrl.file_name}}</b>
+                        <div class="d-flex align-items-center">
+                           <div data-ng-if="orderHelpCtrl.file_type && (orderHelpCtrl.file_type.includes('video') || orderHelpCtrl.file_type.includes('mp4'))" class="d-flex">
+                                <label>
+                                    <input style="vertical-align:bottom; width: 15px;
+                                     height: 20px; margin-right: 5px; cursor: pointer !important;"
+                                    type="checkbox"  ng-true-value="1" ng-false-value="0" data-ng-model="orderHelpCtrl.CorporateConfig_details.auto_play"
+                                    ">
+                                    <i class="input-helper"></i>
+                                </label>
+                                <label title="Auto Play" style="margin-right: 8px;margin-top: 5px; cursor: pointer !important;">
+                                    <span style="white-space: nowrap !important;">
+                                        Auto Play
+                                    </span>
+                                </label>
+                            </div>
+                            <button type="button" id="doc_download" name="doc_download"
+                                class="d-flex align-items-center btn btn-link btn-sm m-r-10 p-0" title="Download"
+                                data-ng-if="orderHelpCtrl.file_size" style="border:0px;" ng-disabled="isDeleting"
+                                data-ng-click="downloadFile(orderHelpCtrl.CorporateConfig_details.id, orderHelpCtrl.file_name, orderHelpCtrl.file_type);">
+                                <span class="zmdi zmdi-download zmdi-hc-fw text-info f-16"></span>
+                                <div class="text-info">Download</div>
+                            </button>
+                            <button type="button" class="bg-none d-flex align-items-center cursor-pointer"
+                                title="Delete" style="border:0px;" ng-disabled="isDeleting"
+                                data-ng-if="orderHelpCtrl.file_size"
+                                data-ng-click="confirmRemoveDrop(orderHelpCtrl.CorporateConfig_details)">
+                                <span class="zmdi zmdi-delete zmdi-hc-fw text-danger f-14"></span>
+                                <div class="text-info">Remove</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-5" data-ng-if="orderHelpCtrl.CorporateConfig_details.files">
+                        <img data-ng-if="orderHelpCtrl.CorporateConfig_details.files[0].type.includes('image')" ngf-src="orderHelpCtrl.CorporateConfig_details.files[0]" style="height:200px;width:200px;">
+                        <video data-ng-if="orderHelpCtrl.CorporateConfig_details.files[0].type.includes('video')"
+                         ngf-src="orderHelpCtrl.CorporateConfig_details.files[0]" style="width:200px;"></video>
+                        <div class="d-flex" style="justify-content: space-between; align-items: flex-end;width: 200px;">
+                            <label class="c-gray f-300">{{orderHelpCtrl.CorporateConfig_details.files[0].type |
+                                truncate:40}}</label>
+                            <label class="c-gray f-300">{{orderHelpCtrl.CorporateConfig_details.files[0].size/1024 |
+                                DecimalPrecision:1}}
+                                kb</label>
+                        </div>
+                    </div>
+                    <div data-ng-if="orderHelpCtrl.CorporateConfig_details.files && orderHelpCtrl.CorporateConfig_details.files.length > 0
+                         && orderHelpCtrl.CorporateConfig_details.files[0].type.includes('video')" class="d-flex">
+                        <label>
+                            <input style="vertical-align:bottom; width: 15px; height: 20px; margin-right: 5px; cursor: pointer !important;"
+                            type="checkbox" ng-true-value="1" ng-false-value="0" data-ng-model="orderHelpCtrl.CorporateConfig_details.file_auto_play"
+                            ">
+                            <i class="input-helper"></i>
+                        </label>
+                        <label title="Auto Play" style="margin-right: 8px;margin-top: 5px; cursor: pointer !important;">
+                            <span style="white-space: nowrap !important;">
+                                Auto Play
+                            </span>
+                        </label>
+                    </div>
+                    <div class="align-items-center p-10">
+                        <span class="f-14 f-700 di-block" style="color: #4caf50;">
+                            <!-- <div class="text-center" ng-if="orderHelpCtrl.isDeleting && orderHelpCtrl.isDeleting === true">
+                                            <img class="m-auto" src="./img/product_search.gif" alt="" width="40px" height="40px" />
+                                        </div> -->
+                            <span class="f-21 f-700 m-r-5 text-success zmdi zmdi-check zmdi-hc-fw"
+                                ng-if="orderHelpCtrl.isDeleting && orderHelpCtrl.isDeleting === 1"
+                                style="color: #4caf50;"></span>
+                            {{orderHelpCtrl.showSuccessMessage}}
+                            <img src="./img/loadingData.gif"
+                                ng-if="orderHelpCtrl.isDeleting && orderHelpCtrl.isDeleting === true"
+                                style="height: 30px;width: 30px;" />
+                        </span>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span style="color:red;" ng-show="orderHelpCtrl.CorporateConfig_form.effective_date.$invalid">*
+                        </span>
+                        <span style="color:green;" ng-show="orderHelpCtrl.CorporateConfig_form.effective_date.$valid">*
+                        </span>
+                        <label>Effective Date</label>
+                        <input type="text" name="effective_date" id="effective_date"
+                            class="form-control input-sm rcp-mydatepicker"
+                            ng-model="orderHelpCtrl.CorporateConfig_details.effectiveDate" ui-mask="{{ui_date_mask}}"
+                            mydatepicker model-view-value="true"
+                            data-ng-change="orderHelpCtrl.requiredFrom();orderHelpCtrl.ValidationFromTo();"
+                            is-effective-date="false" required>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span style="color:red;"
+                            ng-show="orderHelpCtrl.CorporateConfig_form.end_date.$invalid || orderHelpCtrl.ValidationError">*
+                        </span>
+                        <span style="color:green;"
+                            ng-show="orderHelpCtrl.CorporateConfig_form.end_date.$valid && !orderHelpCtrl.ValidationError">*
+                        </span>
+                        <label>End Date</label>
+                        <input type="text" id="end_date" name="end_date" class="form-control input-sm rcp-mydatepicker"
+                            ng-model="orderHelpCtrl.CorporateConfig_details.endDate" ui-mask="{{ui_date_mask}}"
+                            mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                            is-effective-date="false" start-date="orderHelpCtrl.CorporateConfig_details.effective_date"
+                            data-ng-change="orderHelpCtrl.requiredFrom();orderHelpCtrl.ValidationFromTo();orderHelpCtrl.initial_config = false"
+                            required>
+                        <span class="attribute-validation-error" data-ng-if="orderHelpCtrl.ValidationError">
+                            * {{orderHelpCtrl.ValidationError}}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="attribute-validation-error" data-ng-if="orderHelpCtrl.Existingerror">
+                            * {{orderHelpCtrl.Existingerror}}
+                        </span>
+                        <span class="attribute-validation-error"
+                            data-ng-if="(!orderHelpCtrl.initial_config && (orderHelpCtrl.imagear.length == 0 && !orderHelpCtrl.file_name) && orderHelpCtrl.videoar.length ==0 && !orderHelpCtrl.CorporateConfig_details.description && !orderHelpCtrl.invalid_file)">
+                            * Corporate Message and File Cannot Be Empty!
+                        </span>
+                        <span class="attribute-validation-error" data-ng-if="orderHelpCtrl.invalid_file">
+                            * File Format is Unsupported!
+                        </span>
+                    </div>
+                    <div data-ng-if="!showConfirm">
+                        <rcp-edit-form-btns new-form="orderHelpCtrl.isShowAdd"
+                            save-fn="orderHelpCtrl.save(orderHelpCtrl.CorporateConfig_details);"
+                            save-btn-text="orderHelpCtrl.saveBtnText" save-btn-error="orderHelpCtrl.saveBtnError"
+                            update-fn="orderHelpCtrl.update(orderHelpCtrl.CorporateConfig_details);"
+                            update-btn-text="orderHelpCtrl.updateBtnText"
+                            update-btn-error="orderHelpCtrl.updateBtnError"
+                            confirm-fn="orderHelpCtrl.showconfirm(); closeShowHistory();"
+                            confirm-delete="orderHelpCtrl.isConfirmDelete"
+                            update-success="orderHelpCtrl.isUpdateSuccess"
+                            entity-id="orderHelpCtrl.CorporateConfig_details.id" access-permissions="permissionsMap"
+                            enable-button="orderHelpCtrl.CorporateConfig_form.$invalid || orderHelpCtrl.isupdating || 
+                            orderHelpCtrl.isSaving || orderHelpCtrl.ValidationError || orderHelpCtrl.invalid_file || invalid_size|| 
+                            orderHelpCtrl.Existingerror || (!orderHelpCtrl.CorporateConfig_details.description && (orderHelpCtrl.imagear.length ==0 && 
+                            !orderHelpCtrl.file_name && orderHelpCtrl.videoar.length == 0))">
+                        </rcp-edit-form-btns>
+                    </div>
+                    <div class="col-lg-12 col-xs-12" data-ng-if="showConfirm"
+                        style="border: 1px solid lightgrey;box-shadow: 1px 1px 4px lightgrey;">
+                        <div class="col-lg-12 p-10 col-xs-12">
+                            <span class="f-14">Current Configuration doesn't allow multiple drops. If you proceed
+                                current drop will be replaced. Do you want to replace
+                                ?
+                            </span>
+                        </div>
+                        <div class="form-group pull-right">
+                            <button class="btn btn-block btn-success waves-effect f-700"
+                                ng-click="removeFileAndUploadNew(orderHelpCtrl.CorporateConfig_details)"
+                                ng-disabled="orderHelpCtrl.CorporateConfig_form.$invalid">
+                                <span>Yes, Update!</span>
+                            </button>
+                        </div>
+                        <div class="form-group pull-right m-r-5">
+                            <button class="btn btn-block btn-inverse waves-effect f-700"
+                                data-ng-click="cancelConfirm()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="orderHelpCtrl.isConfirmDelete" image-name="corporate_del.svg"
+                close-fn="orderHelpCtrl.closeForm();"
+                delete-fn="orderHelpCtrl.delete(orderHelpCtrl.CorporateConfig_details);"
+                confirm-delete="orderHelpCtrl.isConfirmDelete"></rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="orderHelpCtrl.createAnotherForm();"
+                close-fn="orderHelpCtrl.closeForm();" update-success="orderHelpCtrl.isUpdateSuccess"
+                save-success="orderHelpCtrl.isSaveSuccess" delete-success="orderHelpCtrl.isDeleteSuccess">
+            </rcp-success-form>
+            <div class="col-xs-12 p-0">
+                <div data-ng-show="orderHelpCtrl.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="orderHelpCtrl.message = null"
+                        aria-hidden="true">&times;</button> {{orderHelpCtrl.message}}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" ng-if="orderHelpCtrl.showErrorDetails">
+            <div class="rc-alert rc-alert-error" aria-hidden="false" role="alert">
+                <div class="rc-alert-icon-section">
+                    <span class="zmdi zmdi-alert-polygon">
+                    </span>
+                </div>
+                <div class="rc-alert-content-section">
+                    <div class="rc-alert-header">Dependency Check - Action can not be completed</div>
+                    <div class="rc-alert-body">
+                        <span>
+                            Before deleting we checked and found Order Help Text still linked to SKUs.
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 rcpscrollbar dependency-entityBox">
+                <h4> Dependent Entity - SKU </h4>
+                <div class="col-xs-12 p-0" data-ng-repeat="dependency in orderHelpCtrl.dependentSkus">
+                    <div class="dependency-entityList">
+                        <span ng-if="dependency.description" title="{{dependency.description}}">{{dependency.description
+                            | truncate:50}} (
+                            <strong>{{dependency.sku}}</strong>
+                            )</span>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="orderHelpCtrl.closeDependencyList();">
+                    <span>
+                        <b>Cancel</b>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

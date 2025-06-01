@@ -1,0 +1,226 @@
+<div class="container col-lg-12 p-0" data-ng-controller="RetailPriceTypeController as rptypeCtrl">
+    <!--list panel-->
+    <!--  <rcp-module-header module-name="Individual" button-name="Individual" svg-image="submenu_individual.svg" create-new-fn="rptypeCtrl.openForm();"></rcp-module-header>-->
+    <!-- <nav class="navbar navbar-toolbar navbar-default fixed-top">
+        <div class="bgm-white header-module">
+            <div class="navbar-header p-relative" style="min-height: inherit;">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                <div class="image-module p-absolute">
+                    <img src="./img/sidebar-icons/retail_price_type.svg" />
+                </div>
+                <div class="label-module p-absolute">
+                    <a class="navbar-brand" href="javascript:void(0)">Retail Price Type</a>
+                </div>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse" ng-if="rptypeCtrl.isViewAuthorized">
+                <ul class="nav navbar-nav navbar-right">
+                    <li> <a><button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="rptypeCtrl.openForm();">Create Retail Price Type</button></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav> -->
+
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;display:grid;">
+                <div class="d-flex p-l-5">
+                    <span class="image-module align-items-center" style="display: grid">
+                        <img src="./img/sidebar-icons/retail_price_type.svg" />
+                    </span>
+                    <span class="label-module align-items-center" style="font-size: 1em;font-weight: 500;display: grid;">
+                        <a href="javascript:void(0)" style="width:auto;line-height: inherit;">Retail Price Type</a>
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="tableheader-btn" data-ng-if="permissionsMap.view">
+                        <span data-ng-if="!search"> {{rptypeCtrl.rowsInfo}} </span>
+                        <span data-ng-if="search"> Displaying {{pricetypes.length}} of {{rptypeCtrl.allPriceTypes.length}} Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li data-ng-if="permissionsMap.view">
+                            <a>
+                                <div class="search-section tableheader-btn pull-right">
+                                    <input class="form-control input-sm " type="text " ng-model="rptypeCtrl.search" id="inlineSearch" indicate-quick-search placeholder="Quick Search "
+                                        />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" data-ng-if="permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="rptypeCtrl.ShowHideColumnSettings()" class="btn-primal btn-block waves-effect">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" data-ng-if="permissionsMap.view">
+                            <a>
+                                <button type="button" ng-click="rptypeCtrl.getRetailPriceTypes(true);" class="btn-primal btn-block waves-effect">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="add-btn">
+                            <a>
+                                <button type="button" class="btn btn-success f-700 waves-effect" data-ng-click="rptypeCtrl.openForm();" data-ng-disabled="!permissionsMap.create">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create Retail Price Type
+                                    </span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <a uib-dropdown-toggle class="full-height" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </a>
+                            <ul class="dropdown-menu dm-icon pull-right">
+                                <li class="add-btn cursor-pointer">
+                                    <a>
+                                        <button class="restricted-btn" data-ng-click="rptypeCtrl.openForm();" data-ng-disabled="!permissionsMap.create" data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                            <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">
+                                                <i class="zmdi zmdi-plus text-success f-17 m-r-15"></i> Create Retail Price Type
+                                            </span>
+                                        </button>
+                                    </a>
+                                </li>
+                                <li data-ng-if="permissionsMap.view">
+                                    <a data-ng-click="rptypeCtrl.ShowHideColumnSettings()" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li data-ng-if="permissionsMap.view">
+                                    <a data-ng-click="rptypeCtrl.getRetailPriceTypes(true);" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!rptypeCtrl.rowsCount && !rptypeCtrl.isLoaded && !permissionsMap">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="rptypeCtrl.rowsCount !== 0 && rptypeCtrl.isLoaded && permissionsMap">
+        <div class="rcp-table-container" ng-if="permissionsMap.view">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/item/retail.price.type/hideShowColumns.html'"></div>
+                <div class="table-responsive module-content-configuration" data-ng-init="rptypeCtrl.pageChangeHandler(1)">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table class="price-type-table table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                            <thead data-ng-show="rptypeCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center iconcolumnwidth" id="id_col_head" drag-me drop-me data-handle=".handle" ng-click="rptypeCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="rptypeCtrl.retailPriceTypesGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="rptypeCtrl.sortType == 'id' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="rptypeCtrl.sortType == 'id' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="name_col_head" drag-me drop-me data-handle=".handle" ng-click="rptypeCtrl.sortType = 'name'; sortReverse = !sortReverse"
+                                        data-ng-hide="rptypeCtrl.retailPriceTypesGrid.columns.name.visible == 0">
+                                        <span class="handle">Name</span>
+                                        <span ng-show="rptypeCtrl.sortType == 'name' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="rptypeCtrl.sortType == 'name' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="is_default_col_head" drag-me drop-me data-handle=".handle" ng-click="rptypeCtrl.sortType = 'is_default'; sortReverse = !sortReverse"
+                                        data-ng-hide="rptypeCtrl.retailPriceTypesGrid.columns.isDefault.visible == 0">
+                                        <span class="handle">Is Default</span>
+                                        <span ng-show="rptypeCtrl.sortType == 'is_default' && !sortReverse" class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="rptypeCtrl.sortType == 'is_default' && sortReverse" class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="pricetype in pricetypes = (rptypeCtrl.allPriceTypes|filterBy:['id', 'name', 'is_default']:rptypeCtrl.search)|orderBy:rptypeCtrl.sortType:sortReverse|itemsPerPage:rptypeCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === rptypeCtrl.selectedRow}" data-ng-click="rptypeCtrl.setClickedRow($index,pricetype);"
+                                    selectedrow="{{pricetype}}" ios-dblclick="rptypeCtrl.dblClickAction(pricetype);">
+                                    <td class="id_col text-center" data-ng-hide="rptypeCtrl.retailPriceTypesGrid.columns.id.visible == 0">
+                                        {{pricetype.id}}</td>
+                                    <td class="name_col" data-ng-hide="rptypeCtrl.retailPriceTypesGrid.columns.name.visible == 0">
+                                        {{pricetype.name}}</td>
+                                    <td class="is_default_col text-center" data-ng-hide="rptypeCtrl.retailPriceTypesGrid.columns.isDefault.visible == 0">
+                                        <i ng-show="pricetype.is_default === 1" class="glyphicon glyphicon-ok c-green" title="Yes" title-direction="right" fixed-position="true"></i>
+                                        <i ng-show="pricetype.is_default === 0" class="glyphicon glyphicon-remove c-red" title="No" title-direction="right" fixed-position="true"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 d-flex justify-content-between align-items-center">
+                        <dir-pagination-controls template-url="rc-pagination.html" boundary-links="true" on-page-change="rptypeCtrl.pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+                        <div class="btn-group ng-table-counts">
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="rptypeCtrl.pageSize = 10" ng-class="{'active':rptypeCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="rptypeCtrl.pageSize = 25" ng-class="{'active':rptypeCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="rptypeCtrl.pageSize = 50" ng-class="{'active':rptypeCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow" ng-click="rptypeCtrl.pageSize = 100" ng-class="{'active':rptypeCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="rptypeCtrl.isLoaded && permissionsMap && !permissionsMap.view" data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <div data-ng-if="rptypeCtrl.rowsCount === 0 && rptypeCtrl.isLoaded && permissionsMap.view" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No retail price type exists. Please add retail price type.</span>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':rptypeCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{rptypeCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="rptypeCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{rptypeCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{rptypeCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="rptypeCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/item/retail.price.type/panel.retail.price.type.html'"></div>
+</div>

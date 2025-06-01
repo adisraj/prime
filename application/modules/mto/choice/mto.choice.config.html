@@ -1,0 +1,597 @@
+<div id="mtoChDetails" ng-if="choiceCtrl.isShowDetails">
+    <div class="form-page-size">
+        <div class="maintainence-details-section p-t-10 p-l-10 p-b-10 p-r-0" data-ng-class="{'toggled':choiceCtrl.showSummaryPanel}">
+            <div class="col-lg-3 col-xs-4 p-0" style="background:white;height:100%;">
+                <div class="col-xs-12 p-0">
+                    <!-- <label data-ng-show="head.sku"><span> SKU -</span><span style="color: #ff9857;"> #{{head.sku}}</span></label> -->
+                    <div class="col-xs-12 f-15 maintenance-header-section">Edit panel</div>
+                    <ul class="col-xs-12 p-l-30" style="list-style-type:decimal;">
+                        <li class="p-l-0 p-t-10 p-b-10 cursor-pointer" data-ng-class="{'f-700':choiceCtrl.createStage}" data-ng-click="choiceCtrl.editSKUPanel=true;">
+                            <span ng-show="!head.id">Create MTO Choice</span>
+                            <span ng-show="head.id">Update MTO Choice</span>
+                            <div class="pull-right" data-ng-class="{'stage-indication-passed':choiceCtrl.createStage}" data-ng-include="'./application/modules/item/sku/staging_icon.html'"></div>
+                        </li>
+                        <li class="p-l-0 p-t-10 p-b-10 cursor-pointer" data-ng-class="{'f-700':(choiceCtrl.configureScreen || choiceCtrl.configureStage)}" data-ng-click="choiceCtrl.editSKUPanel=true;">
+                            Configure MTO Choice
+                            <div class="pull-right" data-ng-class="{'stage-indication-passed':(choiceCtrl.configureScreen || choiceCtrl.configureStage)}" data-ng-include="'./application/modules/item/sku/staging_icon.html'"></div>
+                        </li>
+                        <li class="p-l-0 p-t-10 p-b-10 cursor-pointer" data-ng-class="{'f-700':choiceCtrl.previewAndPublish}">
+                            Preview & Publish
+                            <div class="pull-right" data-ng-class="{'stage-indication-passed':choiceCtrl.previewAndPublish}" data-ng-include="'./application/modules/item/sku/staging_icon.html'"></div>
+                        </li>
+                    </ul>
+                    <div class="col-xs-12 f-15 maintenance-header-section" data-ng-if="choiceHead.id">Advanced Settings</div>
+                    <ul class="col-xs-12 p-0 list-style-none advanced-sku-settings" data-ng-if="choiceHead.id">
+                        <li class="advanced-item p-10" data-ng-click="choiceCtrl.goToClonePanel(choiceHead.id)">
+                            <a class="d-flex d-flex-v-center">
+                                <span class="zmdi zmdi-copy m-r-5 f-19" style="width: 20px;"></span>
+                                <span class="setting-label">Clone Data</span>
+                                <span class="p-relative" style="width:20px;">
+                                        <span class="zmdi zmdi-chevron-right zmdi-hc-fw f-14 p-absolute"></span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="advanced-item p-10" data-ng-click="showMetaData(choiceCtrl.entityInformation,choiceHead);">
+                            <a class="d-flex d-flex-v-center">
+                                <span class="zmdi zmdi-cloud-outline m-r-5 f-19" style="width: 20px;"></span><span class="setting-label">Documents</span>
+                                <span class="p-relative" style="width:20px;">
+                                    <span class="zmdi zmdi-chevron-right zmdi-hc-fw f-14 p-absolute"></span>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="col-xs-12 m-0 row pull-right form-btn-div-h p-absolute" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)" style="bottom:15px;">
+                        <button type="button" class="btn-lg bgm-firebrick c-white btn btn-block f-700 pull-right btn-info" ng-click="choiceCtrl.confirmDel()" data-ng-if="choiceCtrl.isUpdate" data-ng-disabled="choiceCtrl.disableActions">
+                            <span class="zmdi zmdi-delete zmdi-hc-fw"></span>Delete
+                        </button>
+                    </div>
+                    <div class="col-xs-12 p-0 p-absolute" data-ng-show="choiceCtrl.deleteVendorMessage" style="bottom:0px;">
+                        <div class="col-lg-12">
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-ng-click="choiceCtrl.deleteVendorMessage = null" aria-hidden="true">&times;</button> {{choiceCtrl.deleteVendorMessage}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 p-0 p-absolute full-width" data-ng-if="!(choiceCtrl.$showErrorDetails || choiceCtrl.$showErrorDetailsData) && (choiceCtrl.confirmDelete && !choiceCtrl.opdone)" style="bottom:15px;">
+                        <div class="col-xs-6 p-r-0">
+                            <button type="button" class="btn-block btn-primal f-700" data-ng-click="choiceCtrl.delete(choiceHead)">Yes,Delete!</button>
+                        </div>
+                        <div class="col-xs-6">
+                            <button type="button" class="btn-block btn-secondary f-700" data-ng-click="choiceCtrl.confirmDel()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-sm-8 col-xs-7 p-0 inheritheight">
+                <div class="col-xs-12 inheritheight">
+                    <!-- <staging-component entity="'MTO Choice'" create-form="choiceCtrl.createForm" configure-screen="choiceCtrl.configureScreen" preview-and-publish="choiceCtrl.previewAndPublish" is-update="choiceCtrl.isUpdate" is-configure-screen="true" is-set-screen="false"
+                        show-set-screen="false" item-set-form=""></staging-component> -->
+                    <div ng-show="choiceCtrl.createForm" ng-init="choiceCtrl.setStageIndication('createform');">
+                        <div class="col-lg-12 box p-t-20 maintenanceworkspace" data-ng-class="{'disable-actions':choiceCtrl.disableActions}">
+                            <ng-form name="choiceCtrl.mto_choice_form" role="form" novalidate="novalidate" valdr-type="RULES-34">
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-lg-7">
+                                        <div class="col-xs-10">
+                                            <div class="form-group" valdr-form-group>
+                                                <label class="maintenance-field-label">Choice Description</label>
+                                                <input id="choice_description" name="choice_description" type="text" class="form-control input-sm" ng-model="choiceHead.choice_description" name="choice_description" errorvaluechosen="choiceHead.choice_description_error" ng-model-options="{ updateOn: 'blur' }"
+                                                    required="" placeholder="Enter Choice Description" auto-focus />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 p-0" ng-if="is_collection === true">
+                                            <div class="col-xs-10">
+                                                <div class="form-group" valdr-form-group>
+                                                    <label class="maintenance-field-label">Collection</label>
+                                                    <select name="collections" class="form-control select-component input-sm" ng-options="each.collection_id as each.collection for each in choiceCtrl.allCollections" ng-model="choiceHead.collection_id" errorvaluechosen="head.collection_id_error"><option value="">Select Collection</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-2 p-0" ng-if="!(choiceCtrl.isShowFamilyDetails ||choiceCtrl.isShowPriceGroupDetails)">
+                                                <div class="form-group">
+                                                    <div class="aligncenter add-new-btn btn-primal btn-block f-700" ng-click="choiceCtrl.openForm('MTOCollection')">Add</div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 p-0" ng-if="is_family === true">
+                                            <div class="col-xs-10">
+                                                <div class="form-group" valdr-form-group>
+                                                    <label class="maintenance-field-label">Family</label>
+                                                    <select name="families" class="form-control select-component input-sm" ng-options="each.family_id as each.family for each in choiceCtrl.allFamilies" ng-model="choiceHead.family_id" errorvaluechosen="head.family_id_error">
+                                                <option value="">Select Family</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-2 p-0" ng-if="!(choiceCtrl.isShowCollectionDetails || choiceCtrl.isShowPriceGroupDetails)">
+                                                <div class="form-group">
+
+                                                    <div class="aligncenter add-new-btn btn-primal btn-block f-700" ng-click="choiceCtrl.openForm('MTOFamily')">Add</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 p-0" ng-if="is_price === true">
+                                            <div class="col-xs-10">
+                                                <div class="form-group" valdr-form-group>
+                                                    <label class="maintenance-field-label">Price Group</label>
+                                                    <select name="price_groups" class="form-control select-component input-sm" ng-options="each.price_group_id as each.price_group for each in choiceCtrl.allPriceGroups" ng-model="choiceHead.price_group_id" required="">
+                                                     <option value="">Select Price Groups</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-2 p-0" ng-if="!(choiceCtrl.isShowCollectionDetails || choiceCtrl.isShowFamilyDetails)">
+                                                <div class="form-group">
+                                                    <div class="aligncenter add-new-btn btn-primal btn-block f-700" ng-click="choiceCtrl.openForm('MTOPriceGroup')">Add</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group" valdr-form-group>
+                                                <label class="maintenance-field-label">Vendor PO Description</label>
+                                                <input id="vendor_po_description" name="vendor_po_description" type="text" class="form-control input-sm" ng-model="choiceHead.vendor_po_description" name="vendor_po_description" errorvaluechosen="choiceHead.vendor_po_description_error"
+                                                    required="" placeholder="Enter Vendor PO Description" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <div class="col-lg-6">
+                                            <div class="form-group" valdr-form-group>
+                                                <label class="maintenance-field-label">Current Status</label>
+                                                <select id="status_id" name="status_id" class="form-control select-component input-sm" ng-change="choiceCtrl.changeevent(choiceHead)" ng-options="each.code as each.description for each in statuses" ng-model="choiceHead.status_id"
+                                                    errorvaluechosen="choiceHead.status_id_error" required=""><option value="" disabled>Select Current Status</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group" valdr-form-group>
+                                                <label class="maintenance-field-label">Effective Date</label>
+                                                <div class="form-groups" valdr-form-group>
+                                                    <div class="form-group" ng-init="choiceHead.effective_date=getDateBasedOnFormat(choiceHead.effective_date)">
+                                                        <input type="text" id="effective_date" name="effective_date" required class="form-control input-sm rcp-mydatepicker" ng-model="choiceHead.effective_date" ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+                                                            model-view-value="true" is-effective-date="true">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group" valdr-form-group>
+                                                <label class="maintenance-field-label">Next Status</label>
+                                                <select name="choice_next_status" class="form-control select-component input-sm" ng-options="each.code as each.description for each in next_statuses" ng-change="choiceCtrl.changeEvent(choiceHead)" ng-model="choiceHead.next_status_id"
+                                                    errorvaluechosen="choiceHead.next_status_id_error" required="">
+                                                <option value="">Select Next Status</option>
+                                            </select>
+                                                <p ng-show="status_id_disable" class="m-b-0 c-red di-table">Invalid combination of current status and next status</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6" ng-if="effective_val">
+                                            <div class="form-group" valdr-form-group ng-init="choiceHead.next_effective_date=getDateBasedOnFormat(choiceHead.next_effective_date)">
+                                                <label class="maintenance-field-label">Next Effective Date</label>
+                                                <input type="text" id="next_effective_date" name="next_effective_date" required class="form-control input-sm rcp-mydatepicker" ng-model="choiceHead.next_effective_date" ui-mask="{{ui_date_mask}}" mydatepicker ng-model-options="{ updateOn: 'blur' }"
+                                                    model-view-value="true" is-effective-date="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-form>
+                        </div>
+                        <div class="col-xs-12 form-group p-t-5 p-0 form-btn-div-h">
+                            <div class="col-sm-5 col-xs-12 m-0 p-0 row pull-left form-btn-div-h hidden-xs" data-ng-if="!choiceCtrl.confirmDelete">
+                                <div growl></div>
+                            </div>
+                            <div class="col-sm-7 col-xs-12 m-0 row pull-right p-0 d-flex" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                <button type="button" class="btn-block m-t-0 m-r-5 btn-lg btn-cancel btn f-700 f-15" data-ng-if="choiceCtrl.createForm || choiceCtrl.previewAndPublish" data-ng-click="choiceCtrl.closeForm('MTOChoice');">Cancel</button>
+                                <button type="button" class="btn-block m-t-0 m-r-5 btn-lg btn-success btn f-700 f-15" data-ng-click="choiceCtrl.continueFn('createForm')" data-ng-if="choiceCtrl.createForm" data-ng-disabled="choiceCtrl.mto_choice_form.$invalid">Continue</button>
+                            </div>
+                            <div class="col-lg-7 m-0 row pull-right form-btn-div-h p-0" data-ng-if="choiceCtrl.opdone">
+                                <button type="button" class="btn btn-lg btn-success f-700 pull-right" data-ng-click="choiceCtrl.closeForm('MTOChoice');">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Div is for the configure location-->
+                    <div ng-show="choiceCtrl.configureScreen" ng-init="choiceCtrl.setStageIndication('configureform');">
+                        <div class="col-lg-12 p-0 box maintenanceworkspace">
+                            <div class="col-lg-12 p-0 rcpscrollbar o-auto" style="max-height:100%;">
+                                <mto-userdefined-data-directive></mto-userdefined-data-directive>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 form-group p-t-5 p-0 form-btn-div-h">
+                            <div class="col-sm-5 col-xs-12 m-0 p-0 row pull-left form-btn-div-h hidden-xs" data-ng-if="!choiceCtrl.confirmDelete">
+                                <div growl></div>
+                            </div>
+                            <div class="col-sm-7 col-xs-12 m-0 row pull-right p-0 d-flex" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                <button type="button" class="btn-block m-t-0 m-r-5 btn-lg btn-inverse btn f-700 f-15" ng-click="choiceCtrl.backFn('configureScreen')" data-ng-if="choiceCtrl.configureScreen">Back</button>
+                                <button type="button" class="btn-block m-t-0 m-r-5 btn-lg btn-success btn f-700 f-15" data-ng-click="choiceCtrl.continueFn('configureScreen')" data-ng-if="choiceCtrl.configureScreen" data-ng-disabled="uddForm.$invalid">Continue</button>
+                            </div>
+                            <div class="col-lg-7 m-0 row pull-right form-btn-div-h p-0" data-ng-if="choiceCtrl.opdone">
+                                <button type="button" class="btn btn-lg btn-success f-700 pull-right" data-ng-click="choiceCtrl.closeForm('MTOChoice');">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Div for preview and publish mto choice - start-->
+                    <div ng-if="choiceCtrl.previewAndPublish" ng-init="choiceCtrl.setStageIndication('previewandpublish');">
+                        <div class="col-lg-12 p-0 maintenanceworkspace">
+                            <div class="col-lg-12 p-0 rcpscrollbar o-auto" style="max-height:100%;">
+                                <!--BASIC DETAILS PREVIEW -- START-->
+                                <div class="col-lg-12 card p-10">
+                                    <div class="col-lg-12 d-flex" style="justify-content:space-between;">
+                                        <label class="f-16 f-500 m-0" style="color: #1e2847;">
+                                        <label class="f-15 maintenance-field-label publishData m-0 p-0" title="{{choiceHead.choice_description}}">{{choiceHead.choice_description}}</label>
+                                        <span> - </span>
+                                        <select class="maintenance-field-label dropdown-to-label" ng-options="each.code as each.description for each in statuses" ng-model="choiceHead.status_id" disabled ng-class="{'text-success f-500': choiceHead.status_id===200 , 'text-warning f-300': choiceHead.status_id===100, 'text-primary f-300': choiceHead.status_id===300,'text-info f-300': choiceHead.status_id===400} "></select>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12 p-t-10 previewnpublish">
+                                        <div class="col-lg-4">
+                                            <label class="publish-preview">Effective Date</label>
+                                            <label class="form-control maintenance-field-label publishData m-0 p-0">{{choiceHead.effective_date  }}</label>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <label class="publish-preview">Next Status</label>
+                                            <div>
+                                                <label class="maintenance-field-label publishData m-0 p-0"> 
+                                                <select class="dropdown-to-label" ng-options="each.code as each.description for each in next_statuses" ng-model="choiceHead.next_status_id" disabled></select></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4" ng-if="effective_val">
+                                            <label class="publish-preview">Next Effective Date</label>
+                                            <div>
+                                                <label class="maintenance-field-label publishData m-0 p-0">{{choiceHead.next_effective_date}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4" ng-if="is_collection === true">
+                                            <label class="publish-preview">Collection</label>
+                                            <div>
+                                                <label class="maintenance-field-label publishData m-0 p-0">
+                                                    <select name="collections" class="dropdown-to-label" ng-options="each.collection_id as each.collection for each in choiceCtrl.allCollections" ng-model="choiceHead.collection_id" disabled>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4" ng-if="is_family === true">
+                                            <label class="publish-preview">Family</label>
+                                            <div>
+                                                <label class="maintenance-field-label publishData m-0 p-0">
+                                                    <select name="families" class="dropdown-to-label" ng-options="each.family_id as each.family for each in choiceCtrl.allFamilies" ng-model="choiceHead.family_id" disabled></select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4" ng-if="is_price === true">
+                                            <label class="publish-preview">Price Group</label>
+                                            <div>
+                                                <label class="maintenance-field-label publishData m-0 p-0">
+                                                    <select name="price_groups" class="dropdown-to-label" ng-options="each.price_group_id as each.price_group for each in choiceCtrl.allPriceGroups" ng-model="choiceHead.price_group_id" disabled></select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label class="publish-preview">Vendor PO Description</label>
+                                            <div>
+                                                <label class="maintenance-field-label publishData m-0 p-0">{{choiceHead.vendor_po_description}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--BASIC DETAILS PREVIEW -- END-->
+                                <div class="col-lg-12 card p-10">
+                                    <!--UDD DETAILS PREVIEW -- START-->
+                                    <div class="col-lg-12">
+                                        <label class="f-16 f-500 m-0" style="color: #1e2847;">Configuration Details</label>
+                                    </div>
+                                    <div class="col-lg-12" ng-show="choiceCtrl.configureScreen || choiceCtrl.previewAndPublish">
+                                        <preview-udd-directive udd-data="uddData" selected-hierarchy-property="selectedHierarchyProperty" attribute-values-map="choiceCtrl.attributeValuesMap" mto-options-map="" is-summary="false"></preview-udd-directive>
+                                    </div>
+                                    <!--UDD DETAILS PREVIEW -- END-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 form-group p-t-5 p-0 form-btn-div-h">
+                            <div class="col-sm-5 col-xs-12 m-0 p-0 row pull-left form-btn-div-h hidden-xs" data-ng-if="!choiceCtrl.confirmDelete">
+                                <div growl></div>
+                            </div>
+                            <div class="col-sm-7 col-xs-12 m-0 row pull-right p-0 d-flex" data-ng-if="(!choiceCtrl.confirmDelete && !choiceCtrl.opdone)">
+                                <button type="button" class="btn-block m-t-0 m-r-5 btn-lg btn-cancel btn f-700 f-15" data-ng-if="choiceCtrl.createForm || choiceCtrl.previewAndPublish" data-ng-click="choiceCtrl.closeForm('MTOChoice');">Cancel</button>
+                                <button type="button" class="btn-block m-t-0 m-r-5 btn-lg btn-inverse btn f-700 f-15" data-ng-click="choiceCtrl.backFn('publishMTOChoice');" data-ng-if="choiceCtrl.previewAndPublish">Back</button>
+                                <button type="button" class="btn-block m-t-0 m-r-5 btn-lg btn-success btn f-700 f-15" data-ng-click="choiceCtrl.publishMTOChoice(choiceHead);" data-ng-if="choiceCtrl.previewAndPublish" data-ng-disabled="choiceCtrl.disableActions">Publish {{moduleName}}</button>
+                            </div>
+                            <div class="col-lg-7 m-0 row pull-right form-btn-div-h p-0" data-ng-if="choiceCtrl.opdone">
+                                <button type="button" class="btn btn-lg btn-success f-700 pull-right" data-ng-click="choiceCtrl.closeForm('MTOChoice');">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="summary-section hidden-md hidden-sm hidden-xs" data-ng-class="{'toggled':choiceCtrl.showSummaryPanel}">
+            <div class="maintenance-summary">
+                <div class="col-xs-12 p-0">
+                    <span class="cursor-pointer f-23 p-5 m-r-10 zmdi zmdi-arrow-left" style="margin-left:-25px;background: #8d96a7;color: white;" data-ng-if="!choiceCtrl.showSummaryPanel" data-ng-click="choiceCtrl.showSummaryPanel = true;"></span>
+                </div>
+                <div class="col-lg-12 p-0 maintenance-preview">
+                    <div class="form-group d-flex d-flex-v-center c-white" style="background: #8d96a7;">
+                        <label class="m-b-0 f-14 f-500" style="padding: 7px 10px;">MTO Choice Summary</label>
+                        <span class="cursor-pointer f-23 zmdi zmdi-arrow-right pull-right p-absolute" data-ng-if="choiceCtrl.showSummaryPanel" data-ng-click="choiceCtrl.showSummaryPanel = false;" style="right:10px;"></span>
+                        <hr class="m-0" />
+                    </div>
+                    <div class="row m-0 m-b-5">
+                        <div class="col-xs-12 p-10" ng-init="choiceCtrl.loadImage(choiceHead,'250x175');">
+                            <img check-image class="img-responsive m-auto config-screen" image-name="mto-choice.svg" ng-src="{{choiceHead.summaryThumbnail}}" style="border-radius:3px;" />
+                        </div>
+                        <div class="col-xs-12 p-10 rcpscrollbar o-auto" style="height: calc(100% - 250px);">
+                            <div class="col-lg-12 p-0 p-10">
+                                <div class="col-lg-12 p-0">
+                                    <div class="p-l-5 p-t-5" disabled>
+                                        <label class="rclabel maintenance-preview">Choice Description</label>
+                                        <label class="rclabel maintenance-preview data form-control m-0 p-0" title="{{choiceHead.choice_description}}">{{choiceHead.choice_description | truncate: 40}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-lg-6 p-l-5 p-t-5">
+                                        <label class="rclabel maintenance-preview">Current Status</label>
+                                        <span class="rclabel maintenance-preview data form-control m-0 p-0">
+                                    <select id="status_id" name="status_id" class="dropdown-to-label" ng-options="each.code as each.description for each in statuses" ng-model="choiceHead.status_id" disabled>
+                                    </select>
+                                </span>
+                                    </div>
+                                    <div class="col-lg-6 p-l-5 p-t-5">
+                                        <label class="rclabel maintenance-preview">Effective Date</label>
+                                        <span class="rclabel maintenance-preview data form-control m-0 p-0"> {{choiceHead.effective_date }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-lg-6 p-l-5 p-t-5">
+                                        <label class="rclabel maintenance-preview">Next Status</label>
+                                        <span class="rclabel maintenance-preview data form-control m-0 p-0"> 
+                                     <select class="dropdown-to-label" ng-options="each.code as each.description for each in next_statuses" ng-model="choiceHead.next_status_id" disabled>
+                                    </select>
+                                    </span>
+                                    </div>
+                                    <div class="col-lg-6 p-l-5 p-t-5" ng-if="effective_val">
+                                        <label class="rclabel maintenance-preview">Next Effective Date</label>
+                                        <span class="rclabel maintenance-preview data form-control m-0 p-0"> {{choiceHead.next_effective_date }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-lg-6 p-l-5 p-t-5" ng-if="is_collection === true">
+                                        <label class="rclabel maintenance-preview"> Collection</label>
+                                        <span class="rclabel maintenance-preview data form-control m-0 p-0"> 
+                                    <select name="collections" class="dropdown-to-label" ng-options="each.collection_id as each.collection for each in choiceCtrl.allCollections" ng-model="choiceHead.collection_id" disabled>
+                                 </select></span>
+                                    </div>
+                                    <div class="col-lg-6 p-l-5 p-t-5" ng-if="is_family === true">
+                                        <label class="rclabel maintenance-preview">Family</label>
+                                        <span class="rclabel maintenance-preview data form-control m-0 p-0">
+                                    <select name="families" class="dropdown-to-label" ng-options="each.family_id as each.family for each in choiceCtrl.allFamilies" ng-model="choiceHead.family_id" disabled></select></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-lg-6 p-l-5 p-t-5" ng-if="is_price === true">
+                                        <label class="rclabel maintenance-preview"> Price Group</label>
+                                        <span class="rclabel maintenance-preview data form-control m-0 p-0">
+                                     <select name="price_groups" class="dropdown-to-label" ng-options="each.price_group_id as each.price_group for each in choiceCtrl.allPriceGroups" ng-model="choiceHead.price_group_id" disabled></select>
+                                </span>
+                                    </div>
+                                    <div class="col-lg-6 p-l-5 p-t-5">
+                                        <label class="rclabel maintenance-preview"> Vendor PO Description</label>
+                                        <span class="rclabel maintenance-preview data form-control m-0 p-0"> {{choiceHead.vendor_po_description | truncate:16}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 p-0" ng-show="choiceCtrl.configureScreen || choiceCtrl.previewAndPublish">
+                                <div class="section-header m-t-10">
+                                    <span>Configure MTO Choice  </span>
+                                </div>
+                                <preview-udd-directive udd-data="uddData" selected-hierarchy-property="selectedHierarchyProperty" attribute-values-map="choiceCtrl.attributeValuesMap" mto-options-map="" is-summary="true"></preview-udd-directive>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ui-view></div>
+        </div>
+        <!--show mto choice dependent details-->
+        <div id="rightsidebar" data-ng-class="{'changehistorytoggle': choiceCtrl.showDependencyDetails === true || showHistory === true,'toggled':choiceCtrl.showDependencyDetailsData === true}">
+            <div class="col-xs-12 m-t-25">
+                <div class="col-xs-3 p-0">
+                    <a data-ng-click="choiceCtrl.showDependencyDetailsData=false;choiceCtrl.showDependencyDetails = false;" class="cursor-pointer">
+                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                    </a>
+                </div>
+                <div class="col-xs-9 p-0">
+                    <label class="rclabel editformlabel"><strong>Choice</strong> Dependency</label>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="d-flex m-b-10 m-t-10">
+                    <div class="m-auto updatepanel">
+                        <div data-ng-include="'./img/sidebar-icons/mto-choice.svg'"></div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div>
+                        <h4 class="aligncenter dependency-errorMessage">Cannot be deleted!</h4>
+                    </div>
+                    <div class="col-xs-12 p-0" ng-repeat="($groupName,$dependencyMain) in ( choiceCtrl.dependencyList | groupBy : 'dependent_entity')">
+                        <div class="rcpscrollbar dependency-entityBox">
+                            <h4> Dependent Entities - {{$groupName}} </h4>
+                            <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                                <div class="dependency-entityList" ng-click="choiceCtrl.showDependencyListDetails(dependency);">
+                                    <span title="{{dependency.description}}">{{dependency.description | truncate:40}}</span>
+                                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group pull-right m-r-5 m-t-15">
+                        <button class="btn btn-secondary" ng-click="choiceCtrl.showDependencyDetailsData=false;choiceCtrl.showDependencyDetails = false;">
+                            <span><b>Cancel</b></span>
+                       </button>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-include="'./application/modules/mto/choice/panel.mto.choice.dependency.html'"></div>
+        </div>
+    </div>
+    <div id="rightsidebar" class="rcpscrollbar o-auto" data-ng-class="{'toggled':choiceCtrl.isShowCollectionDetails === true || choiceCtrl.isShowCollectionDetails === 1}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="choiceCtrl.closeForm('MTOCollection');" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="MTO Collection">Create <strong>MTO Collection</strong></label>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="d-flex m-b-10 m-t-10" ng-if="!(choiceCtrl.isSaveSuccess)">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/mto_collections.svg'"></div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(choiceCtrl.isSaveSuccess)">
+                    <ng-form name="choiceCtrl.collection_form" role="form" novalidate="novalidate" valdr-type="RULES-33">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.collection_form.short_description.$invalid">* </span>
+                            <span class="c-green" ng-show="choiceCtrl.collection_form.short_description.$valid">* </span>
+                            <label>Short Description</label>
+                            <input id="short_description_collection" name="short_description" type="text" class="form-control input-sm" ng-model="choiceCtrl.collection_details.short_description" placeholder="Short description" errorvalue="choiceCtrl.collection_details.short_description_error"
+                                ng-model-options="{ updateOn: 'blur' }">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.collection_form.collection_status_id.$invalid">* </span>
+                            <span class="c-green" ng-show="choiceCtrl.collection_form.collection_status_id.$valid">* </span>
+                            <label>Status</label>
+                            <select name="collection_status_id" class="form-control select-component input-sm" id="mtoCol_status" name="mtoCol_status" ng-options="item.code as item.description for item in statuses" ng-model="choiceCtrl.collection_details.collection_status_id"
+                                errorvaluechosen="choiceCtrl.collection_details.collection_status_id_error">
+                                    <option value="" disabled>Select an option</option>
+                                    </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn-block btn-lg btn-primal" id="save_btn" ng-click="choiceCtrl.save('MTOCollection',choiceCtrl.collection_details);" ng-class="{'btn-danger': choiceCtrl.saveBtnError === true}" ng-disabled="choiceCtrl.collection_form.$invalid">
+                                        <strong>{{choiceCtrl.saveBtnText}}</strong>
+                                    </button>
+                        </div>
+                    </ng-form>
+                </div>
+                <rcp-success-form success-tick="success_tick.svg" create-new-fn="choiceCtrl.createAnotherForm('MTOCollection');" close-fn="choiceCtrl.closeForm('MTOCollection');" save-success="choiceCtrl.isSaveSuccess">
+                </rcp-success-form>
+            </div>
+            <div class="col-xs-12">
+                <div data-ng-show="choiceCtrl.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="choiceCtrl.message = null" aria-hidden="true">&times;</button> {{choiceCtrl.message}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="rightsidebar" class="rcpscrollbar o-auto" data-ng-class="{'toggled':choiceCtrl.isShowFamilyDetails === true || choiceCtrl.isShowFamilyDetails === 1}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="choiceCtrl.closeForm('MTOFamily');" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="MTO Family">Create <strong>MTO Family</strong></label>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="d-flex m-b-10 m-t-10" ng-if="!(choiceCtrl.isSaveSuccess)">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/mto-family.svg'"></div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(choiceCtrl.isSaveSuccess)">
+                    <ng-form name="choiceCtrl.family_form" role="form" novalidate="novalidate" valdr-type="RULES-35">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.family_form.short_description.$invalid">* </span>
+                            <span class="c-green" ng-show="choiceCtrl.family_form.short_description.$valid">* </span>
+                            <label>Short Description</label>
+                            <input id="short_description_family" name="short_description" type="text" class="form-control input-sm" ng-model="choiceCtrl.family_details.short_description" placeholder="Short description" errorvalue="choiceCtrl.family_details.short_description_error"
+                                ng-model-options="{ updateOn: 'blur' }">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.family_form.families_status_id.$invalid">* </span>
+                            <span class="c-green" ng-show="choiceCtrl.family_form.families_status_id.$valid">* </span>
+                            <label>Status</label>
+                            <select name="families_status_id" class="form-control select-component input-sm" id="families_status_id" name="mtoFal_status" ng-options="item.code as item.description for item in statuses" ng-model="choiceCtrl.family_details.families_status_id"
+                                errorvaluechosen="choiceCtrl.family_details.families_status_id_error">
+                                    <option value="" disabled>Select an option</option>
+                                    </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn-block btn-lg btn-primal" id="save_btn" ng-click="choiceCtrl.save('MTOFamily',choiceCtrl.family_details);" ng-class="{'btn-danger': choiceCtrl.saveBtnError === true}" ng-disabled="choiceCtrl.family_form.$invalid">
+                                        <strong>{{choiceCtrl.saveBtnText}}</strong>
+                                    </button>
+                        </div>
+                    </ng-form>
+                </div>
+                <rcp-success-form success-tick="success_tick.svg" create-new-fn="choiceCtrl.createAnotherForm('MTOFamily');" close-fn="choiceCtrl.closeForm('MTOFamily');" save-success="choiceCtrl.isSaveSuccess">
+                </rcp-success-form>
+            </div>
+            <div class="col-xs-12">
+                <div data-ng-show="choiceCtrl.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="choiceCtrl.message = null" aria-hidden="true">&times;</button> {{choiceCtrl.message}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="rightsidebar" class="rcpscrollbar o-auto" data-ng-class="{'toggled':choiceCtrl.isShowPriceGroupDetails === true || choiceCtrl.isShowPriceGroupDetails === 1}">
+        <div class="col-xs-12 m-t-25">
+            <div class="col-xs-3 p-0">
+                <a data-ng-click="choiceCtrl.closeForm('MTOPriceGroup');" class="cursor-pointer">
+                    <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                </a>
+            </div>
+            <div class="col-xs-9 p-0">
+                <label class="rclabel editformlabel" title="MTO Price Group">Create <strong>MTO Price Group</strong></label>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="d-flex m-b-10 m-t-10" ng-if="!(choiceCtrl.isSaveSuccess)">
+                <div class="m-auto updatepanel">
+                    <div data-ng-include="'./img/sidebar-icons/mto-price-group.svg'"></div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12 p-0">
+                <div ng-if="!(choiceCtrl.isSaveSuccess)">
+                    <ng-form name="choiceCtrl.price_group_form" role="form" novalidate="novalidate" valdr-type="RULES-38">
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.price_group_form.short_description.$invalid">* </span>
+                            <span class="c-green" ng-show="choiceCtrl.price_group_form.short_description.$valid">* </span>
+                            <label>Short Description</label>
+                            <input id="short_description_pg" name="short_description" type="text" class="form-control input-sm" ng-model="choiceCtrl.price_group_details.short_description" placeholder="Short description" errorvalue="choiceCtrl.price_group_details.short_description_error"
+                                ng-model-options="{ updateOn: 'blur' }">
+                        </div>
+                        <div class="form-group" valdr-form-group>
+                            <span class="c-red" ng-show="choiceCtrl.price_group_form.price_group_status_id.$invalid">* </span>
+                            <span class="c-green" ng-show="choiceCtrl.price_group_form.price_group_status_id.$valid">* </span>
+                            <label>Status</label>
+                            <select id="price_group_status_id" name="price_group_status_id" class="form-control select-component input-sm" chosen ng-options="item.code as item.description for item in statuses" ng-model="choiceCtrl.price_group_details.price_group_status_id"
+                                errorvaluechosen="choiceCtrl.price_group_details.price_group_status_id_error">
+                                    <option value="" disabled>Select an option</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn-block btn-lg btn-primal" id="save_btn" ng-click="choiceCtrl.save('MTOPriceGroup',choiceCtrl.price_group_details);" ng-class="{'btn-danger': choiceCtrl.saveBtnError === true}" ng-disabled="choiceCtrl.price_group_form.$invalid">
+                                <strong>{{choiceCtrl.saveBtnText}}</strong>
+                            </button>
+                        </div>
+                    </ng-form>
+                </div>
+            </div>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="choiceCtrl.createAnotherForm('MTOPriceGroup');" close-fn="choiceCtrl.closeForm('MTOPriceGroup');" save-success="choiceCtrl.isSaveSuccess">
+            </rcp-success-form>
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="choiceCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="choiceCtrl.message = null" aria-hidden="true">&times;</button> {{choiceCtrl.message}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="col-sm-12">
+    <div class="col-sm-4">
+        <h4 class="f-700 rclabel" ng-show="newForm">New {{moduleLabel}}</h4>
+        <h4 class="f-700 rclabel" ng-show="!newForm">Update {{moduleLabel}}</h4>
+    </div>
+    <div class="col-sm-4">
+    </div>
+    <div class="col-sm-4" style="padding-bottom:5px;">
+        <button class="header-button" ng-click="closeFn();" style="float:right"><i class="zmdi zmdi-close c-red zmdi-hc-fw"></i><span style="font-size:12px;padding-right: 4px;"><b>Close</b></span></button>
+
+        <button class="header-button" tooltip-placement="bottom" ng-click="updateFn();" ng-disabled="enableButton" ng-show="!newForm" style="float:right"><i class="zmdi zmdi-floppy c-green zmdi-hc-fw"></i><span style="font-size:12px;padding-right: 4px;"><b>Update</b></span></button>
+
+        <button class="header-button" tooltip-placement="bottom" ng-click="saveFn();" ng-disabled="enableButton" ng-show="newForm" style="float:right"><i class="zmdi zmdi-check c-green zmdi-hc-fw"></i><span style="font-size:12px;padding-right: 4px;" style="float:right"><b>Save</b></span></button>
+
+        <button class="header-button" ng-click="deleteFn();" ng-show="!newForm && moduleLabel !== 'Entity'" style="float:right;"><i class="zmdi zmdi-delete zmdi-hc-fw" style="color: #9a0f05;"></i><span style="font-size:12px;padding-right: 4px;"><b>Delete</b></span></button>
+    </div>
+</div>

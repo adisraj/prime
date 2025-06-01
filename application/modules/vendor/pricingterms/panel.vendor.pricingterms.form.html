@@ -1,0 +1,336 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+</style>
+<div id="rcrightsidebar" class="c-overflow"
+    data-ng-class="{'toggled':pricingfactorCtrl.isShowDetails === true || pricingfactorCtrl.isShowDetails === 1,'changeposition': pricingfactorCtrl.showDependencyDetailsData === true || showhistory === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button class="close-icon bg-none border-none btn-link p-0"
+            data-ng-click="pricingfactorCtrl.closeForm(); closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!pricingfactorCtrl.isDeleteSuccess && !pricingfactorCtrl.isConfirmDelete && pricingfactorCtrl.isShowAdd)"
+                title="{{pricingfactorCtrl.entityInformation.name}}">Create
+                <strong>{{pricingfactorCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(!pricingfactorCtrl.isDeleteSuccess && !pricingfactorCtrl.isConfirmDelete && !pricingfactorCtrl.isShowAdd)"
+                title="{{pricingfactorCtrl.entityInformation.name}}">Update
+                <strong>{{pricingfactorCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(pricingfactorCtrl.isDeleteSuccess || pricingfactorCtrl.isConfirmDelete && !pricingfactorCtrl.isShowAdd)"
+                title="{{pricingfactorCtrl.entityInformation.name}}">Delete
+                <strong>{{pricingfactorCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!pricingfactorCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="pricingfactorCtrl.showConfigured_error || !(pricingfactorCtrl.isUpdateSuccess || pricingfactorCtrl.isSaveSuccess || pricingfactorCtrl.isConfirmDelete || pricingfactorCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <i class="fas fa-donate fa-8x" style="color: #e2e2e2;"
+                    title="{{pricingfactorCtrl.entityInformation.name | truncate :30}}" title-direction="right"></i>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-if="!pricingfactorCtrl.showConfigured_error">
+            <div
+                ng-if="!(pricingfactorCtrl.isUpdateSuccess || pricingfactorCtrl.isSaveSuccess || pricingfactorCtrl.isConfirmDelete || pricingfactorCtrl.isDeleteSuccess)">
+                <ng-form name="pricingfactorCtrl.term_form" role="form" novalidate="novalidate" valdr-type="RULES-15">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red"
+                            ng-show="!pricingfactorCtrl.term_details.description || pricingfactorCtrl.term_details.description.length>30">*
+                        </span>
+                        <span class="c-green"
+                            ng-show="pricingfactorCtrl.term_details.description && pricingfactorCtrl.term_details.description.length<30">*
+                        </span>
+                        <label>Description</label>
+                        <input id="pricing_factor" name="pricing_factor" type="text" class="form-control input-sm"
+                            ng-model="pricingfactorCtrl.term_details.description" placeholder="Enter Description"
+                            errorvalue="pricingfactorCtrl.term_details.description_error"
+                            ng-model-options="{ updateOn: 'blur' }">
+
+                        <span class="c-red f-11" ng-show="pricingfactorCtrl.term_details.description.length>30">Length (
+                            minimum:1 & maximum:30) chars</span>
+                        <span class="c-red f-12" ng-show="pricingfactorCtrl.showConfigured_error">* Can't Delete
+                            Configured Pricing Factor</span>
+                        <!-- <span class="c-red f-12" ng-show="pricingfactorCtrl.valid_error">* Pricing Factor
+                            is not valid!</span> -->
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="!pricingfactorCtrl.term_details.term_id">*
+                        </span>
+                        <span class="c-green" ng-show="pricingfactorCtrl.term_details.term_id">*
+                        </span>
+                        <label>Term(Months)</label>
+                        <div class="p-0 d-flex">
+                            <select id="term_id" name="term_id" class="form-control select-component input-sm"
+                                ng-model="pricingfactorCtrl.term_details.term_id"
+                                errorvaluechosen="pricingfactorCtrl.term_details.term_id_error"
+                                data-ng-blur="pricingfactorCtrl.resetField()"
+                                ng-options="term.id as term.term for term in pricingfactorCtrl.financingChoiceTerms  | orderBy : '+term'"
+                                data-ng-required="pricingfactorCtrl.term_details.is_eligible_for_finance == 1"
+                                data-ng-change="pricingfactorCtrl.term_details.annual_interest = null;
+                                pricingfactorCtrl.term_details.payment_factor=null;
+                                pricingfactorCtrl.term_details.minimum_monthly=null;
+                                pricingfactorCtrl.term_details.balloon_payment=null;
+                                pricingfactorCtrl.term_details.loan_type=null;pricingfactorCtrl.onChangeTermMonth()">
+                                <option value="" disabled>Select Term(Months)</option>
+                            </select>
+                            <div class="resetbtn fa fa-times-circle f-16 p-l-10" title="Reset Term"
+                                style="width:4%;float:right;" ng-click="pricingfactorCtrl.term_details.annual_interest = null;
+                                pricingfactorCtrl.term_details.payment_factor=null;
+                                pricingfactorCtrl.term_details.term_id=null;
+                                pricingfactorCtrl.term_details.minimum_monthly=null;
+                                pricingfactorCtrl.term_details.balloon_payment=null;
+                                pricingfactorCtrl.term_details.loan_type=null;
+                                pricingfactorCtrl.valid_error = true">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="!pricingfactorCtrl.term_details.loan_type">*
+                        </span>
+                        <span class="c-green" ng-show="pricingfactorCtrl.term_details.loan_type">*
+                        </span>
+                        <label>Type of Loan</label>
+                        <div class="p-0 d-flex">
+                            <select id="loan_type" name="loan_type" class="form-control select-component input-sm"
+                                ng-model="pricingfactorCtrl.term_details.loan_type"
+                                errorvaluechosen="pricingfactorCtrl.term_details.loan_type_error"
+                                data-ng-blur="pricingfactorCtrl.resetField()"
+                                ng-options="loan.typeof as loan.typeof for loan in pricingfactorCtrl.loanType"
+                                data-ng-required="pricingfactorCtrl.term_details.is_eligible_for_finance == 1"
+                                data-ng-change="pricingfactorCtrl.term_details.annual_interest = null;pricingfactorCtrl.term_details.minimum_monthly = null;pricingfactorCtrl.term_details.payment_factor=null;pricingfactorCtrl.term_details.balloon_payment =null;pricingfactorCtrl.onChangeTermMonth()">
+                                <option value="" disabled>Select Type of Loan</option>
+                            </select>
+                            <div class="resetbtn fa fa-times-circle f-16 p-l-10" title="Reset Term"
+                                style="width:4%;float:right;" ng-click="pricingfactorCtrl.term_details.annual_interest = null;
+                                pricingfactorCtrl.term_details.payment_factor = null;
+                                pricingfactorCtrl.term_details.loan_type = null;
+                                pricingfactorCtrl.term_details.minimum_monthly=null">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        ng-if="!(pricingfactorCtrl.isUpdateSuccess || pricingfactorCtrl.isSaveSuccess || pricingfactorCtrl.isConfirmDelete || pricingfactorCtrl.isDeleteSuccess)">
+                        <ng-form name="pricingfactorCtrl.term_form" role="form" novalidate="novalidate"
+                            valdr-type="RULES-15">
+                            <div class="form-group" valdr-form-group
+                                data-ng-if="pricingfactorCtrl.term_details.loan_type == 'Interest Paid' && pricingfactorCtrl.term_details.term_id">
+                                <!-- <span class="c-red"
+                                    ng-show="(pricingfactorCtrl.term_details.annual_interest== ''
+                                     || pricingfactorCtrl.term_details.annual_interest== null || 
+                                     pricingfactorCtrl.valid_error) && pricingfactorCtrl.term_details.annual_interest!=0">*
+                                </span>
+                                <span class="c-green"
+                                    ng-hide="(pricingfactorCtrl.term_details.annual_interest== ''
+                                     || pricingfactorCtrl.term_details.annual_interest== null ||
+                                      pricingfactorCtrl.valid_error) && pricingfactorCtrl.term_details.annual_interest!=0">*
+                                </span> -->
+
+                                <span class="c-red" ng-show="pricingfactorCtrl.term_details.annual_interest==null">*
+                                </span>
+                                <span class="c-green"
+                                    ng-show="(pricingfactorCtrl.term_details.annual_interest || pricingfactorCtrl.term_details.annual_interest == 0) && !pricingfactorCtrl.valid_error">*
+                                </span>
+
+                                <label>Annual Interest Rate</label>
+                                <div class="input-group" style="width:100%;">
+                                    <input id="annual_interest" name="annual_interest" type="text"
+                                        class="form-control input-sm"
+                                        ng-model="pricingfactorCtrl.term_details.annual_interest"
+                                        data-ng-change="pricingfactorCtrl.onChangePricingFactor(); pricingfactorCtrl.onChangeAnnualinterest()"
+                                        placeholder="Enter Annual Interest Rate"
+                                        ng-blur="pricingfactorCtrl.resetField()"
+                                        errorvalue="pricingfactorCtrl.term_details.pricing_factor_error"
+                                        ng-model-options="{ updateOn: 'blur' }" min="0" max="30">
+                                    <span
+                                        class="input-group-addon percentage-append maintenance-entrylevel-label p-0">%</span>
+                                </div>
+                                <span class="c-red f-12"
+                                    ng-show="(pricingfactorCtrl.term_details.annual_interest == '' || pricingfactorCtrl.term_details.annual_interest ==null) && pricingfactorCtrl.term_details.annual_interest != 0 && pricingfactorCtrl.annual_interest_touched">*
+                                    Annual Interest Rate is required !</span>
+
+                                <!-- <span class="c-red f-12"
+                                    ng-show="pricingfactorCtrl.term_details.annual_interest== ' ' || pricingfactorCtrl.term_details.annual_interest == null || !pricingfactorCtrl.term_details.annual_interest "
+                                    ng-hide="pricingfactorCtrl.term_details.annual_interest>=0 || !pricingfactorCtrl.valid_error">*
+                                    Annual Interest Rate is required !</span> -->
+                                <span class="c-red f-12"
+                                    ng-show="pricingfactorCtrl.term_details.annual_interest > 30 || pricingfactorCtrl.term_details.annual_interest < 0">*
+                                    Annual Interest will
+                                    accept
+                                    only numbers with limit of 0-30% </span>
+                                <!-- <span class="c-red f-12"
+                                    ng-show="pricingfactorCtrl.term_details.annual_interest == ''">* The
+                                    Pricing Factor is required !</span> -->
+                                <!-- <span class="c-red f-12" ng-show="pricingfactorCtrl.showConfigured_error">* Can't Delete Configured Pricing Factor</span> -->
+                                <!-- <span class="c-red f-12" ng-show="pricingfactorCtrl.valid_error">* Pricing Factor
+                                    is not valid!</span> -->
+
+                            </div>
+                            <!-- <div class="form-group" valdr-form-group data-ng-if="pricingfactorCtrl.term_details.loan_type == 'Interest Paid'">
+                        <span class="c-green">*</span>
+                        <label>Payment Factor</label>
+                        <br>
+
+                        <input class="form-control input-sm" type="number" value="{{pricingfactorCtrl.payment_factor}}"
+                            readonly> -->
+                            <!-- <span>{{pricingfactorCtrl.payment_factor}}</span> -->
+                            <!-- </div> -->
+
+                            <div class="form-group" valdr-form-group
+                                data-ng-if="pricingfactorCtrl.term_details.loan_type == 'Interest Free' && pricingfactorCtrl.term_details.term_id">
+                                <span class="c-red"
+                                    ng-show="pricingfactorCtrl.valid_error || pricingfactorCtrl.term_details.minimum_monthly==null ">*
+                                </span>
+                                <span class="c-green"
+                                    ng-show="(pricingfactorCtrl.term_details.minimum_monthly || pricingfactorCtrl.term_details.minimum_monthly == 0) && !pricingfactorCtrl.valid_error">*
+                                </span>
+
+                                <label>Minimum Monthly Payment Percentage <span class="c-firebrick f-12"
+                                        data-ng-if="pricingfactorCtrl.minimum_monthly_val">(
+                                        Maximum Monthly %:
+                                        <b>{{pricingfactorCtrl.minimum_monthly_val |
+                                            ThousandSeparator:"$":3}})</b></span></label>
+                                <div class="input-group" style="width:100%;">
+                                    <input id="minimum_monthly" name="minimum_monthly" type="text"
+                                        class="form-control input-sm"
+                                        ng-model="pricingfactorCtrl.term_details.minimum_monthly"
+                                        data-ng-change="pricingfactorCtrl.onChangeMinMonthly(); pricingfactorCtrl.onChangeMinmonthlyPercentage()"
+                                        placeholder="Enter Minimum Monthly Payment Percentage"
+                                        ng-blur="pricingfactorCtrl.resetField()"
+                                        errorvalue="pricingfactorCtrl.term_details.pricing_factor_error"
+                                        ng-model-options="{ updateOn: 'blur' }" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/(\.\d{3})\d+/g, '$1');">
+                                    <span
+                                        class="input-group-addon percentage-append maintenance-entrylevel-label p-0">%</span>
+                                </div>
+                                <span class="c-red f-12"
+                                    ng-show="(pricingfactorCtrl.term_details.minimum_monthly == '' || pricingfactorCtrl.term_details.minimum_monthly ==null) && pricingfactorCtrl.valid_error && pricingfactorCtrl.minimum_monthly_touched">*
+                                    Minimum Monthly Payment Percentage is required !</span>
+                                <span class="c-red f-12"
+                                    ng-show="pricingfactorCtrl.term_details.minimum_monthly > pricingfactorCtrl.minimum_monthly_val || pricingfactorCtrl.term_details.minimum_monthly < 0">*
+                                    Minimum Monthly Payment
+                                    accept
+                                    only numbers with limit of 0-{{pricingfactorCtrl.minimum_monthly_val |
+                                    ThousandSeparator:"$":3}}% </span>
+                            </div>
+                    </div>
+
+                    <div class="form-group" valdr-form-group
+                        data-ng-if="(pricingfactorCtrl.term_details.loan_type == 'Interest Free' || pricingfactorCtrl.term_details.loan_type == 'Interest Paid') && pricingfactorCtrl.term_details.term_id">
+                        <span class="c-green">*</span>
+                        <label>Payment Factor</label>
+                        <br>
+                        <input class="form-control input-sm" type="number"
+                            value="{{pricingfactorCtrl.term_details.payment_factor}}" readonly>
+                    </div>
+
+                    <div class="form-group" valdr-form-group
+                        data-ng-if="pricingfactorCtrl.term_details.loan_type == 'Interest Free' && pricingfactorCtrl.term_details.term_id">
+                        <span class="c-green">*</span>
+                        <label>Balloon Payment Percentage</label>
+                        <br>
+
+                        <input class="form-control input-sm" type="number"
+                            value="{{pricingfactorCtrl.term_details.balloon_payment}}" readonly>
+                    </div>
+
+                    <!-- <div class="form-group" valdr-form-group data-ng-if="pricingfactorCtrl.isShowAdd===true">
+                        <span class="c-red" ng-show="pricingfactorCtrl.term_form.status_id.$invalid">* </span>
+                        <span class="c-green" ng-show="pricingfactorCtrl.term_form.status_id.$valid">* </span>
+                        <label>Status</label>
+                        <select name="status_id" class="form-control select-component input-sm tabfocus" id="status_id" ng-options="item.code as item.description for item in statuses" ng-model="pricingfactorCtrl.term_details.status_id" errorvaluechosen="pricingfactorCtrl.term_details.status_id_error">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div>
+                    <div class="form-group" valdr-form-group data-ng-if="pricingfactorCtrl.isShowAdd===false">
+                        <span class="c-red" ng-show="pricingfactorCtrl.term_form.status_id.$invalid">* </span>
+                        <span class="c-green" ng-show="pricingfactorCtrl.term_form.status_id.$valid">* </span>
+                        <label>Status</label>
+                        <select name="status_id" class="form-control select-component input-sm tabfocus" id="on_update_status_id" ng-options="item.code as item.description disable when (item.code === pricingfactorCtrl.statusCodes.Pending.ID) for item in statuses" ng-model="pricingfactorCtrl.term_details.status_id" errorvaluechosen="pricingfactorCtrl.term_details.status_id_error">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div> -->
+                    <rcp-edit-form-btns new-form="pricingfactorCtrl.isShowAdd"
+                        save-fn="pricingfactorCtrl.save(pricingfactorCtrl.term_details);"
+                        save-btn-text="pricingfactorCtrl.saveBtnText" save-btn-error="pricingfactorCtrl.saveBtnError"
+                        update-fn="pricingfactorCtrl.update(pricingfactorCtrl.term_details);"
+                        update-btn-text="pricingfactorCtrl.updateBtnText"
+                        update-btn-error="pricingfactorCtrl.updateBtnError"
+                        confirm-fn="pricingfactorCtrl.showconfirm(); closeShowHistory();"
+                        confirm-delete="pricingfactorCtrl.isConfirmDelete"
+                        update-success="pricingfactorCtrl.isUpdateSuccess" entity-id="pricingfactorCtrl.term_details.id"
+                        enable-button="((pricingfactorCtrl.term_details.annual_interest == ''|| pricingfactorCtrl.term_details.annual_interest == null || pricingfactorCtrl.term_details.annual_interest < 0 || pricingfactorCtrl.term_details.annual_interest > 30) && pricingfactorCtrl.term_details.loan_type == 'Interest Paid') 
+                || ((pricingfactorCtrl.term_details.minimum_monthly == null || pricingfactorCtrl.term_details.minimum_monthly == '' || pricingfactorCtrl.term_details.minimum_monthly < 0 || pricingfactorCtrl.term_details.minimum_monthly > pricingfactorCtrl.minimum_monthly_val) && pricingfactorCtrl.term_details.minimum_monthly !=0 && pricingfactorCtrl.term_details.loan_type == 'Interest Free') 
+                || (pricingfactorCtrl.term_details.term_id == ''|| pricingfactorCtrl.term_details.term_id == null) || pricingfactorCtrl.term_details.balloon_payment < 0
+                || (pricingfactorCtrl.term_details.loan_type == '' || pricingfactorCtrl.term_details.loan_type  == null)|| pricingfactorCtrl.term_details.description.length>30 || !pricingfactorCtrl.term_details.description"
+                        access-permissions="permissionsMap">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="pricingfactorCtrl.isConfirmDelete" image-name="pricing_factor.svg"
+                close-fn="pricingfactorCtrl.closeForm();"
+                delete-fn="pricingfactorCtrl.delete(pricingfactorCtrl.term_details);"
+                confirm-delete="pricingfactorCtrl.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="pricingfactorCtrl.createAnotherForm();"
+                close-fn="pricingfactorCtrl.closeForm();" update-success="pricingfactorCtrl.isUpdateSuccess"
+                save-success="pricingfactorCtrl.isSaveSuccess" delete-success="pricingfactorCtrl.isDeleteSuccess"=>
+            </rcp-success-form>
+            <div class="col-xs-12" ng-if="!pricingfactorCtrl.isShowAdd && pricingfactorCtrl.isShowHistory"
+                data-ng-include="'./application/templates/history.html'">
+            </div>
+            <div
+                ng-if="isMaintenance !== true && !pricingfactorCtrl.isConfirmDelete && !pricingfactorCtrl.isUpdateSuccess && !pricingfactorCtrl.isSaveSuccess && !pricingfactorCtrl.isDeleteSuccess && !pricingfactorCtrl.isShowAdd">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn" data-ng-click="loadHistory(); "
+                    data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View
+                    History</button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading
+                    history...
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" ng-if="pricingfactorCtrl.showConfigured_error">
+            <div>
+                <h4 class="aligncenter dependency-errorMessage">Payment Factor
+                    {{pricingfactorCtrl.oldVendorTermDetails.payment_factor}} is being used. Cannot be deleted!</h4>
+            </div>
+            <!-- <div class="col-xs-12 p-0"
+                ng-repeat="($groupName,$dependencyMain) in ( pricingfactorCtrl.dependencyList | groupBy : 'dependent_entity')">
+                <div class="rcpscrollbar dependency-entityBox">
+                    <h4> Dependent Entities - {{$groupName}} </h4>
+                    <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                        <div class="dependency-entityList"
+                            ng-click="pricingfactorCtrl.showDependencyListDetails(dependency);">
+                            <span title="{{dependency.name}}">{{dependency.name | truncate:40}}</span>
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="pricingfactorCtrl.closeDependencyList();">
+                    <span>
+                        <b>Cancel</b>
+                    </span>
+                </button>
+            </div>
+            <!-- <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="pricingfactorCtrl.closeForm();">
+                    <span><b>Close</b></span>
+                </button>
+            </div> -->
+        </div>
+        <div class="col-xs-12">
+            <div data-ng-show="pricingfactorCtrl.message" class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-ng-click="pricingfactorCtrl.message = null"
+                    aria-hidden="true">&times;</button> {{pricingfactorCtrl.message}}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="col-xs-12" ng-if="!pricingfactorCtrl.isShowAdd && pricingfactorCtrl.isShowHistory"
+    data-ng-include="'./application/templates/history.html'"></div> -->

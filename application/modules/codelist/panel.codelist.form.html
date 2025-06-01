@@ -1,0 +1,130 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar"
+    data-ng-class="{'toggled':codelistCtrl.isShowDetails === true || codelistCtrl.isShowDetails === 1,'changeposition':showhistory === true || codelistCtrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="codelistCtrl.closeForm();closeShowHistory();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!codelistCtrl.isDeleteSuccess && codelistCtrl.isShowAdd && !codelistCtrl.isConfirmDelete)">Create
+                <strong>{{codelistCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(!codelistCtrl.isDeleteSuccess && !codelistCtrl.isShowAdd && !codelistCtrl.isConfirmDelete)">Update
+                <strong>{{codelistCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(codelistCtrl.isDeleteSuccess || codelistCtrl.isConfirmDelete && !codelistCtrl.isShowAdd)">Delete
+                <strong>{{codelistCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!codelistCtrl.isUnauthorized">
+        <div class="d-flex m-b-10 m-t-10"
+            ng-if="codelistCtrl.showErrorDetails || !(codelistCtrl.isUpdateSuccess || codelistCtrl.isSaveSuccess || codelistCtrl.isConfirmDelete || codelistCtrl.isDeleteSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/submenu_code.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-if="!codelistCtrl.showErrorDetails">
+            <div
+                ng-if="!(codelistCtrl.isUpdateSuccess || codelistCtrl.isSaveSuccess || codelistCtrl.isConfirmDelete || codelistCtrl.isDeleteSuccess)">
+                <ng-form role="form" novalidate="novalidate" name="codelistCtrl.code_form" valdr-type="RULES-51">
+                    <div class="form-group">
+                        <span class="c-red" ng-show="codelistCtrl.code_form.entity_id.$invalid">* </span>
+                        <span class="c-green" ng-show="codelistCtrl.code_form.entity_id.$valid">* </span>
+                        <label>Entity</label>
+                        <select id="entity_id" name="entity_id"
+                            ng-model="codelistCtrl.code_details.entity_id"
+                            class="form-control select-component input-sm"
+                            ng-options="each.id as each.entity for each in codelistCtrl.allEntities"
+                            ng-change="codelistCtrl.code_details.entity=(codelistCtrl.allEntities|filter:{id:codelistCtrl.code_details.entity_id})[0].entity"
+                            errorvaluechosen="codelistCtrl.code_details.entity_id_error">
+                            <option value="" disabled>Select Entity</option>
+                        </select>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="codelistCtrl.code_form.field_name.$invalid">* </span>
+                        <span class="c-green" ng-show="codelistCtrl.code_form.field_name.$valid">* </span>
+                        <label>Field Name</label>
+                        <input name="field_name" id="field_name" type="text"
+                            class="form-control input-sm" ng-model="codelistCtrl.code_details.field_name"
+                            placeholder="Enter Field Name" errorvalue="codelistCtrl.code_details.field_name_error"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="codelistCtrl.code_form.code.$invalid">* </span>
+                        <span class="c-green" ng-show="codelistCtrl.code_form.code.$valid">* </span>
+                        <label>Code</label>
+                        <input id="code" name="code" type="text" class="form-control input-sm"
+                            ng-model="codelistCtrl.code_details.code" placeholder="Enter Code"
+                            errorvalue="codelistCtrl.code_details.code_error" ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <rcp-edit-form-btns new-form="codelistCtrl.isShowAdd"
+                        save-fn="codelistCtrl.save(codelistCtrl.code_details);" save-btn-text="codelistCtrl.saveBtnText"
+                        save-btn-error="codelistCtrl.saveBtnError"
+                        update-fn="codelistCtrl.update(codelistCtrl.code_details);"
+                        update-btn-text="codelistCtrl.updateBtnText" update-btn-error="codelistCtrl.updateBtnError"
+                        confirm-fn="codelistCtrl.showconfirm(); closeShowHistory();"
+                        confirm-delete="codelistCtrl.isConfirmDelete" update-success="codelistCtrl.isUpdateSuccess"
+                        entity-id="codelistCtrl.code_details.id" enable-button="codelistCtrl.code_form.$invalid"
+                        access-permissions="permissionsMap"></rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="codelistCtrl.isConfirmDelete" image-name="submenu_code.svg"
+                close-fn="codelistCtrl.closeForm();" delete-fn="codelistCtrl.delete(codelistCtrl.code_details);"
+                confirm-delete="codelistCtrl.isConfirmDelete"></rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="codelistCtrl.createAnotherForm();"
+                close-fn="codelistCtrl.closeForm();" update-success="codelistCtrl.isUpdateSuccess"
+                save-success="codelistCtrl.isSaveSuccess" delete-success="codelistCtrl.isDeleteSuccess">
+            </rcp-success-form>
+            <div
+                ng-if="isMaintenance !== true && !codelistCtrl.isUpdateSuccess && !codelistCtrl.isConfirmDelete && !codelistCtrl.isDeleteSuccess && !codelistCtrl.isSaveSuccess && !codelistCtrl.isShowAdd">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn"
+                    data-ng-click="loadHistory();" data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View
+                    History</button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading history...
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div data-ng-show="codelistCtrl.message" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="codelistCtrl.message = null"
+                        aria-hidden="true">&times;</button> {{codelistCtrl.message}}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" ng-if="codelistCtrl.showErrorDetails">
+            <div>
+                <h4 class="aligncenter dependency-errorMessage">Cannot be deleted!</h4>
+            </div>
+            <div class="col-xs-12 p-0"
+                ng-repeat="($groupName,$dependencyMain) in ( codelistCtrl.dependencyList | groupBy : 'dependent_entity')">
+                <div class="rcpscrollbar dependency-entityBox">
+                    <h4> Dependent Entities - {{$groupName}} </h4>
+                    <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                        <div class="dependency-entityList"
+                            ng-click="codelistCtrl.showDependencyListDetails(dependency);">
+                            <span title="{{dependency.master_field}}">{{dependency.master_field | truncate:30}}</span>
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"
+                                ng-click="codelistCtrl.showDependencyListDetails(dependency);"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="codelistCtrl.closeDependencyList();">
+                    <span><b>Cancel</b></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div data-ng-include="'./application/modules/codelist/panel.code.dependency.html'"></div>
+    <div ng-if="codelistCtrl.isUnauthorized && (codelistCtrl.isShowAdd || !codelistCtrl.isShowAdd || codelistCtrl.isConfirmDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-xs-12" ng-if="!codelistCtrl.isShowAdd && codelistCtrl.isShowHistory"
+    data-ng-include="'./application/templates/history.html'">
+</div>

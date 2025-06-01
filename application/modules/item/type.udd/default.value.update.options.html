@@ -1,0 +1,77 @@
+<div class="col-xs-12" data-ng-if="itemTypeUDDCtrl.isDefaultValueUpdated && !itemTypeUDDCtrl.messagesList.length">
+  <div data-ng-if="!itemTypeUDDCtrl.isUpdateSuccess">
+    <div class="d-flex m-b-10 m-t-10">
+      <div class="m-auto updatepanel">
+        <div data-ng-include="'./img/sidebar-icons/entity-config-item.svg'"></div>
+      </div>
+    </div>
+    <div class="col-xs-12 rc-alert rc-alert-info flex-column m-b-10">
+      <div class="col-xs-12 d-flex m-b-5 p-0">
+        <div class="rc-alert-icon m-r-10">
+          <span class="zmdi zmdi-alert-polygon" style="font-size:35px;color: #ff6c3c;">
+          </span>
+        </div>
+        <div style="flex:1;">
+          <div>
+            <div class="f-15 f-700 text-info m-b-5">Update Item UDD Default Value!</div>
+            <div>
+              <span class="f-14">
+                The UDD value for all the Items/SKUs containing the UDD can be changed to default value based on following options.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <ng-form role="form" novalidate="novalidate" name="itemTypeUDDCtrl.defaultValueForm">
+        <div class="form-group col-xs-12 p-0" data-ng-init="itemTypeUDDCtrl.defaultValueChanged = 'none'">
+          <div class="form-group">
+            <label class="align-items-center d-flex">
+              <input type="radio" name="change_all" ng-model="itemTypeUDDCtrl.defaultValueChanged" value="'all'" ng-value="'all'">
+              <i class="input-helper"></i> Change All Item/SKU Master to default
+            </label>
+          </div>
+          <div class="form-group" data-ng-if="itemTypeUDDCtrl.oldItemUDDDetails && itemTypeUDDCtrl.oldItemUDDDetails.default_value">
+            <label class="align-items-center d-flex">
+              <input type="radio" name="change_matching" ng-model="itemTypeUDDCtrl.defaultValueChanged" value="'matching'" ng-value="'matching'">
+              <i class="input-helper"></i> Change All Item/SKU Master that match to default
+            </label>
+          </div>
+          <div class="form-group" data-ng-if="itemTypeUDDCtrl.new_type_udd.id">
+            <label class="align-items-center d-flex">
+              <input type="radio" name="change_null" ng-model="itemTypeUDDCtrl.defaultValueChanged" value="'null'" ng-value="'null'">
+              <i class="input-helper"></i> Change All Item/SKU Master that are null to default
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="align-items-center d-flex">
+              <input type="radio" name="do_not_change" ng-model="itemTypeUDDCtrl.defaultValueChanged" value="'none'" ng-value="'none'">
+              <i class="input-helper"></i> Don't change Item/SKU Master
+            </label>
+          </div>
+        </div>
+        <div class="col-xs-12 p-5 d-flex">
+          <button type="button" class="btn btn-success btn-block m-r-20" id="update_title_btn" data-ng-disabled="itemTypeUDDCtrl.isProcessing || !itemTypeUDDCtrl.defaultValueChanged "
+            data-ng-click="itemTypeUDDCtrl.new_type_udd.id ? itemTypeUDDCtrl.update(itemTypeUDDCtrl.new_type_udd, false, false, true) : itemTypeUDDCtrl.save(itemTypeUDDCtrl.new_type_udd, true);">
+            <strong>Proceed</strong>
+          </button>
+          <button type="button" class="btn btn-cancel btn-block m-t-0" id="cancel-dependency-button" data-ng-disabled="itemTypeUDDCtrl.isProcessing"
+            data-ng-click="itemTypeUDDCtrl.onCancelUpdateUddValue();">
+            <strong>Cancel</strong>
+          </button>
+        </div>
+      </ng-form>
+    </div>
+  </div>
+  <rcp-success-form success-tick="success_tick.svg" close-fn="itemTypeUDDCtrl.closeForm(); " update-success="itemTypeUDDCtrl.isUpdateSuccess"
+    delete-success="itemTypeUDDCtrl.isDeleteSuccess">
+  </rcp-success-form>
+
+  <div class="col-xs-12">
+    <div data-ng-show="itemTypeUDDCtrl.message" class="alert alert-danger alert-dismissable">
+      <button type="button" class="close" data-ng-click="itemTypeUDDCtrl.message = null" aria-hidden="true">&times;</button>
+      {{itemTypeUDDCtrl.message}}
+    </div>
+  </div>
+</div>

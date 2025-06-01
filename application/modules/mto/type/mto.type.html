@@ -1,0 +1,404 @@
+<div class="container col-lg-12 p-0" data-ng-controller="MTOTypeController as mtoTypeCtrl">
+    <!--list panel-->
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="mtoTypeCtrl.openForm()" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="mtoTypeCtrl.closeForm();mtoTypeCtrl.isColumnSettingsVisible=false;" />
+        </li>
+        <li>
+            <keybinding on="alt+r" invoke="mtoTypeCtrl.reload('refresh')" />
+        </li>
+        <li>
+            <keybinding on="alt+shift+1" invoke="mtoTypeCtrl.isColumnSettingsVisible=true;" />
+        </li>
+        <li>
+            <keybinding on="ctrl+f" invoke="mtoTypeCtrl.focusSearchField();" />
+        </li>
+    </ul>
+    <div class="rc-module-header d-flex">
+        <div class="col-xs-12 p-0 d-flex" style="justify-content: space-between;">
+            <div class="d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/entity-config-made-to-order.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)">MTO Types</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex" style="flex: 5;">
+                <div class="d-flex d-flex-v-center p-l-20">
+
+                    <div class="tableheader-btn">
+                        <span data-ng-if="!mtoTypeCtrl.search"> {{mtoTypeCtrl.rowsInfo}} </span>
+                        <span data-ng-if="mtoTypeCtrl.search"> Displaying
+                            {{(mtoTypeCtrl.mtostype_data|filterBy:['id','status','short_description','pricing_method_value']:mtoTypeCtrl.search).length}}
+                            of {{mtoTypeCtrl.mtostype_data.length}}
+                            Records </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="d-flex nav navbar-nav navbar-right">
+                        <li>
+                            <a>
+                                <div class="search-section-mto-type tableheader-btn pull-right"
+                                    ng-if="mtoTypeCtrl.mtostype_data.length > 0">
+                                    <input class="form-control input-sm " type="text " ng-model="mtoTypeCtrl.search"
+                                        id="inlineSearch" name="inlineSearch" data-ng-init="mtoTypeCtrl.focusSearchField()"
+                                        indicate-quick-search placeholder="Quick Search "
+                                        data-ng-disabled="!mtoTypeCtrl.isLoaded" />
+                                </div>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="mtoTypeCtrl.mtostype_data.length > 0">
+                            <a>
+                                <button type="button" ng-click="mtoTypeCtrl.ShowHideColumnSettings()"
+                                    class="btn-primal btn-block waves-effect" data-ng-disabled="!mtoTypeCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Columns</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="non-collapsed-link" ng-if="mtoTypeCtrl.mtostype_data.length > 0">
+                            <a>
+                                <button type="button" ng-click="mtoTypeCtrl.reload(true);"
+                                    class="btn-primal btn-block waves-effect" data-ng-disabled="!mtoTypeCtrl.isLoaded">
+                                    <span class="f-700 ng-binding">Refresh</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li ng-if="mtoTypeCtrl.enableGoToAllTypeUDD" class="non-collapsed-link">
+                            <a>
+                                <div class="tableheader-btn">
+                                    <button type="button" ng-click="mtoTypeCtrl.goToAllTypeUDD()"
+                                        class="btn-primal btn-block waves-effect"
+                                        data-ng-disabled="!mtoTypeCtrl.isDisabled">
+                                        <span class="f-700 ng-binding">Maintain UDD</span>
+                                    </button>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="d-flex" style="align-items: center;" data-ng-if="permissionsMap.view">
+                            <div data-ng-include="'./application/modules/mto/parameter/mto.parameter.html'"></div>
+                        </li>
+                        <li class="non-collapsed-link">
+                            <a>
+                                <button type="button" class="btn btn-success waves-effect f-700"
+                                    data-ng-disabled="!permissionsMap.create"
+                                    data-ng-click="mtoTypeCtrl.openForm('MTOType');">
+                                    <span title="{{!permissionsMap.create ? 'Access denied' : ''}}">Create MTO
+                                        Type</span>
+                                </button>
+                            </a>
+                        </li>
+                        <li class="dropdown collapsed-link" uib-dropdown>
+                            <button type="button" uib-dropdown-toggle class="full-height bg-none p-15" style="border-left:3px solid #e8e8e8" href="">
+                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                            </button>
+                            <ul class="dropdown-menu dm-icon pull-right" style="width:200px;">
+                                <li class="cursor-pointer">
+                                    <button data-ng-click="mtoTypeCtrl.openForm('MTOType');" style="padding: 8px 20px"
+                                        class="restricted-btn" title="{{!permissionsMap.create ? 'Access denied' : ''}}"
+                                        data-ng-disabled="!permissionsMap.create"
+                                        data-ng-class="{'opacity50' : !permissionsMap.create}">
+                                        <i class="zmdi zmdi-plus text-success f-17 m-r-20"></i>Create MTO Type
+                                    </button>
+                                </li>
+                                <li ng-if="mtoTypeCtrl.mtostype_data.length > 0">
+                                    <a data-ng-click="mtoTypeCtrl.isLoaded ? mtoTypeCtrl.ShowHideColumnSettings() : '' "
+                                        data-ng-class="{'cursor-not-allowed': !mtoTypeCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-view-week text-info"></i> Columns </a>
+                                </li>
+                                <li ng-if="mtoTypeCtrl.mtostype_data.length > 0">
+                                    <a data-ng-click="mtoTypeCtrl.isLoaded ? mtoTypeCtrl.reload(true) : '' "
+                                        data-ng-class="{'cursor-not-allowed': !mtoTypeCtrl.isLoaded}" href="">
+                                        <i class="zmdi zmdi-refresh text-warning"></i> Refresh</a>
+                                </li>
+                                <li ng-if="mtoTypeCtrl.enableGoToAllTypeUDD">
+                                    <a ng-click="mtoTypeCtrl.isDisabled ? mtoTypeCtrl.goToAllTypeUDD() : '' "
+                                        data-ng-class="{'opacity50': !mtoTypeCtrl.isDisabled}" href="">
+                                        <i class="zmdi zmdi-wrench c-brown zmdi-hc-rotate-90"></i> Maintain UDD</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center module-content-configuration" data-ng-if="!mtoTypeCtrl.isLoaded">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">....</span>
+    </div>
+    <div data-ng-if="mtoTypeCtrl.rowsCount > 0 && mtoTypeCtrl.isLoaded">
+        <div class="rcp-table-container" ng-if="mtoTypeCtrl.isViewAuthorized && mtoTypeCtrl.isLoaded">
+            <div class="col-xs-12 p-0">
+                <script type="text/javascript">
+
+                    $(function () {
+                        var pressed = false;
+                        var start = undefined;
+                        var startX, startWidth;
+
+                        $("table th").dblclick(function (e) {
+                            start = $(this);
+                            pressed = true;
+                            startX = e.pageX;
+                            startWidth = $(this).width();
+                            $(start).addClass("resizing");
+                        });
+
+                        $(document).mousemove(function (e) {
+                            if (pressed) {
+                                $(start).width(parseInt(startWidth + (e.pageX - startX)));
+                            }
+                        });
+
+                        $(document).mouseup(function () {
+                            if (pressed) {
+                                $(start).removeClass("resizing");
+                                pressed = false;
+                            }
+                        });
+                    });
+                </script>
+                <div data-ng-include="'./application/modules/mto/type/hideShowColumns.html'"></div>
+                <div class="table-responsive module-content-configuration">
+                    <div class="col-xs-12 p-0 o-auto sticky-head-container">
+                        <table
+                            class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table"
+                            style="margin-bottom:40px">
+                            <thead data-ng-show="mtoTypeCtrl.isLoaded">
+                                <tr>
+                                    <th class="text-center iconcolumnwidth" id="select_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.select.visible == 0">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" ng-model="mtoTypeCtrl.checkAll" ng-true-value="1"
+                                                    ng-false-value="0" ng-disabled="mtoTypeCtrl.disableCheckboxes"
+                                                    ng-click="mtoTypeCtrl.enableOrDisableCheckboxes(mtoTypeCtrl.checkAll)">
+                                                <i class="input-helper"></i>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th class="text-center" id="id_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="mtoTypeCtrl.sortType = 'id'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.id.visible == 0">
+                                        <span class="handle">Id</span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'id' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'id' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="status_col_head" drag-me drop-me data-handle=".handle"
+                                        ng-click="mtoTypeCtrl.sortType = 'status'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.status.visible == 0">
+                                        <span class="handle">Status</span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'status' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'status' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="short_description_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="mtoTypeCtrl.sortType = 'short_description'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.optionType.visible == 0">
+                                        <span class="handle">Option Type</span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'short_description' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'short_description' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="collection_supported_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="mtoTypeCtrl.sortType = 'collection_supported'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.collectionSupported.visible == 0">
+                                        <span class="handle">Collection Supported</span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'collection_supported' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'collection_supported' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="family_supported_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="mtoTypeCtrl.sortType = 'family_supported'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.familySupported.visible == 0">
+                                        <span class="handle">Family Supported</span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'family_supported' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'family_supported' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+                                    <th class="text-center" id="pricing_method_value_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        ng-click="mtoTypeCtrl.sortType = 'pricing_method_value'; sortReverse = !sortReverse"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.pricingMethod.visible == 0">
+                                        <span class="handle">Pricing Method</span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'pricing_method_value' && !sortReverse"
+                                            class="zmdi zmdi-caret-down pull-right"></span>
+                                        <span ng-show="mtoTypeCtrl.sortType == 'pricing_method_value' && sortReverse"
+                                            class="zmdi zmdi-caret-up pull-right"></span>
+                                    </th>
+
+                                    <th class="text-center iconcolumnwidth" id="datalake_col_head" drag-me drop-me
+                                        data-handle=".handle"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.datalake.visible == 0">
+                                        <span class="handle">Actions</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="mtotype in mtoTypeCtrl.mtostype_data|filterBy:['id','status','short_description','pricing_method_value']:mtoTypeCtrl.search|orderBy:mtoTypeCtrl.sortType:sortReverse|itemsPerPage:mtoTypeCtrl.pageSize"
+                                    ng-class="{'background-hover':$index === selectedRow}"
+                                    data-ng-click="mtoTypeCtrl.setClickedRow($index);" selectedrow="{{mtotype}}">
+                                    <td class="text-center"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.select.visible == 0">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" ng-model="mtotype.check" ng-true-value="1"
+                                                    ng-false-value="0" ng-disabled="mtoTypeCtrl.disableCheckboxes"
+                                                    ng-click="mtoTypeCtrl.enableDisable()">
+                                                <i class="input-helper"></i>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="id_col text-center" ios-dblclick="mtoTypeCtrl.dblClickAction(mtotype);"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.id.visible == 0">{{mtotype.id}}
+                                    </td>
+                                    <td class="status_col" ios-dblclick="mtoTypeCtrl.dblClickAction(mtotype);"
+                                        ng-class="{'text-success f-500': mtotype.status==='Active' , 'text-warning f-300': mtotype.status ==='Pending Active', 'text-primary f-300': mtotype.status ==='Inactive','text-info f-300': mtotype.status==='Pending Inactive'}"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.status.visible == 0">
+                                        {{mtotype.status}}</td>
+                                    <td class="short_description_col"
+                                        ios-dblclick="mtoTypeCtrl.dblClickAction(mtotype);"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.optionType.visible == 0">
+                                        {{mtotype.short_description}}</td>
+                                    <td class="collection_supported_col text-center"
+                                        ios-dblclick="mtoTypeCtrl.dblClickAction(mtotype);"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.collectionSupported.visible == 0">
+                                        <i ng-show="mtotype.collection_supported_id === 1"
+                                            class="glyphicon glyphicon-ok c-green" title="Allowed"
+                                            title-direction="right" fixed-position="true"></i>
+                                        <i ng-show="!mtotype.collection_supported_id"
+                                            class="glyphicon glyphicon-remove c-red" title="Not allowed"
+                                            title-direction="right" fixed-position="true"></i>
+                                    </td>
+                                    <td class="family_supported_col text-center"
+                                        ios-dblclick="mtoTypeCtrl.dblClickAction(mtotype);"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.familySupported.visible == 0">
+                                        <i ng-show="mtotype.family_supported_id === 1"
+                                            class="glyphicon glyphicon-ok c-green" title="Allowed"
+                                            title-direction="right" fixed-position="true"></i>
+                                        <i ng-show="!mtotype.family_supported_id"
+                                            class="glyphicon glyphicon-remove c-red" title="Not allowed"
+                                            title-direction="right" fixed-position="true"></i>
+                                    </td>
+                                    <td class="pricing_method_value_col"
+                                        ios-dblclick="mtoTypeCtrl.dblClickAction(mtotype);"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.pricingMethod.visible == 0">
+                                        {{mtotype.pricing_method_value}}
+                                    </td>
+
+                                    <td class="datalake_col text-center three-dot-menu"
+                                        data-ng-hide="mtoTypeCtrl.mtoTypeGrid.columns.datalake.visible == 0">
+                                        <li class="dropdown d-flex w-100" uib-dropdown>
+                                            <a uib-dropdown-toggle
+                                                class="full-height d-flex w-100 justify-content-center" href="">
+                                                <i class="tm-icon zmdi zmdi-more-vert f-25"></i>
+                                            </a>
+                                            <ul class="arrow_box_menu dropdown-menu dm-icon pull-right">
+                                                <li class="cursor-pointer">
+                                                    <button class="DropButton btn-block"
+                                                        ng-click="showMetaData(mtoTypeCtrl.entityInformation,mtotype,permissionsMap);"
+                                                        data-ng-if="permissionsMap.drop">
+                                                        <div class="d-flex"><i
+                                                                class="zmdi zmdi-cloud zmdi-hc-fw m-r-10 f-17"></i>Documents
+                                                        </div>
+                                                    </button>
+                                                    <button class="DropButton btn-block"
+                                                        ng-click="showMetaData(mtoTypeCtrl.entityInformation,mtotype,permissionsMap);"
+                                                        data-ng-if="!permissionsMap.drop"
+                                                        data-ng-disabled="!permissionsMap.drop"
+                                                        data-ng-class="{'opacity50' : !permissionsMap.drop}">
+                                                        <div class="d-flex" title="Access denied" title-direction="left"
+                                                            fixed-position="true"><i
+                                                                class="zmdi zmdi-cloud-off zmdi-hc-fw m-r-10 f-17"></i>Documents
+                                                        </div>
+                                                    </button>
+                                                </li>
+                                                <li ios-dblclick="mtoTypeCtrl.dblClickAction(mtotype);">
+                                                    <button class="DropButton btn-block"
+                                                            ng-click="mtoTypeCtrl.openClonePanel(mtotype);"
+                                                            data-ng-if="mtoTypeCtrl.isCloneAllowed">
+                                                            <div class="d-flex"><i
+                                                                    class="zmdi zmdi-copy zmdi-hc-fw m-r-10 f-17"></i> Clone
+                                                            </div>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12 p-15 align-items-center d-flex justify-content-between">
+                        <dir-pagination-controls template-url="rc-pagination.html" class="pull-left"
+                            boundary-links="true" on-page-change="mtoTypeCtrl.pageChangeHandler(newPageNumber)">
+                        </dir-pagination-controls>
+                        <div class="btn-group pull-right ng-table-counts m-0">
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="mtoTypeCtrl.pageSize = 10"
+                                ng-class="{'active':mtoTypeCtrl.pageSize === 10}">10</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="mtoTypeCtrl.pageSize = 25"
+                                ng-class="{'active':mtoTypeCtrl.pageSize === 25}">25</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="mtoTypeCtrl.pageSize = 50"
+                                ng-class="{'active':mtoTypeCtrl.pageSize === 50}">50</button>
+                            <button type="button" class="btn btn-default f-12 noboxshadow"
+                                ng-click="mtoTypeCtrl.pageSize = 100"
+                                ng-class="{'active':mtoTypeCtrl.pageSize === 100}">100</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div data-ng-include="'./application/modules/mto/type/panel.mto.type.dependency.html'"></div>
+        <div data-ng-if="mtoTypeCtrl.isShowClonePanel===true"
+            data-ng-include="'./application/modules/mto/type/panel.clone.mto.type.html'"></div>
+
+        <meta-data-panel></meta-data-panel>
+    </div>
+    <div ng-if="!permissionsMap.view && mtoTypeCtrl.isLoaded && !mtoTypeCtrl.rowsCount"
+        data-ng-include="'./application/templates/restricted.access.html'"></div>
+    <ui-view></ui-view>
+    <div data-ng-if="mtoTypeCtrl.rowsCount === 0 && mtoTypeCtrl.isLoaded" class="module-content-configuration">
+        <div class="col-xs-12 text-center text-info">
+            <span class="f-15 f-300">No MTO type exists. Please add MTO type.</span>
+        </div>
+    </div>
+    <div class="col-lg-12 p-0" ng-if="permissionsMap.view">
+        <div id="refresh-table" class="p-15" data-ng-class="{'toggled':mtoTypeCtrl.isRefreshTable}">
+            <div class="col-xs-6 p-0">
+                <span class="f-15 f-300 pull-left">{{mtoTypeCtrl.refreshTableText}}</span>
+            </div>
+            <div class="col-xs-6 p-0" data-ng-if="mtoTypeCtrl.totalTimeText">
+                <span class="pull-right f-300">
+                    <strong>{{mtoTypeCtrl.totalRecords}}</strong>
+                    <span class="f-14 c-gray">{{mtoTypeCtrl.totalRecordsText}}</span>
+                    <span ng-bind-html="mtoTypeCtrl.totalTimeText"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+<div id="rightsidebar" class="rcpscrollbar" data-ng-class="{'toggled':ruleCtrl.showRoundingRuleDetails === true}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a data-ng-click="ruleCtrl.closePanel();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel" title="Rounding Rules"><strong>Rounding Rules</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div>
+            <div data-ng-include="'./application/modules/item/rounding.rules/rounding.rules.svg.html'"></div>
+        </div>
+        <div class="dependencyMargin">
+            <h4>{{ruleCtrl.rule_group_name}}</h4>
+            <div class="col-xs-12 p-0 m-b-10" data-ng-repeat="each in ruleCtrl.rulesList">
+                <div class="table-responsive">
+                    <table class="table table-bordered dependency-table">
+                        <tr>
+                            <td>Order of Apply</td>
+                            <td class="highlight-text-success" title="{{each.order_of_apply}}">{{each.order_of_apply}}</td>
+                        </tr>
+                        <tr>
+                            <td>Type</td>
+                            <td title="{{each.type}}">{{each.type | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Condition</td>
+                            <td title="{{each.condition}}">{{each.condition | truncate:20}}</td>
+                        </tr>
+                        <tr>
+                            <td>Formula</td>
+                            <td data-ng-show="each.formula" title="{{each.formula}}">{{each.formula | truncate:20}}</td>
+                            <td data-ng-show="!each.formula"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+<style>
+   .collection-icon img.updatesuccessicon.mCS_img_loaded {
+    margin: 10% 0% 10% 29% !important;
+}
+</style>
+<div id="rcrightsidebar" class=" c-overflow" data-ng-class="{'toggled':itemMaintCtrl.$showCollDetails === true || itemMaintCtrl.$showCollDetails === 1}">
+    <div class="col-xs-12 m-t-25">
+        <button type="button" class="col-xs-3 p-0 btn-link bg-none border-none" data-ng-click="itemMaintCtrl.closeForm('ItemCollections');itemMaintCtrl.focusAddCollection();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel" title="Item Collection">Create
+                <strong>Item Collection</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10" ng-if="!(itemMaintCtrl.$savesuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/itemCollection.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div ng-if="!(itemMaintCtrl.$savesuccess)">
+                <ng-form name="itemMaintCtrl.itemCol_form" role="form" novalidate="novalidate" valdr-type="RULES-88">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="itemMaintCtrl.itemCol_form.short_description.$invalid">* </span>
+                        <span class="c-green" ng-show="itemMaintCtrl.itemCol_form.short_description.$valid">* </span>
+                        <label>Short Description</label>
+                        <input id="short_description" name="short_description" type="text" class="form-control input-sm"
+                            ng-model="itemMaintCtrl.itemCol_details.short_description" placeholder="Short description" errorvalue="itemMaintCtrl.itemCol_details.short_description_error"
+                            ng-model-options="{ updateOn: 'blur' }">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="itemMaintCtrl.itemCol_form.collection_status_id.$invalid">* </span>
+                        <span class="c-green" ng-show="itemMaintCtrl.itemCol_form.collection_status_id.$valid">* </span>
+                        <label>Status</label>
+                        <select name="collection_status_id" class="form-control select-component input-sm" id="collection_status_id"
+                            ng-options="item.code as item.description for item in statuses" ng-model="itemMaintCtrl.itemCol_details.collection_status_id"
+                            errorvaluechosen="itemMaintCtrl.itemCol_details.collection_status_id_error">
+                            <option value="" disabled>Select Status</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-block btn-lg btn-primal" id="save_btn" ng-click="itemMaintCtrl.save('ItemCollections',itemMaintCtrl.itemCol_details);"
+                            ng-class="{'btn-danger': itemMaintCtrl.$saveCollBtnError === true}" ng-disabled="itemMaintCtrl.itemCol_form.$invalid">
+                            <strong>{{itemMaintCtrl.$saveCollBtnText}}</strong>
+                        </button>
+                    </div>
+                </ng-form>
+            </div>
+            <rcp-success-form class="collection-icon" success-tick="success_tick.svg" create-new-fn="itemMaintCtrl.createAnotherForm('ItemCollections');" close-fn="itemMaintCtrl.closeForm('ItemCollections');itemMaintCtrl.focusAddCollection();"
+                save-success="itemMaintCtrl.$savesuccess">
+            </rcp-success-form>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-show="itemMaintCtrl.itemErrorMessage" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="itemMaintCtrl.itemErrorMessage = null" aria-hidden="true">&times;</button> {{itemMaintCtrl.itemErrorMessage}}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div id="rcrightsidebar" class="rcpscrollbar changehistory" data-ng-class="{'toggled':mtofamctrl.showDependencyDetailsData === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" id="mto_family_depend_close" name="mto_family_depend_close"
+        class="close-icon bg-none border-none btn-link p-0" data-ng-click="mtofamctrl.closeDependencyDetails();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Dependency Details"><strong>Dependency Details</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="dependencyMargin">
+            <div class="col-xs-12 p-0 m-b-20">
+                <h4>MTO Family Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Description</td>
+                        <td class="highlight-text-success" title="{{mtofamctrl.family_details.short_description}}">{{mtofamctrl.family_details.short_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtofamctrl.family_details.status}}">{{mtofamctrl.family_details.status}}</td>
+                    </tr>
+                </table>
+                <h4>{{mtofamctrl.errorDependentData.dependent_entity}} - Dependent Details</h4>
+                <table class="table table-bordered dependency-table">
+                    <tr>
+                        <td>Choice Description</td>
+                        <td class="highlight-text-success" title="{{mtofamctrl.errorDependentData.choice_description}}">{{mtofamctrl.errorDependentData.choice_description | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td title="{{mtofamctrl.errorDependentData.status}}">{{mtofamctrl.errorDependentData.status | truncate:20}}</td>
+                    </tr>
+                    <tr>
+                        <td>MTO Description</td>
+                        <td title="{{mtofamctrl.errorDependentData.option}}">{{mtofamctrl.errorDependentData.option}}</td>
+                    </tr>
+                    <tr>
+                        <td>Collection</td>
+                        <td data-ng-show="mtofamctrl.errorDependentData.collection" title="{{mtofamctrl.errorDependentData.collection}}">{{mtofamctrl.errorDependentData.collection}}</td>
+                        <td data-ng-show="!mtofamctrl.errorDependentData.collection" title="{{mtofamctrl.errorDependentData.collection}}">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Price Group</td>
+                        <td data-ng-show="mtofamctrl.errorDependentData.price_group" title="{{mtofamctrl.errorDependentData.price_group}}">{{mtofamctrl.errorDependentData.price_group}}</td>
+                        <td data-ng-show="!mtofamctrl.errorDependentData.price_group" title="{{mtofamctrl.errorDependentData.price_group}}">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Next Effective Date</td>
+                        <td ng-show="mtofamctrl.errorDependentData.next_status_value !== 'None'" title="{{mtofamctrl.errorDependentData.next_effective_date | FormatDate}}">{{mtofamctrl.errorDependentData.next_effective_date | FormatDate}}</td>
+                        <td ng-show="mtofamctrl.errorDependentData.next_status_value === 'None'" title="{{mtofamctrl.errorDependentData.next_effective_date}}">N/A</td>
+                    </tr>
+                </table>
+                </br>
+                <div class="dependency-notifyMessage"><span>{{mtofamctrl.errorDependentData.message}}</span></div>
+                <!-- <button type="button" class="btn btn-view-values m-5 pull-right m-t-10" ng-click=""><bold>Delete MTO Choice</bold></button>-->
+            </div>
+        </div>
+    </div>
+</div>

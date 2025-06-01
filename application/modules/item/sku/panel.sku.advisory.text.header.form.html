@@ -1,0 +1,157 @@
+<div id="rcrightsidebar" data-ng-class="{'toggled':skuMaintCtrl.isShowCreateAdvisorHeaderForm === true || skuMaintCtrl.isShowCreateAdvisorHeaderForm === 1}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link" data-ng-click="skuMaintCtrl.closeForm('OrderAdvisorHeader');">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" ng-if="(!skuMaintCtrl.isDeleteHelpTextSuccess && skuMaintCtrl.showAddhelpText && !skuMaintCtrl.isConfirmDeleteHelptext)">Create
+                <strong>Order Help Text</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(!skuMaintCtrl.isDeleteHelpTextSuccess && !skuMaintCtrl.showAddhelpText && !skuMaintCtrl.isConfirmDeleteHelptext)">Update
+                <strong>Order Help Text</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(skuMaintCtrl.isDeleteHelpTextSuccess || skuMaintCtrl.isConfirmDeleteHelptext && !skuMaintCtrl.showAddhelpText)">Delete
+                <strong>Order Help Text</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10" ng-if="skuMaintCtrl.showHelpTextErrorDetails || !(skuMaintCtrl.isUpdateHelpTextSuccess || skuMaintCtrl.isSaveHelpTextSuccess || skuMaintCtrl.isConfirmDeleteHelptext || skuMaintCtrl.isDeleteHelpTextSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/type.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" ng-if="!skuMaintCtrl.showHelpTextErrorDetails">
+            <div ng-if="!(skuMaintCtrl.isUpdateHelpTextSuccess || skuMaintCtrl.isSaveHelpTextSuccess || skuMaintCtrl.isConfirmDeleteHelptext || skuMaintCtrl.isDeleteHelpTextSuccess)">
+                <ng-form role="form" novalidate="novalidate" name="skuMaintCtrl.advisor_text_header_form" valdr-type="RULES-51">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="skuMaintCtrl.advisor_text_header_form.title.$invalid">* </span>
+                        <span class="c-green" ng-show="skuMaintCtrl.advisor_text_header_form.title.$valid">* </span>
+                        <label>Title</label>
+                        <input name="title" id="title" type="text" class="form-control input-sm" ng-model="skuMaintCtrl.advisor_text_header.title"
+                            placeholder="Enter Title" errorvalue="skuMaintCtrl.advisor_text_header.title_error" ng-model-options="{ updateOn: 'blur' }"
+                            required>
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="skuMaintCtrl.advisor_text_header_form.description.$invalid">* </span>
+                        <span class="c-green" ng-show="skuMaintCtrl.advisor_text_header_form.description.$valid">* </span>
+                        <label>Order Help Text</label>
+                        <trix-editor angular-trix ng-model="skuMaintCtrl.advisor_text_header.description" name="description" id="description" required
+                            class="trix-content">
+                        </trix-editor>
+                    </div>
+                    <rcp-edit-form-btns new-form="skuMaintCtrl.showAddhelpText" save-fn="skuMaintCtrl.createSkuOrderAdvisorHelpText(skuMaintCtrl.advisor_text_header);"
+                        save-btn-text="skuMaintCtrl.$saveOLBtnText" save-btn-error="skuMaintCtrl.$saveOLBtnError" update-fn="skuMaintCtrl.updateOrderAdvisorHelpText(skuMaintCtrl.advisor_text_header);"
+                        update-btn-text="skuMaintCtrl.$updateOLBtnText" update-btn-error="skuMaintCtrl.$updateOLBtnError" confirm-fn="skuMaintCtrl.isConfirmDeleteHelptext = true;"
+                        confirm-delete="skuMaintCtrl.isConfirmDeleteHelptext" update-success="skuMaintCtrl.isUpdateHelpTextSuccess"
+                        entity-id="skuMaintCtrl.advisor_text_header.id" access-permissions="permissionsMap" enable-button="skuMaintCtrl.advisor_text_header_form.$invalid">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="skuMaintCtrl.isConfirmDeleteHelptext" image-name="type.svg" close-fn="skuMaintCtrl.closeForm('OrderAdvisorHeader');"
+                delete-fn="skuMaintCtrl.deleteOrderAdvisorHelpText(skuMaintCtrl.advisor_text_header);" confirm-delete="skuMaintCtrl.isConfirmDeleteHelptext"></rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="skuMaintCtrl.createAnotherForm('OrderAdvisorHeader');" close-fn="skuMaintCtrl.closeForm('OrderAdvisorHeader');skuMaintCtrl.focusCreateHelpText();"
+                update-success="skuMaintCtrl.isUpdateHelpTextSuccess" save-success="skuMaintCtrl.isSaveHelpTextSuccess" delete-success="skuMaintCtrl.isDeleteHelpTextSuccess">
+            </rcp-success-form>
+            <div class="col-xs-12 p-0">
+                <div data-ng-show="skuMaintCtrl.optionError" class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-ng-click="skuMaintCtrl.optionError = null" aria-hidden="true">&times;</button> {{skuMaintCtrl.optionError}}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" ng-if="skuMaintCtrl.showHelpTextErrorDetails">
+            <div class="rc-alert rc-alert-error" aria-hidden="false" role="alert">
+                <div class="rc-alert-icon-section">
+                    <span class="zmdi zmdi-alert-polygon">
+                    </span>
+                </div>
+                <div class="rc-alert-content-section">
+                    <div class="rc-alert-header">Dependency Check - Action can not be completed</div>
+                    <div class="rc-alert-body">
+                        <span>
+                            Before deleting we checked and found Order Help Text still linked to SKUs.
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 rcpscrollbar dependency-entityBox">
+                <h4> Dependent Entity - SKU </h4>
+                <div class="col-xs-12 p-0" data-ng-repeat="dependency in skuMaintCtrl.dependentSkus">
+                    <div class="dependency-entityList">
+                        <span ng-if="dependency.description" title="{{dependency.description}}">{{dependency.description | truncate:50}} (
+                            <strong>{{dependency.sku}}</strong>
+                            )</span>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group pull-right m-r-5 m-t-15">
+                <button class="btn-secondary waves-effect" ng-click="skuMaintCtrl.closeDependencyList();">
+                    <span>
+                        <b>Cancel</b>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div id="rcrightsidebar" class="c-overflow" data-ng-class="{'toggled':skuMaintCtrl.isShowCreateAdvisorHeaderForm === true || skuMaintCtrl.isShowCreateAdvisorHeaderForm === 1}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a data-ng-click="skuMaintCtrl.closeForm('OrderAdvisorHeader');" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="SKU Option">Create
+                <strong> Order Help Text</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10" ng-if="!(skuMaintCtrl.$savesuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/type.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div ng-if="!(skuMaintCtrl.$savesuccess)">
+                <ng-form name="skuMaintCtrl.advisor_text_header_form" role="form" novalidate="novalidate" valdr-type="RULES-46">
+                    <div class="fg-line form-group" valdr-form-group>
+                        <span class="c-red" ng-show="skuMaintCtrl.advisor_text_header_form.title.$invalid">* </span>
+                        <span class="c-green" ng-show="skuMaintCtrl.advisor_text_header_form.title.$valid">* </span>
+                        <label>Title</label>
+                        <input name="title" id="title" type="text" class="form-control input-sm" ng-model="skuMaintCtrl.advisor_text_header.title"
+                            placeholder="Enter Title" errorvalue="skuMaintCtrl.advisor_text_header.title_error" ng-model-options="{ updateOn: 'blur' }"
+                            required>
+                    </div>
+                    <div class="fg-line form-group" valdr-form-group>
+                        <span class="c-red" ng-show="skuMaintCtrl.advisor_text_header_form.description.$invalid">*
+                        </span>
+                        <span class="c-green" ng-show="skuMaintCtrl.advisor_text_header_form.description.$valid">*
+                        </span>
+                        <label>Order Help Text</label>
+                        <trix-editor angular-trix ng-model="skuMaintCtrl.advisor_text_header.description" name="description" id="description" class="trix-content"
+                            required>
+                        </trix-editor>
+                    </div>
+                    <div class="fg-line form-group">
+                        <button type="button" class="btn-block btn-lg btn-primal" id="save_btn" ng-click="skuMaintCtrl.createSkuOrderAdvisorHelpText(skuMaintCtrl.advisor_text_header);"
+                            ng-class="{'btn-danger': skuMaintCtrl.$saveOLBtnError === true}" ng-disabled="skuMaintCtrl.advisor_text_header_form.$invalid">
+                            <strong>{{skuMaintCtrl.$saveOLBtnText}}</strong>
+                        </button>
+                    </div>
+                </ng-form>
+            </div>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="skuMaintCtrl.createAnotherForm('OrderAdvisorHeader');" close-fn="skuMaintCtrl.closeForm('OrderAdvisorHeader');"
+                save-success="skuMaintCtrl.$savesuccess">
+            </rcp-success-form>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div data-ng-show="skuMaintCtrl.optionError" class="alert alert-danger">
+            <button type="button" class="close" data-ng-click="skuMaintCtrl.optionError = null" aria-hidden="true">&times;</button> {{skuMaintCtrl.optionError}}
+        </div>
+    </div>
+</div> -->

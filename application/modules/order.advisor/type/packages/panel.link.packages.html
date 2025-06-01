@@ -1,0 +1,76 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar" class="c-overflow" data-ng-class="{'toggled':typePackageCtlr.isShowDetails === true || typePackageCtlr.isShowDetails === 1}"
+    ng-keyup="$event.keyCode === typePackageCtlr.common.ShortCuts.global.close.key && typePackageCtlr.closeForm()">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="typePackageCtlr.closeForm();">
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="p-r-40 panel-name-section">
+            <label class="rclabel editformlabel" ng-if="(!typePackageCtlr.isDeleteSuccess && typePackageCtlr.isShowAdd && !typePackageCtlr.isConfirmDelete)"
+                title="{{typePackageCtlr.entityInformation.name}}">Create
+                <strong>Package</strong>
+            </label>
+        <label class="rclabel editformlabel" ng-if="(!typePackageCtlr.isDeleteSuccess && !typePackageCtlr.isShowAdd && !typePackageCtlr.isConfirmDelete)"
+                title="{{typePackageCtlr.entityInformation.name}}">Update
+                <strong>Package</strong>
+            </label>
+            <label class="rclabel editformlabel" ng-if="(typePackageCtlr.isDeleteSuccess || typePackageCtlr.isConfirmDelete && !typePackageCtlr.isShowAdd)"
+                title="{{typePackageCtlr.entityInformation.name}}">Delete
+                <strong>Package</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10" ng-if="!(typePackageCtlr.isUpdateSuccess ||  typePackageCtlr.isConfirmDelete || typePackageCtlr.isDeleteSuccess || typePackageCtlr.isSaveSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/order-advisor.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <div ng-if="!(typePackageCtlr.isUpdateSuccess || typePackageCtlr.isConfirmDelete || typePackageCtlr.isDeleteSuccess || typePackageCtlr.isSaveSuccess)">
+                <ng-form name="type_form" role="form" novalidate="novalidate">
+                    <div class="d-flex m-t-15">
+                        <span style="color:red;" ng-show="type_form.description.$invalid">* </span>
+                        <span style="color:green;" ng-show="type_form.description.$valid">* </span>
+                        <label class="p-l-5">
+                            Package Description
+                        </label>
+                    </div>
+                    <div class="d-flex m-b-10" style="align-items: flex-end;">
+                        <div class="col-xs-12 p-0 flex-fill">
+                            <input required id="description" name="description" type="text" class="form-control input-sm"
+                                ng-model="typePackageCtlr.packageDetails.description" minlength="3" maxlength ="45" errorvalue="typePackageCtlr.description_error"
+                                placeholder="Enter Description" ng-pattern="typePackageCtlr.globalRegularExpression">
+                            <span class="text-danger" data-ng-if="(type_form.$error.minlength || type_form.$error.maxlength) && !type_form.$error.pattern">Description must be a string between 3 and 45 characters.</span>
+                            <span class="text-danger" data-ng-if="type_form.$error.pattern">Invalid Description</span>
+                        </div>
+                    </div>
+                    <rcp-edit-form-btns new-form="typePackageCtlr.isShowAdd" save-fn="typePackageCtlr.CreatePackage(typePackageCtlr.packageDetails);"
+                        save-btn-text="typePackageCtlr.saveBtnText" save-btn-error="typePackageCtlr.saveBtnError" update-fn="typePackageCtlr.UpdatePackage(typePackageCtlr.packageDetails);"
+                        update-btn-text="typePackageCtlr.updateBtnText" update-btn-error="typePackageCtlr.updateBtnError" confirm-fn="typePackageCtlr.showconfirm();"
+                        confirm-delete="typePackageCtlr.isConfirmDelete" entity-id="typePackageCtlr.packageDetails.id"
+                        enable-button="typePackageCtlr.packageDetails.description.length<3 || type_form.$invalid" access-permissions="typePackageCtlr.permissionsMap">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="typePackageCtlr.isConfirmDelete" image-name="order-advisor.svg" close-fn="typePackageCtlr.closeForm();"
+                delete-fn="typePackageCtlr.DeletePackage(typePackageCtlr.packageDetails);" confirm-delete="typePackageCtlr.isConfirmDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" close-fn="typePackageCtlr.closeForm();" update-success="typePackageCtlr.isUpdateSuccess" create-new-fn="typePackageCtlr.createAnotherForm();"
+                delete-success="typePackageCtlr.isDeleteSuccess"  save-success="typePackageCtlr.isSaveSuccess">
+            </rcp-success-form>
+        </div>
+        <div class="col-xs-12 m-t-10">
+            <div data-ng-show="typePackageCtlr.message" class="alert alert-success text-success p-5">
+                <button type="button" class="close" data-ng-click="typePackageCtlr.message = null" aria-hidden="true">&times;</button> {{typePackageCtlr.message}}
+            </div>
+            <div data-ng-show="typePackageCtlr.error" class="alert alert-danger p-10">
+                <button type="button" class="close" data-ng-click="typePackageCtlr.error = null" aria-hidden="true">&times;</button> {{typePackageCtlr.error}}
+            </div>
+        </div>
+    </div>
+</div>

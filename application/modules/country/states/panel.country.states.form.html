@@ -1,0 +1,98 @@
+<style>
+    button:focus{
+        outline: 5px auto #6ecaf6!important
+    }
+</style>
+<div id="rcrightsidebar" class=" c-overflow"
+    data-ng-class="{'toggled':stateCtrl.isShowStatesDetails=== true || stateCtrl.isShowStatesDetails === 1,'changeposition':showhistory === true}">
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="stateCtrl.closeForm(); closeShowHistory();" >
+            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+        </button>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel"
+                ng-if="(!stateCtrl.isDeleteStateSuccess && !stateCtrl.isConfirmStateDelete && stateCtrl.isShowAddStates)"
+                title="{{stateCtrl.entityInformation.name}}">Create
+                <strong>{{stateCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(!stateCtrl.isDeleteStateSuccess && !stateCtrl.isConfirmStateDelete && !stateCtrl.isShowAddStates)"
+                title="{{stateCtrl.entityInformation.name}}">Update
+                <strong>{{stateCtrl.entityInformation.name | truncate :30}}</strong></label>
+            <label class="rclabel editformlabel"
+                ng-if="(stateCtrl.isDeleteStateSuccess || stateCtrl.isConfirmStateDelete && !stateCtrl.isShowAddStates)"
+                title="{{stateCtrl.entityInformation.name}}">Delete
+                <strong>{{stateCtrl.entityInformation.name | truncate :30}}</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12" ng-if="!stateCtrl.isUnauthorized">
+        <div class="d-flex"
+            ng-if="!(stateCtrl.isUpdateStateSuccess || stateCtrl.isSaveStateSuccess || stateCtrl.isConfirmStateDelete || stateCtrl.isDeleteStateSuccess)">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/inr-users.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0" valdr-form-group>
+            <div
+                ng-if="!(stateCtrl.isUpdateStateSuccess || stateCtrl.isSaveStateSuccess || stateCtrl.isConfirmStateDelete || stateCtrl.isDeleteStateSuccess)">
+                <ng-form role="form" novalidate="novalidate" name="stateCtrl.state_form" valdr-type="RULES-117">
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="stateCtrl.state_form.region_name.$invalid">* </span>
+                        <span class="c-green" ng-show="stateCtrl.state_form.region_name.$valid">* </span>
+                        <label>Name</label>
+                        <input id="region_name" name="region_name" type="text"
+                            class="form-control input-sm" ng-model="stateCtrl.states_details.region_name"
+                            placeholder="Enter Name" ng-model-options="{ updateOn: 'blur' }"
+                            errorvalue="stateCtrl.states_details.region_name_error">
+                    </div>
+                    <div class="form-group" valdr-form-group>
+                        <span class="c-red" ng-show="stateCtrl.state_form.region_code.$invalid">* </span>
+                        <span class="c-green" ng-show="stateCtrl.state_form.region_code.$valid">* </span>
+                        <label>States Code</label>
+                        <input id="region_code" name="region_code" type="text"
+                            class="form-control input-sm" ng-model="stateCtrl.states_details.region_code"
+                            placeholder="Enter Name" ng-model-options="{ updateOn: 'blur' }"
+                            errorvalue="stateCtrl.states_details.region_code_error">
+                    </div>
+                    <rcp-edit-form-btns new-form="stateCtrl.isShowAddStates"
+                        save-fn="stateCtrl.save(stateCtrl.states_details);" save-btn-text="stateCtrl.saveStateBtnText"
+                        save-btn-error="stateCtrl.saveStateBtnError"
+                        update-fn="stateCtrl.update(stateCtrl.states_details);"
+                        update-btn-text="stateCtrl.updateStateBtnText" update-btn-error="stateCtrl.updateStateBtnError"
+                        confirm-fn="stateCtrl.showconfirm(); closeShowHistory();"
+                        confirm-delete="stateCtrl.isConfirmStateDelete" update-success="stateCtrl.isUpdateStateSuccess"
+                        access-permissions="stateCtrl.statePermissions" entity-id="stateCtrl.states_details.id"
+                        enable-button="stateCtrl.state_form.$invalid">
+                    </rcp-edit-form-btns>
+                </ng-form>
+            </div>
+            <rcp-delete-form data-ng-if="stateCtrl.isConfirmStateDelete" image-name="inr-users.svg"
+                close-fn="stateCtrl.closeForm(); " delete-fn="stateCtrl.delete(stateCtrl.states_details);"
+                confirm-delete="stateCtrl.isConfirmStateDelete">
+            </rcp-delete-form>
+            <rcp-success-form success-tick="success_tick.svg" create-new-fn="stateCtrl.createAnotherForm();"
+                close-fn="stateCtrl.closeForm();" update-success="stateCtrl.isUpdateStateSuccess"
+                save-success="stateCtrl.isSaveStateSuccess" delete-success="stateCtrl.isDeleteStateSuccess">
+            </rcp-success-form>
+            <div
+                ng-if="isMaintenance !== true && !stateCtrl.isConfirmStateDelete && !stateCtrl.isUpdateStateSuccess && !stateCtrl.isSaveStateSuccess && !stateCtrl.isDeleteStateSuccess && !stateCtrl.isShowAddStates">
+                <button class="f-700 btn-link btn-block m-b-30 tabfocus-btn"
+                    data-ng-click="loadHistory();" data-ng-if="!showhistoryloading" data-ng-disabled="showhistory">View
+                    History</button>
+                <div class="col-xs-12 text-center text-info f-500" data-ng-if="showhistoryloading">Loading history...
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div data-ng-show="stateCtrl.message" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-ng-click="stateCtrl.message = null"
+                aria-hidden="true">&times;</button> {{stateCtrl.message}}
+        </div>
+    </div>
+    <div ng-if="stateCtrl.isUnauthorized && (stateCtrl.isShowAddStates || !stateCtrl.isShowAddStates || stateCtrl.isConfirmStateDelete)"
+        data-ng-include="'./application/templates/restricted.access.compact.html'">
+    </div>
+</div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" data-ng-if="!stateCtrl.isShowAddStates && stateCtrl.isShowHistory"
+    data-ng-include="'./application/templates/history.html'">
+</div>

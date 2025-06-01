@@ -1,0 +1,122 @@
+<data ui-view>
+   <nav class="navbar navbar-toolbar navbar-default fixed-top">
+      <div class="bgm-white header-module">
+         <div class="navbar-header p-relative" style="min-height: inherit;">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <div class="image-module p-absolute">
+               <img src="./img/sidebar-icons/package.svg">
+            </div>
+            <div class="label-module p-absolute">
+               <a class="navbar-brand" href="javascript:void(0)">Settings</a>
+            </div>
+         </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+               <li><a ui-sref="authorization.master"><button type="button" class="btn btn-secondary text-info btn-block waves-effect f-700">Go Back</button></a></li>
+            </ul>
+         </div>
+      </div>
+   </nav>
+   <div style="font-family: 'roboto';">
+      <div class="container-fluid">
+         <div class="col-lg-12">
+            <div class="panel-group" id="accordion">
+               <div class="panel panel-default">
+                  <div class="panel-heading p-10 active">
+                     <h4 class="panel-title">
+                        <span class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+                        <span style="font-size: 14px;font-weight: 00;font-family: 'Roboto';">Password Policy</span>
+                        </span>
+                     </h4>
+                  </div>
+                  <div id="collapseOne" class="panel-collapse collapse-in">
+                     <div class="panel-body" style="border: 1px solid #f5f5f5;" >
+                        <div class="col-lg-12" style="font-family:'Roboto'">
+                           <div class="col-lg-12 m-b-10" style="font-family: 'Roboto';font-weight: 400;font-size: 13px;color: #8e8282;">
+                              <span>
+                              A password policy is a set of rules that define the type of password an IAM user can set. For more information about password policies, go to <a href="http://docs.aws.amazon.com/console/iam/password-policy" target="_blank">Managing Passwords</a> in Using IAM.
+                              </span>    
+                           </div>
+                           <div class="col-lg-12 m-b-20">
+                           <span style="font-family: 'Roboto';font-size: 12px;font-weight: 300;">Modify your existing password policy below.</span>
+                        </div>
+                        </div>
+                        <div class="card-body card-padding">
+                           <div class="checkbox m-b-15">
+                              <label>
+                              <input type="checkbox" value="">
+                              <i class="input-helper"></i>Require at least one uppercase letter
+                              </label>
+                           </div>
+                           <div class="checkbox m-b-15">
+                              <label>
+                              <input type="checkbox" value="">
+                              <i class="input-helper"></i>Require at least one lowercase letter 
+                              </label>
+                           </div>
+                           <div class="checkbox m-b-15">
+                              <label>
+                              <input type="checkbox" value="">
+                              <i class="input-helper"></i>Require at least one number
+                              </label>
+                           </div>
+                           <div class="checkbox m-b-15">
+                              <label>
+                              <input type="checkbox" value="">
+                              <i class="input-helper"></i>Require at least one non-alphanumeric character
+                              </label>
+                           </div>
+                           <div class="checkbox m-b-15">
+                              <label>
+                              <input type="checkbox" value="">
+                              <i class="input-helper"></i>Allow users to change their own password
+                              </label>
+                           </div>
+                           <div>
+                              <div class="checkbox m-b-15">
+                                 <label>
+                                 <input type="checkbox" value="">
+                                 <i class="input-helper"></i>Enable password expiration
+                                 </label>
+                              </div>
+                              <label>
+                              <i class="input-helper"></i>Password expiration period (in days):
+                              <input type="text" value="">
+                              </label>
+                           </div>
+                        </div>
+                        <button class="btn-primal btn-sm">Update</button>
+                        <button class="btn-secondary btn-sm">Reset to Default</button>
+                        
+                     </div>
+                     
+                  </div>
+               </div>
+            </div>
+            <div class="panel panel-default">
+               <div class="panel-heading p-10">
+                  <div>
+                     <h4 class="panel-title">
+                        <span class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
+                        <span style="font-size: 14px;font-weight: 00;font-family: 'Roboto';">API Tokens</span>
+                        </span>
+                     </h4>
+                  </div>
+               </div>
+               <div id="collapseTwo" class="panel-collapse collapse">
+                  <div class="panel-body" style="font-family: 'Roboto';font-weight: 400;font-size: 13px;color: #8e8282;border: 1px solid #f5f5f5;">
+                     <div class="col-lg-12"> Create Prime users and give them only the permissions they need. Do not use your Prime root account for day-to-day interaction with Prime, because the root account provides unrestricted access to your Prime resources.</div>
+                     <button class="btn-primal btn-sm pull-right">Manage Users</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+</data>

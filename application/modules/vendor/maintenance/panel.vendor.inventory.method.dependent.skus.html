@@ -1,0 +1,73 @@
+<style>
+  button:focus {
+    outline: 5px auto #6ecaf6!important
+  }
+
+  .dependentEntityList {
+    font-size: 0.89em;
+    margin: 2px 0px;
+    padding: 5px 0px;
+    background-color: #1e2c58;
+    padding: 6px;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+<div id="rcrightsidebar" data-ng-class="{'toggled':venMaintCtrl.showDependentSkus}">
+  <div class="col-xs-12 side-panel-name m-t-25">
+    <button type="button" class="close-icon bg-none border-none btn-link p-0" data-ng-click="venMaintCtrl.showDependentSkus = false;">
+      <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+    </button>
+    <div class="panel-name-section">
+      <label class="rclabel editformlabel">Inventory Method Dependency
+      </label>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="d-flex m-b-10 m-t-10">
+      <div class="m-auto updatepanel">
+        <div data-ng-include="'./img/sidebar-icons/entity-config-vendor.svg'"></div>
+      </div>
+    </div>
+    <div>
+      <div class="col-xs-12">
+        <div class="rc-alert rc-alert-error" aria-hidden="false" role="alert">
+          <div class="rc-alert-icon-section">
+            <span class="zmdi zmdi-alert-polygon">
+            </span>
+          </div>
+          <div class="rc-alert-content-section">
+            <div class="rc-alert-header">Dependency Check - Action can not be completed</div>
+            <div class="rc-alert-body">
+              <span>
+                Before removing we checked and found some entities are still linked to Inventory Method.
+              </span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4> Dependent Entity - SKU </h4>
+          <div class="rcpscrollbar dependency-entityBox">
+            <div class="col-xs-12 p-0" data-ng-repeat="(groupHeader, skus) in venMaintCtrl.dependentSkus|groupBy:'inventory_name'">
+              <div class="col-xs-12 f-15 f-500 p-5" style="background: black;color: white;">
+                <span>{{groupHeader}}</span>
+              </div>
+              <div class="col-xs-12 p-0" data-ng-repeat="dependency in skus">
+                <div class="dependentEntityList">
+                  <span title="{{dependency.description}}">{{dependency.description | truncate:40}} ({{dependency.sku}})</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group pull-right m-r-5 m-t-15">
+          <button class="btn-secondary waves-effect" ng-click="venMaintCtrl.showDependentSkus = false;">
+            <span>
+              <b>Cancel</b>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

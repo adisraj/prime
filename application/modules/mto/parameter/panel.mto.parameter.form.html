@@ -1,0 +1,41 @@
+<div id="rcrightsidebar" class=" c-overflow" data-ng-class="{'toggled':mtoParamCtrl.isShowDetails === true || mtoParamCtrl.isShowDetails === 1}">
+    <div class="col-xs-12 m-t-25">
+        <div class="col-xs-3 p-0">
+            <a data-ng-click="mtoParamCtrl.closeForm();" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="col-xs-9 p-0">
+            <label class="rclabel editformlabel"><strong>MTO</strong> Parameter</label>
+        </div>
+    </div>
+    <div class="col-xs-12" data-ng-if="!mtoParamCtrl.isUpdateSuccess">
+        <div class="d-flex m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/entity-config-made-to-order.svg'"></div>
+            </div>
+        </div>
+        <div class="form-group col-xs-12 p-0">
+            <ng-form role="form " novalidate="novalidate " name="mto_type_parameter" valdr-type="RULES-37">
+                <div>
+                    <div class="form-group" valdr-form-group>
+                        <div class="form-group">
+                            <label>MTO Configuration Status</label>
+                            <select id="status_id" name="status_id" class="form-control select-component input-sm" ng-model="mtoParamCtrl.mtoParams.status_id" errorvaluechosen="mtoParams.status_id_error" ng-options="each.code as each.description for each in statuses">
+                                <option value="" disabled>Select an option</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-block btn-primal btn-lg" id="update_btn" ng-click="mtoParamCtrl.update(mtoParamCtrl.mtoParams);" ng-class="{'btn-danger': mtoParamCtrl.updateBtnError === true}">
+                            <strong>{{mtoParamCtrl.updateBtnText}}</strong>
+                        </button>
+                    </div>
+                </div>
+            </ng-form>
+        </div>
+    </div>
+    <div class="form-group col-xs-12">
+        <rcp-success-form success-tick="success_tick.svg" close-fn="mtoParamCtrl.closeForm();" update-success="mtoParamCtrl.isUpdateSuccess"> </rcp-success-form>
+    </div>
+</div>

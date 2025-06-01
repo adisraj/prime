@@ -1,0 +1,1628 @@
+<style>
+    button:focus {
+        outline: 5px auto #6ecaf6 !important
+    }
+
+    .select2-container {
+        display: block;
+        border-left: 2px solid #d8d8d8;
+    }
+
+    .select2-container .select2-choice {
+        display: flex !important;
+        position: relative !important;
+        white-space: nowrap !important;
+        color: #444444 !important;
+        background-clip: padding-box !important;
+        background-image: none !important;
+        padding-left: 9px !important;
+        overflow: hidden !important;
+        border: 1px solid#e2e2e2 !important;
+        text-decoration: none !important;
+        border-radius: 0px !important;
+        align-items: center;
+        height: 30px !important;
+    }
+
+    .select2-arrow {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .select2-dropdown-open .select2-choice {
+        box-shadow: none !important;
+        background-color: white !important;
+    }
+
+    .select2-results {
+        padding: 0;
+        margin: 4px 0px;
+    }
+
+    .select2-results li {
+        border-top: 1px solid #dcdcdc;
+    }
+
+    .select2-results .select2-result-label {
+        padding: 6px;
+    }
+
+    .select2-search input {
+        padding: 5px;
+        margin: 0 auto;
+        background-image: url('./img/icons/search-2.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center right;
+    }
+
+    .select2-drop-active {
+        border: 1px solid #e2e2e2;
+    }
+
+    .select2-drop {
+        width: 100.2%;
+        left: -2px;
+        z-index: 1;
+    }
+
+    .select2-search {
+        margin-top: 5px;
+    }
+
+    .select2-search input:focus {
+        background-image: url('./img/icons/search-2.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center right;
+    }
+
+    .select2-results .select2-highlighted span {
+        color: #fff;
+    }
+
+    .select2-results .select2-disabled.select2-highlighted span {
+        color: #666;
+    }
+
+    .error-field-validation.select2-container .select2-choice {
+        background: #ffeaea;
+    }
+
+    a.select2-choice:focus {
+        border-left: 3px solid red !important;
+    }
+
+    .status-validation-error {
+        display: block;
+        font-size: 11px;
+        color: #e41708;
+        font-family: 'lato', 'Roboto';
+        margin: 3px 1px 1px 1px;
+    }
+
+    select:focus {
+        background-color: #ffffff;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    .select2-container-active,
+    trix-editor:focus {
+        border-left: 3px solid #f9c10c !important;
+    }
+
+    .select2-container-multi {
+        display: block;
+        border-left: 3px solid #d8d8d8;
+    }
+
+    .select2-container-multi .select2-choice {
+        display: flex !important;
+        position: relative !important;
+        white-space: nowrap !important;
+        color: #444444 !important;
+        background-clip: padding-box !important;
+        background-image: none !important;
+        padding-left: 9px !important;
+        overflow: hidden !important;
+        border: 1px solid#e2e2e2 !important;
+        text-decoration: none !important;
+        border-radius: 0px !important;
+        align-items: center;
+        height: 30px !important;
+    }
+
+    .select2-container-multi .select2-choices {
+        border: 1px solid #d8d8d8;
+        background: white;
+    }
+
+    .select2-container-multi .select2-choices .select2-search-field input {
+        cursor: default;
+    }
+
+    .select2-container-multi.select2-container-active .select2-choices {
+        border: none;
+    }
+
+    .select2-drop-active {
+        border: none;
+    }
+
+    .select2-search-multi input {
+        padding: 5px;
+        margin: 0 auto;
+        background-image: url('./img/icons/search-2.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center right;
+    }
+
+    .select2-multi-drop-active {
+        border: 1px solid #e2e2e2;
+    }
+
+    .select2-multi-drop {
+        width: 100.2%;
+        left: -2px;
+        z-index: 1;
+    }
+
+    .select2-search-multi {
+        margin-top: 5px;
+    }
+
+    .select2-search-multi input:focus {
+        background-image: url('./img/icons/search-2.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center right;
+    }
+
+    .customised-dropdown-arrow {
+        display: inline-block;
+        font: normal normal normal 14px/1 'Material-Design-Iconic-Font';
+        font-size: 29px;
+        transform: translateY(-50%);
+        border-left: 5px solid transparent;
+    }
+</style>
+<div class="col-lg-12 col-sm-12 col-xs-12 p-0" data-ng-init="itemMaintCtrl.openForm('ItemMaster')" ng-keyup="itemMaintCtrl.performKeyUpEvent($event)">
+    <div class="col-lg-12 text-center m-t-25 m-b-30" data-ng-if="itemMaintCtrl.isAllLoaded===false">
+        <span class="f-17 f-700 c-black">Loading</span>
+        <span class="f-700" style="letter-spacing: 3px;">
+            <img src="./img/loadingData.gif" style="height: 50px;width: 50px;" />
+            <span>
+    </div>
+    <div class="form-page-size" data-ng-if="itemMaintCtrl.isAllLoaded===true">
+        <div class="maintainence-details-section p-t-10 p-l-10 p-b-10 p-r-0 location">
+            <div class="col-lg-9 col-sm-8 col-xs-7 p-0 inheritheight">
+                <div class="col-lg-12 inheritheight">
+                    <div ng-if="itemMaintCtrl.createForm && itemMaintCtrl.isPrimaryHierarchyLoaded" ng-init="itemMaintCtrl.setStageIndication('createform');">
+                        <div class="col-lg-12 p-0" data-ng-class="{'disable-actions':itemMaintCtrl.disableActions}">
+                            <ng-form name="itemMaintCtrl.item_maint_form" valdr-type="RULES-4" role="form" novalidate="novalidate">
+                                <div class="rcpscrollbar">
+                                    <div class="col-lg-12 p-0">
+                                        <!-- Type section starts -->
+                                        <div class="col-lg-8 update-maintenance-screen-title">
+                                            <span class="f-16 c-white">
+                                                <i class="fa fa-edit"></i> Create Item </span>
+                                        </div>
+                                        <div class="col-lg-8 p-0 box maintenanceworkspace">
+                                            <div class="col-lg-12 f-16 panel-header">
+                                                <span class="f-700 main-header">Type</span>
+                                            </div>
+                                            <div class="col-lg-12 p-10">
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <span class="c-red" ng-show="itemMaintCtrl.item_maint_form.type_id.$invalid">*
+                                                            </span>
+                                                            <span class="c-green" ng-show="itemMaintCtrl.item_maint_form.type_id.$valid">*
+                                                            </span>
+                                                            <label class="maintenance-field-label">Item Type</label>
+                                                            <select data-ng-if="selectItemType && allTypes && allTypes.length>0" selectize="selectItemType" name="type_id" id="type_id"
+                                                                items="head" class="form-control select-component input-sm" options="allTypes"
+                                                                ng-model="head.type_id" ng-change="
+                                                                    itemMaintCtrl.fetchItemTypeByGraph(head.type_id);
+                                                                    itemMaintCtrl.setProductExplorerDivision(head.type_id);
+                                                                    itemMaintCtrl.loadCollectionVal(head.type_id);
+                                                                    itemMaintCtrl.reloadUDDs();
+                                                                    itemMaintCtrl.focusVendorField();
+                                                                    itemCtrl.setDivisionDepartmentClass(); itemMaintCtrl.isDescriptionChanged = false;
+                                                                " data-ng-class="{'error-field-validation': itemMaintCtrl.item_maint_form.type_id.$invalid && itemMaintCtrl.isInvalidForm}"
+                                                                required>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Type section ends -->
+                                        <!-- Categorisation section starts -->
+                                        <div class="col-lg-8 p-0 box m-t-10 maintenanceworkspace">
+                                            <div class="col-lg-12 f-16 panel-header">
+                                                <span class="f-700 main-header">Product Explorer Categorisation</span>
+                                                <div>
+                                                    <small>Assigned Division, Department, Class to Categorise Item in Product Explorer</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 p-10">
+                                                <div class="col-lg-12 p-0" ng-if="itemMaintCtrl.isDivisionLoaded">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <span class="c-red" ng-show="!head.division_id">* </span>
+                                                            <span class="c-green" ng-show="head.division_id">* </span>
+                                                            <label class="maintenance-field-label">Product Explorer Division
+                                                            </label>
+                                                            <select ng-if="itemMaintCtrl.isDivisionLoaded" id="division" selectize="selectProductExplorerDivision" items="head" class="form-control select-component input-sm"
+                                                                options="allDivisions" data-ng-model="head.division_id" ng-change="itemMaintCtrl.setProductExplorerDepartment(head.division_id);"
+                                                                data-ng-class="{'error-field-validation': !head.division_id && itemMaintCtrl.isInvalidForm}"
+                                                                disabled required>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0" ng-if="allDepartments.length>0">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <span class="c-red" ng-show="!head.department_id">* </span>
+                                                            <span class="c-green" ng-show="head.department_id">* </span>
+                                                            <label class="maintenance-field-label">Product Explorer Department
+                                                            </label>
+                                                            <select ng-if="itemMaintCtrl.isDepartmentLoaded" selectize="selectProductExplorerDepartment" items="head" class="form-control select-component input-sm"
+                                                                options="allDepartments" ng-model="head.department_id" ng-change="itemMaintCtrl.setProductExplorerClass(head.department_id)"
+                                                                data-ng-class="{'error-field-validation': !head.department_id && itemMaintCtrl.isInvalidForm}"
+                                                                disabled>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0" data-ng-if="itemMaintCtrl.classes.length > 0">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <span class="c-red" ng-show="!head.class">* </span>
+                                                            <span class="c-green" ng-show="head.class">* </span>
+                                                            <label class="maintenance-field-label">Product Explorer Class
+                                                            </label>
+                                                            <select ng-if="itemMaintCtrl.isClassLoaded" selectize="selectProductExplorerClass" items="head" class="form-control select-component input-sm"
+                                                                options="itemMaintCtrl.classes" ng-model="head.class" data-ng-class="{'error-field-validation': !head.class && itemMaintCtrl.isInvalidForm}"
+                                                                disabled>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Categorisation section ends -->
+                                        <!-- Master Details section starts -->
+                                        <div class="col-lg-8 p-0 box m-t-10 maintenanceworkspace">
+                                            <div class="col-lg-12 f-16 panel-header">
+                                                <span class="f-700 main-header">Master Details</span>
+                                                <div>
+                                                    <small>The primary details of the item</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 p-10">
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group" valdr-form-group data-ng-if="isDivisionDepartment===true">
+                                                            <span class="c-red" ng-show="!head.primary_item_hierarchy_value_id">*
+                                                            </span>
+                                                            <span class="c-green" ng-show="head.primary_item_hierarchy_value_id">* </span>
+                                                            <label class="maintenance-field-label">{{itemConfig.primary_item_hierarchy_desc}}</label>
+                                                            <hierarchy-tree-view primary-hierarchy-id="itemConfig.primary_item_hierarchy_id" path="head.primary_item_hierarchy_value_path"
+                                                                primary-hierarchy-value-id="head.primary_item_hierarchy_value_id"
+                                                                directive-end-fn='end(directiveData)' enable-valdr-validation
+                                                                enable-valdr-message form-data="head" form-header="{{itemConfig.primary_item_hierarchy_desc}}"
+                                                                clear-path="itemMaintCtrl.clearPath" data-ng-class="{'error-field-validation': !head.primary_item_hierarchy_value_id && itemMaintCtrl.isInvalidForm}">
+                                                            </hierarchy-tree-view>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <span class="c-red" ng-show="!itemMaintCtrl.selectedVendor">* </span>
+                                                            <span class="c-green" ng-show="itemMaintCtrl.selectedVendor">* </span>
+                                                            <label class="maintenance-field-label">Vendor</label>
+                                                            <span class="p-10 col-lg-12" data-ng-if="!allVendors.length">Loading...</span>
+                                                            <ui-select items="head.vendor" name="selectedVendor" id="selectedVendor" data-ng-if="allVendors.length" ng-model="itemMaintCtrl.selectedVendor"
+                                                                theme="select2" on-select="itemMaintCtrl.loadCollections(itemMaintCtrl.selectedVendor.id);itemMaintCtrl.changeVendor(itemMaintCtrl.selectedVendor.id);itemMaintCtrl.setVendor();head.vendor_id = itemMaintCtrl.selectedVendor.id;itemMaintCtrl.fetchVendorsForAnItem();itemMaintCtrl.duplicateItemCheck(head.type_id, head.description);"
+                                                                data-ng-class="{'error-field-validation': itemMaintCtrl.item_maint_form.selectedVendor.$invalid && itemMaintCtrl.isInvalidForm}"
+                                                                required>
+                                                                <ui-select-match placeholder="Select Vendor">
+                                                                    <span ng-bind-html="$select.selected.name"></span>
+                                                                    <span ng-bind-html="$select.selected.status"></span>
+                                                                    <span ng-bind-html="$select.selected.VendorType"></span>
+                                                                </ui-select-match>
+                                                                <ui-select-choices repeat="vendor in allVendors | filterBy:['name'] : $select.search |limitTo: $select.search.length ? 100 : 50"
+                                                                    ui-disable-choice="vendor.status.toLowerCase() === 'inactive'"
+                                                                    data-ng-class="{'opacity50' : vendor.status.toLowerCase() === 'inactive'}">
+                                                                    <span ng-bind="vendor.name"></span>
+                                                                    <span ng-bind="vendor.status"></span>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-xs-12 m-b-5 text-info" data-ng-if="head.type_id && !itemMaintCtrl.isBuyerLoaded">
+                                                    Loading Buyer...
+                                                </div>
+                                                <div class="col-lg-12 p-0" data-ng-if="head.type_id && itemMaintCtrl.isBuyerLoaded">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <span class="c-red" ng-show="!head.buyer_id">* </span>
+                                                            <span class="c-green" ng-show="head.buyer_id">* </span>
+                                                            <label class="maintenance-field-label">{{itemConfig.buyer_hierarchy_desc}}</label>
+                                                            <hierarchy-tree-view primary-hierarchy-id="itemConfig.buyer_hierarchy_id" path="head.buyer_hierarchy_path" primary-hierarchy-value-id="head.buyer_id"
+                                                                directive-end-fn='getBuyerHierarchyPath(directiveData)' enable-valdr-validation
+                                                                enable-valdr-message form-data="head" form-header="{{itemConfig.buyer_hierarchy_desc}}"
+                                                                data-ng-class="{'error-field-validation': !head.buyer_id && itemMaintCtrl.isInvalidForm}"
+                                                                clear-path="itemMaintCtrl.clearPath">
+                                                            </hierarchy-tree-view>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="align-items-center col-lg-12 d-flex p-0">
+                                                        <div class="col-xs-7">
+                                                            <div class="form-group" ng-if="is_collection === true && allowCollectionDetails.yes_or_no && head.vendor_id" valdr-form-group>
+                                                                <span class="c-green">* </span>
+                                                                <label class="maintenance-field-label">Collection</label>
+                                                                <div class="form-group" valdr-form-group>
+                                                                    <select name="collection_id" id="collection_id" class="form-control select-component input-sm" ng-options="each.collection_id as each.collection + ' : ' + each.status disable when (each.status_code === itemMaintCtrl.statusCodes.Inactive.ID) for each in itemMaintCtrl.allCollections"
+                                                                        ng-model="head.collection_id" errorvaluechosen="head.collection_id_error"
+                                                                        ng-change="itemMaintCtrl.onCollectionChange(); itemMaintCtrl.setItemDescription(head); itemMaintCtrl.reloadUDDs();">
+                                                                        <option value="" disabled>Select Collection</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group" ng-if="(is_collection === false && !allowCollectionDetails.yes_or_no) && head.vendor_id" valdr-form-group
+                                                                data-ng-init="head.old_collection_id=head.collection_id;">
+                                                                <span class="c-green">* </span>
+                                                                <label class="maintenance-field-label">Collection</label>
+                                                                <div data-ng-if="!itemMaintCtrl.isCollectionForDropdownLoaded">Loading ...</div>
+                                                                <div class="form-group" valdr-form-group data-ng-if="itemMaintCtrl.isCollectionForDropdownLoaded">
+                                                                    <ui-select multiple items="head.collection_ids" name="collectionDropdown" id="collectionDropdown" ng-model="head.selectedCollection"
+                                                                        theme="select2" close-on-select="false" on-select="itemMaintCtrl.onCollectionChange(); itemMaintCtrl.setItemDescription(head);"
+                                                                        data-ng-class="{'error-field-validation': head.collection_id_error}">
+                                                                        <ui-select-match style="width:0px" placeholder="Select Collection" ng-click="itemMaintCtrl.onCollectionChange(); itemMaintCtrl.setItemDescription(head);">
+                                                                            {{$item.collection}}
+                                                                        </ui-select-match>
+                                                                        <ui-select-choices repeat="coll in itemMaintCtrl.allCollections | filterBy:['collection'] : $select.search |limitTo: $select.search.length ? 100 : 50"
+                                                                            ui-disable-choice="coll.status.toLowerCase() === 'inactive'"
+                                                                            data-ng-class="{'opacity50' : coll.status.toLowerCase() === 'inactive'}">
+                                                                            <span ng-bind="coll.collection"></span> :
+                                                                            <span ng-bind="coll.status"></span>
+                                                                        </ui-select-choices>
+                                                                    </ui-select>
+                                                                    <span class="customised-dropdown-arrow zmdi-caret-down" ng-click="itemMaintCtrl.toggleCollectionDropdown()" style="position: absolute; right: 17px; top: 37px;"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-5 p-0 d-flex m-t-10" ng-if="head.vendor_id && ((is_collection === true && allowCollectionDetails.yes_or_no) || (is_collection === false && !allowCollectionDetails.yes_or_no))">
+                                                            <div class="m-r-5">
+                                                                <button class="aligncenter btn-primal btn-block f-700" ng-click="head.collection_id=null; head.collection=''; head.selectedCollection = [];"
+                                                                    ng-disabled="!head.collection_id">Reset</button>
+                                                            </div>
+                                                            <div>
+                                                                <button type="button" class="aligncenter btn-primal btn-block f-700" id="add_collection" name="Add New Collection" ng-click="itemMaintCtrl.openForm('ItemCollections')"
+                                                                    data-ng-disabled="!itemMaintCtrl.itemCollectionPermissions.create"
+                                                                    title="{{!itemMaintCtrl.itemCollectionPermissions.create ? 'Access denied' : ''}}">
+                                                                    Add New Collection
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <label class="maintenance-field-label">Qualifier</label>
+                                                            <input id="qualifier" name="qualifier" type="text" class="form-control input-sm" ng-model="head.qualifier" errorvalue="head.qualifier_error"
+                                                                maxlength="{{model.qualifier.size}}" placeholder="Enter Qualifier"
+                                                                ng-change="itemMaintCtrl.setItemDescription(head)" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 p-0">
+                                                        <div class="col-md-12 col-lg-12 form-group">
+                                                            <label class="maintenance-field-label d-block">Vendor Reorder
+                                                            </label>
+                                                            <div class="d-flex align-items-center">
+                                                                <label class="align-items-center d-flex m-r-15">
+                                                                    <input type="radio" name="vendorreorder" ng-model="head.vendor_reorder" value="1" ng-value="1">
+                                                                    <i class="input-helper"></i>
+                                                                    Yes
+                                                                </label>
+                                                                <label class="align-items-center d-flex">
+                                                                    <input type="radio" name="vendorreorder" ng-model="head.vendor_reorder" value="0" ng-value="0">
+                                                                    <i class="input-helper"></i>
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <span class="c-red" ng-show="itemMaintCtrl.item_maint_form.description.$invalid">*
+                                                            </span>
+                                                            <span class="c-green" ng-show="itemMaintCtrl.item_maint_form.description.$valid">*
+                                                            </span>
+                                                            <label class="maintenance-field-label">Description</label>
+                                                            <textarea auto-focus class="input-sm description-text-area rc-text-area" rows="4" cols="50" name="description" id="description"
+                                                                ng-model="head.description" data-ng-change=" itemMaintCtrl.isDescriptionChanged = head.description ? true : false;"
+                                                                ng-blur="itemMaintCtrl.duplicateItemCheck(head.type_id, head.description, undefined)"
+                                                                placeholder="Enter Description" data-ng-class="{'error-field-validation': itemMaintCtrl.item_maint_form.description.$invalid && itemMaintCtrl.isInvalidForm}"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12" ng-if="itemMaintCtrl.duplicateItemExist === true">
+                                                    <div class="rc-alert rc-alert-type-info" style="background-color: #fbfbfb;height: 40px;" aria-hidden="false" role="alert">
+                                                        <div class="col-xs-12 d-flex p-0">
+                                                            <div class="rc-alert-icon">
+                                                                <span class="text-info zmdi zmdi-alert-polygon" style="font-size:24px;color: #ff6c3c;">
+                                                                </span>
+                                                            </div>
+                                                            <div style="flex:1;">
+                                                                <span class="f-14 f-700 text-warning">There are {{itemMaintCtrl.duplicateItemList.length}} Items
+                                                                    with similar description
+                                                                </span>
+                                                                <span class="pull-right">
+                                                                    <button type="button" class="btn btn-primal" style="padding: 5px 8px;" ng-click="itemMaintCtrl.showDuplicateItems = true;">View Items</button>
+                                                                    <button type="button" class="btn btn-secondary" style="padding: 5px 8px;" ng-click="itemMaintCtrl.duplicateItemExist = false">Cancel</button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <label class="maintenance-field-label">Romanic Copy</label>
+                                                            <trix-editor angular-trix ng-model="head.romanic_copy" class="trix-content"></trix-editor>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Master Details section ends -->
+                                        <!-- Status section starts -->
+                                        <div class="col-lg-8 p-0 box m-t-10 maintenanceworkspace">
+                                            <div class="col-lg-12 f-16 panel-header">
+                                                <span class="f-700 main-header">Status</span>
+                                                <div>
+                                                    <small>Current and next status for the item</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 p-10">
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <span class="c-red" ng-show="itemMaintCtrl.item_maint_form.status_id.$invalid">*
+                                                            </span>
+                                                            <span class="c-green" ng-show="itemMaintCtrl.item_maint_form.status_id.$valid">*
+                                                            </span>
+                                                            <label class="maintenance-field-label">Current Status
+                                                            </label>
+                                                            <select name="status_id" id="status_id" data-ng-disabled="!itemMaintCtrl.editStatusRole"
+                                                            class="form-control select-component input-sm" ng-options="each.code as each.description for each in statuses"
+                                                                ng-change="head.status=(statuses|filter:{code:head.status_id})[0].description;itemMaintCtrl.changingstatus = true;itemMaintCtrl.reloadUDDs()"
+                                                                ng-model="head.status_id" errorvaluechosen="head.status_id_error"
+                                                                required data-ng-class="{'error-field-validation': itemMaintCtrl.item_maint_form.status_id.$invalid && itemMaintCtrl.isInvalidForm}">
+                                                                <option value="" disabled>Select Current Status</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <span class="c-red" ng-show="itemMaintCtrl.item_maint_form.status_effective_date.$invalid">*
+                                                            </span>
+                                                            <span class="c-green" ng-show="itemMaintCtrl.item_maint_form.status_effective_date.$valid">*
+                                                            </span>
+                                                            <label class="maintenance-field-label">Effective Date
+                                                            </label>
+                                                            <div class="form-group" ng-init="head.status_effective_date=getDateBasedOnFormat(head.status_effective_date)">
+                                                                <input type="text" data-ng-disabled="!itemMaintCtrl.editStatusRole" id="status_effective_date" name="status_effective_date" required class="form-control input-sm rcp-mydatepicker"
+                                                                    ng-model="head.status_effective_date" ui-mask="{{ui_date_mask}}"
+                                                                    mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                                                    data-ng-change="itemMaintCtrl.changingdate =true;itemMaintCtrl.changeStatusFields();"
+                                                                    is-effective-date="true" data-ng-class="{'error-field-validation': itemMaintCtrl.item_maint_form.status_effective_date.$invalid && itemMaintCtrl.isInvalidForm}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 p-0">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group" valdr-form-group>
+                                                            <span class="c-red" ng-show="itemMaintCtrl.item_maint_form.next_status_id.$invalid || (head.next_status_id == head.status_id)">*
+                                                            </span>
+                                                            <span class="c-green" ng-show="itemMaintCtrl.item_maint_form.next_status_id.$valid && (head.next_status_id != head.status_id)">*
+                                                            </span>
+                                                            <label class="maintenance-field-label">Next Status</label>
+                                                            <select name="next_status_id" id="next_status_id" data-ng-disabled="!itemMaintCtrl.editStatusRole"
+                                                            class="form-control select-component input-sm" ng-options="each.code as each.description disable when (each.code === itemMaintCtrl.statusCodes.Pending.ID && head.status_id !== itemMaintCtrl.statusCodes.Pending.ID) for each in next_statuses"
+                                                                ng-change="itemMaintCtrl.changingnextstatus =true;itemMaintCtrl.changeStatusFields();head.next_status=(next_statuses|filter:{code:head.next_status_id})[0].description"
+                                                                ng-model="head.next_status_id
+                                                                    " errorvaluechosen="head.next_status_id_error" data-ng-class="{'error-field-validation': itemMaintCtrl.item_maint_form.next_status_id.$invalid && itemMaintCtrl.isInvalidForm || (head.next_status_id == head.status_id)}">
+                                                                <option value="" disabled>Select Next Status</option>
+                                                            </select>
+                                                            <div data-ng-if="head.next_status_id == head.status_id" class="status-validation-error">Next Status cannot be same as Current Status!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6" ng-if="effective_val" valdr-form-group>
+                                                        <div class="form-group" ng-init="head.next_effective_date=getDateBasedOnFormat(head.next_effective_date)">
+                                                            <span class="c-red" ng-show="itemMaintCtrl.item_maint_form.next_effective_date.$invalid">*
+                                                            </span>
+                                                            <span class="c-green" ng-show="itemMaintCtrl.item_maint_form.next_effective_date.$valid">*
+                                                            </span>
+                                                            <label class="maintenance-field-label">Next Effective Date
+                                                            </label>
+                                                            <input type="text" id="next_effective_date" name="next_effective_date" data-ng-disabled="!itemMaintCtrl.editStatusRole"
+                                                            required class="form-control input-sm rcp-mydatepicker"
+                                                                ng-model="head.next_effective_date" ui-mask="{{ui_date_mask}}"
+                                                                mydatepicker ng-model-options="{ updateOn: 'blur' }" model-view-value="true"
+                                                                data-ng-change="itemMaintCtrl.changingnextdate = true;itemMaintCtrl.changeStatusFields();"
+                                                                is-effective-date="false" data-ng-class="{'error-field-validation': itemMaintCtrl.item_maint_form.next_effective_date.$invalid && itemMaintCtrl.isInvalidForm}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="rc-alert rc-alert-type-info" aria-hidden="false" role="alert">
+                                                        <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                            <div class="rc-alert-icon">
+                                                                <span class="text-info zmdi zmdi-alert-polygon" style="font-size:35px">
+                                                                </span>
+                                                            </div>
+                                                            <div style="flex:1;">
+                                                                <div class="f-14 f-700 text-info">Automatic status adjustment
+                                                                </div>
+                                                                <div>
+                                                                    <span class="text-muted">
+                                                                        Based on the next effective date the current status will be automatically adjusted. If the current date is equal to the next
+                                                                        effective date then the current status will be changed
+                                                                        to the next status and the effective date will be
+                                                                        updated to the current date
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Status section ends -->
+                                        <div class="col-lg-8 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="itemMaintCtrl.validationMessage">
+                                            <div class="col-lg-12 p-0">
+                                                <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                                    <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                        <div class="rc-alert-icon">
+                                                            <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px" title="Error message" title-direction="bottom" fixed-position="true">
+                                                            </span>
+                                                        </div>
+                                                        <div style="flex:1;">
+                                                            <div class="f-15 f-700 text-danger">Error!</div>
+                                                            <div>
+                                                                <span class="c-black">{{itemMaintCtrl.validationMessage}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8 m-t-10 p-0 m-b-10">
+                                            <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="(!itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                                <button type="button" class="btn btn-block btn-inverse f-700 waves-effect" data-ng-click="itemMaintCtrl.exit('update');">Cancel</button>
+                                                <button type="button" class="btn btn-block btn-success f-700 m-l-5 m-t-0 waves-effect" data-ng-click="itemMaintCtrl.continueFn('configureItemVendorScreen')">Next</button>
+                                            </div>
+                                            <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="!(itemMaintCtrl.$showErrorDetails || itemMaintCtrl.$showErrorDetailsData) && (itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                                <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700" data-ng-click="itemMaintCtrl.confirmDel()">Cancel</button>
+                                                <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0" data-ng-click="itemMaintCtrl.delete('SKUMaster',head);">Yes,Delete!</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-form>
+                        </div>
+                    </div>
+                    <!--Configure item vendors -- Start -->
+                    <div ng-show="itemMaintCtrl.configureItemVendorScreen" ng-init="itemMaintCtrl.setStageIndication('configureItemVendorForm')">
+                        <div class="col-lg-8 col-xs-10 p-0">
+                            <div class="col-lg-12 update-maintenance-screen-title">
+                                <span class="f-16 c-white">
+                                    <i class="fa fa-edit"></i> Create Item </span>
+                            </div>
+                            <div class="col-lg-12 p-0 box maintenanceworkspace d-flex">
+                                <div class="col-lg-12 p-0" style="min-height:100px">
+                                    <div data-ng-include="'./application/modules/item/maintenance/item.vendor.configuration.html'">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 p-t-10">
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="(!itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect" data-ng-click="itemMaintCtrl.exit('update');">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="itemMaintCtrl.backFn('itemVendorConfigurationScreen');">Back</button>
+                                    <button type="button" id="config_item_next" name="config_item_next" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0 waves-effect"
+                                        data-ng-click="itemMaintCtrl.continueFn('createForm')">Next</button>
+                                </div>
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="!(itemMaintCtrl.$showErrorDetails || itemMaintCtrl.$showErrorDetailsData) && (itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700" data-ng-click="itemMaintCtrl.confirmDel()">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0" data-ng-click="itemMaintCtrl.delete('SKUMaster',head);">Yes,Delete!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Configure item vendors -- End -->
+                    <!--Configure item UDD -- Start -->
+                    <div ng-show="itemMaintCtrl.configureScreen" ng-init="itemMaintCtrl.setStageIndication('configureform')">
+                        <div class="col-lg-8 col-xs-10 p-0">
+                            <div class="col-lg-12 update-maintenance-screen-title">
+                                <span class="f-16 c-white">
+                                    <i class="fa fa-edit"></i> Create Item </span>
+                            </div>
+                            <div class="col-lg-12 p-0 box maintenanceworkspace d-flex">
+                                <div class="col-lg-12 col-xs-12 p-0 rcpscrollbar">
+                                    <item-userdefined-data-directive ng-init="disableActions=itemMaintCtrl.disableActions">
+                                    </item-userdefined-data-directive>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-b-10 p-0 m-t-10" data-ng-if="uddValidationErrors.length>0">
+                                <div class="rc-alert p-10" aria-hidden="false" role="alert">
+                                    <div class="col-xs-12 d-flex p-0 box">
+                                        <div style="flex:1;">
+                                            <div class="d-flex d-flex-v-center p-10" style="background-color: #fffdf7;border-bottom: 1px solid #eaeded;">
+                                                <span class="c-firebrick zmdi zmdi-alert-octagon" style="font-size:28px"></span>
+                                                <span class="c-firebrick m-l-10">
+                                                    Please add values before proceeding in maintenance.
+                                                </span>
+                                            </div>
+                                            <div class="p-5">
+                                                <!-- <div class="c-gray p-5">Click on each link to add values</div> -->
+                                                <div class="p-5" data-ng-repeat="uddValidationError in uddValidationErrors">
+                                                    <span class="d-flex d-flex-v-center">
+                                                        <span data-ng-if="uddValidationError.user_defined_data_type.toLowerCase() === 'attribute'">
+                                                            <img src="./img/sidebar-icons/package.svg" style="height:13px;width:15px;" />
+                                                        </span>
+                                                        <span data-ng-if="uddValidationError.user_defined_data_type.toLowerCase() === 'hierarchy'">
+                                                            <img src="./img/sidebar-icons/hierarchy-levels.svg" style="height:13px;width:15px;" />
+                                                        </span>
+                                                        <span class="c-bluegray f-400 m-l-5 m-r-5">{{uddValidationError.user_defined_data_type}}
+                                                        </span> -
+                                                        <span class="m-l-5 text-info">{{uddValidationError.udd_description}}</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="itemMaintCtrl.validationMessage">
+                                <div class="col-xs-12 p-0">
+                                    <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                        <div class="col-xs-12 d-flex m-b-5 p-0">
+                                            <div class="rc-alert-icon">
+                                                <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                </span>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div class="f-15 f-700 text-danger">Error!</div>
+                                                <div>
+                                                    <span class="c-black">{{itemMaintCtrl.validationMessage}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 p-t-10">
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="(!itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect" data-ng-click="itemMaintCtrl.exit('update');">Cancel</button>
+                                    <!-- Buttons for back and next if item_sub_type is an Set -- start -->
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="itemMaintCtrl.backFn('configureScreen');"
+                                        data-ng-if="head.item_sub_type==='Set'">Back</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0 waves-effect" data-ng-click="itemMaintCtrl.continueFn('configureScreen')"
+                                        data-ng-if="head.item_sub_type==='Set'">Next</button>
+                                    <!-- Buttons for back and next if item_sub_type is an Set -- end -->
+                                    <!-- Buttons for back and next if item_sub_type is an Item -- start -->
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="itemMaintCtrl.backFn('configureScreen');"
+                                        data-ng-if="head.item_sub_type==='Item'">Back</button>
+                                    <button type="button" id="item_set_next" name="item_set_next" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0 waves-effect"
+                                        data-ng-click="itemMaintCtrl.continueFn('itemSetForm')" data-ng-if="head.item_sub_type==='Item'">Next</button>
+                                    <!-- Buttons for back and next if item_sub_type is an Item -- end -->
+                                </div>
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="!(itemMaintCtrl.$showErrorDetails || itemMaintCtrl.$showErrorDetailsData) && (itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700" data-ng-click="itemMaintCtrl.confirmDel()">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0" data-ng-click="itemMaintCtrl.delete('SKUMaster',head);">Yes,Delete!</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--Configure item UDD -- Start -->
+
+                    <!-- Div for Create Item Set -- START -->
+                    <div ng-show="itemMaintCtrl.itemSetForm" ng-init="itemMaintCtrl.setStageIndication('itemSetForm');">
+                        <div class="col-xs-12 col-md-8 p-0">
+                            <div class="col-lg-12 update-maintenance-screen-title">
+                                <span class="f-16 c-white">
+                                    <i class="fa fa-edit"></i> Create Item </span>
+                            </div>
+                            <div class="col-xs-12 box p-0 maintenanceworkspace">
+                                <div class="col-lg-12 p-0 rcpscrollbar">
+                                    <item-set-directive ng-init="disableActions=itemMaintCtrl.disableActions">
+                                    </item-set-directive>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 p-0 p-t-10">
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="(!itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-cancel f-700 waves-effect" data-ng-click="itemMaintCtrl.exit('update');">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="itemMaintCtrl.backFn('itemSetForm');">Back</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0 waves-effect" data-ng-click="itemMaintCtrl.continueFn('itemSetForm')">Next</button>
+                                </div>
+                                <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="!(itemMaintCtrl.$showErrorDetails || itemMaintCtrl.$showErrorDetailsData) && (itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700" data-ng-click="itemMaintCtrl.confirmDel()">Cancel</button>
+                                    <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0" data-ng-click="itemMaintCtrl.delete('SKUMaster',head);">Yes,Delete!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Div for Create Item Set -- End -->
+
+                    <!--Manage drops div -- Start -->
+                    <div ng-if="itemMaintCtrl.manageDropScreen" ng-init="itemMaintCtrl.setStageIndication('dropScreen');itemMaintCtrl.fetchDropsByUuidAndInstanceId(head.id);itemMaintCtrl.initializeDropForm()">
+                        <ng-form name="itemMaintCtrl.drop_form" novalidate="novalidate">
+                            <div class="col-lg-8 col-xs-10 p-0">
+                                <div class="col-lg-12 update-maintenance-screen-title">
+                                    <span class="f-16 c-white">
+                                        <i class="fa fa-edit"></i> Create Item </span>
+                                </div>
+                                <div class="col-xs-12 p-0 box maintenanceworkspace">
+                                    <div class="col-xs-12 f-16 panel-header">
+                                        <span class="f-700 main-header">Unstructured Data</span>
+                                        <div>
+                                            <small>Add/Remove drops for the item</small>
+                                        </div>
+                                    </div>
+
+                                    <div data-ng-include="'./template/unstructured.data.info.section.html'"></div>
+
+                                    <div class="col-xs-12 p-10">
+                                        <div class="col-xs-6">
+                                            <div class="text-info text-center f-12 m-t-5" ng-if="loadingStreams">Loading streams...
+                                            </div>
+                                            <div class="text-info text-center f-12 m-t-5" ng-if="!streams.length && !loadingStreams">No streams exists for selected lake</div>
+                                            <div class="form-group" ng-if="drop.lake_id && !loadingStreams">
+                                                <span class="c-red" ng-show="itemMaintCtrl.drop_form.stream_id.$invalid">*
+                                                </span>
+                                                <span class="c-green" ng-show="itemMaintCtrl.drop_form.stream_id.$valid">*
+                                                </span>
+                                                <label>Stream</label>
+                                                <select id="stream_id" name="stream_id" ng-model="drop.stream_id" class="form-control select-component input-sm" ng-options="item.stream_id as item.stream for item in streams"
+                                                    data-ng-change="itemMaintCtrl.getLakeStreamLinkByIds(drop.lake_id,drop.stream_id);resetData()"
+                                                    required>
+                                                    <option value="" disabled>Select Stream</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 p-0">
+                                            <div class="col-xs-12">
+                                                <span class="c-green">*</span>
+                                                <label>Status</label>
+                                            </div>
+                                            <div class="col-xs-12 form-group d-flex m-t-5 p-0" data-ng-init="itemMaintCtrl.getDropStatus()">
+                                                <div ng-repeat="status in statusList">
+                                                    <div class="m-l-10 m-r-10" data-ng-init="status.isDefault ? drop.status_id = status.id : ''">
+                                                        <label class="d-flex align-items-center m-r-5">
+                                                            <input class="m-t-0" hidden="hidden" type="radio" name="status" id="{{$index}}-status-local" ng-model="drop.status_id" value="{{status.id}}"
+                                                                required ng-checked="status.isDefault">
+                                                            <i class="input-helper"></i>{{status.label}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0">
+                                            <div data-ng-if="itemMaintCtrl.thumbnailActive" style="padding-left: 9px;">
+                                                <span class="c-red" ng-show="itemMaintCtrl.oneSequence||itemMaintCtrl.numberCannotExeed||itemMaintCtrl.conditionForEmpty">*
+                                                </span>
+                                                <span class="c-green" ng-show="!itemMaintCtrl.oneSequence && !itemMaintCtrl.numberCannotExeed && !itemMaintCtrl.conditionForEmpty">*
+                                                </span>
+                                                <label >Sequence for thumbnail</label>
+                                                <input type="number" id="display_sequence" name="display_sequence" data-ng-model="drop.display_sequence" class="widthValue" min="0" pattern="\d*" data-ng-change="itemMaintCtrl.changeSequenceNumberFor()" only-integer>
+                                                <span data-ng-if="itemMaintCtrl.numberCannotExeed" style="color: #e41708; ">* sequence number cannot exceed 300</span>
+                                                <span data-ng-if="itemMaintCtrl.oneSequence" style="color: #e41708; ">* Sequence number is reserved for cover_image thumbnail</span>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <span class="c-green">*</span>
+                                                <label>Source</label>
+                                            </div>
+                                            <div class="col-xs-12 form-group d-flex">
+                                                <div class="m-t-5" data-ng-init="drop.source = 'local'">
+                                                    <label class="d-flex align-items-center"> 
+                                                        <input class="m-t-0" hidden="hidden" type="radio" name="match" id="match-local" data-ng-change="itemMaintCtrl.itemdataAddToQueueError = false;resetData()" ng-model="drop.source" value="local" required>
+                                                        <i class="input-helper"></i>Upload from Local Computer
+                                                    </label>
+                                                </div>
+                                              
+                                               
+                                                <div class="m-t-5 m-l-10">
+                                                    <label class="d-flex align-items-center">
+                                                        <input class="m-t-0" hidden="hidden" type="radio" 
+                                                        name="match" id="match-url" ng-model="drop.source"
+                                                         value="url" ng-click="drop.is_save_to_document_store=true;drop.url = '';resetData()"
+                                                            required>
+                                                        <i class="input-helper"></i>Upload from Internet
+                                                    </label>
+                                                </div>
+
+                                                <div class="m-t-5 m-l-10">
+                                                    <label class="d-flex align-items-center">
+                                                        <input class="m-t-0" hidden="hidden" type="radio" 
+                                                        ng-disabled="!drop.stream_id || (drop.stream_id && [39, 40 ,41].indexOf(drop.stream_id) > -1)"
+                                                        name="match" ng-model="drop.source" value="camera"
+                                                         id="match-camera" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false"
+                                                         data-ng-click="itemMaintCtrl.startCam();resetData()"                                                   
+                                                            required>
+                                                        <i class="input-helper"></i>Upload from Camera
+                                                    </label>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 p-0" data-ng-if="drop.source.toLowerCase() === 'local'" style="align-items:flex-end;">
+                                            <div class="col-xs-4 col-lg-7">
+                                                <div class="form-group" ng-repeat="f in files">
+                                                    <label>File Name</label>
+                                                    <label name="filename" class="form-control input-sm o-hidden text-overflow-desc-auto" title="{{f.name}}" disabled required>{{f.name}}</label>
+                                                </div>
+                                                <div class="text-danger p-t-10" data-ng-if="errFiles" data-ng-repeat="ef in errFiles">
+                                                    <span data-nf-if="ef.$errorMessages && ef.$errorMessages.maxSize">
+                                                        * {{ef.name}} exedes size limit {{ef.$errorParam}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8 col-lg-5 p-0" style="margin-top: 22px;">
+                                                <div class="col-xs-6 form-group">
+                                                    <button type="button" class="btn btn-info f-700 btn-block" ng-disabled="!isAllowMultipleDrops||itemMaintCtrl.oneSequence||itemMaintCtrl.numberCannotExeed||itemMaintCtrl.conditionForEmpty" name="update_title_btn" id="update_title_btn"
+                                                        ngf-select="itemMaintCtrl.selectFiles($files, $invalidFiles)" multiple
+                                                        accept="*" ngf-max-size="60MB">Select File</button>
+                                                </div>
+                                                <div class="col-xs-6 form-group pull-right" data-ng-if1="itemMaintCtrl.drop_form.$valid && (!isAllowMultipleDrops||(files||files.length>0))"
+                                                    data-ng-click="itemMaintCtrl.isAllowedMultipleDropsForSelectedStream(queuedDrops)">
+                                                    <button ng-disabled="(!isAllowMultipleDrops && queuedDrops.length>0) || itemMaintCtrl.drop_form.$invalid || itemMaintCtrl.isAddedToQueue || !files || !files.length||itemMaintCtrl.oneSequence||itemMaintCtrl.numberCannotExeed||itemMaintCtrl.conditionForEmpty||notImage"
+                                                        type="button" class="btn btn-success f-700 btn-block" name="update_title_btn"
+                                                        id="update_title_btn">Add to Queue
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-lg-12 p-0 checkbox m-b-10">
+                                                <label class="d-flex" data-ng-if="drop.stream_id == '33' && files.length && !notImage" data-ng-init="itemMaintCtrl.is_thumbnail = 1;">
+                                                    <input type="checkbox" data-ng-model="itemMaintCtrl.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                                    <i class="input-helper"></i>
+                                                    <span class="m-t-5 m-l-10">Save as thumbnail</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="text-danger p-b-10 m-l-10" data-ng-if="notImage">* Selected File is
+                                            not an image</div>
+                                        <div class="col-xs-12 p-0 d-flex" data-ng-if="drop.source.toLowerCase() === 'url'" style="align-items:flex-end;">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <span class="c-red" ng-show="itemMaintCtrl.drop_form.url.$invalid || notImageUrl || invalidUrl">*
+                                                    </span>
+                                                    <span class="c-green" ng-show="itemMaintCtrl.drop_form.url.$valid && !notImageUrl && !invalidUrl">*
+                                                    </span>
+                                                    <label>URL</label>
+                                                    <input id="url" ng-bind="datas" name="url" ng-keyup="itemMaintCtrl.validateUrl(drop.url);"
+                                                        type="text" class="form-control input-sm" ng-model="drop.url" placeholder="Enter URL"
+                                                        data-ng-change="itemMaintCtrl.itemdataAddToQueueError = false;itemMaintCtrl.showCantGen = false;"
+                                                        required>
+                                                    <span class="text-danger" ng-if="(itemMaintCtrl.drop_form.url.$error.pattern && !itemMaintCtrl.drop_form.url.$pristine) || invalidUrl">Invalid URL
+                                                    </span>
+                                                    <span class="text-danger" ng-if="itemMaintCtrl.showCantGen">Cannot convert the given url into file
+                                                    </span>
+                                                    <div class="col-xs-12 p-0 form-group" data-ng-if="drop.source.toLowerCase()=='url' && isImage && files.length > 0" style="display: inline-flex;top: 5px;flex-direction: column;">
+                                                        <img data-ng-if="drop.source.toLowerCase()=='url' && itemMaintCtrl.drop_form.url.$valid && !itemMaintCtrl.showCantGen"
+                                                        ng-src="{{drop.url}}" style="height:125px;width:125px;" />
+                                                        <div class="d-flex" style="align-items: flex-end;" ng-repeat="f in files">
+                                                            <label class="c-gray f-300">{{f.type | truncate:40}}</label>
+                                                            <label class="c-gray f-300" style="margin-left: 15px">{{f.size}} kb</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div data-ng-if="drop.url&&drop.url.length>0&&itemMaintCtrl.drop_form.url.$valid  && !notImageUrl && !invalidUrl" class="checkbox m-b-10" style="margin-left: -9px;">
+                                                    <label class="d-flex">
+                                                        <input type="checkbox" data-ng-disabled="drop.source.toLowerCase()=='url'" data-ng-model="drop.is_save_to_document_store" ng-true-value=true ng-false-value=false>
+                                                        <i class="input-helper" data-ng-disabled="drop.source.toLowerCase()=='url'" 
+                                                        ng-class="{'cursor-nt-al': drop.source.toLowerCase()=='url'}" title="{{drop.source.toLowerCase()=='url'? 'Saving to document store by default':''}}"></i>
+                                                        <span class="m-t-5 m-l-10">Save to document store</span>
+                                                    </label>
+                                                    <div class="checkbox m-b-10">
+                                                        <label class="d-flex m-t-5" data-ng-if="drop.stream_id == '33'" data-ng-init="itemMaintCtrl.is_thumbnail = 1;">
+                                                            <input type="checkbox" data-ng-model="itemMaintCtrl.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                                            <i class="input-helper"></i>
+                                                            <span class="m-t-5 m-l-10">Save as thumbnail</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 p-0" data-ng-if1="(isAllowMultipleDrops && !(itemMaintCtrl.drop_form.$invalid))">
+                                                <div class="col-xs-12 col-lg-6   form-group pull-right" data-ng-click="itemMaintCtrl.isAllowedMultipleDropsForSelectedStream(queuedDrops)">
+                                                    <button type="button" ng-disabled="itemMaintCtrl.drop_form.$invalid || itemMaintCtrl.isAddedToQueue || itemMaintCtrl.showCantGen || (!isAllowMultipleDrops && queuedDrops.length>0)||itemMaintCtrl.oneSequence||itemMaintCtrl.numberCannotExeed||itemMaintCtrl.conditionForEmpty||notImageUrl||invalidUrl" class="btn btn-success f-700 btn-block"
+                                                        name="update_title_btn" id="update_title_btn">Add to Queue</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-danger p-b-10 m-l-10" data-ng-if="notImageUrl">* URL is
+                                            not an image</div>
+                                        <div class="col-xs-12 p-0" data-ng-if="!isAllowMultipleDrops && queuedDrops.length>0">
+                                            <span class="col-xs-12 text-danger">Multiple drop upload is not allowed for selected stream. Delete the existing queue.
+                                            </span>
+                                        </div>
+                                        <div class="f-14 f-700 c-firebrick" data-ng-if="itemMaintCtrl.itemdataAddToQueueError">{{itemMaintCtrl.itemdataAddToQueueError}}</div>
+                                        <!-- End -->
+                                    </div>
+                                </div>
+                                <!-- Table to show the cover images and the Thumbnails start -->
+                                <div class="col-xs-12 p-0 box maintenanceworkspace m-t-10">
+                                    <div class="col-xs-12 m-b-10 p-0">
+                                        <div class="col-xs-12 f-16 panel-header">
+                                            <span class="f-700 main-header">Images linked to the item</span>
+                                            <div>
+                                                <small>Images which are already linked are listed here.</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 o-auto p-t-10" id="showQueueMessage" data-ng-class="{'isProccessing':itemMaintCtrl.isDeleting && itemMaintCtrl.isDeleting === true,'processed':itemMaintCtrl.isDeleting && itemMaintCtrl.isDeleting === 1}">
+                                            <div class="col-xs-12 p-0" style="border:1px solid #ececec;">
+                                                <div class="col-xs-12 p-10 queue-message-header" style="background: #fafafa;color: #1369ab;font-weight: 700;">
+                                                    <span>Drop Status</span>
+                                                </div>
+                                                <!-- Section to show the message for the Image added to Queue start -->
+                                                <div class="col-xs-12 m-t-10 p-0">
+                                                    <div class="col-xs-12 p-10">
+                                                        <span class="d-flex f-14 f-700 di-block" style="color: #386d39;">
+                                                            <span class="f-21 f-700 m-r-5 text-success zmdi zmdi-check zmdi-hc-fw" ng-if="itemMaintCtrl.isDeleting && itemMaintCtrl.isDeleting === 1"
+                                                                style="color: #5ca05d;"></span>
+                                                            {{itemMaintCtrl.showSuccessQueueMessage}}
+                                                            <img src="./img/loadingData.gif" ng-if="itemMaintCtrl.isDeleting && itemMaintCtrl.isDeleting === true" style="height: 30px;width: 30px;"
+                                                            />
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- Section to show the message for the Image added to Queue end -->
+                                            </div>
+                                        </div>
+
+                                        <!-- Section to show the message on deleting cover image -->
+                                        <div class="col-xs-12 m-t-10" id="showConfirmationMessage" data-ng-if="itemMaintCtrl.DeletionConfirmation">
+                                            <div class="col-xs-12 p-10" style="border: 1px solid #b4ceb4;border-radius: 3px;background: #f2fff2;">
+                                                <span class="d-flex f-14 f-700" style="color: #313131">
+                                                    Removing cover image will remove the same from thumbnail. Do you want to delete ?
+                                                </span>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group pull-right">
+                                                        <button class="btn btn-block btn-success waves-effect f-700" ng-if="!updateFile" ng-click="itemMaintCtrl.deleteDropFromQueue()">
+                                                            Yes, Delete!
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-group pull-right m-r-5">
+                                                        <button class="btn btn-block btn-inverse waves-effect f-700" data-ng-click="itemMaintCtrl.initializeDropForm()">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 m-t-10" id="showConfirmationMessage" data-ng-if="itemMaintCtrl.DeletionThumbnailConfirmation">
+                                            <div class="col-xs-12 p-10" style="border: 1px solid #b4ceb4;border-radius: 3px;background: #f2fff2;">
+                                                <span class="d-flex f-14 f-700" style="color: #313131">
+                                                    Removing thumbnail will remove the same from cover image. Do you want to delete ?
+                                                </span>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group pull-right">
+                                                        <button class="btn btn-block btn-success waves-effect f-700" ng-if="!updateFile" ng-click="itemMaintCtrl.deleteDropFromQueue()">
+                                                            Yes, Delete!
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-group pull-right m-r-5">
+                                                        <button class="btn btn-block btn-inverse waves-effect f-700" data-ng-click="itemMaintCtrl.initializeDropForm()">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Section to show the message on deleting cover image end -->
+                                        <div class="col-xs-12 o-auto p-t-10" data-ng-if="queuedDrops.length>0">
+                                            <table class="table table-condensed table-bordered-sm table-bordered table-vmiddle maintenance-drops-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sequence for Thumbnail</th>
+                                                        <th>Name</th>
+                                                        <th>Size</th>
+                                                        <th>Lake</th>
+                                                        <th>Stream</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody data-ng-repeat="(groupName,dropValues) in queuedDrops|groupBy:'stream' track by $index">
+                                                    <tr>
+                                                        <td colspan="5" class="group-header-cover-img">{{groupName}}<span data-ng-if="itemMaintCtrl.sequenceChangeError && groupName === 'Thumbnail'" class="text-danger m-l-5">{{itemMaintCtrl.errorInvolve}}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="repeated-item" data-ng-repeat="drop in dropValues | orderBy:'display_sequence'"  data-ng-init="drop.thumbnail=itemMaintCtrl.getDownloadUrl(drop.drop_id, drop.url)"
+                                                        ng-disabled="isDeleting">
+                                                        <td style="text-align: center;">
+                                                            <span title="{{drop.display_sequence == 1 || drop.is_coverImage?'Cover image thumbnail sequence is fixed':'Click to edit sequence'}}" title-direction="right" data-ng-hide="drop.editDocSequence" data-ng-if="groupName === 'Thumbnail'" data-ng-click="itemMaintCtrl.editItem(drop)" >{{drop.display_sequence}}</span>
+                                                            <input data-ng-class="itemMaintCtrl.sequenceChangeError?'borders':null" data-ng-show="drop.editDocSequence" data-ng-model="drop.display_sequence" ng-blur="itemMaintCtrl.doneEditing(drop,queuedDrops)" min="2" style="width: 60px;" only-integer-three data-ng-change="itemMaintCtrl.validationHandleFor(drop,queuedDrops)" click-outside="drop.editDocSequence=false"/>
+                                                            
+                                                        </td>
+                                                        <td>{{drop.file_name || (drop.url | limitTo: 50)}}
+                                                            <span ng-if="drop.url">
+                                                                ... </span>
+                                                        </td>
+                                                        <td>
+                                                            <span data-ng-if="drop.size">{{drop.size/1024 | DecimalPrecision:1 }} KB</span>
+                                                            <span data-ng-if="!drop.size"> - </span>
+                                                        </td>
+                                                        <td>{{drop.lake}}</td>
+                                                        <td>{{drop.stream}}</td>
+                                                        <td class="text-center d-flex" style="justify-content: space-evenly;">
+                                                            <button type="button" class="c-firebrick f-500 cursor-pointer f-17 
+                                                            zmdi zmdi-delete zmdi-hc-fw bg-none border-none p-0" ng-click="itemMaintCtrl.deleteDropsFromQueue(drop)"
+                                                                title="Delete Image">
+                                                            </button>
+                                                            <button type="button" class="c-black f-500 cursor-pointer f-17 
+                                                            zmdi zmdi-square-o zmdi-hc-fw bg-none border-none p-0" data-ng-if="drop.stream.toLowerCase() == 'thumbnail' && !drop.is_thumbnailImage && drop.stream_id ==1"
+                                                             ng-click="itemMaintCtrl.setDropAsCoverImage(1,drop)"
+                                                                title="Save as Cover Image">
+                                                            </button>
+                                                        </td>
+                                                   
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-12 o-auto" data-ng-if="itemMaintCtrl.queuedDrops.length===0">
+                                            <div class="col-xs-12 p-10">
+                                                <span class="text-info">No queued drops to publish.</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 o-auto p-t-10" data-ng-if="isLoadingDrops">
+                                            <span>Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 m-t-10 p-0 maintenanceworkspace noboxshadow" data-ng-if="itemMaintCtrl.validationMessage ">
+                                    <div class="col-xs-12 p-0">
+                                        <div class="rc-alert rc-alert-type-info type-error" aria-hidden="false" role="alert">
+                                            <div class="col-xs-12 d-flex m-b-5 p-0">
+                                                <div class="rc-alert-icon">
+                                                    <span class="text-danger zmdi zmdi-alert-octagon" style="font-size:35px">
+                                                    </span>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div class="f-15 f-700 text-danger">Error!</div>
+                                                    <div>
+                                                        <span class="c-black">{{itemMaintCtrl.validationMessage}}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Table to show the cover images and the Thumbnails end -->
+                                <div class="col-xs-12 m-t-10 p-0 m-b-10">
+                                    <div class="col-xs-8 col-lg-6 p-0 pull-right d-flex" data-ng-if="(!itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                        <button type="button" class="btn btn-block btn-cancel f-700 waves-effect" data-ng-click="itemMaintCtrl.exit('update');">Cancel</button>
+                                        <!-- Buttons for back if item_sub_type is an Set or Item -- start -->
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="itemMaintCtrl.backFn('dropScreen');"
+                                            data-ng-if="head.item_sub_type==='Set'">Back</button>
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700 m-l-5 waves-effect" data-ng-click="itemMaintCtrl.backFn('itemSetForm')"
+                                            data-ng-if="head.item_sub_type==='Item'">Back</button>
+                                        <!-- Buttons for back if item_sub_type is an Set or Item -- end -->
+                                        <button type="button" id="drop_item_next" name="drop_item_next" class="btn btn-block btn-success f-700 m-l-5 m-t-0 waves-effect"
+                                            data-ng-click="itemMaintCtrl.continueFn('dropScreen')" ng-disabled="itemMaintCtrl.isProcessing ||itemMaintCtrl.isDeleting">Next</button>
+                                        <button data-ng-if="files.length > 0" type="button" class="btn btn-block btn-info f-700 m-l-5 m-t-0 waves-effect" data-ng-click="itemMaintCtrl.continueFn('skip')"
+                                            ng-disabled="itemMaintCtrl.isProcessing ||itemMaintCtrl.isDeleting">Skip</button>
+                                    </div>
+                                    <div class="col-xs-6 p-0 pull-right d-flex" data-ng-if="!(itemMaintCtrl.$showErrorDetails || itemMaintCtrl.$showErrorDetailsData) && (itemMaintCtrl.confirmDelete && !itemMaintCtrl.opdone)">
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-inverse f-700" data-ng-click="itemMaintCtrl.confirmDel()">Cancel</button>
+                                        <button type="button" class="btn btn-group-justified btn-sm btn-success f-700 m-l-5 m-t-0" data-ng-click="itemMaintCtrl.delete('Vendor',head,itemMaintCtrl.vendor_properties)">Yes,Delete!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                    <!--Manage drops div -- End -->
+
+                    <!--BASIC DETAILS PREVIEW -- START-->
+                    <div ng-show="itemMaintCtrl.previewAndPublish" ng-init="itemMaintCtrl.setStageIndication('previewandpublish');">
+                        <div class="col-xs-12 p-0 maintenanceworkspace noboxshadow">
+                            <div class="rcpscrollbar full-height">
+                                <!-- Preview Screen top note and button section -- Start -->
+
+                                <div class="col-xs-12 m-b-10 p-0" data-ng-show1="!itemMaintCtrl.publishResponseMessage">
+                                    <div class="col-lg-12 update-maintenance-screen-title" data-ng-class="{'d-none' : itemMaintCtrl.publishResponseMessage}">
+                                        <span class="f-16 c-white">
+                                            <i class="fa fa-edit"></i> Create Item </span>
+                                    </div>
+                                    <div class="col-xs-12 d-flex p-0" style="min-height:50px;flex-direction:column;align-items:flex-end;">
+                                        <div class="col-xs-12 align-items-center d-flex justify-content-between type-success" aria-hidden="false" role="alert" ng-class="{'preview-screen':!itemMaintCtrl.publishResponseMessage, 'publish-screen':itemMaintCtrl.publishResponseMessage}">
+                                            <div class="d-flex p-0" data-ng-show="!itemMaintCtrl.publishResponseMessage">
+                                                <div class="rc-alert-icon">
+                                                    <span class=" zmdi zmdi-globe text-info" style="font-size:35px" title="review" title-direction="bottom" fixed-position="true">
+                                                    </span>
+                                                </div>
+                                                <div style="flex:1;">
+                                                    <div class="f-14 f-700">Review and Publish</div>
+                                                    <div>
+                                                        <span class="text-muted">
+                                                            <div class="list-style-none" style="line-height: 1.7;">
+                                                                <li class="p-relative p-l-10">
+                                                                    <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5 p-absolute" style="top:4px;left:0;"></span>
+                                                                    <span class="">
+                                                                        <strong>Preview and Publish :</strong> Publish the entered/configured
+                                                                        details
+                                                                    </span>
+                                                                </li>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="" style="justify-content:space-between" data-ng-show="!itemMaintCtrl.publishResponseMessage">
+                                                <div class="pull-right d-flex p-0 d-flex-h-center">
+                                                    <button type="button" class="btn btn-lg btn-inverse f-700 waves-effect" data-ng-click="itemMaintCtrl.backFn('previewAndPublish');"
+                                                        data-ng-if="itemMaintCtrl.previewAndPublish">Back</button>
+                                                    <button type="button" class="btn btn-lg btn-success f-700 m-l-5 waves-effect" data-ng-disabled="itemMaintCtrl.LoadingSecndryAuth" data-ng-click="itemMaintCtrl.publishItemUdd(head);itemMaintCtrl.selectedVendor = null">Publish {{moduleName}}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- Section to show the response of the published data -- Start -->
+                                            <div class="col-xs-12 p-0" data-ng-show="itemMaintCtrl.publishResponseMessage">
+                                                <div class="col-xs-12 p-0 justify-content-between p-0">
+                                                    <div class="col-xs-12 col-lg-9 p-0">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="rc-alert-icon">
+                                                                    <span class=" zmdi zmdi-globe text-info" style="font-size:35px" title="Update information" title-direction="bottom" fixed-position="true">
+                                                                    </span>
+                                                                </span>
+                                                                <div data-ng-if="itemMaintCtrl.isProcessing">
+                                                                    <i class="zmdi zmdi-hourglass-alt"></i> ...
+                                                                </div>
+                                                                <span class="f-14 f-700 text-success" data-ng-if="itemSuccessMessage && !itemMaintCtrl.isProccessing">
+                                                                    Item Created
+                                                                </span>
+                                                                <span class="f-14 f-700 c-firebrick" data-ng-if="itemErrorMessage && !itemMaintCtrl.isProccessing">
+                                                                    <span>Error while creating the Item</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div style="padding-left:40px;" data-ng-if="!itemMaintCtrl.isProccessing">
+                                                            <div class="message-section success d-flex-v-center" data-ng-if="itemSuccessMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{itemSuccessMessage}}</span>
+                                                            </div>
+                                                            <div class="message-section success d-flex-v-center" data-ng-if="itemUDDSuccessMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{itemUDDSuccessMessage}}</span>
+                                                            </div>
+                                                            <!-- <div class="message-section error d-flex-v-center" data-ng-if="itemErrorMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{itemErrorMessage}}</span>
+                                                            </div> -->
+                                                            <div class="message-section error d-flex-v-center" data-ng-if="itemErrorMessage&&itemErrorMessage.length>0" data-ng-repeat="error in itemErrorMessage">
+                                                                <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                <span class="message-info">{{error}}</span>
+                                                            </div>
+                                                            <div class="d-flex message-section" data-ng-if="itemMaintCtrl.opdone || itemErrorMessage">
+                                                                <span class="message-info" data-ng-if="itemMaintCtrl.opdone && !itemErrorMessage">
+                                                                    <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                    Are you planing to create a new Item?
+                                                                </span>
+                                                                <span class="" data-ng-if="itemErrorMessage">
+                                                                    <span class="zmdi zmdi-chevron-right f-16 f-700 m-r-5"></span>
+                                                                    Will you go back and review your setup?
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-xs-12 m-t-10" data-ng-if="!itemMaintCtrl.isProcessing">
+                                                        <div class="pull-right d-flex p-0 d-flex-h-center">
+                                                            <button type="button" class="btn btn-inverse f-300 waves-effect f-15 p-10" data-ng-click="itemMaintCtrl.exit();itemMaintCtrl.gobacktomtain()">Finish</button>
+                                                            <button type="button" class="btn btn-cancel f-300 waves-effect f-15 m-l-5" data-ng-if="itemErrorMessage" data-ng-click="itemMaintCtrl.backFn('itemVendorConfigurationScreen');itemMaintCtrl.publishResponseMessage=false;">Go Back
+                                                            </button>
+                                                            <button type="button" class="btn btn-info f-300 m-l-5 waves-effect f-16" data-ng-if="itemMaintCtrl.opdone && !itemErrorMessage"
+                                                                data-ng-click="itemMaintCtrl.createAgain();" style="padding:10px 15px;">Let's Create</button>
+                                                            <button class="btn btn-success f-300 m-l-5 f-16 cursor-not-allowed clone-not-allowed" data-ng-if="itemMaintCtrl.isCloneAllowed && (head.description.includes('clone') || head.description.includes('Clone'))"
+                                                                type="button" rc-popover popover-title="Cloning is disabled for this Item"
+                                                                popover-content="Have same identity as the cloned parent Item, to enable cloning change any master properties of this entity."
+                                                                popover-trigger="hover" popover-placement="bottom">
+                                                                <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick" style="margin-left:-5px;"></span>Clone
+                                                            </button>
+                                                            <button class="btn btn-success f-300 m-l-5 f-16 cursor-not-allowed clone-not-allowed" data-ng-if="!itemMaintCtrl.isCloneAllowed"
+                                                                type="button" rc-popover popover-title="Cloning feature is disabled"
+                                                                popover-content="No access for clone. Enable access to clone Item."
+                                                                popover-trigger="hover" popover-placement="bottom">
+                                                                <span class="zmdi zmdi-lock zmdi-hc-fw f-17 c-firebrick" style="margin-left:-5px;"></span>Clone
+                                                            </button>
+                                                            <button type="button" id="clone_item_publish" name="clone_item_publish" class="btn btn-success f-300 m-l-5 f-16" data-ng-if="itemMaintCtrl.isCloneAllowed && !(head.description.includes('clone') || head.description.includes('Clone')) && !itemErrorMessage"
+                                                                data-ng-click="itemMaintCtrl.goToClonePanelFromItemPublish(itemMaintCtrl.inserted_item_id)">
+                                                                Clone
+                                                            </button>
+                                                            <button type="button" class="btn bgm-ocean f-300 m-l-5 f-15" ng-click="itemMaintCtrl.gotoSKU(head);" data-ng-if="head.id">
+                                                                <span>View
+                                                                    <b>SKU[s]</b>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Section to show the response of the published data -- End -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Preview Screen top note and button section -- End -->
+                                <!-- Preview Screen data section -- Start -->
+                                <div class="col-lg-12 p-0">
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="col-xs-12 p-0">
+                                            <div class="col-xs-12 f-16 panel-header">
+                                                <span class="f-700" style="color:darkgray;">
+                                                    Item Details
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-12 p-t-10 card previewnpublish f-13">
+                                                <div class="col-xs-12 form-group">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Description</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">{{head.description}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group" ng-if="(is_collection === true && allowCollectionDetails.yes_or_no) || (is_collection === false && !allowCollectionDetails.yes_or_no)">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Collection</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                {{head.collection || 'Not Configured'}}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group" data-ng-if="head.qualifier">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Qualifier</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">{{head.qualifier}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Item Type</label>
+                                                        <div class="description-data" style="display:block;">
+                                                            <label ng-repeat="itemType in head.selectedTreePath" style="display:inline">
+                                                                {{itemType}}
+                                                                <span ng-if="$index!==(head.selectedTreePath.length-1)" class="p-l-5 p-r-5 zmdi zmdi-long-arrow-right arrow-style c-firebrick"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Product Explorer Division
+                                                        </label>
+                                                        <div class="description-data">
+                                                            {{head.selectedTreePath[0]}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group" ng-if="allDepartments.length>0">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Product Explorer Department
+                                                        </label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                {{head.selectedTreePath[1]}}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group" ng-if="itemMaintCtrl.classes.length>0">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Product Explorer Class</label>
+                                                        <div class="description-data">
+                                                            {{itemMaintCtrl.classes[0].short_description}}
+                                                            <label class="m-0 p-0">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group p-0">
+                                                    <div class="col-xs-12 col-md-6">
+                                                        <label class="panel-body-label">Status</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                <select class="dropdown-to-label" ng-options="each.code as each.description for each in statuses" ng-model="head.status_id"
+                                                                    disabled></select>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-6">
+                                                        <label class="panel-body-label">Effective Date</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">{{head.status_effective_date}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group p-0">
+                                                    <div class="col-xs-12 col-md-6">
+                                                        <label class="panel-body-label">Next Status</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                <select class="dropdown-to-label" ng-options="each.code as each.description for each in next_statuses" ng-model="head.next_status_id"
+                                                                    disabled></select>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-6" ng-if="effective_val">
+                                                        <label class="panel-body-label">Next Effective Date</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">{{head.next_effective_date}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">{{itemConfig.primary_item_hierarchy_desc}}</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0" ng-bind-html="head.primary_item_hierarchy_value_name"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Vendor</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">
+                                                                {{itemMaintCtrl.selectedVendor.name}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 form-group">
+                                                    <div class="col-xs-12 p-0">
+                                                        <label class="panel-body-label">Buyer</label>
+                                                        <div class="description-data">
+                                                            <label class="m-0 p-0">{{head.buyer}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- UDD DETAILS PREVIEW -- START -->
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="col-lg-12 p-0 card m-b-0">
+                                            <div class="col-xs-12 f-16 panel-header c-white">
+                                                <span class="f-700" style="color:darkgray;">
+                                                    User Defined Data
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 p-0">
+                                            <preview-udd-directive udd-data="uddData" selected-hierarchy-property="selectedHierarchyProperty" attribute-values-map="itemMaintCtrl.attributeValuesMap"
+                                                mto-options-map="itemMaintCtrl.mtoOptionsMap" mto-option-choices-map="itemMaintCtrl.mtoOptionChoicesMap"
+                                                is-summary="false"></preview-udd-directive>
+                                        </div>
+                                    </div>
+                                    <!-- UDD DETAILS PREVIEW -- END -->
+                                    <!-- SET DETAILS PREVIEW -- START -->
+                                    <div class="col-xs-12">
+                                        <div class="col-lg-12 card p-0 p-b-10" ng-if="head.item_sub_type === 'Set'&&vm.setItems.length>0">
+                                            <div class="col-lg-12 p-0 card m-b-0">
+                                                <div class="col-xs-12 f-16 panel-header c-white">
+                                                    <span class="f-700" style="color:darkgray;">
+                                                        Set Components
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-12 p-t-10  p-0">
+                                                    <div class="col-md-2 col-sm-6 col-xs-12" data-ng-repeat="sitem in vm.setItems" data-ng-if="vm.setItems.length>0">
+                                                        <div class="d-flex" style="justify-content:space-between;flex-wrap:wrap;align-items:center;border: 1px solid #eaeaea;padding: 10px;background:white;">
+                                                            <div class="d-flex d-flex-h-center full-width">
+                                                                <img check-image class="img-responsive m-0" image-name="entity-config-item.svg" ng-src="{{sitem.thumbnail}}" style="width:100px;height:100px;"
+                                                                />
+                                                            </div>
+                                                            <div class="d-flex d-flex-v-center" style="flex-direction:column;">
+                                                                <label class="o-hidden f-700 text-center" title="{{vm.setItems[$index].description}}" style=" display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;height:35px;">
+                                                                    {{vm.setItems[$index].description}}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 p-0" data-ng-if="vm.setItems.length===0">
+                                                        <span class="text-info text-center">No components exists for selected item set. Please add item to set.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- SET DETAILS PREVIEW -- END -->
+                                </div>
+                                <!-- Preview Screen data section -- End -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Available screens in item update LINK start-->
+            <div id="fixed-side-navigation">
+                <div class="fixed-side-panel">
+                    <div data-ng-if="!itemMaintCtrl.opdone">
+                        <ul class="p-0">
+                            <li data-ng-class="{'active-navigation' : itemMaintCtrl.createForm}" title="" title-direction="left">
+                                <a href="" data-ng-click="itemMaintCtrl.goToScreen('itemMasterScreen')">
+                                    <span>Item Master Configuration</span>
+                                </a>
+                            </li>
+                            <li data-ng-class="{'active-navigation' : itemMaintCtrl.configureItemVendorScreen}" title="" title-direction="left">
+                                <a href="" data-ng-click="itemMaintCtrl.goToScreen('itemVendorConfigurationScreen')">
+                                    <span>Item Vendor Configuration</span>
+                                </a>
+                            </li>
+                            <li data-ng-class="{'active-navigation' : itemMaintCtrl.configureScreen}" title="" title-direction="left">
+                                <a href="" data-ng-click="itemMaintCtrl.goToScreen('userDefinedDataConfigurationScreen')">
+                                    <span>User Defined Data Configuration</span>
+                                </a>
+                            </li>
+                            <li data-ng-class="{'active-navigation' : itemMaintCtrl.itemSetForm}" title="" title-direction="left" data-ng-if="head.item_sub_type.toLowerCase()==='set'">
+                                <a href="" data-ng-click="itemMaintCtrl.goToScreen('setConfigurationScreen')">
+                                    <span>Item Set Configuration</span>
+                                </a>
+                            </li>
+                            <li data-ng-class="{'active-navigation' : itemMaintCtrl.manageDropScreen}" title="" title-direction="left">
+                                <a href="" data-ng-click="itemMaintCtrl.goToScreen('dropConfigurationScreen')">
+                                    <span>Document Configuration</span>
+                                </a>
+                            </li>
+                            <li data-ng-class="{'active-navigation' : itemMaintCtrl.previewAndPublish}" title="" title-direction="left">
+                                <a href="" data-ng-click="itemMaintCtrl.goToScreen('publishscreen')">
+                                    <span>Review and Publish</span>
+                                </a>
+                            </li>
+                            <li class="p-5" title="Publish Changes" title-direction="left" style="background:#fff1d4" data-ng-init="itemLoadingUDD = true">
+                                <button class="btn btn-block f-13 bgm-ocean center-block" data-ng-disabled="itemMaintCtrl.LoadingSecndryAuth" data-ng-click="itemMaintCtrl.publishItemUdd(head, true)"
+                                    style="border: 1px dotted;">
+                                    <!-- <span data-ng-if="itemLoadingUDD">
+                                        <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                    </span> -->
+                                    <span>Publish Changes</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--Available screens in item update LINK end-->
+            <meta-data-panel></meta-data-panel>
+            <!--show item dependent details-->
+            <div id="rcrightsidebar" data-ng-class="{'changehistorytoggle': itemMaintCtrl.$showErrorDetails === true || showHistory === true,'toggled':itemMaintCtrl.$showErrorDetailsData === true}">
+                <div class="col-xs-12 m-t-25">
+                    <div class="col-xs-3 p-0">
+                        <a data-ng-click="itemMaintCtrl.$showErrorDetailsData=false;itemMaintCtrl.$showErrorDetails = false;itemMaintCtrl.$confirmdelete = false;"
+                            class="inheritheight">
+                            <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+                        </a>
+                    </div>
+                    <div class="col-xs-9 p-0">
+                        <label class="rclabel editformlabel" title="{{itemCtrl.moduleName}}">
+                            <strong>Item</strong> Dependency</label>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="d-flex m-b-10 m-t-10">
+                        <div class="m-auto updatepanel">
+                            <div data-ng-include="'./img/sidebar-icons/entity-config-item.svg'"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div>
+                            <h4 class="aligncenter dependency-errorMessage">Cannot be deleted!</h4>
+                        </div>
+                        <div class="col-xs-12 p-0" ng-repeat="($groupName,$dependencyMain) in ( itemMaintCtrl.dependencyList | groupBy : 'dependent_entity')">
+                            <div class="rcpscrollbar dependency-entityBox">
+                                <h4> Dependent Entities - {{$groupName}} </h4>
+                                <div class="col-xs-12 p-0" data-ng-repeat="dependency in $dependencyMain">
+                                    <div class="dependency-entityList" ng-click="itemMaintCtrl.showDependencyListDetails(dependency);">
+                                        <span title="{{dependency.description}}">{{dependency.description | truncate:40}}</span>
+                                        <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw pull-right zmdi-hc-border-circle"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pull-right m-r-5 m-t-15">
+                            <button class="btn btn-secondary" ng-click="itemMaintCtrl.$showErrorDetailsData=false;itemMaintCtrl.$showErrorDetails = false;itemMaintCtrl.$confirmdelete = false;">
+                                <span>
+                                    <b>Cancel</b>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div data-ng-include="'./application/modules/item/maintenance/panel.item.dependency.html'"></div>
+            </div>
+        </div>
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"
+                   data-ng-click="itemMaintCtrl.closeCam();itemMaintCtrl.resetValues()">&times;</button>
+                  <h4 class="modal-title" style="text-align:center">Capture Photo</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align:center">
+                        <video id="video" width="400" height="300" autoplay></video>
+                    </div>
+                    <button id="takeSnap" class="btn bgm-ocean center-block" style="width:130px; margin-top:10px; margin-bottom:10px; margin-left:75%" data-ng-disabled="itemMaintCtrl.oneSequence||itemMaintCtrl.numberCannotExeed||itemMaintCtrl.conditionForEmpty"
+                        data-ng-click="itemMaintCtrl.onClickSnap()">Take Photo
+                    </button>
+                    <div style="text-align:center">
+                        <canvas id="canvas" hidden width="400" height="300" autoplay></canvas>
+                        <img data-ng-if="drop.source =='camera' && itemMaintCtrl.link && itemMaintCtrl.clickedSnap"
+                        ng-src="{{itemMaintCtrl.link}}" width="400" height="300"/>
+                    </div>
+
+                    <div data-ng-if="itemMaintCtrl.clickedSnap" class="d-flex flex-1 input-group">
+                         
+                        <div class="checkbox m-b-10" data-ng-if="drop.stream_id == '33'" style="margin-top:10px; margin-left:40%;">
+                            <label class="d-flex">
+                                <input type="checkbox" ng-disabled="itemMaintCtrl.isAddedToQueue" data-ng-model="itemMaintCtrl.is_thumbnail" ng-true-value="1" ng-false-value="0">
+                                <i class="input-helper"></i>
+                                <span class="m-t-5 m-l-10"> Save as thumbnail</span>
+                            </label>
+                        </div>
+                        
+                        <button data-ng-if="drop.stream_id == '33'" id="savelSnap"
+                         data-ng-click="itemMaintCtrl.isAllowedMultipleDropsForSelectedStream(queuedDrops);itemMaintCtrl.closeCam()" ng-disabled="itemMaintCtrl.isAddedToQueue"
+                            type="button" class="btn btn-success f-700 btn-block capture-button-upload" name="update_title_btn"
+                            >Upload
+                        </button>  
+
+                        <button id="saveSnap" data-ng-if="!(drop.stream_id == '33')" 
+                         data-ng-click="itemMaintCtrl.isAllowedMultipleDropsForSelectedStream(queuedDrops);itemMaintCtrl.closeCam()" 
+                        ng-disabled="itemMaintCtrl.isAddedToQueue"
+                            type="button" class="btn btn-success f-700 btn-block capture-button-upload-t" name="update_title_btn"
+                            >Upload
+                        </button>  
+                    </div>
+
+                    
+                </div>
+              </div>
+            </div>
+        </div>
+        <div data-ng-include="'./application/modules/item/maintenance/panel.item.maintenance.collection.create.html'">
+        </div>
+        <div ng-if="itemMaintCtrl.isCloneItemcreate">
+            <div data-ng-include="'./application/modules/item/sku/clone/panel.clone.item.html'"></div>
+        </div>
+        <secondary-authentication feature-code="'Item status'" show-locked-screen="itemMaintCtrl.showLockedScreenStatus"
+            close-fn="itemMaintCtrl.showLockedScreenStatus = false;itemMaintCtrl.resettoDefault()"
+            data-ng-if="itemMaintCtrl.showLockedScreenStatus">
+        </secondary-authentication>
+    </div>

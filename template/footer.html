@@ -1,0 +1,62 @@
+<div id="console-nav-footer">
+    <div id="footer-content">
+        <a class="cursor-default" data-ng-click="dashboardController.toggleVersionMenu();">
+            <span class="pull-right" style="padding: 0 1em">
+                <span> Version  {{::dashboardController.copyrightDetails.app_version}} </span>
+            </span>
+        </a>
+        <a id="terms-of-use" target="_blank">Terms of Use</a>
+        <a id="privacy" target="_blank">Privacy Policy </a>
+        <span id="copyright-notice" style="display: inline;">© {{ ::dashboardController.copyrightDetails.from_year}} - {{ ::dashboardController.copyrightDetails.to_year}},
+            <span id="awsc-marketplace-name">Retail Calculus</span> or its affiliates. All rights reserved.
+        </span>
+    </div>
+</div>
+
+<!--div id="releaseVersionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <Modal content>
+        <div class="col-xs-12 modal-content p-0">
+            <div class="p-10" style="border-bottom: 1px solid lightgray;">
+                <span class="f-17 f-700" style="color: sandybrown;">Version Details</span>
+            </div>
+            Modal body start 
+            <div class="col-xs-12 modal-body m-t-15 p-5">
+
+                <div class="bgm-black col-xs-12 p-10">
+                    <span class="c-white f-300 f-15">Current Version &nbsp;
+                        <i class="zmdi zmdi-arrow-right"></i> &nbsp;
+                        <span style="font-family:monospace;font-weight:800">{{::dashboardController.copyrightDetails.app_version}}</span>
+                    </span>
+                    <div class="col-xs-12 p-0 f-300 c-white">
+                        <span>Release Date </span>
+                        <span>{{ ::dashboardController.copyrightDetails.release_date }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="col-xs-12 m-t-10">
+                    <div class="m-b-5">
+                        <span class="c-green f-700 m-b-10 f-14">Features</span>
+                    </div>
+                    <ol>
+                        <li class="c-black" data-ng-repeat="features in dashboardController.currentVersion.features">{{::features.description}}</li>
+                    </ol>
+                </div>
+                <div class="col-xs-12" data-ng-if="dashboardController.currentVersion.bugfixes">
+                    <div class="m-b-5">
+                        <span class="c-green f-700 m-b-10 f-14">Bug Fixes</span>
+                    </div>
+                    <ol>
+                        <li class="c-black" data-ng-repeat="bugs in dashboardController.currentVersion.bugfixes">{{::bugs.description}}</li>
+                    </ol>
+                </div>
+            </div>
+             Modal body
+            Footer section start 
+            <div class="col-xs-12 modal-footer">
+                <span><a>Old Versions</a></span>
+            </div> 
+        </div>
+    </div>
+</div>-->

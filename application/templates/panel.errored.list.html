@@ -1,0 +1,90 @@
+<style>
+    .entity-header {
+        background: #f7eded;
+        color: #ca5757;
+        font-size: 17px;
+        padding: 5px 10px;
+    }
+
+    .individual-module-container {
+        padding: 10px 5px;
+        border-bottom: 1px solid #ececec;
+    }
+
+    .entity-list-body {
+        height: auto;
+        max-height: 320px;
+        overflow: auto;
+        border-left: 1px solid #ececec;
+        border-right: 1px solid #ececec;
+    }
+
+</style>
+<div id="rcrightsidebar-large" data-ng-class="{'toggled':mactrl.showErroredListPanel}"
+     data-ng-controller="erroredListCtrl as erdCtrl">
+    <div class="col-xs-12 d-flex d-flex-v-center sidepanel-header m-t-15">
+        <div class="close-icon">
+            <a data-ng-click="mactrl.showErroredListPanel = false;" class="cursor-pointer">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="d-flex-h-center d-flex panel-name-section" style="flex:1;">
+            <label class="rclabel editformlabel" title="Errored entities">
+                <strong>System Warnings & Data Errors</strong>
+            </label>
+        </div>
+    </div>
+    <div class="col-lg-12 d-flex justify-content-center">
+        <div class="m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/warning.svg'" style="height: 150px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 m-b-30">
+        <div class="col-xs-12 p-0 p-t-10">
+            <div class="col-xs-12 p-0 m-b-10"
+                 data-ng-repeat="(name,erroredInfo) in (erdCtrl.erroredList | groupBy: 'entityName')"
+                 data-ng-if="erdCtrl.hasData && erroredInfo[0].data.length > 0">
+                <div class="align-items-center col-xs-12 d-flex entity-header justify-content-between">
+                    <span><i class="fa fa-receipt  p-r-5"></i><strong>{{name}}</strong> Warnings</span>
+                </div>
+                <div class="col-xs-12 p-0 entity-list-body rc-scroll-bar m-b-5">
+                    <div class="col-xs-12 d-flex align-items-center justify-content-between p-5"
+                         style="border-bottom: 1px solid #efefef"
+                         data-ng-repeat="data in erroredInfo[0].data">
+                        <div class="d-flex justify-content-between col-xs-12 p-0">
+                            <div class="d-flex flex-column p-0">
+                                <span class="f-14"><strong>{{data.description}}</strong></span>
+                                <span class="f-11 text-muted">{{data.message}}</span>
+                            </div>
+                            <div class="d-flex flex-column p-0">
+                                <a class="btn btn-primal btn-sm"
+                                   data-ng-click="erdCtrl.goToUpdate(data);mactrl.showErroredListPanel = false;">Resolve</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="m-t-10 " data-ng-if="erroredInfo[0].data.length < erroredInfo[0].count">
+                    <button class="btn btn-inverse  pull-right" ng-disabled="erdCtrl.isProccessingMore"
+                            data-ng-click="erdCtrl.loadMoreItemErrors(erroredInfo[0].uuid)">Load remaining
+                        {{erroredInfo[0].count-erroredInfo[0].data.length}} {{erroredInfo[0].entityName}}[s]
+                    </button>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0 d-flex flex-column justify-content-center align-items-center"
+                    data-ng-if="erdCtrl.isProccessing">
+                <span style="font-size: 27px;font-weight: 500;color: #ababab;"> Loading...</span>
+            </div>
+            <div class="col-xs-12 p-0 d-flex flex-column justify-content-center align-items-center"
+                 data-ng-if="!erdCtrl.hasData&&!erdCtrl.isProccessing">
+                <img src="./img/no-error-list.svg" style="height: 200px;width: 110px;" alt="" title="Refresh"
+                     title-direction="left">
+                <span style="font-size: 27px;font-weight: 500;color: #ababab;"> No Data found!!</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+<style>
+    .maintenanceworkspace .focus {
+        border-left: 3px solid #ffc107;
+        border-radius: 0px;
+    }
+
+    #hierarchyTreeSideBar .modal-dialog {
+        width: 700px !important;
+        margin: 30px auto;
+    }
+</style>
+
+<span ng-click="clickToHierarchyViewOpen(1);">
+    <div class="form-control hierarchyfield input-sm" style="width:100%;padding: 5px;">
+        <span class="text-overflow-desc-auto" data-ng-if="selectedHierarchyProperty[id]['path_name']" title="{{selectedHierarchyProperty[id]['path_name']}}"
+            style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;height:20px;overflow:hidden;" ng-bind-html="selectedHierarchyProperty[id]['path_name']"></span>
+    </div>
+</span>
+<div id="hierarchyTreeSideBar{{id}}" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="col-xs-12 p-0 modal-content">
+            <div class="col-xs-12 d-flex d-flex-v-center p-t-5 p-b-5 hierarchy-modal-header-section">
+                <div class="panel-name-section">
+                    <label class="editformlabel text-center m-b-0 form-header" title="{{formHeader}}">{{formHeader | truncate : 50}}</label>
+                </div>
+                <div class="close-icon">
+                    <a data-ng-click="clickToHierarchyViewOpen(-1);" class="cursor-pointer c-wheat">
+                        <span class="zmdi zmdi-close zmdi-hc-fw f-15"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-xs-12 p-0">
+                <div class="col-xs-12 m-t-5">
+                    <div class="d-flex">
+                        <div style="flex:3">
+                            <input class="form-control hierarchy-tree-search-input" ng-model='treeSearchQuery' type="text" placeholder="Search in hierarchy..."
+                                ng-change="searchResults=null" rc-on-enter="searchHierarchyValue(treeSearchQuery)" />
+                        </div>
+                        <div style="flex: 1;justify-content: space-evenly;display: flex;">
+                            <button class="btn btn-info" ng-click="searchHierarchyValue(treeSearchQuery)">
+                                <strong>Search</strong>
+                            </button>
+                            <button class="btn btn-cancel" ng-click="treeSearchQuery=null;searchHierarchyValue()">
+                                <strong>Clear</strong>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="text-info" ng-if="searchResults">{{searchResults}} record[s] found.</span>
+                    <span class="text-danger" ng-if="treeSearchQuery&&searchResults===0">No records found.</span>
+                </div>
+                <div class="hierDialog col-xs-12">
+                    <div class="col-xs-12 m-t-10 p-l-5 p-r-5 m-b-10 selected-property-container">
+                        <label class="m-b-10" style="font-family: 'Roboto';">
+                            <span class="c-gray f-400">Selected {{formHeader | truncate :50}} :</span>
+                        </label>
+                        <div class="m-b-10">
+                            <span class="p-5 f-500 path-name" ng-show="selectedHierarchyTreeProperty[id]['path_name']">
+                                <span ng-bind-html="selectedHierarchyTreeProperty[id]['path_name'] | truncate : 50"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- [TREE attribute]
+                        angular-treeview: the treeview directive
+                        tree-id : each tree's unique id.
+                        tree-model : the tree model on $scope.
+                        node-id : each node's id
+                        node-label : each node's label
+                        node-children: each node's children
+                    -->
+                </div>
+                <div class="hierDialog col-xs-12">
+                    <div class="tree o-auto rc-scroll-bar col-sm-12" style="max-height:70vh;" id="hierarchyTreeViewSelectScroll">
+                        <div id="tree{{id}}" data-angular-treeview="true" data-tree-id="hierarchyTree" data-tree-model="hierarchyList" data-node-id="id"
+                            data-node-label="short_description" data-node-children="children" data-search-query='treeSearchQuery'>
+                        </div>
+                    </div>
+                    <div class="d-flex d-flex-h-center col-sm-12">
+                        <button type="button" class="btn btn-success m-b-10 p-l-20 p-r-20" ng-click="clickToHierarchyViewOpen(0);">
+                            <strong>Done</strong>
+                        </button>
+                        <button type="button" class="btn btn-cancel m-b-10 m-l-10 p-l-20 p-r-20 waves-effect" ng-click="resetSelectedHierarchy();">
+                            <strong>Reset</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

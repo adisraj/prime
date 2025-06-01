@@ -1,0 +1,184 @@
+<div class="container col-lg-12 p-0" data-ng-controller="TypePackageController as typePackageCtlr">
+    <!--list panel-->
+    <ul style="display:none">
+        <li>
+            <keybinding on="alt+n" invoke="typePackageCtlr.openForm();" />
+        </li>
+        <li>
+            <keybinding on="esc" invoke="typePackageCtlr.closeForm();" />
+        </li>
+    </ul>
+    <div>
+        <div class="rc-module-header col-xs-12 d-flex">
+            <div class="col-xs-6 d-flex" style="padding: 0px 10px;box-shadow: 3px 0px 4px -1px #f7f7f7;">
+                <div class="p-relative">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="image-module p-absolute top-10">
+                        <img src="./img/sidebar-icons/order-advisor.svg" />
+                    </div>
+                    <div class="label-module top-10">
+                        <a class="p-l-40" href="javascript:void(0)"
+                            style="display:block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width:475px"
+                            title="{{typePackageCtlr.Type.description}}."
+                            title-direction="bottom">{{typePackageCtlr.Type.description}} - Packages
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex" style="flex: 5;"></div>
+
+            <div class="col-6 d-flex">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right m-r-5">
+                        <li>
+                            <a>
+                                <button type="button" class="btn btn-cancel waves-effect f-700"
+                                    data-ui-sref="common.prime.orderadvisortype">Go Back</button>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-ng-click="typePackageCtlr.openForm();">
+                                <button type="button" class="btn btn-primal waves-effect f-700">Create Package</button>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 text-center module-content-configuration"
+            data-ng-if="!typePackageCtlr.Packages && !typePackageCtlr.isLoaded">
+            <span class="f-17 f-700 c-black">Loading</span>
+            <span class="f-700" style="letter-spacing: 3px;">....</span>
+        </div>
+        <div>
+            <div class="rcp-table-container">
+                <div class="col-xs-12 p-0">
+                    <div class="table-responsive module-content-configuration">
+                        <div class="col-xs-12 p-0 o-auto sticky-head-container"
+                            data-ng-if="typePackageCtlr.Packages&&typePackageCtlr.Packages.length > 0">
+                            <table
+                                class="table table-hover table-vmiddle table-condensed table-bordered grid sticky-head-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" id="value_short_description_col_head"
+                                            ng-click="typePackageCtlr.sortType = 'value_short_description'; sortReverse = !sortReverse">
+                                            <span class="handle">Package</span>
+                                            <span
+                                                ng-show="typePackageCtlr.sortType == 'value_short_description' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span
+                                                ng-show="typePackageCtlr.sortType == 'value_short_description' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" style="width:12%" id="price_percentage_col_head"
+                                            ng-click="typePackageCtlr.sortType = 'price_percentage'; sortReverse = !sortReverse">
+                                            <span class="handle">Link/Unlink</span>
+                                            <span
+                                                ng-show="typePackageCtlr.sortType == 'price_percentage' && !sortReverse"
+                                                class="zmdi zmdi-caret-down pull-right"></span>
+                                            <span
+                                                ng-show="typePackageCtlr.sortType == 'price_percentage' && sortReverse"
+                                                class="zmdi zmdi-caret-up pull-right"></span>
+                                        </th>
+                                        <th class="text-center" style="width:5%;word-wrap: break-word"><span>
+                                                Display Package Price in PE </span></th>
+                                        <th class="text-center" style="width:10%;word-wrap: break-word">Default Package in PE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="package in typePackageCtlr.Packages"
+                                        ng-class="{'background-hover':$index === selectedRow}"
+                                        data-ng-if="typePackageCtlr.Packages.length > 0">
+                                        <td ios-dblclick="typePackageCtlr.dblClickAction(package);">
+                                            {{package.description}}
+                                        </td>
+                                        <td class="p-relative">
+                                            <div id="container" class="pop-contain" data-toggle="popover" 
+                                            data-trigger="manual"
+                                            data-package-id="{{package.id}}"
+                                            data-content="Custom content here">
+                                                <div style="padding: 10px;padding-left: 5px;">
+                                                    <span data-ng-if="package.isLinked==1">Unlink</span>
+                                                    <span data-ng-if="package.isLinked==0 || !package.isLinked">Unlinked</span>
+                                                </div>
+                                                <div style="padding-top: 8px;" >
+                                                    <label class="switch" >
+                                                        <input type="checkbox" ng-model="package.isLinked"
+                                                            ng-true-value="1" ng-false-value="0"
+                                                            ng-click="typePackageCtlr.CreateTypePackageLink(undefined, package);"
+                                                            ng-disabled="typePackageCtlr.isProcessing"
+                                                            class="primary">
+                                                        <span class="slider round" ng-class="{'opacity-50 cursor-not-allowed':typePackageCtlr.isProcessing}"></span>
+                                                    </label>
+                                                </div>
+                                                <div style="text-align: end;padding: 10px;">
+                                                    <span
+                                                        data-ng-if="package.isLinked==0 || !package.isLinked">Link</span>
+                                                    <span data-ng-if="package.isLinked==1">Linked</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <!-- <td class="price_percentage_col text-center"
+                                            data-ng-if="!typePackageCtlr.PackageIds.includes(package.id)"
+                                            data-ng-init="package.isLinked = 0">
+                                            <button class="btn btn-sm btn-primal f-400"
+                                                data-ng-click="typePackageCtlr.CreateTypePackageLink(undefined, package);"
+                                                data-ng-disabled="typePackageCtlr.isProcessing" style="min-width:60px">
+                                                <span data-ng-if="package.isProcessing">
+                                                    <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                                </span>
+                                                Link
+                                            </button>
+                                        </td>
+                                        <td class="price_percentage_col text-center"
+                                            data-ng-if="typePackageCtlr.PackageIds.includes(package.id)"
+                                            data-ng-init="package.isLinked = 1">
+                                            <button class="btn btn-sm btn-danger bgm-firebrick f-400"
+                                                data-ng-click="typePackageCtlr.DeleteTypePackageLink(package);"
+                                                data-ng-disabled="typePackageCtlr.isProcessing" style="min-width:60px">
+                                                <span data-ng-if="package.isProcessing">
+                                                    <i class="fa fa-spinner fa-spin m-r-5"></i>
+                                                </span>
+                                                Unlink
+                                            </button>
+                                        </td> -->
+                                        <td class="text-center">
+                                            <div class="form-check"
+                                                data-ng-if="typePackageCtlr.PackageIds.includes(package.id)">
+                                                <input class="form-check-input" type="radio" name="display_pe"
+                                                    data-ng-model="package.display_pe" data-ng-value="true"
+                                                    ng-click="typePackageCtlr.DisplayinPE(package, undefined,$event)">
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="form-check"
+                                                data-ng-if="typePackageCtlr.PackageIds.includes(package.id)">
+                                                <input class="form-check-input" type="radio" name="default_package" data-ng-value="true"
+                                                    data-ng-model="package.default_package" ng-click="typePackageCtlr.defaultPackage(package,undefined,$event)"
+                                                    >
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-include="'./application/modules/order.advisor/type/packages/panel.link.packages.html'">
+            <div data-ng-if="typePackageCtlr.OrderAdvisorTypePackages.length === 0">
+                <div class="col-xs-12 m-10 center-align">
+                    <span class="f-15 f-300">No packages exists for selected Sale order advisor type.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

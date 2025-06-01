@@ -1,0 +1,161 @@
+<style>
+    #rcrightsidebar {
+        overflow-x: hidden;
+    }
+</style>
+<div id="rcrightsidebar" class="rc-scroll-bar"
+    data-ng-class="{'toggled':venMaintCtrl.isCompanyDepartmentSidePanelVisible, 'changeposition':venMaintCtrl.showassociate || venMaintCtrl.isShowDepartmentDetails || venMaintCtrl.isShowAssociateDetails || isShowAddressContactPanel}">
+    <style>
+        .panel-heading .accordion-toggle:after {
+            font-family: 'Glyphicons Halflings';
+            content: "\e114";
+            float: right;
+            color: grey;
+        }
+
+        .panel-heading .accordion-toggle.collapsed:after {
+            content: "\e080";
+        }
+
+        .panel-body {
+            border: 1px solid #eaeaea;
+        }
+
+        .rotate-90deg {
+            transform: rotate(90deg);
+        }
+    </style>
+
+    <div class="col-xs-12 side-panel-name m-t-25">
+        <div class="close-icon">
+            <a class="cursor-pointer" data-ng-click="venMaintCtrl.closeForm('CompanyDepartments');">
+                <span class="zmdi zmdi-long-arrow-right zmdi-hc-fw zmdi-hc-3x"></span>
+            </a>
+        </div>
+        <div class="panel-name-section">
+            <label class="rclabel editformlabel" title="Departments"><strong>Departments</strong></label>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="d-flex m-b-10 m-t-10">
+            <div class="m-auto updatepanel">
+                <div data-ng-include="'./img/sidebar-icons/department.svg'"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <h4>
+            <span class="rclabel data m-0 p-0">
+                <select class="dropdown-to-label" name="name"
+                    ng-options="each.id as each.name for each in venMaintCtrl.allCompanies"
+                    ng-model="head.individual_id_or_company_id" disabled>
+                </select>
+            </span>
+        </h4>
+    </div>
+    <div class="col-xs-12 m-b-10">
+        <button class="btn btn-secondary pull-right" data-ng-click="venMaintCtrl.openForm('Department');">
+            <span class="zmdi zmdi-plus"></span>
+            Add Department
+        </button>
+    </div>
+    <div class="col-xs-12 form-group d-flex p-0" style="justify-content:space-around;">
+        <div class="d-flex p-0">
+            <div class="m-r-5" style="background: rgba(0, 128, 0, 0.47);height: 15px;width: 15px;border-radius: 1px;">
+            </div>Active
+        </div>
+        <div class="d-flex">
+            <div class="m-r-5" style="background: rgba(255, 165, 0, 0.47);height: 15px;width: 15px;border-radius: 1px;">
+            </div>Pending Active
+        </div>
+        <div class="d-flex">
+            <div class="m-r-5" style="background: rgba(255, 0, 0, 0.47);height: 15px;width: 15px;border-radius: 1px;">
+            </div> Inactive
+        </div>
+        <div class="d-flex">
+            <div class="m-r-5"
+                style="background: rgba(33, 150, 243, 0.47);height: 15px;width: 15px;border-radius: 1px;"> </div>
+            Pending Inactive
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="panel-group" id="accordion">
+            <div ng-if="venMaintCtrl.companyDetails.length === 0" class="text-info text-center f-13 f-300 m-t-20">
+                No department is associated.Please add departments.
+            </div>
+            <div class="panel panel-default" ng-if="venMaintCtrl.companyDetails.length > 0"
+                ng-repeat="data in venMaintCtrl.companyDetails">
+                <div class="panel-heading cursor-pointer p-10">
+                    <h4 class="d-flex justify-content-between panel-title">
+                        <div style="flex-grow: 1;" ng-click="data.showAssociate = !data.showAssociate">
+                            <span class="cursor-pointer">
+                                <span class="f-13">
+                                    <a title="{{data.department}}"
+                                        ng-class="{'active' : data.status_id === 200 ,'pending' : data.status_id === 100, 'inactive' : data.status_id === 300, 'discontinued' : data.status_id === 400}">
+                                        {{ data.department | truncate: 50}}
+                                    </a>
+                                </span>
+                                <span class="rc-alert-icon m-r-10" ng-if="venMaintCtrl.primaryDepartment.department_id == data.department_id">
+                                    <span class="text-info zmdi zmdi-info-outline" style="font-size:18px" title="Primary Department" title-direction="right"
+                                        fixed-position="true">
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="zmdi zmdi-chevron-right zmdi-hc-lg zmdi-hc-fw pull-right cursor-pointer f-24"
+                                data-ng-class="{'rotate-90deg' : data.showAssociate}" style="color:gray"
+                                ng-click="data.showAssociate = !data.showAssociate"></span>
+                            <span class="zmdi zmdi-edit zmdi-hc-fw pull-right cursor-pointer f-18 m-l-10"
+                                style="color:gray" data-ng-click="venMaintCtrl.openUpdateForm('Department',data);"
+                                title="Update Department" title-direction="left"></span>
+                            <span
+                                class="zmdi zmdi-account-calendar zmdi-hc-fw pull-right cursor-pointer p-r-10 f-18 m-l-10"
+                                style="color:gray"
+                                ng-click="venMaintCtrl.openAddressContactPanel('department'); openAddressPanel(data.department_id);"
+                                title="Address and Contact" title-direction="left"></span>
+                        </div>
+                    </h4>
+                </div>
+                <div id="{{data.department_id}}" data-ng-if="data.showAssociate">
+                    <div class="panel-body p-10">
+                        <div class="col-xs-12 m-b-5">
+                            <a class="pull-right cursor-pointer"
+                                data-ng-click="venMaintCtrl.openForm('Associate',data.department_id);">Add Associate</a>
+                        </div>
+                        <div ng-if="data.associates.length === 0" class="text-info text-center f-13 f-300 m-t-20">
+                            No associates present.Please add associate.
+                        </div>
+                        <div class="col-xs-12 " ng-if="data.associates.length > 0">
+                            <table class="table table-condensed table-bordered table-bordered-sm table-vmiddle">
+                                <thead>
+                                    <tr role="row">
+                                        <th>Job Title</th>
+                                        <th>Name</th>
+                                        <th style="width:15%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="associate in data.associates">
+                                        <td>{{ associate.title }}</td>
+                                        <td>{{ associate.associate }}</td>
+                                        <td class="">
+                                            <i class="zmdi zmdi-account-calendar zmdi-hc-fw cursor-pointer f-18"
+                                                style="color: gray;"
+                                                data-ng-click="venMaintCtrl.openAddressContactPanel('associate'); openAddressPanel(associate.id);"
+                                                title="Address and Contact" title-direction="left"></i>
+                                            <i class="zmdi zmdi-edit zmdi-hc-fw cursor-pointer f-18 m-l-5"
+                                                style="color: gray;"
+                                                data-ng-click="venMaintCtrl.openUpdateForm('Associate',associate);"
+                                                title="Update Associate" title-direction="left"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
